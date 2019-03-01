@@ -1,0 +1,37 @@
+# Project specific #
+####################
+**/test-output/
+**/target/
+**/.allure/
+**/allure-results/
+**/lib/
+**/logs/
+**/.metadata/
+**/*.orig
+**/reports/
+**/.classpath
+**/.idea/
+**/*.iml
+**/.project
+**/secretData
+**/.settings/
+**/ajcore.*
+**/src/bin/
+~*.docx
+**/chromedriver/
+**/geckodriver/
+**/allure-framework-modules
+**/allure-app-under-test
+
+# Compiled source #
+###################
+**/*.com
+**/*.class
+**/*.dll
+**/*.exe
+**/*.o
+**/*.so
+
+
+# Log #
+**/*.log
