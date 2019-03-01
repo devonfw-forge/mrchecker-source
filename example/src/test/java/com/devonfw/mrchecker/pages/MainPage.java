@@ -49,9 +49,7 @@ public class MainPage extends BasePage {
    * */
   @Override
   public String pageTitle() {
-    // TODO: Return the title
-    getDriver();
-    return null;
+    return "Main page title";
   }
 
 }

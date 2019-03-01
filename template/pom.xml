@@ -19,36 +19,12 @@
         <url>https://www.capgemini.com/es-es/</url>
     </organization>
 
-    <developers>
-        <developer>
-            <name>Juan Andrés Ambuludi Olmedo</name>
-            <email>juan-andres.ambuludi-olmedo@capgemini.com</email>
-            <organization>Capgemini - European Industrial Center - Spain</organization>
-        </developer>
-        <developer>
-            <name>Jorge Dacal Cantos</name>
-            <email>jorge.dacal-cantos@capgemini.com</email>
-            <organization>Capgemini - European Industrial Center - Spain</organization>
-        </developer>
-        <developer>
-            <name>Carlos Micó Egea</name>
-            <email>carlos.mico-egea@capgemini.com</email>
-            <organization>Capgemini - European Industrial Center - Spain</organization>
-        </developer>
-    </developers>
-
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
-
-    <!--<scm>
-        <connection>scm:git:git://github.com/devonfw/devonfw-testing.git</connection>
-        <developerConnection>scm:git:ssh://github.com:devonfw/devonfw-testing.git</developerConnection>
-        <url>http://github.com/devonfw/devonfw-testing/tree/develop</url>
-    </scm> -->
 
     <repositories>
         <repository>
@@ -63,7 +39,7 @@
         <repository>
             <id>Local repository</id>
             <url>file://${env.BASE_PATH}/usr/share/maven2</url>
-            <!-- <url>file://${env.BASE_PATH}/m2/repository</url> -->
+
         </repository>
     </distributionManagement>
 
@@ -141,28 +117,19 @@
 
 
 
- 
+
 
         <!-- Selenium module -->
 
         <dependency>
-        
+
                <groupId>com.capgemini.mrchecker</groupId>
-        
+
                <artifactId>mrchecker-selenium-module</artifactId>
-        
+
                <version>${mrchecker-selenium-module.version}</version>
-        
+
         </dependency>
-
- 
-        <!-- Selenium module 
-        <dependency>
-            <groupId>com.capgemini.mrchecker</groupId>
-            <artifactId>mrchecker-selenium-module</artifactId>
-            <version>${mrchecker-selenium-module.version}</version>
-        </dependency>-->
-
 
         <!-- Security module -->
         <dependency>
