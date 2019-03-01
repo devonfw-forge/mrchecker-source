@@ -3,8 +3,7 @@ MrChecker template
 
 This repository includes a template to make test using MrChecker and an example.
 
-How to use
-~~~~~~~~~~
+## How to use
 
 To use this template the following steps have to be followed:
 
@@ -14,8 +13,7 @@ To use this template the following steps have to be followed:
 
 * Write the code to test an application.
 
-What is included?
-~~~~~~~~~~~~~~~~~
+## What is included?
 
 * *common/data*: Directory to store files with java objects.
 
