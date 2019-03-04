@@ -31,6 +31,6 @@ To use this template the following steps have to be followed:
 
 The example folder also has a the following tests: 
 
-*Data Driven Behaviour (DDB)*: Inside test/junit/.
+* *Data Driven Behaviour (DDB)*: Inside test/junit/.
 
-*Test Driven Development (TDD)*: Situated on test/cucumber/.
+* *Test Driven Development (TDD)*: Situated on test/cucumber/.
