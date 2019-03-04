@@ -1,4 +1,4 @@
-package com.devonfw.mrchecker.tests;
+package com.devonfw.mrchecker.tests.junit;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
