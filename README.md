@@ -23,6 +23,12 @@ To use this template the following steps have to be followed:
 
 * *pages*: Contains a template (MainPage.java) with methods necessary to build a basic page object.
 
-* *test*: Folder which includes a java file (MainTest.java) with methods recommended to build a basic test.
+* *test/cucumber/*: Folder to store the cucumber tests (MainCucumberTest.java).
 
-The example folder also has a test following the Data Driven Behaviour (DDB) pattern.
+* *test/cucumber/features*: Directory to keep cucumber files with features (MainCucumberFeatures.features).
+
+* *test/junit*: Folder which includes a java file (MainTest.java) with methods recommended to build a basic test.
+
+The example folder also has a the following tests: 
+*Data Driven Behaviour (DDB)*: Inside test/junit/.
+*Test Driven Development (TDD)*: Situated on test/cucumber/.
