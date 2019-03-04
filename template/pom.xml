@@ -79,8 +79,7 @@
         <aspectj.version>1.8.10</aspectj.version>
 
         <!-- Cucumber version -->
-        <cucumber.version>1.2.5</cucumber.version>
-        <cucumber.jvm.parallel.version>4.1.0</cucumber.jvm.parallel.version>
+        <cucumber.jvm.parallel.version>5.0.0</cucumber.jvm.parallel.version>
         <cucumber-reporting.version>3.7.0</cucumber-reporting.version>
 
         <!-- Test tools -->
