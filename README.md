@@ -30,5 +30,7 @@ To use this template the following steps have to be followed:
 * *test/junit*: Folder which includes a java file (MainTest.java) with methods recommended to build a basic test.
 
 The example folder also has a the following tests: 
+
 *Data Driven Behaviour (DDB)*: Inside test/junit/.
+
 *Test Driven Development (TDD)*: Situated on test/cucumber/.
