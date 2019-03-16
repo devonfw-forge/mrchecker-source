@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: org.codehaus.plexus:plexus-utils:3.0.24">
     <CLASSES>
-      <root url="jar://C:/usr/share/maven2/org/codehaus/plexus/plexus-utils/3.0.24/plexus-utils-3.0.24.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/plexus/plexus-utils/3.0.24/plexus-utils-3.0.24.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://C:/usr/share/maven2/org/codehaus/plexus/plexus-utils/3.0.24/plexus-utils-3.0.24-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/plexus/plexus-utils/3.0.24/plexus-utils-3.0.24-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://C:/usr/share/maven2/org/codehaus/plexus/plexus-utils/3.0.24/plexus-utils-3.0.24-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/plexus/plexus-utils/3.0.24/plexus-utils-3.0.24-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
