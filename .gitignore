@@ -9,10 +9,6 @@
 **/.metadata/
 **/*.orig
 **/reports/
-**/.classpath
-**/.idea/
-**/*.iml
-**/.project
 **/secretData
 **/.settings/
 **/ajcore.*
@@ -22,6 +18,18 @@
 **/geckodriver/
 **/allure-framework-modules
 **/allure-app-under-test
+
+# IDE source #
+###################
+**/.classpath
+**/.project
+**/.idea/
+./.idea
+**/*.iml
+**/*.eml
+*.userlibraries
+
+
 
 # Compiled source #
 ###################
@@ -33,5 +41,24 @@
 **/*.so
 
 
-# Log #
+# Exclude #
+##############
+!mrchecker-app-under-test/lib/**/*
+
+# Packages #
+############
+**/*.7z
+**/*.dmg
+**/*.gz
+**/*.iso
+**/*.jar
+**/*.rar
+**/*.tar
+**/*.zip
+
+# Logs and databases #
+######################
+**/*.orig
 **/*.log
+**/*.sql
+**/*.sqlite
