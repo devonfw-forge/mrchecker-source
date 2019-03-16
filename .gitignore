@@ -34,6 +34,7 @@
 
 # Exclude #
 ##############
+.idea/
 !mrchecker-app-under-test/lib/**/*
 
 # Packages #
