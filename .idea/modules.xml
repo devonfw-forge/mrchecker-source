@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/mrchecker-framework-modules/mrchecker-core-module/mrchecker-core-module.iml" filepath="$PROJECT_DIR$/mrchecker-framework-modules/mrchecker-core-module/mrchecker-core-module.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mrchecker-framework-modules/mrchecker-database-module/mrchecker-database-module.iml" filepath="$PROJECT_DIR$/mrchecker-framework-modules/mrchecker-database-module/mrchecker-database-module.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mrchecker-framework-modules/mrchecker-example-module/mrchecker-example-module.iml" filepath="$PROJECT_DIR$/mrchecker-framework-modules/mrchecker-example-module/mrchecker-example-module.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mrchecker-framework-modules/mrchecker-security-module/mrchecker-security-module.iml" filepath="$PROJECT_DIR$/mrchecker-framework-modules/mrchecker-security-module/mrchecker-security-module.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mrchecker-framework-modules/mrchecker-selenium-module/mrchecker-selenium-module.iml" filepath="$PROJECT_DIR$/mrchecker-framework-modules/mrchecker-selenium-module/mrchecker-selenium-module.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/mrchecker-source.iml" filepath="$PROJECT_DIR$/.idea/mrchecker-source.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mrchecker-framework-modules/mrchecker-test-framework.iml" filepath="$PROJECT_DIR$/mrchecker-framework-modules/mrchecker-test-framework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mrchecker-framework-modules/mrchecker-webapi-module/mrchecker-webapi-module.iml" filepath="$PROJECT_DIR$/mrchecker-framework-modules/mrchecker-webapi-module/mrchecker-webapi-module.iml" />
+    </modules>
+  </component>
+</project>
