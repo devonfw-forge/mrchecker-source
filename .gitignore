@@ -23,6 +23,7 @@
 **/allure-framework-modules
 **/allure-app-under-test
 .idea/
+.idea/workspace.xml
 
 # Compiled source #
 ###################
