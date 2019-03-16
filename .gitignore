@@ -32,6 +32,24 @@
 **/*.o
 **/*.so
 
+# Exclude #
+##############
+!mrchecker-app-under-test/lib/**/*
 
-# Log #
+# Packages #
+############
+**/*.7z
+**/*.dmg
+**/*.gz
+**/*.iso
+**/*.jar
+**/*.rar
+**/*.tar
+**/*.zip
+
+# Logs and databases #
+######################
+**/*.orig
 **/*.log
+**/*.sql
+**/*.sqlite
