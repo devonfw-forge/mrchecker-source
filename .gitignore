@@ -22,6 +22,7 @@
 **/geckodriver/
 **/allure-framework-modules
 **/allure-app-under-test
+**/.idea
 
 # Compiled source #
 ###################
@@ -32,6 +33,24 @@
 **/*.o
 **/*.so
 
+# Exclude #
+##############
+!mrchecker-app-under-test/lib/**/*
 
-# Log #
+# Packages #
+############
+**/*.7z
+**/*.dmg
+**/*.gz
+**/*.iso
+**/*.jar
+**/*.rar
+**/*.tar
+**/*.zip
+
+# Logs and databases #
+######################
+**/*.orig
 **/*.log
+**/*.sql
+**/*.sqlite
