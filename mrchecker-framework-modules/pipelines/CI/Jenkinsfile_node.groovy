@@ -17,7 +17,7 @@ Snapshot
 https://oss.sonatype.org/content/repositories/snapshots/com/capgemini/ntc/''', name: 'IS_TO_DEPLOY_REMOTE_NEXUS'), 
 			string(defaultValue: '', description: 'Application version number. If empty, pom.xml version will be taken', name: 'VERSION'), 
 			string(defaultValue: 'origin/develop', description: 'Optional variable. What is your "master" branch', name: 'MAIN_BRANCH'), 
-			string(defaultValue: 'https://github.com/devonfw/devonfw-testing.git', description: 'Optional variable. Which repo to run', name: 'GIT_REPO'), 
+			string(defaultValue: 'https://github.com/devonfw-forge/mrchecker-source.git ', description: 'Optional variable. Which repo to run', name: 'GIT_REPO'),
 			string(defaultValue: '', description: 'Optional list of mvn parameters, example -DskipTests=true -Dtest=*', name: 'MVN_PARAMETERS')
 			]), 
 			pipelineTriggers([])
