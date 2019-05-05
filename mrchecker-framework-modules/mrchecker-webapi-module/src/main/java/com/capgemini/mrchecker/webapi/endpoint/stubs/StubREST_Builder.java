@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.capgemini.mrchecker.webapi.core.base.driver.DriverManager;
+import com.github.tomakehurst.wiremock.client.WireMock;
 
 import io.restassured.http.ContentType;
 
@@ -37,11 +38,6 @@ public class StubREST_Builder {
 		this.endpointURI = builder.endpointURI;
 		this.statusCode = builder.statusCode;
 	}
-	
-	
-	
-	
-	
 	
 	// Builder Class
 	public static class StubBuilder {
@@ -70,8 +66,12 @@ public class StubREST_Builder {
 		public StubREST_Builder build() {
 			UUID id;
 			
+			// Bind all stubbers to running WireMock client connection
+			WireMock driver = DriverManager.getDriverVirtualService();
+			WireMock.configureFor(driver);
+			
 			// GET
-			id = DriverManager.getDriverVirtualService()
+			id = WireMock
 					.givenThat(
 							// Given that request with ...
 							get(urlMatching(this.endpointURI))
@@ -86,7 +86,7 @@ public class StubREST_Builder {
 			BFLogger.logDebug("Mapped GET with ID=" + id.toString());
 			
 			// POST
-			id = DriverManager.getDriverVirtualService()
+			id = WireMock
 					.givenThat(
 							// Given that request with ...
 							post(urlMatching(this.endpointURI))
@@ -101,7 +101,7 @@ public class StubREST_Builder {
 			BFLogger.logDebug("Mapped POST with ID=" + id.toString());
 			
 			// PUT
-			id = DriverManager.getDriverVirtualService()
+			id = WireMock
 					.givenThat(
 							// Given that request with ...
 							put(urlMatching(this.endpointURI))
@@ -116,7 +116,7 @@ public class StubREST_Builder {
 			BFLogger.logDebug("Mapped PUT with ID=" + id.toString());
 			
 			// DELETE
-			id = DriverManager.getDriverVirtualService()
+			id = WireMock
 					.givenThat(
 							// Given that request with ...
 							delete(urlMatching(this.endpointURI))
@@ -131,7 +131,7 @@ public class StubREST_Builder {
 			BFLogger.logDebug("Mapped DELETE with ID=" + id.toString());
 			
 			// CATCH any other requests
-			id = DriverManager.getDriverVirtualService()
+			id = WireMock
 					.givenThat(
 							any(anyUrl())
 									.atPriority(10)

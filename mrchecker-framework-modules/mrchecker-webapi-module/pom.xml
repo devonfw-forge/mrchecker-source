@@ -65,15 +65,15 @@
     </scm>
 
     <properties>
-        <version>1.2.0</version>
-        
+        <version>1.2.1-SNAPSHOT</version>
+
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
         <mrchecker-core-module.version>4.12.1.1</mrchecker-core-module.version>
 
 
         <!-- Lib/package version settings -->
-        <wiremock.version>2.15.0</wiremock.version>
+        <wiremock.version>2.21.0</wiremock.version>
         <wiremock-body-transformer.version>1.1.6</wiremock-body-transformer.version>
         <java-xmlbuilder.version>1.2</java-xmlbuilder.version>
 

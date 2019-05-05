@@ -12,6 +12,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 
 import com.capgemini.mrchecker.webapi.core.base.driver.DriverManager;
+import com.github.tomakehurst.wiremock.client.WireMock;
 
 public class StubSOAP_Builder {
 	
@@ -67,8 +68,12 @@ public class StubSOAP_Builder {
 		
 		public StubSOAP_Builder build() {
 			
+			// Bind all stubbers to running WireMock client connection
+			WireMock driver = DriverManager.getDriverVirtualService();
+			WireMock.configureFor(driver);
+			
 			// GET
-			DriverManager.getDriverVirtualService()
+			WireMock
 					.givenThat(
 							// Given that request with ...
 							get(urlMatching(this.endpointURI))
@@ -82,7 +87,7 @@ public class StubSOAP_Builder {
 											.withTransformers("body-transformer")));
 			
 			// POST
-			DriverManager.getDriverVirtualService()
+			WireMock
 					.givenThat(
 							// Given that request with ...
 							// post(urlEqualTo(this.endpointURI))
@@ -97,7 +102,7 @@ public class StubSOAP_Builder {
 											.withTransformers("body-transformer")));
 			
 			// PUT
-			DriverManager.getDriverVirtualService()
+			WireMock
 					.givenThat(
 							// Given that request with ...
 							put(urlMatching(this.endpointURI))
@@ -111,7 +116,7 @@ public class StubSOAP_Builder {
 											.withTransformers("body-transformer")));
 			
 			// DELETE
-			DriverManager.getDriverVirtualService()
+			WireMock
 					.givenThat(
 							// Given that request with ...
 							delete(urlMatching(this.endpointURI))
@@ -125,7 +130,7 @@ public class StubSOAP_Builder {
 											.withTransformers("body-transformer")));
 			
 			// CATCH any other requests
-			DriverManager.getDriverVirtualService()
+			WireMock
 					.givenThat(
 							any(anyUrl())
 									.atPriority(10)
