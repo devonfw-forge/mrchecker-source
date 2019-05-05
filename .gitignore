@@ -9,11 +9,6 @@
 **/.metadata/
 **/*.orig
 **/reports/
-**/.classpath
-**/.idea/
-./.idea
-**/*.iml
-**/.project
 **/secretData
 **/.settings/
 **/ajcore.*
@@ -23,6 +18,16 @@
 **/geckodriver/
 **/allure-framework-modules
 **/allure-app-under-test
+
+# IDE source #
+###################
+**/.classpath
+**/.project
+**/.idea/
+./.idea
+**/*.iml
+**/*.eml
+*.userlibraries
 
 
 
