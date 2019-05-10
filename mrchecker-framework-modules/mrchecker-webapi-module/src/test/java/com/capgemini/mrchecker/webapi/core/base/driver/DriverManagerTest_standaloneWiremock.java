@@ -1,23 +1,24 @@
 package com.capgemini.mrchecker.webapi.core.base.driver;
 
-
-import static org.hamcrest.Matchers.startsWith;
-import static org.junit.Assert.assertEquals;
-
+import com.capgemini.mrchecker.test.core.BaseTest;
+import com.capgemini.mrchecker.webapi.core.base.runtime.RuntimeParameters;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.capgemini.mrchecker.test.core.BaseTest;
-import com.capgemini.mrchecker.webapi.core.base.runtime.RuntimeParameters;
-import com.github.tomakehurst.wiremock.client.WireMock;
-
+import java.io.File;
+import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
-
-import java.io.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Paths;
+
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.Assert.assertEquals;
+
 
 public class DriverManagerTest_standaloneWiremock extends BaseTest {
 
@@ -28,10 +29,18 @@ public class DriverManagerTest_standaloneWiremock extends BaseTest {
 	public ExpectedException thrown = ExpectedException.none();
 	
 	@Test
-	public void testStandaloneWireMockStartDedicatedPortHttp() {
-		System.setProperty("mock_http_host", "192.168.1.104");
+	public void testStandaloneWireMockStartDedicatedPortHttp() throws UnknownHostException {
+		InetAddress inetAddress = InetAddress.getLocalHost();
+		String hostAddress = inetAddress.getHostAddress();
+		System.out.println("IP Address:- " + hostAddress);
+		String hostName = inetAddress.getHostName();
+		System.out.println("Host Name:- " + hostName);
+
+
+
+		System.setProperty("mock_http_host", hostAddress);
 		RuntimeParameters.MOCK_HTTP_HOST.refreshParameterValue();
-		assertEquals("System parameters for 'mock_http_host'", "192.168.1.104", RuntimeParameters.MOCK_HTTP_HOST.getValue());
+		assertEquals("System parameters for 'mock_http_host'", hostAddress, RuntimeParameters.MOCK_HTTP_HOST.getValue());
 		
 		System.setProperty("mock_http_port", WIREMOCK_STANDALONE_PORT);
 		RuntimeParameters.MOCK_HTTP_PORT.refreshParameterValue();
@@ -39,7 +48,7 @@ public class DriverManagerTest_standaloneWiremock extends BaseTest {
 		
 		WireMock driver = DriverManager.getDriverVirtualService();
 		assertEquals("Mock server for http does not run o specified port", WIREMOCK_STANDALONE_PORT, String.valueOf(DriverManager.getHttpPort()));
-		assertEquals("Mock server for http does not run o specific hostname", "192.168.1.104", DriverManager.getHttpHost());
+		assertEquals("Mock server for http does not run o specific hostname", hostAddress, DriverManager.getHttpHost());
 	}
 	
 	@Test
