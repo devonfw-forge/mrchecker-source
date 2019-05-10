@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 public class DriverManagerTest_standaloneWiremock extends BaseTest {
 
 	private static Process process_wiremock = null;
-	private static final String WIREMOCK_STANDALONE_PORT = "8100";
+	private static final String WIREMOCK_STANDALONE_PORT = "8111";
 
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
@@ -44,7 +44,7 @@ public class DriverManagerTest_standaloneWiremock extends BaseTest {
 		
 		System.setProperty("mock_http_port", WIREMOCK_STANDALONE_PORT);
 		RuntimeParameters.MOCK_HTTP_PORT.refreshParameterValue();
-		assertEquals("Runtime Parameter for MOCK_HTTP_PORT is incorrect", "8100", RuntimeParameters.MOCK_HTTP_PORT.getValue());
+		assertEquals("Runtime Parameter for MOCK_HTTP_PORT is incorrect", "8111", RuntimeParameters.MOCK_HTTP_PORT.getValue());
 		
 		WireMock driver = DriverManager.getDriverVirtualService();
 		assertEquals("Mock server for http does not run o specified port", WIREMOCK_STANDALONE_PORT, String.valueOf(DriverManager.getHttpPort()));
