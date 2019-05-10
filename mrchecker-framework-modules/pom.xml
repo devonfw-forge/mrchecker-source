@@ -71,8 +71,8 @@
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
         <!-- Report maven generator -->
-        <maven-site-plugin.version>3.3</maven-site-plugin.version>
-        <maven-project-info-reports-plugin.version>2.9</maven-project-info-reports-plugin.version>
+        <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
+        <maven-project-info-reports-plugin.version>3.0</maven-project-info-reports-plugin.version>
         <dependency.locations.enabled>false</dependency.locations.enabled>
 
         <!-- Java settings -->
