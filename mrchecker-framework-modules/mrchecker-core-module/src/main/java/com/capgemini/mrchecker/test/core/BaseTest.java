@@ -40,6 +40,7 @@ public abstract class BaseTest implements IBaseTest {
 	
 	public BaseTest() {
 		getAnalytics().sendClassName();
+		System.out.println("BaseTest constructor");
 	}
 	
 	public static IEnvironmentService getEnvironmentService() {
