@@ -62,7 +62,7 @@
         <version>0.0.1-SNAPSHOT</version>
         
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
-	    <mrchecker-core-module.version>4.12.1.1</mrchecker-core-module.version>
+	    <mrchecker-core-module.version>4.12.0.9-SNAPSHOT</mrchecker-core-module.version>
         <jpa.version>2.2</jpa.version>
         <jpa.version>2.2</jpa.version>
 
@@ -87,11 +87,13 @@
             <artifactId>javax.persistence-api</artifactId>
             <version>${jpa.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>5.2.17.Final</version>
         </dependency>
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -112,6 +114,8 @@
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-junit4</artifactId>
         </dependency>
+
+
     </dependencies>
 
 
