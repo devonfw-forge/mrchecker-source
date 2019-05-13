@@ -20,25 +20,24 @@ import io.restassured.http.ContentType;
 
 public class StubREST_Builder {
 
-	private final int httpPort;
-	private final String httpHost;
 	// required parameters
 	private String endpointURI;
-	
+
 	// optional parameters
 	private int statusCode;
-	
+
+	//Driver config
+	private final String endpointBaseUri;
+
 	public String getEndpointURI() {
 		return endpointURI;
 	}
 
-	public String getHost() {
-		return this.httpHost;
+	public String getEndpointBaseUri() {
+		return this.endpointBaseUri;
 	}
 
-	public int getPort() {
-		return this.httpPort;
-	}
+
 	
 	public int getStatusCode() {
 		return statusCode;
@@ -47,8 +46,8 @@ public class StubREST_Builder {
 	private StubREST_Builder(StubBuilder builder) {
 		this.endpointURI = builder.endpointURI;
 		this.statusCode = builder.statusCode;
-		this.httpHost = builder.httpHost;
-		this.httpPort = builder.httpPort;
+		this.endpointBaseUri = builder.endpointBaseUri;
+
 	}
 	
 	// Builder Class
@@ -62,8 +61,7 @@ public class StubREST_Builder {
 		private String	response	= "{ \"message\": \"Hello\" }";
 
 		///Driver config
-		private String			httpHost;
-		private int				httpPort;
+		private String			endpointBaseUri;
 
 		public StubBuilder(String endpointURI) {
 			this.endpointURI = endpointURI;
@@ -84,11 +82,7 @@ public class StubREST_Builder {
 			
 			// Bind all stubbers to running WireMock client connection
 			WireMock driver = DriverManager.getDriverVirtualService();
-			this.httpHost= DriverManager.getHttpHost();
-			this.httpPort = DriverManager.getHttpPort();
-
-
-
+			this.endpointBaseUri = DriverManager.getEndpointBaseUri();
 			WireMock.configureFor(driver);
 			
 			// GET

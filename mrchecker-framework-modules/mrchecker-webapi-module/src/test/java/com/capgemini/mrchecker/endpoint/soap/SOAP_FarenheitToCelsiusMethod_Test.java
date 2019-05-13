@@ -23,22 +23,21 @@ import static org.junit.Assert.assertThat;
 
 public class SOAP_FarenheitToCelsiusMethod_Test extends BaseTest {
 
-	private static String endpointBaseUri;
 
 	@BeforeClass
 	public static void beforeClass() {
-		DriverManager.clearAllDrivers();
-
-		// Start Virtual Server
-		BFLogger.logInfo("#1 Start wiremock server");
-		WireMock driverVirtualService = DriverManager.getDriverVirtualService();
-
-		// Get Virtual Server running http port
-		int httpPort = DriverManager.getHttpPort();
-		String baseURI = DriverManager.getHttpHost();
-		endpointBaseUri = baseURI + ":" + httpPort;
-
-		RestAssured.config = new RestAssuredConfig().encoderConfig(new EncoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false));
+//		DriverManager.clearAllDrivers();
+//
+//		// Start Virtual Server
+//		BFLogger.logInfo("#1 Start wiremock server");
+//		WireMock driverVirtualService = DriverManager.getDriverVirtualService();
+//
+//		// Get Virtual Server running http port
+//		int httpPort = DriverManager.getHttpPort();
+//		String baseURI = DriverManager.getHttpHost();
+//		endpointBaseUri = baseURI + ":" + httpPort;
+//
+//		RestAssured.config = new RestAssuredConfig().encoderConfig(new EncoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false));
 
 	}
 
@@ -64,11 +63,14 @@ public class SOAP_FarenheitToCelsiusMethod_Test extends BaseTest {
 		 */
 		BFLogger.logInfo("#3 Add resource to wiremock server");
 		String endpointUriRegExp = "/tempconvert.asmx.*";
-		new StubSOAP_Builder.StubBuilder(endpointUriRegExp)
+		StubSOAP_Builder stubSOAP_builder = new StubSOAP_Builder.StubBuilder(endpointUriRegExp)
 				.setRequestXPathQuery(requestXPathQuery)
 				.setResponse(responseMessage)
 				.setStatusCode(200)
 				.build();
+
+		// Get Virtual Server running endpoint URI
+		String endpointBaseUri = stubSOAP_builder.getEndpointBaseUri();
 
 		/*
 		 * ----------
@@ -114,11 +116,15 @@ public class SOAP_FarenheitToCelsiusMethod_Test extends BaseTest {
 		BFLogger.logInfo("#3 Add resource to wiremock server");
 		String endpointUriRegExp = "/tempconvert.asmx\\?op=FahrenheitToCelsius";
 
-		new StubSOAP_Builder.StubBuilder(endpointUriRegExp)
+		StubSOAP_Builder stubSOAP_builder = new StubSOAP_Builder.StubBuilder(endpointUriRegExp)
 				.setRequestXPathQuery(requestXPathQuery)
 				.setResponse(responseMessage)
 				.setStatusCode(200)
 				.build();
+
+		// Get Virtual Server running endpoint URI
+		String endpointBaseUri = stubSOAP_builder.getEndpointBaseUri();
+
 
 		/*
 		 * ----------

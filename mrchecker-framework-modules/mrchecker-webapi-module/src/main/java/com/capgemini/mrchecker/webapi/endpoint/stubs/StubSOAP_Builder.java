@@ -21,6 +21,9 @@ public class StubSOAP_Builder {
 	
 	// optional parameters
 	private int statusCode;
+
+	//Driver config
+	private final String endpointBaseUri;
 	
 	public String getEndpointURI() {
 		return endpointURI;
@@ -29,10 +32,15 @@ public class StubSOAP_Builder {
 	public int getStatusCode() {
 		return statusCode;
 	}
-	
+
+	public String getEndpointBaseUri() {
+		return this.endpointBaseUri;
+	}
+
 	private StubSOAP_Builder(StubBuilder builder) {
 		this.endpointURI = builder.endpointURI;
 		this.statusCode = builder.statusCode;
+		this.endpointBaseUri = builder.endpointBaseUri;
 	}
 	
 	// Builder Class
@@ -45,11 +53,14 @@ public class StubSOAP_Builder {
 		private int		statusCode			= 200;
 		private String	response			= "Hello";
 		private String	requestXPathQuery	= "";
-		
+
+		///Driver config
+		private String			endpointBaseUri;
+
 		public StubBuilder(String endpointURI) {
 			this.endpointURI = endpointURI;
 		}
-		
+
 		public StubBuilder setStatusCode(int statusCode) {
 			this.statusCode = statusCode;
 			return this;
@@ -70,6 +81,7 @@ public class StubSOAP_Builder {
 			
 			// Bind all stubbers to running WireMock client connection
 			WireMock driver = DriverManager.getDriverVirtualService();
+			this.endpointBaseUri = DriverManager.getEndpointBaseUri();
 			WireMock.configureFor(driver);
 			
 			// GET

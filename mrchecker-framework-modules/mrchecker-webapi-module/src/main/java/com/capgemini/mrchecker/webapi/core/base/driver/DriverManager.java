@@ -89,6 +89,11 @@ public class DriverManager {
 		VirtualizedService virtualizedService = getVirtualizedService();
 		return virtualizedService.getHttpHost();
 	}
+
+	public static String getEndpointBaseUri() {
+		VirtualizedService virtualizedService = getVirtualizedService();
+		return virtualizedService.getEndpointBaseUri();
+	}
 	
 	private static VirtualizedService getVirtualizedService() {
 		VirtualizedService virtualizedService = driverVirtualizedService.get();

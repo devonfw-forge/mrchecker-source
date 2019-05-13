@@ -33,9 +33,15 @@ public class VirtualizedService {
 	public String getHttpHost() {
 		return httpHost;
 	}
-	
+
+	public String getEndpointBaseUri(){
+		return getHttpHost() + ":" + getHttpPort();
+	}
+
+
+
 	@Override
 	public String toString() {
-		return "Service for host " + getHttpHost() + ":" + getHttpPort();
+		return "Service for host " + getEndpointBaseUri();
 	}
 };

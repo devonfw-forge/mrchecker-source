@@ -43,10 +43,9 @@ public class REST_FarenheitToCelsiusMethod_Test extends BaseTest {
 				.setStatusCode(200)
 				.build();
 
-		// Get Virtual Server running http port
-		String baseURI = stubREST_builder.getHost();
-		int httpPort = stubREST_builder.getPort();
-		endpointBaseUri = baseURI + ":" + httpPort;
+		// Get Virtual Server running endpoint URI
+		endpointBaseUri = stubREST_builder.getEndpointBaseUri();
+
 
 	}
 
