@@ -19,7 +19,9 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import io.restassured.http.ContentType;
 
 public class StubREST_Builder {
-	
+
+	private final int httpPort;
+	private final String httpHost;
 	// required parameters
 	private String endpointURI;
 	
@@ -29,6 +31,14 @@ public class StubREST_Builder {
 	public String getEndpointURI() {
 		return endpointURI;
 	}
+
+	public String getHost() {
+		return this.httpHost;
+	}
+
+	public int getPort() {
+		return this.httpPort;
+	}
 	
 	public int getStatusCode() {
 		return statusCode;
@@ -37,6 +47,8 @@ public class StubREST_Builder {
 	private StubREST_Builder(StubBuilder builder) {
 		this.endpointURI = builder.endpointURI;
 		this.statusCode = builder.statusCode;
+		this.httpHost = builder.httpHost;
+		this.httpPort = builder.httpPort;
 	}
 	
 	// Builder Class
@@ -48,7 +60,11 @@ public class StubREST_Builder {
 		// optional parameters
 		private int		statusCode	= 200;
 		private String	response	= "{ \"message\": \"Hello\" }";
-		
+
+		///Driver config
+		private String			httpHost;
+		private int				httpPort;
+
 		public StubBuilder(String endpointURI) {
 			this.endpointURI = endpointURI;
 		}
@@ -68,6 +84,11 @@ public class StubREST_Builder {
 			
 			// Bind all stubbers to running WireMock client connection
 			WireMock driver = DriverManager.getDriverVirtualService();
+			this.httpHost= DriverManager.getHttpHost();
+			this.httpPort = DriverManager.getHttpPort();
+
+
+
 			WireMock.configureFor(driver);
 			
 			// GET
