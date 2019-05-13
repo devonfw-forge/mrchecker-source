@@ -29,6 +29,8 @@ public class SOAP_FarenheitToCelsiusMethod_Test extends BaseTest {
 	
 	@BeforeClass
 	public static void beforeClass() {
+		DriverManager.clearAllDrivers();
+
 		// Start Virtual Server
 		BFLogger.logInfo("#1 Start wiremock server");
 		WireMock driverVirtualService = DriverManager.getDriverVirtualService();
