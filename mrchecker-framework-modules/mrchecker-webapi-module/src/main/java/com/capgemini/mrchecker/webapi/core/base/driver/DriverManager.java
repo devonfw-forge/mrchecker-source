@@ -93,9 +93,11 @@ public class DriverManager {
 	private static VirtualizedService getVirtualizedService() {
 		VirtualizedService virtualizedService = driverVirtualizedService.get();
 		if (null == virtualizedService) {
+			BFLogger.logDebug("!!!virtualizedService null not");
 			virtualizedService = createDriverVirtualServer();
 			driverVirtualizedService.set(virtualizedService);
 		}
+		BFLogger.logDebug("!!!virtualizedService");
 		return virtualizedService;
 	}
 	
