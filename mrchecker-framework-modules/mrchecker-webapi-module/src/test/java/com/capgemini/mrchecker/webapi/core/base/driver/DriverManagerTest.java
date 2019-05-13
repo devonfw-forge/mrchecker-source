@@ -21,6 +21,12 @@ public class DriverManagerTest extends BaseTest {
 	@Override
 	public void tearDown() {
 		DriverManager.closeDriverVirtualServer();
+
+		System.clearProperty("mock_http_host");
+		RuntimeParameters.MOCK_HTTP_HOST.refreshParameterValue();
+
+		System.clearProperty("mock_http_port");
+		RuntimeParameters.MOCK_HTTP_PORT.refreshParameterValue();
 	}
 
 

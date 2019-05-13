@@ -1,6 +1,7 @@
 package com.capgemini.mrchecker.webapi.core.base.driver;
 
 import com.capgemini.mrchecker.test.core.BaseTest;
+import com.capgemini.mrchecker.test.core.base.runtime.RuntimeParametersCore;
 import com.capgemini.mrchecker.webapi.core.base.runtime.RuntimeParameters;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.AfterClass;
@@ -93,6 +94,12 @@ public class DriverManagerTest_standaloneWiremock extends BaseTest {
 			//No need to catch Exception
 		}
 		DriverManager.clearAllDrivers();
+
+		System.clearProperty("mock_http_host");
+		RuntimeParameters.MOCK_HTTP_HOST.refreshParameterValue();
+
+		System.clearProperty("mock_http_port");
+		RuntimeParameters.MOCK_HTTP_PORT.refreshParameterValue();
 
 	}
 
