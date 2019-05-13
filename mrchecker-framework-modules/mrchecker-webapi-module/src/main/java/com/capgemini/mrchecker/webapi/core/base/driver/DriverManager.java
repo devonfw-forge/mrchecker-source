@@ -3,10 +3,14 @@ package com.capgemini.mrchecker.webapi.core.base.driver;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static io.restassured.RestAssured.given;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.capgemini.mrchecker.webapi.core.base.properties.PropertiesFileSettings;
 import com.capgemini.mrchecker.webapi.core.base.runtime.RuntimeParameters;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.common.FatalStartupException;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.google.inject.Inject;
@@ -20,7 +24,7 @@ import io.restassured.specification.RequestSpecification;
 
 public class DriverManager {
 	
-	private static ThreadLocal<WireMockServer> driversVirtualServer = new ThreadLocal<WireMockServer>();
+	private static ThreadLocal<VirtualizedService> driverVirtualizedService = new ThreadLocal<VirtualizedService>();
 	
 	private static PropertiesFileSettings propertiesFileSettings;
 	
@@ -58,17 +62,46 @@ public class DriverManager {
 	}
 	
 	public static void clearAllDrivers() {
-		driversVirtualServer.remove();
+		driverVirtualizedService = new ThreadLocal<VirtualizedService>();
+//		driverVirtualizedService.remove();
 	}
 	
-	public static WireMockServer getDriverVirtualService() {
-		WireMockServer driver = driversVirtualServer.get();
-		if (driver == null) {
-			driver = createDriverVirtualServer();
-			driversVirtualServer.set(driver);
-			BFLogger.logDebug("driver:" + driver.toString());
-		}
+	public static WireMock getDriverVirtualService() {
+		VirtualizedService virtualizedService = getVirtualizedService();
+		WireMock driver = virtualizedService.getDriver();
+		BFLogger.logDebug("Driver for server: " + driver.toString());
 		return driver;
+	}
+	
+	public static WireMockServer getDriverVirtualServerService() {
+		VirtualizedService virtualizedService = getVirtualizedService();
+		WireMockServer driver = virtualizedService.getDriverServer();
+		BFLogger.logDebug("Driver for virtual server: " + driver.toString());
+		return driver;
+	}
+	
+	public static int getHttpPort() {
+		VirtualizedService virtualizedService = getVirtualizedService();
+		return virtualizedService.getHttpPort();
+	}
+	
+	public static String getHttpHost() {
+		VirtualizedService virtualizedService = getVirtualizedService();
+		return virtualizedService.getHttpHost();
+	}
+
+	public static String getEndpointBaseUri() {
+		VirtualizedService virtualizedService = getVirtualizedService();
+		return virtualizedService.getEndpointBaseUri();
+	}
+	
+	private static VirtualizedService getVirtualizedService() {
+		VirtualizedService virtualizedService = driverVirtualizedService.get();
+		if (null == virtualizedService) {
+			virtualizedService = createDriverVirtualServer();
+			driverVirtualizedService.set(virtualizedService);
+		}
+		return virtualizedService;
 	}
 	
 	public static RequestSpecification getDriverWebAPI() {
@@ -78,19 +111,27 @@ public class DriverManager {
 	}
 	
 	public static void closeDriverVirtualServer() {
-		WireMockServer driverVirtualServer = driversVirtualServer.get();
-		if (driverVirtualServer == null) {
-			BFLogger.logDebug("closeDriverVirtualServer() was called but there was no driver for this thread.");
-		} else {
+		VirtualizedService virtualizedService = driverVirtualizedService.get();
+		
+		if (null != virtualizedService) {
+			WireMock driver = virtualizedService.getDriver();
+			WireMockServer driverServer = virtualizedService.getDriverServer();
+			BFLogger.logDebug(
+					"Closing communication to Virualize Service under: " + driver.toString());
+			
 			try {
-				BFLogger.logDebug("Closing Mock Server under http://localhost:" + driverVirtualServer.port() + " https://localhost:" + driverVirtualServer.httpsPort());
-				driverVirtualServer.stop();
+				if (null != driver) {
+					// driver.shutdown();
+				}
+				
+				if (null != driverServer) {
+					driverServer.stop();
+				}
+				
 			} catch (Exception e) {
 				BFLogger.logDebug("Ooops! Something went wrong while closing the driver");
-				e.printStackTrace();
 			} finally {
-				driverVirtualServer = null;
-				driversVirtualServer.remove();
+				clearAllDrivers();
 			}
 		}
 	}
@@ -104,58 +145,93 @@ public class DriverManager {
 		return given();
 	}
 	
-	static WireMockServer createDriverVirtualServer() {
+	static VirtualizedService createDriverVirtualServer() {
 		BFLogger.logDebug("Creating new Mock Server");
 		
-		WireMockServer driver = Driver.WIREMOCK.getDriver();
+		VirtualizedService virtualizedService = Driver.WIREMOCK.getDriver();
 		
-		BFLogger.logDebug("Mock server running under http://localhost:" + driver.port() + " https://localhost:" + driver.httpsPort());
-		return driver;
+		BFLogger.logDebug("Running: " + virtualizedService.toString());
+		return virtualizedService;
 	}
 	
 	private enum Driver {
 		
 		WIREMOCK {
 			
-			private WireMockConfiguration wireMockConfig = wireMockConfig().extensions(new BodyTransformer());
+			public VirtualizedService getDriver() throws FatalStartupException {
+				
+				WireMock driver = null;
+				WireMockServerMrChecker driverServer = null;
+				
+				int httpPort = getPort();
+				String httpHost = getHost();
+				
+				if ("".equals(httpHost) || "http://localhost".equals(httpHost) || "https://localhost".equals(httpHost)) {
+					WireMockConfiguration wireMockConfig = wireMockConfig().extensions(new BodyTransformer());
+					
+					wireMockConfig.port(httpPort);
+					driverServer = new WireMockServerMrChecker(wireMockConfig);
+					
+					try {
+						driverServer.start();
+					} catch (FatalStartupException e) {
+						BFLogger.logError(e.getMessage() + "host " + httpHost + ":" + httpPort);
+						throw new FatalStartupException(e);
+					}
+					driver = driverServer.getClient();
+				} else {
+					driver = new WireMock(httpHost, httpPort);
+					driver.startStubRecording("http://example.mocklab.io");
+					driver.stopStubRecording();
+				}
+				return new VirtualizedService(driver, driverServer, httpHost, httpPort);
+				
+			}
 			
-			public WireMockServer getDriver() throws FatalStartupException {
-				
-				int portHttp = RuntimeParameters.MOCK_HTTP_PORT.getValue()
-						.isEmpty() ? 0 : getInteger(RuntimeParameters.MOCK_HTTP_PORT.getValue());
-				
-				int portHttps = RuntimeParameters.MOCK_HTTPS_PORT.getValue()
-						.isEmpty() ? 0 : getInteger(RuntimeParameters.MOCK_HTTPS_PORT.getValue());
-				
-				setHttpPort(portHttp);
-				setHttpsPort(portHttps);
-				
-				WireMockServer driver = new WireMockServer(wireMockConfig);
-				
+			private String getHost() {
+				return RuntimeParameters.MOCK_HTTP_HOST.getValue();
+			}
+			
+			private int getPort() {
+				return RuntimeParameters.MOCK_HTTP_PORT.getValue()
+						.isEmpty()
+								? this.findFreePort()
+								: getInteger(RuntimeParameters.MOCK_HTTP_PORT.getValue());
+			}
+			
+			/**
+			 * Returns a free port number on localhost.
+			 * Heavily inspired from org.eclipse.jdt.launching.SocketUtil (to avoid a dependency to JDT just because of
+			 * this).
+			 * Slightly improved with close() missing in JDT. And throws exception instead of returning -1.
+			 * 
+			 * @return a free port number on localhost
+			 * @throws IllegalStateException
+			 *             if unable to find a free port
+			 */
+			private int findFreePort() throws IllegalStateException {
+				ServerSocket socket = null;
 				try {
-					driver.start();
-				} catch (FatalStartupException e) {
-					BFLogger.logError(e.getMessage() + " http_port=" + RuntimeParameters.MOCK_HTTP_PORT.getValue() + " https_port=" + RuntimeParameters.MOCK_HTTPS_PORT.getValue());
-					throw new FatalStartupException(e);
+					socket = new ServerSocket(0);
+					socket.setReuseAddress(true);
+					int port = socket.getLocalPort();
+					try {
+						socket.close();
+					} catch (IOException e) {
+						// Ignore IOException on close()
+					}
+					return port;
+				} catch (IOException e) {
+				} finally {
+					if (socket != null) {
+						try {
+							socket.close();
+						} catch (IOException e) {
+							// Ignore IOException on close()
+						}
+					}
 				}
-				return driver;
-				
-			}
-			
-			private void setHttpPort(int portHttp) {
-				if (0 != portHttp) {
-					this.wireMockConfig.port(portHttp);
-				} else {
-					this.wireMockConfig.dynamicPort();
-				}
-			}
-			
-			private void setHttpsPort(int portHttps) {
-				if (0 != portHttps) {
-					this.wireMockConfig.httpsPort(portHttps);
-				} else {
-					this.wireMockConfig.dynamicHttpsPort();
-				}
+				throw new IllegalStateException("Could not find a free TCP/IP port to start embedded Jetty HTTP Server on");
 			}
 			
 			private int getInteger(String value) {
@@ -170,7 +246,7 @@ public class DriverManager {
 			
 		};
 		
-		public WireMockServer getDriver() {
+		public VirtualizedService getDriver() {
 			return null;
 		}
 		

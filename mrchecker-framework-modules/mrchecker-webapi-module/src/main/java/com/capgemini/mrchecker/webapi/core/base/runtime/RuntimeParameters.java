@@ -12,7 +12,8 @@ public enum RuntimeParameters implements RuntimeParametersI {
 	
 	// NAME(<maven-variable-name>, <default-value>)
 	MOCK_HTTP_PORT("mock_http_port", ""), // -Dmock_http_port="" Default random
-	MOCK_HTTPS_PORT("mock_https_port", ""); // -Dmock_https_port="" Default random
+	MOCK_HTTP_HOST("mock_http_host", "http://localhost"), // -Dmock_http_host="" Default localhost
+	;
 	
 	private String	paramName;
 	private String	paramValue;
