@@ -92,6 +92,7 @@ public class DriverManagerTest_standaloneWiremock extends BaseTest {
 		}catch (Exception e){
 			//No need to catch Exception
 		}
+		DriverManager.clearAllDrivers();
 
 	}
 

@@ -3,6 +3,7 @@ package com.capgemini.mrchecker.webapi.core.base.driver;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import com.capgemini.mrchecker.test.core.BaseTest;
@@ -11,7 +12,23 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.common.FatalStartupException;
 
 public class DriverManagerTest extends BaseTest {
-	
+
+	@Override
+	public void setUp() {
+		DriverManager.closeDriverVirtualServer();
+	}
+
+	@Override
+	public void tearDown() {
+		DriverManager.closeDriverVirtualServer();
+	}
+
+
+	@AfterClass
+	public static void afterAll(){
+		DriverManager.clearAllDrivers();
+	}
+
 	@Test
 	public void testRuntimeEnvironmentHostHttp() {
 		System.setProperty("mock_http_host", "http://test.org");
@@ -82,14 +99,5 @@ public class DriverManagerTest extends BaseTest {
 		}
 	}
 	
-	@Override
-	public void setUp() {
-		DriverManager.closeDriverVirtualServer();
-	}
-	
-	@Override
-	public void tearDown() {
-		DriverManager.closeDriverVirtualServer();
-	}
-	
+
 }

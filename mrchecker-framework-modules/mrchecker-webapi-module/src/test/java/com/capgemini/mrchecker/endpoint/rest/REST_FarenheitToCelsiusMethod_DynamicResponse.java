@@ -21,7 +21,6 @@ public class REST_FarenheitToCelsiusMethod_DynamicResponse extends BaseTest {
 	
 	@BeforeClass
 	public static void beforeClass() {
-		
 		// Start Virtual Server
 		WireMock driverVirtualService = DriverManager.getDriverVirtualService();
 		
