@@ -62,7 +62,8 @@ public class DriverManager {
 	}
 	
 	public static void clearAllDrivers() {
-		driverVirtualizedService.remove();
+		driverVirtualizedService = new ThreadLocal<VirtualizedService>();
+//		driverVirtualizedService.remove();
 	}
 	
 	public static WireMock getDriverVirtualService() {
