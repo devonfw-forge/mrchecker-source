@@ -40,6 +40,7 @@ public abstract class BaseTest implements IBaseTest {
 	
 	public BaseTest() {
 		getAnalytics().sendClassName();
+		BFLogger.logDebug("BaseTest");
 	}
 	
 	public static IEnvironmentService getEnvironmentService() {
