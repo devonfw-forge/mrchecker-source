@@ -82,7 +82,7 @@
         <java.compiler.version>1.8</java.compiler.version>
 
         <!-- Tests executors -->
-        <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
         <surefire.provider.version>1.0.0-M2</surefire.provider.version>
         <thread.count>8</thread.count>
 
