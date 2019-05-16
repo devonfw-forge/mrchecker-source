@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.capgemini.mrchecker</groupId>
     <artifactId>mrchecker-test-framework</artifactId>
@@ -38,12 +38,13 @@
         <url>http://github.com/devonfw/devonfw-testing/tree/develop</url>
     </scm>
 
+
     <modules>
-<!--         <module>mrchecker-core-module</module>
-        <module>mrchecker-selenium-module</module>
-        <module>mrchecker-security-module</module>
-        <module>mrchecker-webapi-module</module>
-        <module>mrchecker-database-module</module> -->
+        <!--         <module>mrchecker-core-module</module>
+                <module>mrchecker-selenium-module</module>
+                <module>mrchecker-security-module</module>
+                <module>mrchecker-webapi-module</module>
+                <module>mrchecker-database-module</module> -->
         <!-- <module>build-tools</module> -->
     </modules>
 
@@ -76,7 +77,6 @@
 
         <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
         <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
-        <dependency.locations.enabled>false</dependency.locations.enabled>
 
         <!-- Java settings -->
         <java.compiler.version>1.8</java.compiler.version>
@@ -109,11 +109,6 @@
 
         <!--This dependency is necessary for Rest assured plugin. -->
         <rest-assured.version>3.0.6</rest-assured.version>
-
-        <!-- Allure Annotations -->
-        <allure-junit4-listener.version>2.6.0</allure-junit4-listener.version> <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-junit4 -->
-
-
     </properties>
 
 
@@ -197,16 +192,6 @@
                 <version>${rest-assured.version}</version>
             </dependency>
 
-
-            <!--This dependency is necessary for Allure generator plugin. -->
-            <dependency>
-                <!-- Test listener. Binds Junit exec to Allure annotation -->
-                <groupId>io.qameta.allure</groupId>
-                <artifactId>allure-junit4</artifactId>
-                <version>${allure-junit4-listener.version}</version>
-            </dependency>
-
-
         </dependencies>
     </dependencyManagement>
 
@@ -214,7 +199,6 @@
     <!-- Build goals/actions -->
     <build>
         <pluginManagement>
-
             <plugins>
 
                 <!-- CLEAN -->
@@ -262,7 +246,6 @@
                     </configuration>
                     <executions>
                         <execution>
-                            <id></id>
                             <phase>verify</phase>
                             <goals>
                                 <goal>validate</goal>
@@ -270,6 +253,26 @@
                         </execution>
                     </executions>
                 </plugin>
+
+                <!-- RUN CLASSIC JUNIT TESTS -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                    <configuration>
+                        <parallel>classes</parallel>
+                        <perCoreThreadCount>false</perCoreThreadCount>
+                        <threadCount>${thread.count}</threadCount>
+                        <includes>
+                            <include>**/*.class</include>
+                        </includes>
+                        <excludes>
+                            <exclude>**/RawTest.*</exclude>
+                            <exclude>**/OutboxDocumentTest.*</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+
 
                 <!-- Generate report for maven site goal -->
                 <plugin>
@@ -286,7 +289,9 @@
 
 
             </plugins>
+
         </pluginManagement>
+
     </build>
 
     <profiles>
@@ -433,6 +438,23 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-project-info-reports-plugin</artifactId>
                         <version>${maven-project-info-reports-plugin.version}</version>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>dependencies</report>
+                                    <report>index</report>
+                                    <report>issue-management</report>
+                                    <report>licenses</report>
+                                    <report>mailing-lists</report>
+                                    <report>modules</report>
+                                    <report>plugin-management</report>
+                                    <report>plugins</report>
+                                    <report>team</report>
+                                    <report>scm</report>
+                                    <report>summary</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
                     </plugin>
                 </plugins>
             </reporting>
@@ -440,7 +462,6 @@
         </profile>
 
 
-        <!-- RUN CLASSIC JUNIT TESTS -->
         <profile>
             <id>default</id>
             <activation>
@@ -448,30 +469,62 @@
             </activation>
             <build>
                 <plugins>
+
+                    <!-- Validate software environment, like Java, Maven version -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${maven-surefire-plugin.version}</version>
-                        <configuration>
-                            <testFailureIgnore>true</testFailureIgnore>
-                            <parallel>classes</parallel>
-                            <perCoreThreadCount>false</perCoreThreadCount>
-                            <threadCount>${thread.count}</threadCount>
-                            <includes>
-                                <include>**/*.class</include>
-                            </includes>
-                            <excludes>
-                                <exclude>**/RawTest.*</exclude>
-                                <exclude>**/OutboxDocumentTest.*</exclude>
-                            </excludes>
-                        </configuration>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <version>3.0.0-M2</version>
+                        <executions>
+                            <execution>
+                                <id>default-cli</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireMavenVersion>
+                                            <version>3.3.9</version>
+                                        </requireMavenVersion>
+                                        <requireJavaVersion>
+                                            <version>1.8</version>
+                                        </requireJavaVersion>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
-
-
-
                 </plugins>
             </build>
         </profile>
+
     </profiles>
+
+    <reporting>
+        <plugins>
+            <!-- Report project information -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${maven-project-info-reports-plugin.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>index</report>
+                            <report>issue-management</report>
+                            <report>licenses</report>
+                            <report>mailing-lists</report>
+                            <report>modules</report>
+                            <report>plugin-management</report>
+                            <report>plugins</report>
+                            <report>team</report>
+                            <report>scm</report>
+                            <report>summary</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>
