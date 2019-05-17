@@ -67,7 +67,7 @@
 
 
     <properties>
-        <version>2.4.1-SNAPSHOT</version>
+        <version>2.4.1</version>
 
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
