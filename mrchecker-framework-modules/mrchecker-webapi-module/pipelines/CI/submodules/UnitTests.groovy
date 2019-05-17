@@ -2,14 +2,14 @@ def call(){
 		
 //# Unit test run
     stage('Unit test'){
-        def failUnitTeststage = false
+        def failStage = false
         try {
             sh """
                 cd ${env.APP_WORKSPACE}
                 mvn -q surefire:test -Dtest=${env.TEST_NAME} -Dthread.count=${env.THREAD_COUNT} -Denv=${env.ENVIRONMENT} ${env.MVN_PARAMETERS}
             """
         } catch (Exception e){
-            failUnitTeststage = true
+            failStage = true
         }
 
         try{
@@ -29,7 +29,7 @@ def call(){
             echo("No report generated. Reason: \n" + error);
         }
 
-        if(failUnitTeststage){
+        if(failStage){
             error("Some test cases are failing")
         }
     }
