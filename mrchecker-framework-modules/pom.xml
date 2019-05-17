@@ -106,6 +106,9 @@
 
         <!--This dependency is necessary for Rest assured plugin. -->
         <rest-assured.version>3.0.6</rest-assured.version>
+
+        <!-- Allure Annotations -->
+        <allure-junit4-listener.version>2.6.0</allure-junit4-listener.version> <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-junit4 -->
     </properties>
 
 
@@ -188,6 +191,15 @@
                 <artifactId>json-schema-validator</artifactId>
                 <version>${rest-assured.version}</version>
             </dependency>
+
+            <!--This dependency is necessary for Allure generator plugin. -->
+            <dependency>
+                <!-- Test listener. Binds Junit exec to Allure annotation -->
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-junit4</artifactId>
+                <version>${allure-junit4-listener.version}</version>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>
