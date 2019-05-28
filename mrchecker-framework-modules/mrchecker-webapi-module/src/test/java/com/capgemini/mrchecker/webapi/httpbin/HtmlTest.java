@@ -17,7 +17,7 @@ public class HtmlTest extends BasePageWebApiTest {
 	private HtmlPage htmlPage = new HtmlPage();
 
 	@Test
-	public void sendSimpleGETQuery() {
+	public void getHtmlPage() {
 		BFLogger.logInfo("Step 1 - Sending GET query to " + htmlPage.getEndpoint());
 		Response response = htmlPage.getHtmlDocument();
 
