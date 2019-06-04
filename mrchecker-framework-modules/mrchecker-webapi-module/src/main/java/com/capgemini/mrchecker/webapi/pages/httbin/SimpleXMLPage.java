@@ -22,7 +22,18 @@ public class SimpleXMLPage extends BasePageWebAPI {
 	private final static String XML_ELEMENT_DATE_VALUE = "Date of publication";
 	private final static String XML_ENCODING = "us-ascii";
 
-	
+	public static String getXmlDocumentRoot(){	return XML_DOCUMENT_ROOT;	}
+
+	public static int getItemsNumber() { return ITEMS_NUMBER;	}
+
+	public static String getXmlElementItem(){ return XML_ELEMENT_ITEM;	}
+
+	public static String getXmlElementDate(){ return XML_ELEMENT_DATE;	}
+
+	public static String getXmlElementDateValue(){ return XML_ELEMENT_DATE_VALUE;	}
+
+	public static String getXmlEncoding(){ return XML_ENCODING;	}
+
 	public Response getXMLDocument(){
 		return DriverManager.getDriverWebAPI().get(ENDPOINT);
 	}
@@ -31,11 +42,4 @@ public class SimpleXMLPage extends BasePageWebAPI {
 	public String getEndpoint() {
 		return ENDPOINT;
 	}
-
-	public static String getXmlDocumentRoot(){	return XML_DOCUMENT_ROOT;	}
-	public static int getItemsNumber() { return ITEMS_NUMBER;	}
-	public static String getXmlElementItem(){ return XML_ELEMENT_ITEM;	}
-	public static String getXmlElementDate(){ return XML_ELEMENT_DATE;	}
-	public static String getXmlElementDateValue(){ return XML_ELEMENT_DATE_VALUE;	}
-	public static String getXmlEncoding(){ return XML_ENCODING;	}
 }
