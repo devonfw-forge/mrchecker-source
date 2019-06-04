@@ -5,34 +5,30 @@ import com.capgemini.mrchecker.webapi.BasePageWebApiTest;
 import com.capgemini.mrchecker.webapi.pages.httbin.LinksPage;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.text.MessageFormat;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+@RunWith(JUnitParamsRunner.class)
 public class HtmlLinksTest extends BasePageWebApiTest {
 	private LinksPage linksPage = new LinksPage();
 
 	@Test
-	public void notFoundOnNegativeNParam() {
-		int n = -1;
-		int offset = 5;
-		validateNegativeParam(n, offset);
-	}
-
-	@Test
-	public void notFoundOnNegativeOffsetParam() {
-		int n = 5;
-		int offset = -1;
-		validateNegativeParam(n, offset);
-	}
-
-	private void validateNegativeParam(int n, int offset) {
+	@Parameters({
+			"-1, 5",
+			"5,  -1",
+			"-1, -1"
+	})
+	public void sendGetWithNegativeParamAndValidateNotFoundStatusCode(int n, int offset) {
 		BFLogger.logInfo(MessageFormat.format("Step 1 - Sending GET query to {0} with positive n param: {1} and negative offset: {2}", linksPage.getEndpoint(), n, offset));
 		Response response = linksPage.getHtmlDocument(n, offset);
 
@@ -41,27 +37,26 @@ public class HtmlLinksTest extends BasePageWebApiTest {
 	}
 
 	@Test
-	public void offsetBiggerThanNParam() {
-		int n = 2;
-		int offset = 5;
-		validateCorrectParams(n, offset);
-	}
-
-	@Test
-	public void offsetLowerThanNParam() {
-		int n = 10;
-		int offset = 5;
-		validateCorrectParams(n, offset);
-	}
-
-	private void validateCorrectParams(int n, int offset) {
+	@Parameters({
+			"10, 5",
+			"5,  10",
+			"10, 10",
+			"0,  5",
+			"5,  0",
+			"0, 0"
+	})
+	public void sendGetWithPositiveParamsAndValidateHTMLPage(int n, int offset) {
 		BFLogger.logInfo(MessageFormat.format("Step 1 - Sending GET query to {0} with n param: {1} and offset: {2}", linksPage.getEndpoint(), n, offset));
 		Response response = linksPage.getHtmlDocument(n, offset);
 
 		BFLogger.logInfo("Step 2 - Validate response status code (should be 200): ");
 		assertThat(response.statusCode(), is(200));
 
-		int properLinkCount = offset > n ? n : n - 1;
+		//When n is equal 0 there is still one link
+		int initLinkCount = n == 0 ? 1 : n;
+
+		//Offset cuts count of links if it is lower than n
+		int properLinkCount = offset >= initLinkCount ? initLinkCount : initLinkCount - 1;
 		BFLogger.logInfo("Step 3 - Validate links in html response - count should be " + properLinkCount);
 		ResponseBody body = response.body();
 		String htmlText = body.asString();
@@ -84,10 +79,10 @@ public class HtmlLinksTest extends BasePageWebApiTest {
 			if (j >= offset) {
 				j++;
 			}
-			assertThat(link.attr("href"), is("/links/" + n + "/" + j));
+			assertThat(link.attr("href"), is("/links/" + initLinkCount + "/" + j));
 		});
 
-		if (offset <= n) {
+		if (offset < n) {
 			BFLogger.logInfo(MessageFormat.format("Step 6 - Validate that there is text equal to offset: {0}", offset));
 			assertThat(doc.select("body").first().ownText(), is(String.valueOf(offset)));
 		}
