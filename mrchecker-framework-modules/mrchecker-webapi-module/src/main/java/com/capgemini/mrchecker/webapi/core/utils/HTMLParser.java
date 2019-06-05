@@ -61,6 +61,10 @@ public class HTMLParser {
 		return getHyperlinkElements().stream().map(s -> s.attr("href")).collect(Collectors.toList());
 	}
 
+	public String getBodyNoTagsText() {
+		return getTagElements("body").first().ownText();
+	}
+
 	public Elements getTagElements(String tag) {
 		return this.parsedHTML.select(tag);
 	}
