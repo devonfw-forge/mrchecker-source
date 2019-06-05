@@ -79,13 +79,13 @@ public class HtmlLinksTest extends BasePageWebApiTest {
 			if (j >= offset) {
 				j++;
 			}
-			assertThat(link, is("/links/" + initLinkCount + "/" + j));
+			assertThat(link, is(MessageFormat.format("/links/{0}/{1}", initLinkCount, j)));
 		});
 
 		//When offset cuts some link
 		if (offset < n) {
 			BFLogger.logInfo(MessageFormat.format("Step 6 - Validate that there is text equal to offset: {0}", offset));
-			assertThat(doc.select("body").first().ownText(), is(String.valueOf(offset)));
+			assertThat(parser.getBodyNoTagsText(), is(String.valueOf(offset)));
 		}
 	}
 }
