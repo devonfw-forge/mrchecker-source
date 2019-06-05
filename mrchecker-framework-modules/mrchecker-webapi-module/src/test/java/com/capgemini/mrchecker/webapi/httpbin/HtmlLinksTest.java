@@ -64,26 +64,19 @@ public class HtmlLinksTest extends BasePageWebApiTest {
 		Elements links = doc.select("a");
 		assertThat(links.size(), is(properLinkCount));
 
-		BFLogger.logInfo("Step 4 - Validate links in html response - text");
+		BFLogger.logInfo("Step 4 - Validate links in html response - text, href attribute");
 		links.forEach(link -> {
 			int j = links.indexOf(link);
 			if (j >= offset) {
 				j++;
 			}
 			assertThat(link.text(), is(String.valueOf(j)));
-		});
-
-		BFLogger.logInfo("Step 5 - Validate links in html response - href attribute");
-		links.forEach(link -> {
-			int j = links.indexOf(link);
-			if (j >= offset) {
-				j++;
-			}
 			assertThat(link.attr("href"), is("/links/" + initLinkCount + "/" + j));
 		});
 
+		//When offset cuts some link
 		if (offset < n) {
-			BFLogger.logInfo(MessageFormat.format("Step 6 - Validate that there is text equal to offset: {0}", offset));
+			BFLogger.logInfo(MessageFormat.format("Step 5 - Validate that there is text equal to offset: {0}", offset));
 			assertThat(doc.select("body").first().ownText(), is(String.valueOf(offset)));
 		}
 	}
