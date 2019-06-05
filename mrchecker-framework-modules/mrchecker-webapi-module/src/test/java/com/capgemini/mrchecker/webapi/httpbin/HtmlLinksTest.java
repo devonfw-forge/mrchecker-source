@@ -2,18 +2,17 @@ package com.capgemini.mrchecker.webapi.httpbin;
 
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.capgemini.mrchecker.webapi.BasePageWebApiTest;
+import com.capgemini.mrchecker.webapi.core.utils.HTMLParser;
 import com.capgemini.mrchecker.webapi.pages.httbin.LinksPage;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -60,23 +59,32 @@ public class HtmlLinksTest extends BasePageWebApiTest {
 		BFLogger.logInfo("Step 3 - Validate links in html response - count should be " + properLinkCount);
 		ResponseBody body = response.body();
 		String htmlText = body.asString();
-		Document doc = Jsoup.parse(htmlText);
-		Elements links = doc.select("a");
-		assertThat(links.size(), is(properLinkCount));
+		HTMLParser parser = HTMLParser.parse(htmlText);
+		assertThat(parser.getHyperlinkElementsCount(), is(properLinkCount));
 
-		BFLogger.logInfo("Step 4 - Validate links in html response - text, href attribute");
-		links.forEach(link -> {
-			int j = links.indexOf(link);
+		BFLogger.logInfo("Step 4 - Validate links in html response - text");
+		List<String> linksText = parser.getHyperlinkElementsText();
+		linksText.forEach(link -> {
+			int j = linksText.indexOf(link);
 			if (j >= offset) {
 				j++;
 			}
-			assertThat(link.text(), is(String.valueOf(j)));
-			assertThat(link.attr("href"), is("/links/" + initLinkCount + "/" + j));
+			assertThat(link, is(String.valueOf(j)));
+		});
+
+		BFLogger.logInfo("Step 5 - Validate links in html response - href attribute");
+		List<String> linksLink = parser.getHyperlinkElementsLink();
+		linksLink.forEach(link -> {
+			int j = linksLink.indexOf(link);
+			if (j >= offset) {
+				j++;
+			}
+			assertThat(link, is("/links/" + initLinkCount + "/" + j));
 		});
 
 		//When offset cuts some link
 		if (offset < n) {
-			BFLogger.logInfo(MessageFormat.format("Step 5 - Validate that there is text equal to offset: {0}", offset));
+			BFLogger.logInfo(MessageFormat.format("Step 6 - Validate that there is text equal to offset: {0}", offset));
 			assertThat(doc.select("body").first().ownText(), is(String.valueOf(offset)));
 		}
 	}
