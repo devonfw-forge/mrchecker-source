@@ -15,9 +15,18 @@ import org.xml.sax.SAXException;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.capgemini.mrchecker.webapi.BasePageWebApiTest;
 import com.capgemini.mrchecker.webapi.pages.httbin.SimpleXMLPage;
+import com.capgemini.mrchecker.webapi.pages.httbin.SimpleXMLPage.XML_ATTRIBUTE;
+import com.capgemini.mrchecker.webapi.pages.httbin.SimpleXMLPage.XML_ELEMENT;
 import com.capgemini.mrchecker.webapi.pages.utils.SimpleXMLParser;
 
 public class SimpleXMLTest extends BasePageWebApiTest {
+	
+	// data to check for in tests
+	private final static XML_ELEMENT	ROOT_ELEMENT			= XML_ELEMENT.SLIDESHOW;
+	private final static XML_ELEMENT	ITEM_ELEMENT			= XML_ELEMENT.ITEM;
+	private final static XML_ATTRIBUTE	DATE_ATTRIBUTE			= XML_ATTRIBUTE.DATE;
+	private final static String			XML_ENCODING			= "us-ascii";
+	private final static String			DATE_ATTRIBUTE_VALUE	= "Date of publication";
 	
 	private static SimpleXMLPage	simpleXMLPage	= new SimpleXMLPage();
 	private static Document			simpleXMLPageDocument;
@@ -40,39 +49,38 @@ public class SimpleXMLTest extends BasePageWebApiTest {
 	public void validateXMLPageRequestHTTPResponseCode() {
 		final int HTTP_OK = 200;
 		BFLogger.logInfo("Validating that request for " + simpleXMLPage.getEndpoint() + " completed with  status code: " + HTTP_OK);
-		assertThat(HTTP_OK, equalTo(simpleXMLPage.getXMLDocument()
-				.getStatusCode()));
-		
+		assertThat(simpleXMLPage.getXMLDocument()
+				.getStatusCode(), equalTo(HTTP_OK));
 	}
 	
 	@Test
 	public void validateRootElementName() {
-		BFLogger.logInfo("Validating that document root is " + simpleXMLPage.getXmlDocumentRoot());
-		assertThat(simpleXMLPage.getXmlDocumentRoot(), equalTo(simpleXMLPageDocument.getDocumentElement()
-				.getNodeName()));
+		BFLogger.logInfo("Validating that document root is " + ROOT_ELEMENT.getElementKey() + " element");
+		assertThat(simpleXMLPageDocument.getDocumentElement()
+				.getNodeName(), equalTo(ROOT_ELEMENT.getElementKey()));
 	}
 	
 	@Test
 	public void validateElementsNumberWhenSearchingByTag() {
-		BFLogger.logInfo("Validating that item element number is  " + simpleXMLPage.getItemsNumber());
-		NodeList itemsList = simpleXMLPageDocument.getElementsByTagName(simpleXMLPage.getXmlElementItem());
-		assertThat(simpleXMLPage.getItemsNumber(), equalTo(itemsList.getLength()));
+		BFLogger.logInfo("Validating that " + ITEM_ELEMENT.getElementKey() + " element number is 3");
+		NodeList itemsList = simpleXMLPageDocument.getElementsByTagName(ITEM_ELEMENT.getElementKey());
+		assertThat(itemsList.getLength(), equalTo(3));
 	}
 	
 	@Test
 	public void validateRootElementAttributeValueAndNumberWhenSearchingByTag() {
-		BFLogger.logInfo("Validating attribute value  " + simpleXMLPage.getXmlElementDate());
-		NodeList itemsList = simpleXMLPageDocument.getElementsByTagName(simpleXMLPage.getXmlDocumentRoot());
+		BFLogger.logInfo("Validating " + DATE_ATTRIBUTE.getAttributeKey() + " attribute value");
+		NodeList itemsList = simpleXMLPageDocument.getElementsByTagName(ROOT_ELEMENT.getElementKey());
 		// there can be only 1
 		assertThat(itemsList.getLength(), equalTo(1));
 		Element rootElement = (Element) (itemsList.item(0));
 		
-		assertThat(simpleXMLPage.getXmlElementDateValue(), equalTo(rootElement.getAttribute(simpleXMLPage.getXmlElementDate())));
+		assertThat(rootElement.getAttribute(DATE_ATTRIBUTE.getAttributeKey()), equalTo(DATE_ATTRIBUTE_VALUE));
 	}
 	
 	@Test
 	public void validateXmlDocumentEncoding() {
-		BFLogger.logInfo("Validating document encoding  to be " + simpleXMLPageDocument.getXmlEncoding());
-		assertThat(simpleXMLPageDocument.getXmlEncoding(), equalTo(simpleXMLPageDocument.getXmlEncoding()));
+		BFLogger.logInfo("Validating document encoding  to be " + XML_ENCODING);
+		assertThat(simpleXMLPageDocument.getXmlEncoding(), equalTo(XML_ENCODING));
 	}
 }
