@@ -4,28 +4,24 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.capgemini.mrchecker.webapi.BasePageWebApiTest;
 import com.capgemini.mrchecker.webapi.pages.httbin.RandomNBytesPage;
 import io.restassured.response.Response;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.text.MessageFormat;
-import java.util.Random;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+@RunWith(JUnitParamsRunner.class)
 public class RandomNBytesTest extends BasePageWebApiTest {
 	private RandomNBytesPage randomNBytesPage = new RandomNBytesPage();
 
 	@Test
-	public void staticBytesTest() {
-		Integer size=10;
-		validateNBytesOfData(size);
-	}
-
-	@Test
-	public void randomBytesTest() {
-		Random generator = new Random();
-		Integer size=generator.nextInt(50);
-		validateNBytesOfData(size);
+	@Parameters({ "1", "6", "30", "90" })
+	public void randomNBytesGenerationTest(Integer length) {
+		validateNBytesOfData(length);
 	}
 
 	private void validateNBytesOfData(Integer size) {
@@ -36,6 +32,6 @@ public class RandomNBytesTest extends BasePageWebApiTest {
 		assertThat(response.statusCode(), is(200));
 
 		BFLogger.logInfo(MessageFormat.format("Step 3 - Validate response body (should be {0}): ", size));
-		assertThat(response.body().asByteArray().length, is(size));
+		assertThat(randomNBytesPage.getRandomBytes(response).length, is(size));
 	}
 }
