@@ -8,6 +8,7 @@ import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import org.jsoup.select.Elements;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -59,11 +60,12 @@ public class HtmlLinksTest extends BasePageWebApiTest {
 		BFLogger.logInfo("Step 3 - Validate links in html response - count should be " + properLinkCount);
 		ResponseBody body = response.body();
 		String htmlText = body.asString();
-		HTMLParser parser = HTMLParser.parse(htmlText);
-		assertThat(parser.getHyperlinkElementsCount(), is(properLinkCount));
+		Elements links = HTMLParser.getElements(htmlText, "a");
+
+		assertThat(links.size(), is(properLinkCount));
 
 		BFLogger.logInfo("Step 4 - Validate links in html response - text");
-		List<String> linksText = parser.getHyperlinkElementsText();
+		List<String> linksText = HTMLParser.getTextFromElements(links);
 		linksText.forEach(link -> {
 			int j = linksText.indexOf(link);
 			if (j >= offset) {
@@ -73,7 +75,7 @@ public class HtmlLinksTest extends BasePageWebApiTest {
 		});
 
 		BFLogger.logInfo("Step 5 - Validate links in html response - href attribute");
-		List<String> linksLink = parser.getHyperlinkElementsLink();
+		List<String> linksLink = HTMLParser.getAttributeValueFromElements(links, "href");
 		linksLink.forEach(link -> {
 			int j = linksLink.indexOf(link);
 			if (j >= offset) {
@@ -85,7 +87,8 @@ public class HtmlLinksTest extends BasePageWebApiTest {
 		//When offset cuts some link
 		if (offset < n) {
 			BFLogger.logInfo(MessageFormat.format("Step 6 - Validate that there is text equal to offset: {0}", offset));
-			assertThat(parser.getBodyNoTagsText(), is(String.valueOf(offset)));
+			String bodyText = HTMLParser.getElements(htmlText, "body").first().ownText();
+			assertThat(bodyText, is(String.valueOf(offset)));
 		}
 	}
 }
