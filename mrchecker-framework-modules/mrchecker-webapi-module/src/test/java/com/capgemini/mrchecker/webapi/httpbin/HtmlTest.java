@@ -6,7 +6,10 @@ import com.capgemini.mrchecker.webapi.core.utils.HTMLParser;
 import com.capgemini.mrchecker.webapi.pages.httbin.HtmlPage;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
+import org.jsoup.select.Elements;
 import org.junit.Test;
+
+import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -30,12 +33,15 @@ public class HtmlTest extends BasePageWebApiTest {
 		BFLogger.logInfo("Step 3 - Validate response body is html that contains proper h1 tag content (count and value)");
 		ResponseBody body = response.body();
 		String htmlText = body.asString();
-		HTMLParser parser = HTMLParser.parse(htmlText);
-		assertThat(parser.getHeadingElementsCount(1), is(h1ElementsCount));
-		assertThat(parser.getHeadingElementsText(1).get(0), is(h1ElementText));
+		Elements headings = HTMLParser.getElements(htmlText, "h1");
+		List<String> headingsText = HTMLParser.getTextFromElements(headings);
+		assertThat(headings.size(), is(h1ElementsCount));
+		assertThat(headingsText.get(0), is(h1ElementText));
 
 		BFLogger.logInfo("Step 4 - Validate response body is html that contains proper p tag content (count and length)");
-		assertThat(parser.getParagraphElementsCount(), is(pElementCount));
-		assertThat(parser.getParagraphElementsText().get(0).length(), is(pElementTextLength));
+		Elements paragraphs = HTMLParser.getElements(htmlText, "p");
+		List<String> paragraphsText = HTMLParser.getTextFromElements(paragraphs);
+		assertThat(paragraphs.size(), is(pElementCount));
+		assertThat(paragraphsText.get(0).length(), is(pElementTextLength));
 	}
 }
