@@ -10,10 +10,18 @@ public class Base64Page extends BasePageWebAPI {
 	private final static String PATH     = "/base64/{value}";
 	private final static String ENDPOINT = HOSTNAME + PATH;
 
-	public Response sendGETQuery(String value) {
+	private Response sendGETQuery(String value) {
 		return DriverManager.getDriverWebAPI()
 				.given().pathParam("value", value)
 				.get(ENDPOINT);
+	}
+
+	public String getDecodedValue(String base64Data) {
+		Response response = sendGETQuery(base64Data);
+		if (response.statusCode() == 200 && !response.body().equals(null)) {
+			return response.body().asString();
+		}
+		return null;
 	}
 
 	@Override
