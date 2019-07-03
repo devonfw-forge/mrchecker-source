@@ -8,72 +8,28 @@ import org.jsoup.select.Elements;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HTMLParser {
-	private String   originalHTML;
-	private Document parsedHTML;
+public final class HTMLParser {
 
-	public HTMLParser(String html) {
-		this.originalHTML = html;
-		this.parsedHTML = Jsoup.parse(html);
+	private HTMLParser() {
 	}
 
-	public static HTMLParser parse(String html) {
-		return new HTMLParser(html);
+	public static Document parse(String html) {
+		return Jsoup.parse(html);
 	}
 
-	public Elements getHeadingElements(int level) {
-		return getTagElements("h" + level);
+	public static Elements getElements(String html, String tag) {
+		return getElements(parse(html), tag);
 	}
 
-	public int getHeadingElementsCount(int level) {
-		return getElementsCount(getHeadingElements(level));
+	public static Elements getElements(Document document, String tag) {
+		return document.select(tag);
 	}
 
-	public List<String> getHeadingElementsText(int level) {
-		return getElementsText(getHeadingElements(level));
+	public static List<String> getAttributeValueFromElements(Elements elements, String attributeKey) {
+		return elements.stream().map(el -> el.attr(attributeKey)).collect(Collectors.toList());
 	}
 
-	public Elements getParagraphElements() {
-		return getTagElements("p");
-	}
-
-	public int getParagraphElementsCount() {
-		return getElementsCount(getParagraphElements());
-	}
-
-	public List<String> getParagraphElementsText() {
-		return getElementsText(getParagraphElements());
-	}
-
-	public Elements getHyperlinkElements() {
-		return getTagElements("a");
-	}
-
-	public int getHyperlinkElementsCount() {
-		return getElementsCount(getHyperlinkElements());
-	}
-
-	public List<String> getHyperlinkElementsText() {
-		return getElementsText(getHyperlinkElements());
-	}
-
-	public List<String> getHyperlinkElementsLink() {
-		return getHyperlinkElements().stream().map(s -> s.attr("href")).collect(Collectors.toList());
-	}
-
-	public String getBodyNoTagsText() {
-		return getTagElements("body").first().ownText();
-	}
-
-	public Elements getTagElements(String tag) {
-		return this.parsedHTML.select(tag);
-	}
-
-	private List<String> getElementsText(Elements elements) {
+	public static List<String> getTextFromElements(Elements elements) {
 		return elements.stream().map(Element::text).collect(Collectors.toList());
-	}
-
-	private int getElementsCount(Elements elements) {
-		return elements.size();
 	}
 }
