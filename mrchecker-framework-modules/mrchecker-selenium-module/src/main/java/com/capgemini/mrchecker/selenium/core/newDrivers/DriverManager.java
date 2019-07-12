@@ -218,8 +218,14 @@ public class DriverManager {
 				System.setProperty("webdriver.edge.driver", browserPath);
 				EdgeOptions options = new EdgeOptions();
 
-				INewWebDriver driver = new NewEdgeDriver(options);
-				return driver;
+				// Set users browser options
+				RuntimeParametersSelenium.BROWSER_OPTIONS.getValues()
+						.forEach((key, value) -> {
+							BFLogger.logInfo("Browser option: " + key + " " + value);
+							options.setCapability(key, value);
+						});
+
+				return new NewEdgeDriver(options);
 			}
 
 		},
@@ -247,15 +253,11 @@ public class DriverManager {
 				RuntimeParametersSelenium.BROWSER_OPTIONS.getValues()
 						.forEach((key, value) -> {
 							BFLogger.logInfo("Browser option: " + key + " " + value);
-							String item = (value.toString()
-									.isEmpty()) ? key : key + "=" + value;
-							options.addArguments(item);
+							options.setCapability(key, value);
 						});
 
-				INewWebDriver driver = new NewOperaDriver(options);
-				return driver;
+				return new NewOperaDriver(options);
 			}
-
 		},
 		CHROME_HEADLESS {
 			@Override
@@ -293,7 +295,6 @@ public class DriverManager {
 				INewWebDriver driver = new NewChromeDriver(options);
 				return driver;
 			}
-
 		},
 		FIREFOX {
 			@Override

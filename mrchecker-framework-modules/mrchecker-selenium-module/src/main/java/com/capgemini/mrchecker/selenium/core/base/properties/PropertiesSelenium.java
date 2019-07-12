@@ -8,7 +8,7 @@ public class PropertiesSelenium {
 	private String  webDrivers           = "./lib/webdrivers";                                    // default value
 	private String  seleniumChrome       = webDrivers + "/chrome/chromedriver.exe";               // default value
 	private String  seleniumOpera        = webDrivers + "/opera/operadriver.exe";                 // default value
-	private String  seleniumEdge         = webDrivers + "/edge/MicrosoftWebDriver.exe";           // default value
+	private String  seleniumEdge         = webDrivers + "/edge/msedgedriver.exe";                 // default value
 	private String  seleniumFirefox      = webDrivers + "/firefox/geckodriver.exe";               // default value
 	private String  seleniumIE           = webDrivers + "/internetexplorer/IEDriverServer.exe";   // default value
 	private String  proxy                = "";                                                    // default value
