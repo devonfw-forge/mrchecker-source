@@ -5,18 +5,20 @@ import com.google.inject.name.Named;
 
 public class PropertiesSelenium {
 
-	private String  webDrivers           = "./lib/webdrivers";                                    // default value
-	private String  seleniumChrome       = webDrivers + "/chrome/chromedriver.exe";               // default value
-	private String  seleniumOpera        = webDrivers + "/opera/operadriver.exe";                 // default value
-	private String  seleniumEdge         = webDrivers + "/edge/msedgedriver.exe";                 // default value
-	private String  seleniumFirefox      = webDrivers + "/firefox/geckodriver.exe";               // default value
-	private String  seleniumIE           = webDrivers + "/internetexplorer/IEDriverServer.exe";   // default value
-	private String  proxy                = "";                                                    // default value
-	private boolean driverAutoUpdateFlag = true;                                                  // default value
+	private String  webDrivers                    = "./lib/webdrivers";                                    // default value
+	private String  seleniumChrome                = webDrivers + "/chrome/chromedriver.exe";               // default value
+	private String  seleniumOpera                 = webDrivers + "/opera/operadriver.exe";                 // default value
+	private String  seleniumEdge                  = webDrivers + "/edge/msedgedriver.exe";                 // default value
+	private String  seleniumFirefox               = webDrivers + "/firefox/geckodriver.exe";               // default value
+	private String  seleniumIE                    = webDrivers + "/internetexplorer/IEDriverServer.exe";   // default value
+	private String  proxy                         = "";                                                    // default value
+	private boolean driverAutoUpdateFlag          = true;                                                  // default value
 	private String  chromeDriverVersion           = "";
 	private String  chromeHeadlessDriverVersion   = "";
 	private String  internetExplorerDriverVersion = "";
 	private String  geckoDriverVersion            = "";
+	private String  edgeDriverVersion             = "";
+	private String  operaDriverVersion            = "";
 
 	@Inject(optional = true)
 	private void setSeleniumChrome(@Named("selenium.chrome") String path) {
@@ -124,4 +126,21 @@ public class PropertiesSelenium {
 		return this.geckoDriverVersion;
 	}
 
+	@Inject(optional = true)
+	private void setEdgeDriverVersion(@Named("wdm.edgeDriverVersion") String version) {
+		this.edgeDriverVersion = version;
+	}
+
+	public String getEdgeDriverVersion() {
+		return this.edgeDriverVersion;
+	}
+
+	@Inject(optional = true)
+	private void setOperaDriverVersion(@Named("wdm.operaDriverVersion") String version) {
+		this.operaDriverVersion = version;
+	}
+
+	public String getOperaDriverVersion() {
+		return this.operaDriverVersion;
+	}
 }
