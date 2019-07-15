@@ -13,6 +13,10 @@ public class PropertiesSelenium {
 	private String  seleniumIE           = webDrivers + "/internetexplorer/IEDriverServer.exe";   // default value
 	private String  proxy                = "";                                                    // default value
 	private boolean driverAutoUpdateFlag = true;                                                  // default value
+	private String  chromeDriverVersion           = "";
+	private String  chromeHeadlessDriverVersion   = "";
+	private String  internetExplorerDriverVersion = "";
+	private String  geckoDriverVersion            = "";
 
 	@Inject(optional = true)
 	private void setSeleniumChrome(@Named("selenium.chrome") String path) {
@@ -91,6 +95,33 @@ public class PropertiesSelenium {
 
 	public boolean getDriverAutoUpdateFlag() {
 		return this.driverAutoUpdateFlag;
+	}
+
+	@Inject(optional = true)
+	private void setChromeDriverVersion(@Named("wdm.chromeDriverVersion") String version) {
+		this.chromeDriverVersion = version;
+	}
+
+	public String getChromeDriverVersion() {
+		return this.chromeDriverVersion;
+	}
+
+	@Inject(optional = true)
+	private void setInternetExplorerDriverVersion(@Named("wdm.internetExplorerDriverVersion") String version) {
+		this.geckoDriverVersion = version;
+	}
+
+	public String getInternetExplorerDriverVersion() {
+		return this.internetExplorerDriverVersion;
+	}
+
+	@Inject(optional = true)
+	private void setGeckoDriverVersion(@Named("wdm.geckoDriverVersion") String version) {
+		this.geckoDriverVersion = version;
+	}
+
+	public String getGeckoDriverVersion() {
+		return this.geckoDriverVersion;
 	}
 
 }
