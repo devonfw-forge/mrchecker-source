@@ -18,6 +18,7 @@ public class PropertiesSelenium {
 	private String  internetExplorerDriverVersion = "";
 	private String  geckoDriverVersion            = "";
 	private String  edgeDriverVersion             = "";
+	private boolean edgeDriverFeatureOnDemandFlag = true;
 	private String  operaDriverVersion            = "";
 
 	@Inject(optional = true)
@@ -127,12 +128,21 @@ public class PropertiesSelenium {
 	}
 
 	@Inject(optional = true)
-	private void setEdgeDriverVersion(@Named("wdm.edgeDriverVersion") String version) {
+	private void setEdgeDriverVersion(@Named("wdm.edgeVersion") String version) {
 		this.edgeDriverVersion = version;
 	}
 
 	public String getEdgeDriverVersion() {
 		return this.edgeDriverVersion;
+	}
+
+	@Inject(optional = true)
+	private void setEdgeDriverFeatureOnDemandFlag(@Named("wdm.edgeFeatureOnDemand") boolean flag) {
+		this.edgeDriverFeatureOnDemandFlag = flag;
+	}
+
+	public boolean getEdgeDriverFeatureOnDemandFlag() {
+		return this.edgeDriverFeatureOnDemandFlag;
 	}
 
 	@Inject(optional = true)

@@ -215,21 +215,29 @@ public class DriverManager {
 		EDGE {
 			@Override
 			public INewWebDriver getDriver() {
-				String browserPath = DriverManager.propertiesSelenium.getSeleniumEdge();
-				boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
-				synchronized (this) {
-					if (isDriverAutoUpdateActivated && !driverDownloadedEdge) {
-						if (!DriverManager.propertiesSelenium.getEdgeDriverVersion().equals("")) {
-							System.setProperty("wdm.edgeDriverVersion", DriverManager.propertiesSelenium.getEdgeDriverVersion());
+				//Microsoft WebDriver for Microsoft Edge from version 18 is a Windows Feature on Demand.
+				//To install run the following in an elevated command prompt:
+				//DISM.exe /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0
+				//For builds prior to 18, download the appropriate driver for your installed version of Microsoft Edge
+				//Info: https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/#downloads
+				boolean featureOnDemand = DriverManager.propertiesSelenium.getEdgeDriverFeatureOnDemandFlag();
+				if(!featureOnDemand) {
+					String browserPath = DriverManager.propertiesSelenium.getSeleniumEdge();
+					boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
+					synchronized (this) {
+						if (isDriverAutoUpdateActivated && !driverDownloadedEdge) {
+							if (!DriverManager.propertiesSelenium.getEdgeDriverVersion().equals("")) {
+								System.setProperty("wdm.edgeVersion", DriverManager.propertiesSelenium.getEdgeDriverVersion());
+							}
+							downloadNewestOrGivenVersionOfWebDriver(EdgeDriver.class);
+							OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(EdgeDriver.class)
+									.getBinaryPath(), browserPath);
 						}
-						downloadNewestOrGivenVersionOfWebDriver(EdgeDriver.class);
-						OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(EdgeDriver.class)
-								.getBinaryPath(), browserPath);
+						driverDownloadedEdge = true;
 					}
-					driverDownloadedEdge = true;
+					System.setProperty("webdriver.edge.driver", browserPath);
 				}
 
-				System.setProperty("webdriver.edge.driver", browserPath);
 				EdgeOptions options = new EdgeOptions();
 
 				// Set users browser options
