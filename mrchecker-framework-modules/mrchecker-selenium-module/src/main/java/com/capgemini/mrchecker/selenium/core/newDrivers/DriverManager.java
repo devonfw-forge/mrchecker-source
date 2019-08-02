@@ -32,13 +32,13 @@ public class DriverManager {
 	private static ThreadLocal<INewWebDriver> drivers = new ThreadLocal<INewWebDriver>();
 
 	// Setup default variables
-	private static final ResolutionEnum     DEFAULT_RESOLUTION     = ResolutionEnum.w1200;
-	private static final int                IMPLICITYWAITTIMER     = 2;                                    // in seconds
-	private static final String             DOWNLOAD_DIR           = System.getProperty("java.io.tmpdir");
-	private static       boolean            driverDownloadedChrome = false;
-	private static       boolean            driverDownloadedGecko  = false;
-	private static       boolean            driverDownloadedIE     = false;
-	private static       PropertiesSelenium propertiesSelenium;
+	private static final ResolutionEnum DEFAULT_RESOLUTION     = ResolutionEnum.w1200;
+	private static final int            IMPLICITYWAITTIMER     = 2;                                    // in seconds
+	private static final String         DOWNLOAD_DIR           = System.getProperty("java.io.tmpdir");
+	private static       boolean        driverDownloadedChrome = false;
+	private static       boolean        driverDownloadedGecko  = false;
+	private static       boolean        driverDownloadedIE     = false;
+	private static PropertiesSelenium propertiesSelenium;
 
 	@Inject
 	public DriverManager(@Named("properties") PropertiesSelenium propertiesSelenium) {
@@ -277,7 +277,7 @@ public class DriverManager {
 						"text/comma-separated-values, application/vnd.ms-excel, application/msword, application/csv, application/ris, text/csv, image/png, application/pdf, text/html, text/plain, application/zip, application/x-zip, application/x-zip-compressed, application/download, application/octet-stream");
 				profile.setPreference("browser.download.manager.showWhenStarting", false);
 				profile.setPreference("browser.helperApps.alwaysAsk.force", false);
-
+				profile.setPreference("pdfjs.disabled", true);
 				FirefoxOptions options = new FirefoxOptions().setProfile(profile);
 				// Set users browser options
 				RuntimeParametersSelenium.BROWSER_OPTIONS.getValues()
