@@ -15,10 +15,14 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.opera.OperaDriver;
+import org.openqa.selenium.opera.OperaOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -38,6 +42,8 @@ public class DriverManager {
 	private static       boolean            driverDownloadedChrome = false;
 	private static       boolean            driverDownloadedGecko  = false;
 	private static       boolean            driverDownloadedIE     = false;
+	private static       boolean            driverDownloadedEdge   = false;
+	private static       boolean            driverDownloadedOpera  = false;
 	private static       PropertiesSelenium propertiesSelenium;
 
 	@Inject
@@ -147,6 +153,10 @@ public class DriverManager {
 		switch (browser) {
 			case "chrome":
 				return Driver.CHROME.getDriver();
+			case "opera":
+				return Driver.OPERA.getDriver();
+			case "edge":
+				return Driver.EDGE.getDriver();
 			case "firefox":
 				return Driver.FIREFOX.getDriver();
 			case "internet explorer":
@@ -202,6 +212,80 @@ public class DriverManager {
 			}
 
 		},
+		EDGE {
+			@Override
+			public INewWebDriver getDriver() {
+				//Microsoft WebDriver for Microsoft Edge from version 18 is a Windows Feature on Demand.
+				//To install run the following in an elevated command prompt:
+				//DISM.exe /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0
+				//For builds prior to 18, download the appropriate driver for your installed version of Microsoft Edge
+				//Info: https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/#downloads
+				boolean featureOnDemand = DriverManager.propertiesSelenium.getEdgeDriverFeatureOnDemandFlag();
+				if(!featureOnDemand) {
+					String browserPath = DriverManager.propertiesSelenium.getSeleniumEdge();
+					boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
+					synchronized (this) {
+						if (isDriverAutoUpdateActivated && !driverDownloadedEdge) {
+							if (!DriverManager.propertiesSelenium.getEdgeDriverVersion().equals("")) {
+								System.setProperty("wdm.edgeVersion", DriverManager.propertiesSelenium.getEdgeDriverVersion());
+							}
+							downloadNewestOrGivenVersionOfWebDriver(EdgeDriver.class);
+							OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(EdgeDriver.class)
+									.getBinaryPath(), browserPath);
+						}
+						driverDownloadedEdge = true;
+					}
+					System.setProperty("webdriver.edge.driver", browserPath);
+				}
+
+				EdgeOptions options = new EdgeOptions();
+
+				// Set users browser options
+				RuntimeParametersSelenium.BROWSER_OPTIONS.getValues()
+						.forEach((key, value) -> {
+							BFLogger.logInfo("Browser option: " + key + " " + value);
+							options.setCapability(key, value);
+						});
+
+				return new NewEdgeDriver(options);
+			}
+
+		},
+		OPERA {
+			@Override
+			public INewWebDriver getDriver() {
+				String browserPath = DriverManager.propertiesSelenium.getSeleniumOpera();
+				boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
+				synchronized (this) {
+					if (isDriverAutoUpdateActivated && !driverDownloadedOpera) {
+						if (!DriverManager.propertiesSelenium.getOperaDriverVersion().equals("")) {
+							System.setProperty("wdm.operaDriverVersion", DriverManager.propertiesSelenium.getOperaDriverVersion());
+						}
+						downloadNewestOrGivenVersionOfWebDriver(OperaDriver.class);
+						OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(OperaDriver.class)
+								.getBinaryPath(), browserPath);
+					}
+					driverDownloadedOpera = true;
+				}
+
+				System.setProperty("webdriver.opera.driver", browserPath);
+				HashMap<String, Object> operaPrefs = new HashMap<String, Object>();
+				operaPrefs.put("download.default_directory", DOWNLOAD_DIR);
+				operaPrefs.put("profile.content_settings.pattern_pairs.*.multiple-automatic-downloads", 1);
+				OperaOptions options = new OperaOptions();
+				options.setExperimentalOption("prefs", operaPrefs);
+				options.addArguments("--test-type");
+
+				// Set users browser options
+				RuntimeParametersSelenium.BROWSER_OPTIONS.getValues()
+						.forEach((key, value) -> {
+							BFLogger.logInfo("Browser option: " + key + " " + value);
+							options.setCapability(key, value);
+						});
+
+				return new NewOperaDriver(options);
+			}
+		},
 		CHROME_HEADLESS {
 			@Override
 			public INewWebDriver getDriver() {
@@ -249,15 +333,11 @@ public class DriverManager {
 			public INewWebDriver getDriver() {
 				String browserPath = DriverManager.propertiesSelenium.getSeleniumFirefox();
 				boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
-
 				synchronized (this) {
-
 					if (isDriverAutoUpdateActivated && !driverDownloadedGecko) {
-
 						if (!DriverManager.propertiesSelenium.getGeckoDriverVersion().equals("")) {
 							System.setProperty("wdm.geckoDriverVersion", DriverManager.propertiesSelenium.getGeckoDriverVersion());
 						}
-
 						downloadNewestOrGivenVersionOfWebDriver(FirefoxDriver.class);
 						OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(FirefoxDriver.class)
 								.getBinaryPath(), browserPath);

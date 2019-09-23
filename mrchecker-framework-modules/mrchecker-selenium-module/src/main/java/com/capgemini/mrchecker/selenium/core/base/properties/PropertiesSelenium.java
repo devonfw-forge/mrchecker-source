@@ -6,15 +6,20 @@ import com.google.inject.name.Named;
 public class PropertiesSelenium {
 
 	private String  webDrivers                    = "./lib/webdrivers";                                    // default value
-	private String  seleniumChrome                = webDrivers + "/chrome/chromedriver.exe";                // default value
-	private String  seleniumFirefox               = webDrivers + "/firefox/geckodriver.exe";                // default value
-	private String  seleniumIE                    = webDrivers + "/internetexplorer/IEDriverServer.exe";    // default value
+	private String  seleniumChrome                = webDrivers + "/chrome/chromedriver.exe";               // default value
+	private String  seleniumOpera                 = webDrivers + "/opera/operadriver.exe";                 // default value
+	private String  seleniumEdge                  = webDrivers + "/edge/msedgedriver.exe";                 // default value
+	private String  seleniumFirefox               = webDrivers + "/firefox/geckodriver.exe";               // default value
+	private String  seleniumIE                    = webDrivers + "/internetexplorer/IEDriverServer.exe";   // default value
 	private String  proxy                         = "";                                                    // default value
-	private boolean driverAutoUpdateFlag          = true;                                                    // default value
+	private boolean driverAutoUpdateFlag          = true;                                                  // default value
 	private String  chromeDriverVersion           = "";
 	private String  chromeHeadlessDriverVersion   = "";
 	private String  internetExplorerDriverVersion = "";
 	private String  geckoDriverVersion            = "";
+	private String  edgeDriverVersion             = "";
+	private boolean edgeDriverFeatureOnDemandFlag = true;
+	private String  operaDriverVersion            = "";
 
 	@Inject(optional = true)
 	private void setSeleniumChrome(@Named("selenium.chrome") String path) {
@@ -24,6 +29,26 @@ public class PropertiesSelenium {
 
 	public String getSeleniumChrome() {
 		return this.seleniumChrome;
+	}
+
+	@Inject(optional = true)
+	private void setSeleniumOpera(@Named("selenium.opera") String path) {
+		this.seleniumOpera = path;
+
+	}
+
+	public String getSeleniumOpera() {
+		return this.seleniumOpera;
+	}
+
+	@Inject(optional = true)
+	private void setSeleniumEdge(@Named("selenium.edge") String path) {
+		this.seleniumEdge = path;
+
+	}
+
+	public String getSeleniumEdge() {
+		return this.seleniumEdge;
 	}
 
 	@Inject(optional = true)
@@ -102,4 +127,30 @@ public class PropertiesSelenium {
 		return this.geckoDriverVersion;
 	}
 
+	@Inject(optional = true)
+	private void setEdgeDriverVersion(@Named("wdm.edgeVersion") String version) {
+		this.edgeDriverVersion = version;
+	}
+
+	public String getEdgeDriverVersion() {
+		return this.edgeDriverVersion;
+	}
+
+	@Inject(optional = true)
+	private void setEdgeDriverFeatureOnDemandFlag(@Named("wdm.edgeFeatureOnDemand") boolean flag) {
+		this.edgeDriverFeatureOnDemandFlag = flag;
+	}
+
+	public boolean getEdgeDriverFeatureOnDemandFlag() {
+		return this.edgeDriverFeatureOnDemandFlag;
+	}
+
+	@Inject(optional = true)
+	private void setOperaDriverVersion(@Named("wdm.operaDriverVersion") String version) {
+		this.operaDriverVersion = version;
+	}
+
+	public String getOperaDriverVersion() {
+		return this.operaDriverVersion;
+	}
 }
