@@ -5,7 +5,11 @@ import org.junit.Test;
 import com.capgemini.mrchecker.mobile.core.BasePage;
 
 public class BasePageTest {
-	
+
+
+
+	//TODO https://www.guru99.com/introduction-to-appium.html
+
 	@Test
 	public void test() {
 		MyPage myPage = new MyPage();

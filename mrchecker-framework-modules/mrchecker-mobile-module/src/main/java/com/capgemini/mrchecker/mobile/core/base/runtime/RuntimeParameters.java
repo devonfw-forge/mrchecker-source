@@ -2,23 +2,39 @@ package com.capgemini.mrchecker.mobile.core.base.runtime;
 
 import com.capgemini.mrchecker.test.core.base.runtime.RuntimeParametersI;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.math.NumberUtils;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
- * This class stores various system properties These parameters are accessible while test case executes mobile :
- * PARAM_3("param_3", "1410") IS: mvn test -Dparam_3=1525 -Dtest=MyTestClass
+ * This class stores various system properties
  * 
  * @author LUSTEFAN
  */
 public enum RuntimeParameters implements RuntimeParametersI {
 	
-	// NAME(<maven-variable-name>, <default-value>)
-	PARAM_1("param_1", "Hello"), // -Dparam_1=Hello
-	PARAM_2("param_2", "world"), // -Dparam_2=world
-	PARAM_3("param_3", "1410"); // -Dparam_3=1410
+	BROWSER("browser", "chrome"),
+	BROWSER_VERSION("browserVersion", ""),
+	SELENIUM_GRID("seleniumGrid", ""),
+	OS("os", ""),
+	BROWSER_OPTIONS("browserOptions", "") {
+		public Map<String, Object> getValues() {
+			return Arrays.asList(this.paramValue.split(";"))
+					.stream()
+					.filter(i -> i != "") // remove empty inputs
+					.map(i -> i.split("=", 2)) // split to key, value. Not more than one time
+					.map(i -> new String[] { i[0], (i.length == 1) ? "" : i[1] }) // if value is empty, set empty text
+					.collect(Collectors.toMap(i -> i[0], i -> (Object) convertToCorrectType(i[1].trim()))); // create
+		}
+		
+	};
 	
-	private String paramName;
-	private String paramValue;
-	private String defaultValue;
+	private String		paramName;
+	protected String	paramValue;
+	private String		defaultValue;
 	
 	private RuntimeParameters(String paramName, String defaultValue) {
 		this.paramName = paramName;
@@ -27,9 +43,36 @@ public enum RuntimeParameters implements RuntimeParametersI {
 		
 	}
 	
+	protected static Object convertToCorrectType(String value) {
+		Object convertedValue = value;
+		
+		if (null != BooleanUtils.toBooleanObject(value)) {
+			convertedValue = Boolean.valueOf(value);
+			return convertedValue;
+		}
+		
+		if (NumberUtils.isNumber(value)) {
+			if (NumberUtils.isDigits(value)) {
+				// so it is integer value
+				convertedValue = Integer.valueOf(value);
+				return convertedValue;
+			} else {
+				// so it is probably float value
+				convertedValue = Float.valueOf(value);
+				return convertedValue;
+			}
+		}
+		
+		return convertedValue;
+	}
+	
 	@Override
 	public String getValue() {
 		return this.paramValue;
+	}
+	
+	public Map<String, Object> getValues() {
+		return null;
 	}
 	
 	@Override
@@ -45,22 +88,27 @@ public enum RuntimeParameters implements RuntimeParametersI {
 	private void setValue() {
 		
 		String paramValue = System.getProperty(this.paramName);
-		paramValue = isSystemParameterEmpty(paramValue) ? this.defaultValue : paramValue.toLowerCase();
+		paramValue = isSystemParameterEmpty(paramValue) ? this.defaultValue : paramValue;
 		;
 		
 		switch (this.name()) {
-		case "PARAM_1":
-			if (paramValue.equals("Bye")) {
-				paramValue = "Hi";
-			}
-			break;
-		case "PARAM_2":
-			break;
-		case "PARAM_3":
-			break;
-		default:
-			BFLogger.logError("Unknown RuntimeParameter = " + this.name());
-			break;
+			case "BROWSER":
+				paramValue = paramValue.toLowerCase();
+				if (paramValue.equals("ie")) {
+					paramValue = "internet explorer";
+				}
+				break;
+			case "BROWSER_VERSION":
+				break;
+			case "SELENIUM_GRID":
+				break;
+			case "OS":
+				break;
+			case "BROWSER_OPTIONS":
+				break;
+			default:
+				BFLogger.logError("Unknown RuntimeParameter = " + this.name());
+				break;
 		}
 		
 		this.paramValue = paramValue;
