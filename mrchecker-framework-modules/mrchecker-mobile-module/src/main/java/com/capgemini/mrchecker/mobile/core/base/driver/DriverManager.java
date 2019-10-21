@@ -219,7 +219,7 @@ public class DriverManager {
 				// DesiredCapabilities cap = DesiredCapabilities.chrome();
 				// cap.setCapability(ChromeOptions.CAPABILITY, options);
 
-				INewMobileDriver driver = new NewChromeDriver(options);
+				INewMobileDriver driver = new NewAndroidDriver(options);
 				return driver;
 			}
 
