@@ -15,12 +15,22 @@ import java.util.stream.Collectors;
  * @author LUSTEFAN
  */
 public enum RuntimeParameters implements RuntimeParametersI {
-	
-	BROWSER("browser", "chrome"),
-	BROWSER_VERSION("browserVersion", ""),
-	SELENIUM_GRID("seleniumGrid", ""),
-	OS("os", ""),
-	BROWSER_OPTIONS("browserOptions", "") {
+
+//http://appium.io/docs/en/writing-running-appium/caps/#appium-desired-capabilities
+	platformName": "iOS",
+			"platformVersion": "11.0",
+			"deviceName": "iPhone 7",
+			"automationName": "XCUITest",
+			"app": "/path/to/my.app"
+
+
+	PLATFORM_NAME("platformName", "Android"),
+	DEVICE_NAME("deviceName", "Android Emulator"),
+	BROWSER_NAME("browserName", "chrome"),
+	APPLICATION_PATH("appPath", "."),
+	APPLICATION_PACKAGE("appPackage", ""),
+	APPLICATION_ACTIVITY("appActivity", ""),
+	DEVICE_OPTIONS("deviceOptions", "") {
 		public Map<String, Object> getValues() {
 			return Arrays.asList(this.paramValue.split(";"))
 					.stream()
@@ -90,21 +100,30 @@ public enum RuntimeParameters implements RuntimeParametersI {
 		String paramValue = System.getProperty(this.paramName);
 		paramValue = isSystemParameterEmpty(paramValue) ? this.defaultValue : paramValue;
 		;
-		
+
 		switch (this.name()) {
-			case "BROWSER":
+			case "PLATFORM_NAME":
 				paramValue = paramValue.toLowerCase();
-				if (paramValue.equals("ie")) {
-					paramValue = "internet explorer";
+
+				if (paramValue.equals("android")) {
+					paramValue = "Android";
+				} else if (paramValue.equals("ios")) {
+					paramValue = "iOS";
 				}
 				break;
-			case "BROWSER_VERSION":
+			case "DEVICE_NAME":
+				paramValue = paramValue.toLowerCase();
+				if (paramValue.equals("android")) {
+					paramValue = "Android Emulator";
+				}
 				break;
-			case "SELENIUM_GRID":
+			case "BROWSER_NAME":
 				break;
-			case "OS":
+			case "APPLICATION_PATH":
 				break;
-			case "BROWSER_OPTIONS":
+			case "APPLICATION_PACKAGE":
+				break;
+			case "APPLICATION_ACTIVITY":
 				break;
 			default:
 				BFLogger.logError("Unknown RuntimeParameter = " + this.name());

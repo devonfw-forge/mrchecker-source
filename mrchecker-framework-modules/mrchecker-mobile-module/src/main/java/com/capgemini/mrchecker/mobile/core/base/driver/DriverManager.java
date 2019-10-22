@@ -110,7 +110,7 @@ public class DriverManager {
 		INewMobileDriver driver;
 		String seleniumGridParameter = RuntimeParameters.SELENIUM_GRID.getValue();
 		if (isEmpty(seleniumGridParameter)) {
-			driver = setupBrowser();
+			driver = setupDevice();
 		} else {
 			driver = setupGrid();
 		}
@@ -142,23 +142,17 @@ public class DriverManager {
 	/**
 	 * Method sets desired 'driver' depends on chosen parameters
 	 */
-	private static INewMobileDriver setupBrowser() {
-		String browser = RuntimeParameters.BROWSER.getValue();
-		switch (browser) {
-			case "chrome":
-				return Driver.CHROME.getDriver();
-			case "opera":
-				return Driver.OPERA.getDriver();
-			case "edge":
-				return Driver.EDGE.getDriver();
-			case "firefox":
-				return Driver.FIREFOX.getDriver();
-			case "internet explorer":
-				return Driver.IE.getDriver();
-			case "chromeheadless":
-				return Driver.CHROME_HEADLESS.getDriver();
+	private static INewMobileDriver setupDevice() {
+		String device = RuntimeParameters.DEVICE_NAME.getValue();
+		switch (device) {
+			case "android":
+				return Driver.ANDROID.getDriver();
+			case "ios":
+				return Driver.IOS.getDriver();
+			case "windows":
+				return Driver.WINDOWS.getDriver();
 			default:
-				throw new RuntimeException("Unable to setup [" + browser + "] browser. Browser not recognized.");
+				throw new RuntimeException("Unable to setup [" + device + "] device. Name not recognized. Possible values: android, ios, windows");
 		}
 	}
 
@@ -210,9 +204,9 @@ public class DriverManager {
 				options.addArguments("--test-type");
 
 				// Set users browser options
-				RuntimeParameters.BROWSER_OPTIONS.getValues()
+				RuntimeParameters.DEVICE_OPTIONS.getValues()
 						.forEach((key, value) -> {
-							BFLogger.logInfo("Browser option: " + key + " " + value);
+							BFLogger.logInfo("Device option: " + key + " " + value);
 							String item = (value.toString()
 									.isEmpty()) ? key : key + "=" + value;
 							options.addArguments(item);
