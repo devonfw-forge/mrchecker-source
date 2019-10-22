@@ -10,17 +10,30 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public final class NewAndroidDriver extends AndroidDriver implements INewMobileDriver {
 
 	private DriverExtention driverExtention;
 
-	public NewAndroidDriver(ChromeOptions options) {
-		DesiredCapabilities capabilities = new DesiredCapabilities();
-		capabilities.setCapability("deviceName", "Android Emulator");
-		capabilities.setCapability("app", app.getAbsolutePath());
-		capabilities.setCapability("appPackage", "io.appium.android.apis");
-		capabilities.setCapability("appActivity", ".ApiDemos");
+	public NewAndroidDriver(DesiredCapabilities capabilities) {
 		super(getServiceUrl(), capabilities);
+
+	}
+
+	private static URL getServiceUrl() {
+		URL url = null;
+		try {
+			url = new URL("http://target_ip:used_port/wd/hub");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		//if it needs to use locally started server
+				//then the target_ip is 127.0.0.1 or 0.0.0.0
+				//the default port is 4723
+
+		return url;
 	}
 
 	public static void main(String[] args) {

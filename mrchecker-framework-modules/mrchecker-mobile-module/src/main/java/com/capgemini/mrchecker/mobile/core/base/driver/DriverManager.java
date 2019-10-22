@@ -18,6 +18,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -219,7 +221,24 @@ public class DriverManager {
 				// DesiredCapabilities cap = DesiredCapabilities.chrome();
 				// cap.setCapability(ChromeOptions.CAPABILITY, options);
 
-				INewMobileDriver driver = new NewAndroidDriver(options);
+				//TODO Add capabilities added by user
+
+//				AndroidCreateSessionTest https://github.com/appium/appium/blob/master/sample-code/java/src/AndroidCreateSessionTest.java
+								File classpathRoot = new File(System.getProperty("user.dir"));
+								File appDir = new File(classpathRoot, "../apps");
+				File app = null;
+				try {
+					app = new File(appDir.getCanonicalPath(), "ApiDemos-debug.apk");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				DesiredCapabilities capabilities = new DesiredCapabilities();
+				capabilities.setCapability("deviceName", "Android Emulator");
+				capabilities.setCapability("app", app.getAbsolutePath());
+				capabilities.setCapability("appPackage", "io.appium.android.apis");
+				capabilities.setCapability("appActivity", ".ApiDemos");
+
+				INewMobileDriver driver = new NewAndroidDriver(capabilities);
 				return driver;
 			}
 

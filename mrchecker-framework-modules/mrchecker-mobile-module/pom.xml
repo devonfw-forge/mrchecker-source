@@ -38,6 +38,14 @@
         </license>
     </licenses>
 
+    <repositories>
+        <!--https://github.com/appium/java-client-->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
 
         <!-- Dependency to other MrChecker Test Framework modules -->
@@ -61,6 +69,8 @@
 
 
         <!--This dependency is necessary for Appium plugin. -->
+        <!--https://github.com/appium/java-client/blob/master/docs/Installing-the-project.md-->
+
         <dependency>
             <groupId>io.appium</groupId>
             <artifactId>java-client</artifactId>
