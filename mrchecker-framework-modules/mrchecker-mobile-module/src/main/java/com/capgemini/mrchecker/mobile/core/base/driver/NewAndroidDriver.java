@@ -1,21 +1,18 @@
 package com.capgemini.mrchecker.mobile.core.base.driver;
 
-import com.capgemini.mrchecker.selenium.core.BasePage;
-import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundException;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.*;
+import com.capgemini.mrchecker.mobile.core.BasePage;
+//import com.capgemini.mrchecker.selenium.core.BasePage;
+//import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundException;
+//import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.*;
 import com.capgemini.mrchecker.test.core.BaseTest;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public final class NewAndroidDriver extends AndroidDriver implements INewMobileDriver {
-
-	private DriverExtention driverExtention;
 
 	public NewAndroidDriver(DesiredCapabilities capabilities) {
 		super(getServiceUrl(), capabilities);

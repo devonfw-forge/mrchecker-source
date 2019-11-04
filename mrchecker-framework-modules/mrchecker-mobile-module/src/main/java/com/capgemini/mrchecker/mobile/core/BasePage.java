@@ -4,6 +4,7 @@ package com.capgemini.mrchecker.mobile.core;
 
 import com.capgemini.mrchecker.mobile.core.base.driver.DriverManager;
 import com.capgemini.mrchecker.mobile.core.base.properties.PropertiesFileSettings;
+import com.capgemini.mrchecker.mobile.core.base.runtime.RuntimeParameters;
 import com.capgemini.mrchecker.test.core.BaseTest;
 import com.capgemini.mrchecker.test.core.BaseTestWatcher;
 import com.capgemini.mrchecker.test.core.ITestObserver;

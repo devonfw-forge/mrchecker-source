@@ -12,6 +12,7 @@ import org.junit.rules.ExpectedException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class RuntimeParametersTest {
@@ -23,20 +24,24 @@ public class RuntimeParametersTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		
-		values.put("browser", "magicBrowser");
-		values.put("browserVersion", "11.0");
-		values.put("seleniumGrid", "smth");
-		values.put("os", "linux");
-		values.put("browserOptions", "headless;window-size=1200x600;testEquals=FirstEquals=SecondEquals;--testMe;acceptInsecureCerts=true;maxInstances=3");
+
+		values.put("automationName", "magicAutomationName");
+		values.put("platformName", "magic_Android");
+		values.put("platformVersion", "11.0");
+		values.put("deviceName", "magicAndroidEmulator");
+		values.put("app", "./magic/path");
+		values.put("browserName", "magicChrome");
+		values.put("deviceOptions", "headless;window-size=1200x600;testEquals=FirstEquals=SecondEquals;--testMe;acceptInsecureCerts=true;maxInstances=3");
 		
 		values.forEach(System::setProperty);
-		
-		RuntimeParametersSelenium.BROWSER.refreshParameterValue();
-		RuntimeParametersSelenium.BROWSER_VERSION.refreshParameterValue();
-		RuntimeParametersSelenium.OS.refreshParameterValue();
-		RuntimeParametersSelenium.SELENIUM_GRID.refreshParameterValue();
-		RuntimeParametersSelenium.BROWSER_OPTIONS.refreshParameterValue();
+
+		RuntimeParameters.AUTOMATION_NAME.refreshParameterValue();
+		RuntimeParameters.PLATFORM_NAME.refreshParameterValue();
+		RuntimeParameters.PLATFORM_VERSION.refreshParameterValue();
+		RuntimeParameters.DEVICE_NAME.refreshParameterValue();
+		RuntimeParameters.APPLICATION_PATH.refreshParameterValue();
+		RuntimeParameters.BROWSER_NAME.refreshParameterValue();
+		RuntimeParameters.DEVICE_OPTIONS.refreshParameterValue();
 	}
 	
 	@After
@@ -45,14 +50,25 @@ public class RuntimeParametersTest {
 	
 	@Test
 	public void testGetProperty() {
-		
-		assertThat("System parameters for empty property 'browser' should be 'magicbrowser'", RuntimeParametersSelenium.BROWSER.getValue(), Matchers.equalTo("magicbrowser"));
-		assertThat("System parameters for empty property 'browserVersion' should be '11.0'", RuntimeParametersSelenium.BROWSER_VERSION.getValue(), Matchers.equalTo("11.0"));
-		assertThat("System parameters for empty property 'seleniumGrid' should be 'smth'", RuntimeParametersSelenium.SELENIUM_GRID.getValue(), Matchers.equalTo("smth"));
-		assertThat("System parameters for empty property 'os' should be 'linux'", RuntimeParametersSelenium.OS.getValue(), Matchers.equalTo("linux"));
+
+
+		values.put("automationName", "magicAutomationName");
+		values.put("platformName", "magic_Android");
+		values.put("platformVersion", "11.0");
+		values.put("deviceName", "magicAndroidEmulator");
+		values.put("app", "./magic/path");
+		values.put("browserName", "magicChrome");
+
+
+		assertThat("System parameters for empty property 'automationName' should be 'magicAutomationName'", RuntimeParameters.AUTOMATION_NAME.getValue(), Matchers.equalTo("magicAutomationName"));
+		assertThat("System parameters for empty property 'platformName' should be 'magic_Android'", RuntimeParameters.PLATFORM_NAME.getValue(), Matchers.equalTo("magic_Android"));
+		assertThat("System parameters for empty property 'platformVersion' should be '11.0'", RuntimeParameters.PLATFORM_VERSION.getValue(), Matchers.equalTo("11.0"));
+		assertThat("System parameters for empty property 'deviceName' should be 'magicAndroidEmulator'", RuntimeParameters.DEVICE_NAME.getValue(), Matchers.equalTo("magicAndroidEmulator"));
+		assertThat("System parameters for empty property 'app' should be './magic/path'", RuntimeParameters.APPLICATION_PATH.getValue(), Matchers.equalTo("./magic/path"));
+		assertThat("System parameters for empty property 'browserName' should be 'magicChrome'", RuntimeParameters.BROWSER_NAME.getValue(), Matchers.equalTo("magicChrome"));
 		assertThat(
 				"System parameters for empty property 'browserOptions' should be 'headless;window-size=1200x600;testEquals=FirstEquals=SecondEquals;--testMe;acceptInsecureCerts=true;maxInstances=3'",
-				RuntimeParametersSelenium.BROWSER_OPTIONS.getValue(),
+				RuntimeParameters.DEVICE_OPTIONS.getValue(),
 				Matchers.equalTo("headless;window-size=1200x600;testEquals=FirstEquals=SecondEquals;--testMe;acceptInsecureCerts=true;maxInstances=3"));
 		
 	}
@@ -62,15 +78,15 @@ public class RuntimeParametersTest {
 		
 		// validate type as Boolean
 		String value = "true";
-		Object convertToCorrectType = RuntimeParametersSelenium.convertToCorrectType(value);
+		Object convertToCorrectType = RuntimeParameters.convertToCorrectType(value);
 		assertThat(BooleanUtils.toBooleanObject((boolean) convertToCorrectType), IsInstanceOf.instanceOf(Boolean.class));
 		
 		value = "false";
-		convertToCorrectType = RuntimeParametersSelenium.convertToCorrectType(value);
+		convertToCorrectType = RuntimeParameters.convertToCorrectType(value);
 		assertThat(BooleanUtils.toBooleanObject((boolean) convertToCorrectType), IsInstanceOf.instanceOf(Boolean.class));
 		
 		value = "blue";
-		convertToCorrectType = RuntimeParametersSelenium.convertToCorrectType(value);
+		convertToCorrectType = RuntimeParameters.convertToCorrectType(value);
 		exceptionGrabber.expect(ClassCastException.class);
 		exceptionGrabber.expectMessage("java.lang.String cannot be cast to java.lang.Boolean");
 		assertThat(BooleanUtils.toBooleanObject((boolean) convertToCorrectType), Matchers.not(IsInstanceOf.instanceOf(Boolean.class)));
@@ -81,15 +97,15 @@ public class RuntimeParametersTest {
 	public void testConvertToCorrectTypeInteger() throws Exception {
 		
 		String value = "1";
-		Object convertToCorrectType = RuntimeParametersSelenium.convertToCorrectType(value);
+		Object convertToCorrectType = RuntimeParameters.convertToCorrectType(value);
 		assertThat((Integer) convertToCorrectType, IsInstanceOf.instanceOf(Integer.class));
 		
 		value = "0.23";
-		convertToCorrectType = RuntimeParametersSelenium.convertToCorrectType(value);
+		convertToCorrectType = RuntimeParameters.convertToCorrectType(value);
 		assertThat((Float) convertToCorrectType, IsInstanceOf.instanceOf(Float.class));
 		
 		value = "blue";
-		convertToCorrectType = RuntimeParametersSelenium.convertToCorrectType(value);
+		convertToCorrectType = RuntimeParameters.convertToCorrectType(value);
 		exceptionGrabber.expect(ClassCastException.class);
 		exceptionGrabber.expectMessage("java.lang.String cannot be cast to java.lang.Integer");
 		assertThat((Integer) convertToCorrectType, IsInstanceOf.instanceOf(Integer.class));
@@ -99,15 +115,15 @@ public class RuntimeParametersTest {
 	public void testConvertToCorrectTypeString() throws Exception {
 		
 		String value = "hello";
-		Object convertToCorrectType = RuntimeParametersSelenium.convertToCorrectType(value);
+		Object convertToCorrectType = RuntimeParameters.convertToCorrectType(value);
 		assertThat((String) convertToCorrectType, IsInstanceOf.instanceOf(String.class));
 		
 		value = "";
-		convertToCorrectType = RuntimeParametersSelenium.convertToCorrectType(value);
+		convertToCorrectType = RuntimeParameters.convertToCorrectType(value);
 		assertThat((String) convertToCorrectType, IsInstanceOf.instanceOf(String.class));
 		
 		value = null;
-		convertToCorrectType = RuntimeParametersSelenium.convertToCorrectType(value);
+		convertToCorrectType = RuntimeParameters.convertToCorrectType(value);
 		assertThat((String) convertToCorrectType, Matchers.isEmptyOrNullString());
 		
 	}
@@ -123,11 +139,11 @@ public class RuntimeParametersTest {
 		expected.put("acceptInsecureCerts", true);
 		expected.put("maxInstances", 3);
 		
-		assertThat(RuntimeParametersSelenium.BROWSER_OPTIONS.getValues()
+		assertThat(RuntimeParameters.DEVICE_OPTIONS.getValues()
 				.size(),
 				Matchers.is(6));
 		
-		assertThat(RuntimeParametersSelenium.BROWSER_OPTIONS.getValues()
+		assertThat(RuntimeParameters.DEVICE_OPTIONS.getValues()
 				.toString(),
 				Matchers.is(expected.toString()));
 		
@@ -136,7 +152,7 @@ public class RuntimeParametersTest {
 	@Test
 	public void testBrowserOptionsSet() throws Exception {
 		
-		RuntimeParametersSelenium.BROWSER_OPTIONS.getValues()
+		RuntimeParameters.DEVICE_OPTIONS.getValues()
 				.forEach((key, value) -> {
 					String item = (value.toString()
 							.isEmpty()) ? key : key + "=" + value;
@@ -146,38 +162,43 @@ public class RuntimeParametersTest {
 	}
 	
 	@Test
-	public void testBrowserIE() throws Exception {
-		System.setProperty("browser", "ie");
-		RuntimeParametersSelenium.BROWSER.refreshParameterValue();
+	public void testPlatformNameIOS() throws Exception {
+		System.setProperty("platformName", "ios");
+		RuntimeParameters.PLATFORM_NAME.refreshParameterValue();
 		
-		assertEquals("System parameters for empty property 'browser' should be 'internet explorer'", "internet explorer", RuntimeParametersSelenium.BROWSER.getValue());
+		assertEquals("System parameters for empty property 'platformName' should be 'iOS'", "iOS", RuntimeParameters.PLATFORM_NAME.getValue());
 		
 	}
 	
 	@Test
 	public void testGetEmptyProperty() {
 		values.forEach((String key, String value) -> System.clearProperty(key));
-		
-		RuntimeParametersSelenium.BROWSER.refreshParameterValue();
-		RuntimeParametersSelenium.BROWSER_VERSION.refreshParameterValue();
-		RuntimeParametersSelenium.OS.refreshParameterValue();
-		RuntimeParametersSelenium.SELENIUM_GRID.refreshParameterValue();
-		RuntimeParametersSelenium.BROWSER_OPTIONS.refreshParameterValue();
-		
-		assertThat("System parameters for empty property 'browser' should be 'chrome'", RuntimeParametersSelenium.BROWSER.getValue(), Matchers.equalTo("chrome"));
-		assertThat("System parameters for empty property 'browserVersion' should be 'null'", RuntimeParametersSelenium.BROWSER_VERSION.getValue(), Matchers.isEmptyString());
-		assertThat("System parameters for empty property 'seleniumGrid' should be 'false'", RuntimeParametersSelenium.SELENIUM_GRID.getValue(), Matchers.isEmptyString());
-		assertThat("System parameters for empty property 'os' should be 'null'", RuntimeParametersSelenium.OS.getValue(), Matchers.isEmptyString());
-		assertThat("System parameters for empty property 'browserOptions' should be 'null'", RuntimeParametersSelenium.BROWSER_OPTIONS.getValue(), Matchers.isEmptyString());
+
+		RuntimeParameters.AUTOMATION_NAME.refreshParameterValue();
+		RuntimeParameters.PLATFORM_NAME.refreshParameterValue();
+		RuntimeParameters.PLATFORM_VERSION.refreshParameterValue();
+		RuntimeParameters.DEVICE_NAME.refreshParameterValue();
+		RuntimeParameters.APPLICATION_PATH.refreshParameterValue();
+		RuntimeParameters.BROWSER_NAME.refreshParameterValue();
+		RuntimeParameters.DEVICE_OPTIONS.refreshParameterValue();
+
+
+		assertThat("System parameters for empty property 'automationName' should be 'Appium'", RuntimeParameters.AUTOMATION_NAME.getValue(), Matchers.equalTo("Appium"));
+		assertThat("System parameters for empty property 'platformName' should be 'Android'", RuntimeParameters.PLATFORM_NAME.getValue(), Matchers.equalTo("Android"));
+		assertThat("System parameters for empty property 'platformVersion' should be 'null'", RuntimeParameters.PLATFORM_VERSION.getValue(), Matchers.isEmptyString());
+		assertThat("System parameters for empty property 'deviceName' should be 'Android Emulator'", RuntimeParameters.DEVICE_NAME.getValue(), Matchers.equalTo("Android Emulator"));
+		assertThat("System parameters for empty property 'app' should be '.'", RuntimeParameters.APPLICATION_PATH.getValue(), Matchers.equalTo("."));
+		assertThat("System parameters for empty property 'browserName' should be 'null'", RuntimeParameters.BROWSER_NAME.getValue(), Matchers.isEmptyString());
+		assertThat("System parameters for empty property 'deviceOptions' should be 'null'", RuntimeParameters.DEVICE_OPTIONS.getValue(), Matchers.isEmptyString());
 		
 	}
 	
 	@Test
 	public void testParamsToString() throws Exception {
 		
-		RuntimeParametersSelenium.valueOf("BROWSER")
+		RuntimeParameters.valueOf("PLATFORM_NAME")
 				.toString()
-				.equals("browser=magicBrowser");
+				.equals("platformName=Android");
 		
 	}
 	

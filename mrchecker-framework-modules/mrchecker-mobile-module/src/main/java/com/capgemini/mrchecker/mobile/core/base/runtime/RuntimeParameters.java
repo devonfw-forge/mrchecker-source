@@ -17,19 +17,21 @@ import java.util.stream.Collectors;
 public enum RuntimeParameters implements RuntimeParametersI {
 
 //http://appium.io/docs/en/writing-running-appium/caps/#appium-desired-capabilities
-	platformName": "iOS",
-			"platformVersion": "11.0",
-			"deviceName": "iPhone 7",
-			"automationName": "XCUITest",
-			"app": "/path/to/my.app"
+//	platformName": "iOS",
+//			"platformVersion": "11.0",
+//			"deviceName": "iPhone 7",
+//			"automationName": "XCUITest",
+//			"app": "/path/to/my.app"
 
-
+// GENERIC Capabilities
+// http://appium.io/docs/en/writing-running-appium/caps/#general-capabilities
+	APPIUM_SERVER_URL("appiumServer", ""),
+	AUTOMATION_NAME("automationName", "Appium"),
 	PLATFORM_NAME("platformName", "Android"),
+	PLATFORM_VERSION("platformVersion", ""),
 	DEVICE_NAME("deviceName", "Android Emulator"),
-	BROWSER_NAME("browserName", "chrome"),
-	APPLICATION_PATH("appPath", "."),
-	APPLICATION_PACKAGE("appPackage", ""),
-	APPLICATION_ACTIVITY("appActivity", ""),
+	APPLICATION_PATH("app", "."),
+	BROWSER_NAME("browserName", ""),
 	DEVICE_OPTIONS("deviceOptions", "") {
 		public Map<String, Object> getValues() {
 			return Arrays.asList(this.paramValue.split(";"))
@@ -41,7 +43,7 @@ public enum RuntimeParameters implements RuntimeParametersI {
 		}
 		
 	};
-	
+
 	private String		paramName;
 	protected String	paramValue;
 	private String		defaultValue;
@@ -102,6 +104,16 @@ public enum RuntimeParameters implements RuntimeParametersI {
 		;
 
 		switch (this.name()) {
+			//TODO: Set validation for each Runtime Param based on http://appium.io/docs/en/writing-running-appium/caps/#general-capabilities
+			//			MobileCapabilityType.PLATFORM_VERSION, "4.4");
+			//					MobileCapabilityType.PLATFORM_NAME,"Android");
+			//					MobileCapabilityType.AUTOMATION_NAME,"UiAutomator2");
+			//					MobileCapabilityType.DEVICE_NAME, "Samsung Galaxy S4 Emulator");
+			//					MobileCapabilityType.BROWSER_NAME, "Browser");
+
+			case "AUTOMATION_NAME":
+				break;
+
 			case "PLATFORM_NAME":
 				paramValue = paramValue.toLowerCase();
 

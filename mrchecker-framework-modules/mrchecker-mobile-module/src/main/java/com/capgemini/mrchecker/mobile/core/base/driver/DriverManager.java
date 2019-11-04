@@ -1,20 +1,15 @@
 package com.capgemini.mrchecker.mobile.core.base.driver;
 
-import com.capgemini.mrchecker.selenium.core.base.properties.PropertiesSelenium;
-import com.capgemini.mrchecker.selenium.core.base.runtime.RuntimeParameters;
-import com.capgemini.mrchecker.selenium.core.enums.ResolutionEnum;
-import com.capgemini.mrchecker.selenium.core.exceptions.BFSeleniumGridNotConnectedException;
-import com.capgemini.mrchecker.selenium.core.utils.OperationsOnFiles;
-import com.capgemini.mrchecker.selenium.core.utils.ResolutionUtils;
+
+import com.capgemini.mrchecker.mobile.core.base.properties.PropertiesFileSettings;
+import com.capgemini.mrchecker.mobile.core.base.runtime.RuntimeParameters;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
+import com.capgemini.mrchecker.mobile.core.base.exceptions.BFAppiumServerNotConnectedException;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.WebDriverManagerException;
+import io.appium.java_client.remote.MobileCapabilityType;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -30,21 +25,14 @@ public class DriverManager {
 	private static ThreadLocal<INewMobileDriver> drivers = new ThreadLocal<INewMobileDriver>();
 
 	// Setup default variables
-	private static final ResolutionEnum     DEFAULT_RESOLUTION     = ResolutionEnum.w1200;
 	private static final int                IMPLICITYWAITTIMER     = 2;                                    // in seconds
-	private static final String             DOWNLOAD_DIR           = System.getProperty("java.io.tmpdir");
-	private static       boolean            driverDownloadedChrome = false;
-	private static       boolean            driverDownloadedGecko  = false;
-	private static       boolean            driverDownloadedIE     = false;
-	private static       boolean            driverDownloadedEdge   = false;
-	private static       boolean            driverDownloadedOpera  = false;
-	private static       PropertiesSelenium propertiesSelenium;
+	private static       PropertiesFileSettings propertiesFileSettings;
 
 	@Inject
-	public DriverManager(@Named("properties") PropertiesSelenium propertiesSelenium) {
+	public DriverManager(@Named("properties") PropertiesFileSettings propertiesSelenium) {
 
-		if (null == DriverManager.propertiesSelenium) {
-			DriverManager.propertiesSelenium = propertiesSelenium;
+		if (null == DriverManager.propertiesFileSettings) {
+			DriverManager.propertiesFileSettings = propertiesSelenium;
 		}
 
 		this.start();
@@ -58,7 +46,6 @@ public class DriverManager {
 		try {
 			closeDriver();
 			BFLogger.logDebug("Closing Driver in stop()");
-			BFLogger.logInfo(String.format("All clicks took %.2fs", 1.0 * NewRemoteWebElement.dropClickTimer() / 1000));
 		} catch (Exception e) {
 		}
 	}
@@ -90,7 +77,7 @@ public class DriverManager {
 			BFLogger.logDebug("closeDriver() was called but there was no driver for this thread.");
 		} else {
 			try {
-				BFLogger.logDebug("Closing WebDriver for this thread. " + RuntimeParameters.BROWSER.getValue());
+				BFLogger.logDebug("Closing WebDriver for this thread. " + RuntimeParameters.PLATFORM_NAME.getValue());
 				driver.quit();
 			} catch (WebDriverException e) {
 				BFLogger.logDebug("Ooops! Something went wrong while closing the driver: ");
@@ -106,260 +93,260 @@ public class DriverManager {
 	 * Method sets desired 'driver' depends on chosen parameters
 	 */
 	private static INewMobileDriver createDriver() {
-		BFLogger.logDebug("Creating new " + RuntimeParameters.BROWSER.toString() + " WebDriver.");
+		BFLogger.logDebug("Creating new " + RuntimeParameters.PLATFORM_NAME.toString() + " WebDriver.");
 		INewMobileDriver driver;
-		String seleniumGridParameter = RuntimeParameters.SELENIUM_GRID.getValue();
-		if (isEmpty(seleniumGridParameter)) {
-			driver = setupDevice();
+		String appiumServerParameter = RuntimeParameters.APPIUM_SERVER_URL.getValue();
+		if (isEmpty(appiumServerParameter)) {
+//			driver = setupDevice();
+			driver = null;
 		} else {
-			driver = setupGrid();
+			driver = setupAppiumServer();
 		}
-		driver.manage()
-				.timeouts()
-				.implicitlyWait(DriverManager.IMPLICITYWAITTIMER, TimeUnit.SECONDS);
+//		driver.manage()
+//				.timeouts()
+//				.implicitlyWait(DriverManager.IMPLICITYWAITTIMER, TimeUnit.SECONDS);
 
-		ResolutionUtils.setResolution(driver, DriverManager.DEFAULT_RESOLUTION);
-		NewRemoteWebElement.setClickTimer();
+//		NewRemoteWebElement.setClickTimer();
 		return driver;
 	}
 
-	private static boolean isEmpty(String seleniumGridParameter) {
-		return seleniumGridParameter == null || seleniumGridParameter.trim()
+	private static boolean isEmpty(String appiumServerParameter) {
+		return appiumServerParameter == null || appiumServerParameter.trim()
 				.isEmpty();
 	}
 
 	/**
 	 * Method sets Selenium Grid
 	 */
-	private static INewMobileDriver setupGrid() {
+	private static INewMobileDriver setupAppiumServer() {
 		try {
-			return Driver.SELENIUMGRID.getDriver();
+			return Driver.APPIUM_SERVER.getDriver();
 		} catch (WebDriverException e) {
-			throw new BFSeleniumGridNotConnectedException(e);
+			throw new BFAppiumServerNotConnectedException(e);
 		}
 	}
 
 	/**
 	 * Method sets desired 'driver' depends on chosen parameters
 	 */
-	private static INewMobileDriver setupDevice() {
-		String device = RuntimeParameters.DEVICE_NAME.getValue();
-		switch (device) {
-			case "android":
-				return Driver.ANDROID.getDriver();
-			case "ios":
-				return Driver.IOS.getDriver();
-			case "windows":
-				return Driver.WINDOWS.getDriver();
-			default:
-				throw new RuntimeException("Unable to setup [" + device + "] device. Name not recognized. Possible values: android, ios, windows");
-		}
-	}
+//	private static INewMobileDriver setupDevice() {
+//		String device = RuntimeParameters.DEVICE_NAME.getValue();
+//		switch (device) {
+//			case "android":
+//				return Driver.ANDROID.getDriver();
+//			case "ios":
+//				return Driver.IOS.getDriver();
+//			case "windows":
+//				return Driver.WINDOWS.getDriver();
+//			default:
+//				throw new RuntimeException("Unable to setup [" + device + "] device. Name not recognized. Possible values: android, ios, windows");
+//		}
+//	}
 
 	private enum Driver {
 
-		ANDROID {
-			@Override
-			public INewMobileDriver getDriver() {
-				String browserPath = DriverManager.propertiesSelenium.getSeleniumChrome();
-				boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
-				synchronized (this) {
-					if (isDriverAutoUpdateActivated && !driverDownloadedChrome) {
-						if (!DriverManager.propertiesSelenium.getChromeDriverVersion().equals("")) {
-							System.setProperty("wdm.chromeDriverVersion", DriverManager.propertiesSelenium.getChromeDriverVersion());
-						}
-						downloadNewestOrGivenVersionOfWebDriver(ChromeDriver.class);
-						OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(ChromeDriver.class)
-								.getBinaryPath(), browserPath);
-					}
-					driverDownloadedChrome = true;
-				}
-
-				System.setProperty("webdriver.chrome.driver", browserPath);
-
-				//  https://github.com/appium/appium/tree/master/sample-code/java/src
-
-//			AndroidCreateSessionTest https://github.com/appium/appium/blob/master/sample-code/java/src/AndroidCreateSessionTest.java
-//				File classpathRoot = new File(System.getProperty("user.dir"));
-//				File appDir = new File(classpathRoot, "../apps");
-//				File app = new File(appDir.getCanonicalPath(), "ApiDemos-debug.apk");
+//		ANDROID {
+//			@Override
+//			public INewMobileDriver getDriver() {
+//				String browserPath = DriverManager.propertiesFileSettings.getSeleniumChrome();
+//				boolean isDriverAutoUpdateActivated = DriverManager.propertiesFileSettings.getDriverAutoUpdateFlag();
+//				synchronized (this) {
+//					if (isDriverAutoUpdateActivated && !driverDownloadedChrome) {
+//						if (!DriverManager.propertiesFileSettings.getChromeDriverVersion().equals("")) {
+//							System.setProperty("wdm.chromeDriverVersion", DriverManager.propertiesFileSettings.getChromeDriverVersion());
+//						}
+//						downloadNewestOrGivenVersionOfWebDriver(ChromeDriver.class);
+//						OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(ChromeDriver.class)
+//								.getBinaryPath(), browserPath);
+//					}
+//					driverDownloadedChrome = true;
+//				}
+//
+//				System.setProperty("webdriver.chrome.driver", browserPath);
+//
+//				//  https://github.com/appium/appium/tree/master/sample-code/java/src
+//
+////			AndroidCreateSessionTest https://github.com/appium/appium/blob/master/sample-code/java/src/AndroidCreateSessionTest.java
+////				File classpathRoot = new File(System.getProperty("user.dir"));
+////				File appDir = new File(classpathRoot, "../apps");
+////				File app = new File(appDir.getCanonicalPath(), "ApiDemos-debug.apk");
+////				DesiredCapabilities capabilities = new DesiredCapabilities();
+////				capabilities.setCapability("deviceName", "Android Emulator");
+////				capabilities.setCapability("app", app.getAbsolutePath());
+////				capabilities.setCapability("appPackage", "io.appium.android.apis");
+////				capabilities.setCapability("appActivity", ".ApiDemos");
+////				driver = new AndroidDriver<WebElement>(getServiceUrl(), capabilities);
+//
+////			AndroidCreateWebSessionTest  https://github.com/appium/appium/blob/master/sample-code/java/src/AndroidCreateWebSessionTest.java
+////				DesiredCapabilities capabilities = new DesiredCapabilities();
+////				capabilities.setCapability("deviceName", "Android Emulator");
+////				capabilities.setCapability("browserName", "Chrome");
+////				driver = new AndroidDriver<WebElement>(getServiceUrl(), capabilities);
+//
+//				HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
+//				chromePrefs.put("download.default_directory", DOWNLOAD_DIR);
+//				chromePrefs.put("profile.content_settings.pattern_pairs.*.multiple-automatic-downloads", 1);
+//				ChromeOptions options = new ChromeOptions();
+//				options.setExperimentalOption("prefs", chromePrefs);
+//				options.addArguments("--test-type");
+//
+//				// Set users browser options
+//				RuntimeParameters.DEVICE_OPTIONS.getValues()
+//						.forEach((key, value) -> {
+//							BFLogger.logInfo("Device option: " + key + " " + value);
+//							String item = (value.toString()
+//									.isEmpty()) ? key : key + "=" + value;
+//							options.addArguments(item);
+//						});
+//
+//				// DesiredCapabilities cap = DesiredCapabilities.chrome();
+//				// cap.setCapability(ChromeOptions.CAPABILITY, options);
+//
+//				//TODO Add capabilities added by user
+//
+////				AndroidCreateSessionTest https://github.com/appium/appium/blob/master/sample-code/java/src/AndroidCreateSessionTest.java
+//								File classpathRoot = new File(System.getProperty("user.dir"));
+//								File appDir = new File(classpathRoot, "../apps");
+//				File app = null;
+//				try {
+//					app = new File(appDir.getCanonicalPath(), "ApiDemos-debug.apk");
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
 //				DesiredCapabilities capabilities = new DesiredCapabilities();
 //				capabilities.setCapability("deviceName", "Android Emulator");
 //				capabilities.setCapability("app", app.getAbsolutePath());
 //				capabilities.setCapability("appPackage", "io.appium.android.apis");
 //				capabilities.setCapability("appActivity", ".ApiDemos");
-//				driver = new AndroidDriver<WebElement>(getServiceUrl(), capabilities);
-
-//			AndroidCreateWebSessionTest  https://github.com/appium/appium/blob/master/sample-code/java/src/AndroidCreateWebSessionTest.java
-//				DesiredCapabilities capabilities = new DesiredCapabilities();
-//				capabilities.setCapability("deviceName", "Android Emulator");
-//				capabilities.setCapability("browserName", "Chrome");
-//				driver = new AndroidDriver<WebElement>(getServiceUrl(), capabilities);
-
-				HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
-				chromePrefs.put("download.default_directory", DOWNLOAD_DIR);
-				chromePrefs.put("profile.content_settings.pattern_pairs.*.multiple-automatic-downloads", 1);
-				ChromeOptions options = new ChromeOptions();
-				options.setExperimentalOption("prefs", chromePrefs);
-				options.addArguments("--test-type");
-
-				// Set users browser options
-				RuntimeParameters.DEVICE_OPTIONS.getValues()
-						.forEach((key, value) -> {
-							BFLogger.logInfo("Device option: " + key + " " + value);
-							String item = (value.toString()
-									.isEmpty()) ? key : key + "=" + value;
-							options.addArguments(item);
-						});
-
-				// DesiredCapabilities cap = DesiredCapabilities.chrome();
-				// cap.setCapability(ChromeOptions.CAPABILITY, options);
-
-				//TODO Add capabilities added by user
-
-//				AndroidCreateSessionTest https://github.com/appium/appium/blob/master/sample-code/java/src/AndroidCreateSessionTest.java
-								File classpathRoot = new File(System.getProperty("user.dir"));
-								File appDir = new File(classpathRoot, "../apps");
-				File app = null;
-				try {
-					app = new File(appDir.getCanonicalPath(), "ApiDemos-debug.apk");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				DesiredCapabilities capabilities = new DesiredCapabilities();
-				capabilities.setCapability("deviceName", "Android Emulator");
-				capabilities.setCapability("app", app.getAbsolutePath());
-				capabilities.setCapability("appPackage", "io.appium.android.apis");
-				capabilities.setCapability("appActivity", ".ApiDemos");
-
-				INewMobileDriver driver = new NewAndroidDriver(capabilities);
-				return driver;
-			}
-
-		},
-		IOS {
-			@Override
-			public INewMobileDriver getDriver() {
-				String browserPath = DriverManager.propertiesSelenium.getSeleniumChrome();
-				boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
-				synchronized (this) {
-					if (isDriverAutoUpdateActivated && !driverDownloadedChrome) {
-						if (!DriverManager.propertiesSelenium.getChromeDriverVersion().equals("")) {
-							System.setProperty("wdm.chromeDriverVersion", DriverManager.propertiesSelenium.getChromeDriverVersion());
-						}
-						downloadNewestOrGivenVersionOfWebDriver(ChromeDriver.class);
-						OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(ChromeDriver.class)
-								.getBinaryPath(), browserPath);
-					}
-					driverDownloadedChrome = true;
-				}
-
-				System.setProperty("webdriver.chrome.driver", browserPath);
-
-				//  https://github.com/appium/appium/tree/master/sample-code/java/src
-
-				// 			IOSCreateSessionTest https://github.com/appium/appium/blob/master/sample-code/java/src/IOSCreateSessionTest.java
-				//  	File classpathRoot = new File(System.getProperty("user.dir"));
-				//        File appDir = new File(classpathRoot, "../apps");
-				//        File app = new File(appDir.getCanonicalPath(), "TestApp.app.zip");
-				//        String deviceName = System.getenv("IOS_DEVICE_NAME");
-				//        String platformVersion = System.getenv("IOS_PLATFORM_VERSION");
-				//        DesiredCapabilities capabilities = new DesiredCapabilities();
-				//        capabilities.setCapability("deviceName", deviceName == null ? "iPhone 6s" : deviceName);
-				//        capabilities.setCapability("platformVersion", platformVersion == null ? "11.1" : platformVersion);
-				//        capabilities.setCapability("app", app.getAbsolutePath());
-				//        capabilities.setCapability("automationName", "XCUITest");
-				//        driver = new IOSDriver<WebElement>(getServiceUrl(), capabilities);
-
-				//			IOSCreateWebSessionTest   https://github.com/appium/appium/blob/master/sample-code/java/src/IOSCreateWebSessionTest.java
-				//				 String deviceName = System.getenv("IOS_DEVICE_NAME");
-				//        String platformVersion = System.getenv("IOS_PLATFORM_VERSION");
-				//        DesiredCapabilities capabilities = new DesiredCapabilities();
-				//        capabilities.setCapability("deviceName", deviceName == null ? "iPhone 6s" : deviceName);
-				//        capabilities.setCapability("platformVersion", platformVersion == null ? "11.1" : platformVersion);
-				//        capabilities.setCapability("browserName", "Safari");
-				//        capabilities.setCapability("automationName", "XCUITest");
-				//        driver = new IOSDriver<WebElement>(getServiceUrl(), capabilities);
-
-				HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
-				chromePrefs.put("download.default_directory", DOWNLOAD_DIR);
-				chromePrefs.put("profile.content_settings.pattern_pairs.*.multiple-automatic-downloads", 1);
-				ChromeOptions options = new ChromeOptions();
-				options.setExperimentalOption("prefs", chromePrefs);
-				options.addArguments("--test-type");
-
-				// Set users browser options
-				RuntimeParameters.BROWSER_OPTIONS.getValues()
-						.forEach((key, value) -> {
-							BFLogger.logInfo("Browser option: " + key + " " + value);
-							String item = (value.toString()
-									.isEmpty()) ? key : key + "=" + value;
-							options.addArguments(item);
-						});
-
-				// DesiredCapabilities cap = DesiredCapabilities.chrome();
-				// cap.setCapability(ChromeOptions.CAPABILITY, options);
-
-				INewMobileDriver driver = new NewChromeDriver(options);
-				return driver;
-			}
-
-		},
-		WINDOWS {
-			@Override
-			public INewMobileDriver getDriver() {
-				String browserPath = DriverManager.propertiesSelenium.getSeleniumChrome();
-				boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
-				synchronized (this) {
-					if (isDriverAutoUpdateActivated && !driverDownloadedChrome) {
-						if (!DriverManager.propertiesSelenium.getChromeDriverVersion().equals("")) {
-							System.setProperty("wdm.chromeDriverVersion", DriverManager.propertiesSelenium.getChromeDriverVersion());
-						}
-						downloadNewestOrGivenVersionOfWebDriver(ChromeDriver.class);
-						OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(ChromeDriver.class)
-								.getBinaryPath(), browserPath);
-					}
-					driverDownloadedChrome = true;
-				}
-
-				System.setProperty("webdriver.chrome.driver", browserPath);
-
-				//  https://github.com/appium/appium/blob/master/sample-code/java/src/WindowsDesktopAppTest.java
-
-				// 			WindowsDesktopAppTest
-				//  	DesiredCapabilities caps = new DesiredCapabilities();
-				//        caps.setCapability("platformVersion", "10");
-				//        caps.setCapability("platformName", "Windows");
-				//        caps.setCapability("deviceName", "WindowsPC");
-				//        caps.setCapability("app", "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App");
-				//        caps.setCapability("newCommandTimeout", 2000);
-				//        driver = new WindowsDriver<>(getServiceUrl(), caps);
-
-				HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
-				chromePrefs.put("download.default_directory", DOWNLOAD_DIR);
-				chromePrefs.put("profile.content_settings.pattern_pairs.*.multiple-automatic-downloads", 1);
-				ChromeOptions options = new ChromeOptions();
-				options.setExperimentalOption("prefs", chromePrefs);
-				options.addArguments("--test-type");
-
-				// Set users browser options
-				RuntimeParameters.BROWSER_OPTIONS.getValues()
-						.forEach((key, value) -> {
-							BFLogger.logInfo("Browser option: " + key + " " + value);
-							String item = (value.toString()
-									.isEmpty()) ? key : key + "=" + value;
-							options.addArguments(item);
-						});
-
-				// DesiredCapabilities cap = DesiredCapabilities.chrome();
-				// cap.setCapability(ChromeOptions.CAPABILITY, options);
-
-				INewMobileDriver driver = new NewChromeDriver(options);
-				return driver;
-			}
-
-		},
-		SELENIUMGRID {
+//
+//				INewMobileDriver driver = new NewAndroidDriver(capabilities);
+//				return driver;
+//			}
+//
+//		},
+//		IOS {
+//			@Override
+//			public INewMobileDriver getDriver() {
+//				String browserPath = DriverManager.propertiesFileSettings.getSeleniumChrome();
+//				boolean isDriverAutoUpdateActivated = DriverManager.propertiesFileSettings.getDriverAutoUpdateFlag();
+//				synchronized (this) {
+//					if (isDriverAutoUpdateActivated && !driverDownloadedChrome) {
+//						if (!DriverManager.propertiesFileSettings.getChromeDriverVersion().equals("")) {
+//							System.setProperty("wdm.chromeDriverVersion", DriverManager.propertiesFileSettings.getChromeDriverVersion());
+//						}
+//						downloadNewestOrGivenVersionOfWebDriver(ChromeDriver.class);
+//						OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(ChromeDriver.class)
+//								.getBinaryPath(), browserPath);
+//					}
+//					driverDownloadedChrome = true;
+//				}
+//
+//				System.setProperty("webdriver.chrome.driver", browserPath);
+//
+//				//  https://github.com/appium/appium/tree/master/sample-code/java/src
+//
+//				// 			IOSCreateSessionTest https://github.com/appium/appium/blob/master/sample-code/java/src/IOSCreateSessionTest.java
+//				//  	File classpathRoot = new File(System.getProperty("user.dir"));
+//				//        File appDir = new File(classpathRoot, "../apps");
+//				//        File app = new File(appDir.getCanonicalPath(), "TestApp.app.zip");
+//				//        String deviceName = System.getenv("IOS_DEVICE_NAME");
+//				//        String platformVersion = System.getenv("IOS_PLATFORM_VERSION");
+//				//        DesiredCapabilities capabilities = new DesiredCapabilities();
+//				//        capabilities.setCapability("deviceName", deviceName == null ? "iPhone 6s" : deviceName);
+//				//        capabilities.setCapability("platformVersion", platformVersion == null ? "11.1" : platformVersion);
+//				//        capabilities.setCapability("app", app.getAbsolutePath());
+//				//        capabilities.setCapability("automationName", "XCUITest");
+//				//        driver = new IOSDriver<WebElement>(getServiceUrl(), capabilities);
+//
+//				//			IOSCreateWebSessionTest   https://github.com/appium/appium/blob/master/sample-code/java/src/IOSCreateWebSessionTest.java
+//				//				 String deviceName = System.getenv("IOS_DEVICE_NAME");
+//				//        String platformVersion = System.getenv("IOS_PLATFORM_VERSION");
+//				//        DesiredCapabilities capabilities = new DesiredCapabilities();
+//				//        capabilities.setCapability("deviceName", deviceName == null ? "iPhone 6s" : deviceName);
+//				//        capabilities.setCapability("platformVersion", platformVersion == null ? "11.1" : platformVersion);
+//				//        capabilities.setCapability("browserName", "Safari");
+//				//        capabilities.setCapability("automationName", "XCUITest");
+//				//        driver = new IOSDriver<WebElement>(getServiceUrl(), capabilities);
+//
+//				HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
+//				chromePrefs.put("download.default_directory", DOWNLOAD_DIR);
+//				chromePrefs.put("profile.content_settings.pattern_pairs.*.multiple-automatic-downloads", 1);
+//				ChromeOptions options = new ChromeOptions();
+//				options.setExperimentalOption("prefs", chromePrefs);
+//				options.addArguments("--test-type");
+//
+//				// Set users browser options
+//				RuntimeParameters.BROWSER_OPTIONS.getValues()
+//						.forEach((key, value) -> {
+//							BFLogger.logInfo("Browser option: " + key + " " + value);
+//							String item = (value.toString()
+//									.isEmpty()) ? key : key + "=" + value;
+//							options.addArguments(item);
+//						});
+//
+//				// DesiredCapabilities cap = DesiredCapabilities.chrome();
+//				// cap.setCapability(ChromeOptions.CAPABILITY, options);
+//
+//				INewMobileDriver driver = new NewChromeDriver(options);
+//				return driver;
+//			}
+//
+//		},
+//		WINDOWS {
+//			@Override
+//			public INewMobileDriver getDriver() {
+//				String browserPath = DriverManager.propertiesFileSettings.getSeleniumChrome();
+//				boolean isDriverAutoUpdateActivated = DriverManager.propertiesFileSettings.getDriverAutoUpdateFlag();
+//				synchronized (this) {
+//					if (isDriverAutoUpdateActivated && !driverDownloadedChrome) {
+//						if (!DriverManager.propertiesFileSettings.getChromeDriverVersion().equals("")) {
+//							System.setProperty("wdm.chromeDriverVersion", DriverManager.propertiesFileSettings.getChromeDriverVersion());
+//						}
+//						downloadNewestOrGivenVersionOfWebDriver(ChromeDriver.class);
+//						OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(ChromeDriver.class)
+//								.getBinaryPath(), browserPath);
+//					}
+//					driverDownloadedChrome = true;
+//				}
+//
+//				System.setProperty("webdriver.chrome.driver", browserPath);
+//
+//				//  https://github.com/appium/appium/blob/master/sample-code/java/src/WindowsDesktopAppTest.java
+//
+//				// 			WindowsDesktopAppTest
+//				//  	DesiredCapabilities caps = new DesiredCapabilities();
+//				//        caps.setCapability("platformVersion", "10");
+//				//        caps.setCapability("platformName", "Windows");
+//				//        caps.setCapability("deviceName", "WindowsPC");
+//				//        caps.setCapability("app", "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App");
+//				//        caps.setCapability("newCommandTimeout", 2000);
+//				//        driver = new WindowsDriver<>(getServiceUrl(), caps);
+//
+//				HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
+//				chromePrefs.put("download.default_directory", DOWNLOAD_DIR);
+//				chromePrefs.put("profile.content_settings.pattern_pairs.*.multiple-automatic-downloads", 1);
+//				ChromeOptions options = new ChromeOptions();
+//				options.setExperimentalOption("prefs", chromePrefs);
+//				options.addArguments("--test-type");
+//
+//				// Set users browser options
+//				RuntimeParameters.BROWSER_OPTIONS.getValues()
+//						.forEach((key, value) -> {
+//							BFLogger.logInfo("Browser option: " + key + " " + value);
+//							String item = (value.toString()
+//									.isEmpty()) ? key : key + "=" + value;
+//							options.addArguments(item);
+//						});
+//
+//				// DesiredCapabilities cap = DesiredCapabilities.chrome();
+//				// cap.setCapability(ChromeOptions.CAPABILITY, options);
+//
+//				INewMobileDriver driver = new NewChromeDriver(options);
+//				return driver;
+//			}
+//
+//		},
+		APPIUM_SERVER {
 			@Override
 			public INewMobileDriver getDriver() {
 
@@ -381,66 +368,41 @@ public class DriverManager {
 //					mobiledriver = new AndroidDriver<>(new URL(URL), capabilities);
 
 
-				final String SELENIUM_GRID_URL = RuntimeParameters.SELENIUM_GRID.getValue();
-				BFLogger.logDebug("Connecting to the selenium grid: " + SELENIUM_GRID_URL);
+				final String APPIUM_SERVER_URL = RuntimeParameters.APPIUM_SERVER_URL.getValue() + "/wd/hub";
+				BFLogger.logDebug("Connecting to the Appium Server: " + APPIUM_SERVER_URL);
 				DesiredCapabilities capabilities = new DesiredCapabilities();
-				String operatingSystem = RuntimeParameters.OS.getValue();
 
-				// TODO add others os's
-				switch (operatingSystem) {
-					case "windows":
-						capabilities.setPlatform(Platform.WINDOWS);
-						break;
-					case "vista":
-						capabilities.setPlatform(Platform.VISTA);
-						break;
-					case "mac":
-						capabilities.setPlatform(Platform.MAC);
-						break;
-				}
+				capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, RuntimeParameters.AUTOMATION_NAME);
+				capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, RuntimeParameters.PLATFORM_NAME);
+				capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, RuntimeParameters.PLATFORM_VERSION);
+				capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, RuntimeParameters.DEVICE_NAME);
+				capabilities.setCapability(MobileCapabilityType.APP, RuntimeParameters.APPLICATION_PATH);
+				capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, RuntimeParameters.BROWSER_NAME);
 
-				capabilities.setVersion(RuntimeParameters.BROWSER_VERSION.getValue());
-				capabilities.setBrowserName(RuntimeParameters.BROWSER.getValue());
-
-				// Set users browser options
-				RuntimeParameters.BROWSER_OPTIONS.getValues()
+				// Set users device options
+				RuntimeParameters.DEVICE_OPTIONS.getValues()
 						.forEach((key, value) -> {
-							BFLogger.logInfo("Browser option: " + key + " " + value);
+							BFLogger.logInfo("Device option: " + key + " " + value);
 							capabilities.setCapability(key, value);
 						});
 
-				NewRemoteWebDriver newRemoteWebDriver = null;
+				NewAppiumDriver newRemoteWebDriver = null;
 				try {
-					newRemoteWebDriver = new NewRemoteWebDriver(new URL(SELENIUM_GRID_URL), capabilities);
+					URL url = new URL(APPIUM_SERVER_URL);
+					//url = new URL("http://target_ip:used_port/wd/hub");
+					//if it needs to use locally started server
+					//then the target_ip is 127.0.0.1 or 0.0.0.0
+					//the default port is 4723
+
+					newRemoteWebDriver = new NewAppiumDriver(url, capabilities);
 				} catch (MalformedURLException e) {
-					e.printStackTrace();
-					System.out.println("Unable to find selenium grid URL: " + SELENIUM_GRID_URL);
+					BFLogger.logError("Unable connect to Appium Server URL: " + APPIUM_SERVER_URL);
 				}
 				return newRemoteWebDriver;
 			}
 		};
 
-		private static <T extends RemoteWebDriver> void downloadNewestOrGivenVersionOfWebDriver(Class<T> webDriverType) {
 
-			String proxy = DriverManager.propertiesSelenium.getProxy();
-			String webDriversPath = DriverManager.propertiesSelenium.getWebDrivers();
-			try {
-				System.setProperty("wdm.targetPath", webDriversPath);
-				System.setProperty("wdm.useBetaVersions", "false");
-
-				WebDriverManager.getInstance(webDriverType)
-						.proxy(proxy)
-						.setup();
-				BFLogger.logDebug("Downloaded version of driver=" + WebDriverManager.getInstance(webDriverType).getDownloadedVersion());
-
-			} catch (WebDriverManagerException e) {
-				BFLogger.logInfo("Unable to download driver automatically. "
-						+ "Please try to set up the proxy in properties file. "
-						+ "If you want to download them manually, go to the "
-						+ "http://www.seleniumhq.org/projects/webdriver/ site.");
-			}
-
-		}
 
 		public INewMobileDriver getDriver() {
 			return null;
