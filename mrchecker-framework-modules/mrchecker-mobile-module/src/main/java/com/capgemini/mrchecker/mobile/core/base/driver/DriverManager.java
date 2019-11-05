@@ -33,10 +33,10 @@ public class DriverManager {
 	private static       PropertiesFileSettings propertiesFileSettings;
 
 	@Inject
-	public DriverManager(@Named("properties") PropertiesFileSettings propertiesSelenium) {
+	public DriverManager(@Named("properties") PropertiesFileSettings propertiesFileSettings) {
 
 		if (null == DriverManager.propertiesFileSettings) {
-			DriverManager.propertiesFileSettings = propertiesSelenium;
+			DriverManager.propertiesFileSettings = propertiesFileSettings;
 		}
 
 		this.start();
@@ -354,38 +354,15 @@ public class DriverManager {
 			@Override
 			public INewMobileDriver getDriver() {
 
-//				AndroidBrowserSaucelabsTest  https://github.com/appium/appium/blob/master/sample-code/java/src/AndroidBrowserSaucelabsTest.java
-				// 				public static final String USERNAME = "YOUR_USERNAME";
-//				public static final String ACCESS_KEY = "YOUR_ACESS_KEY";
-//				public static final String URL = "https://"+USERNAME+":" + ACCESS_KEY + "@ondemand.saucelabs.com:443/wd/hub";
-//				public static AndroidDriver<?> mobiledriver;
-//
-//				@BeforeTest
-//				public void beforeTest( ) throws MalformedURLException {
-//					DesiredCapabilities capabilities = new DesiredCapabilities();
-//					capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "4.4");
-//					capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME,"Android");
-//					capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME,"UiAutomator2");
-//					capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Samsung Galaxy S4 Emulator");
-//					capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, "Browser");
-//					capabilities.setCapability("newCommandTimeout", 2000);
-//					mobiledriver = new AndroidDriver<>(new URL(URL), capabilities);
-
-
 				final String APPIUM_SERVER_URL = RuntimeParameters.APPIUM_SERVER_URL.getValue() + "/wd/hub";
 				BFLogger.logDebug("Connecting to the Appium Server: " + APPIUM_SERVER_URL);
-				DesiredCapabilities capabilities = new DesiredCapabilities();
 
+				DesiredCapabilities capabilities = new DesiredCapabilities();
 				capabilities.setCapability(RuntimeParameters.AUTOMATION_NAME.getKey(), RuntimeParameters.AUTOMATION_NAME.getValue());
 				capabilities.setCapability(RuntimeParameters.PLATFORM_NAME.getKey(), RuntimeParameters.PLATFORM_NAME.getValue());
 				capabilities.setCapability(RuntimeParameters.PLATFORM_VERSION.getKey(), RuntimeParameters.PLATFORM_VERSION.getValue());
 				capabilities.setCapability(RuntimeParameters.DEVICE_NAME.getKey(), RuntimeParameters.DEVICE_NAME.getValue());
-
-
-				String path = System.getProperty("user.dir") + Paths.get("/src/test/resources/Simple App_v2.0.1_apkpure.com.apk");
-				File app  = new File(path);
-
-				capabilities.setCapability(RuntimeParameters.APP.getKey(), app.getAbsolutePath());
+				capabilities.setCapability(RuntimeParameters.APP.getKey(), RuntimeParameters.APP.getValue());
 				capabilities.setCapability(RuntimeParameters.BROWSER_NAME.getKey(), RuntimeParameters.BROWSER_NAME.getValue());
 
 				// Set users device options
@@ -403,30 +380,6 @@ public class DriverManager {
 					//then the target_ip is 127.0.0.1 or 0.0.0.0
 					//the default port is 4723
 					BFLogger.logDebug("Capabilities: " + capabilities.toJson());
-
-
-
-//					String path = System.getProperty("user.dir") + Paths.get("/src/test/resources/Simple App_v2.0.1_apkpure.com.apk");
-//					File app  = new File(path);
-//					DesiredCapabilities capabilities2 = new DesiredCapabilities();
-//					capabilities2.setCapability(MobileCapabilityType.DEVICE_NAME, "Android Emulator");
-//					capabilities2.setCapability(MobileCapabilityType.APP, app.getAbsolutePath());
-//					capabilities2.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
-//					BFLogger.logDebug("Capabilities: " + capabilities2.toJson());
-//					//you are free to set additional capabilities
-//					AppiumDriver<MobileElement> driver = new AppiumDriver<>(
-//							new URL("http://0.0.0.0:4723/wd/hub"), //if it needs to use locally started server
-//							//then the target_ip is 127.0.0.1 or 0.0.0.0
-//							//the default port is 4723
-//							capabilities2);
-//					BFLogger.logDebug("driver:" + driver.toString());
-
-
-
-
-
-
-
 					newRemoteWebDriver = new NewAppiumDriver(url, capabilities);
 				} catch (MalformedURLException e) {
 					BFLogger.logError("Unable connect to Appium Server URL: " + APPIUM_SERVER_URL);
