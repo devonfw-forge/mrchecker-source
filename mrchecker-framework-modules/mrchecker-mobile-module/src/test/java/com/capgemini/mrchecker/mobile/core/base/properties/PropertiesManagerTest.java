@@ -35,12 +35,12 @@ public class PropertiesManagerTest {
 
 	@Test
 	public void testParamter_1() {
-		assertEquals("", "How are you", propertiesFileSettings.getProperty_1());
+		assertEquals("", "This is value for prop 1", propertiesFileSettings.getProperty_1());
 	}
 
 	@Test
 	public void testParamter_2() {
-		assertEquals("", "What is your today success", propertiesFileSettings.getProperty_2());
+		assertEquals("", "This is value for prop 2", propertiesFileSettings.getProperty_2());
 	}
 
 	// @Ignore
@@ -51,7 +51,7 @@ public class PropertiesManagerTest {
 		Injector i = Guice.createInjector(PropertiesSettingsModule.init());
 		PropertiesFileSettings propertiesFileSettings = i.getInstance(PropertiesFileSettings.class);
 
-		assertEquals("", "This is value for prop 1", propertiesFileSettings.getProperty_1());
+		assertEquals("", "Hello One", propertiesFileSettings.getProperty_1());
 	}
 
 }
