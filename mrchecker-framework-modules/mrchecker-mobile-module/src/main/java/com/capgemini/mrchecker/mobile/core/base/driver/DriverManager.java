@@ -8,17 +8,21 @@ import com.capgemini.mrchecker.mobile.core.base.exceptions.BFAppiumServerNotConn
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import io.appium.java_client.remote.MobileCapabilityType;
-import org.openqa.selenium.Platform;
+import io.appium.java_client.remote.MobilePlatform;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
+
+
+import java.io.File;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.MobileElement;
+import java.net.URL;
+import java.nio.file.Paths;
 
 public class DriverManager {
 
@@ -372,12 +376,17 @@ public class DriverManager {
 				BFLogger.logDebug("Connecting to the Appium Server: " + APPIUM_SERVER_URL);
 				DesiredCapabilities capabilities = new DesiredCapabilities();
 
-				capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, RuntimeParameters.AUTOMATION_NAME);
-				capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, RuntimeParameters.PLATFORM_NAME);
-				capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, RuntimeParameters.PLATFORM_VERSION);
-				capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, RuntimeParameters.DEVICE_NAME);
-				capabilities.setCapability(MobileCapabilityType.APP, RuntimeParameters.APPLICATION_PATH);
-				capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, RuntimeParameters.BROWSER_NAME);
+				capabilities.setCapability(RuntimeParameters.AUTOMATION_NAME.getKey(), RuntimeParameters.AUTOMATION_NAME.getValue());
+				capabilities.setCapability(RuntimeParameters.PLATFORM_NAME.getKey(), RuntimeParameters.PLATFORM_NAME.getValue());
+				capabilities.setCapability(RuntimeParameters.PLATFORM_VERSION.getKey(), RuntimeParameters.PLATFORM_VERSION.getValue());
+				capabilities.setCapability(RuntimeParameters.DEVICE_NAME.getKey(), RuntimeParameters.DEVICE_NAME.getValue());
+
+
+				String path = System.getProperty("user.dir") + Paths.get("/src/test/resources/Simple App_v2.0.1_apkpure.com.apk");
+				File app  = new File(path);
+
+				capabilities.setCapability(RuntimeParameters.APP.getKey(), app.getAbsolutePath());
+				capabilities.setCapability(RuntimeParameters.BROWSER_NAME.getKey(), RuntimeParameters.BROWSER_NAME.getValue());
 
 				// Set users device options
 				RuntimeParameters.DEVICE_OPTIONS.getValues()
@@ -393,6 +402,30 @@ public class DriverManager {
 					//if it needs to use locally started server
 					//then the target_ip is 127.0.0.1 or 0.0.0.0
 					//the default port is 4723
+					BFLogger.logDebug("Capabilities: " + capabilities.toJson());
+
+
+
+//					String path = System.getProperty("user.dir") + Paths.get("/src/test/resources/Simple App_v2.0.1_apkpure.com.apk");
+//					File app  = new File(path);
+//					DesiredCapabilities capabilities2 = new DesiredCapabilities();
+//					capabilities2.setCapability(MobileCapabilityType.DEVICE_NAME, "Android Emulator");
+//					capabilities2.setCapability(MobileCapabilityType.APP, app.getAbsolutePath());
+//					capabilities2.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
+//					BFLogger.logDebug("Capabilities: " + capabilities2.toJson());
+//					//you are free to set additional capabilities
+//					AppiumDriver<MobileElement> driver = new AppiumDriver<>(
+//							new URL("http://0.0.0.0:4723/wd/hub"), //if it needs to use locally started server
+//							//then the target_ip is 127.0.0.1 or 0.0.0.0
+//							//the default port is 4723
+//							capabilities2);
+//					BFLogger.logDebug("driver:" + driver.toString());
+
+
+
+
+
+
 
 					newRemoteWebDriver = new NewAppiumDriver(url, capabilities);
 				} catch (MalformedURLException e) {

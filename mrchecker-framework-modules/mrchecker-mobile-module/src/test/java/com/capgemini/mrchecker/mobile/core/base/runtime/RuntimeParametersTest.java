@@ -39,7 +39,7 @@ public class RuntimeParametersTest {
 		RuntimeParameters.PLATFORM_NAME.refreshParameterValue();
 		RuntimeParameters.PLATFORM_VERSION.refreshParameterValue();
 		RuntimeParameters.DEVICE_NAME.refreshParameterValue();
-		RuntimeParameters.APPLICATION_PATH.refreshParameterValue();
+		RuntimeParameters.APP.refreshParameterValue();
 		RuntimeParameters.BROWSER_NAME.refreshParameterValue();
 		RuntimeParameters.DEVICE_OPTIONS.refreshParameterValue();
 	}
@@ -64,7 +64,7 @@ public class RuntimeParametersTest {
 		assertThat("System parameters for empty property 'platformName' should be 'magic_Android'", RuntimeParameters.PLATFORM_NAME.getValue(), Matchers.equalTo("magic_Android"));
 		assertThat("System parameters for empty property 'platformVersion' should be '11.0'", RuntimeParameters.PLATFORM_VERSION.getValue(), Matchers.equalTo("11.0"));
 		assertThat("System parameters for empty property 'deviceName' should be 'magicAndroidEmulator'", RuntimeParameters.DEVICE_NAME.getValue(), Matchers.equalTo("magicAndroidEmulator"));
-		assertThat("System parameters for empty property 'app' should be './magic/path'", RuntimeParameters.APPLICATION_PATH.getValue(), Matchers.equalTo("./magic/path"));
+		assertThat("System parameters for empty property 'app' should be './magic/path'", RuntimeParameters.APP.getValue(), Matchers.equalTo("./magic/path"));
 		assertThat("System parameters for empty property 'browserName' should be 'magicChrome'", RuntimeParameters.BROWSER_NAME.getValue(), Matchers.equalTo("magicChrome"));
 		assertThat(
 				"System parameters for empty property 'browserOptions' should be 'headless;window-size=1200x600;testEquals=FirstEquals=SecondEquals;--testMe;acceptInsecureCerts=true;maxInstances=3'",
@@ -178,7 +178,7 @@ public class RuntimeParametersTest {
 		RuntimeParameters.PLATFORM_NAME.refreshParameterValue();
 		RuntimeParameters.PLATFORM_VERSION.refreshParameterValue();
 		RuntimeParameters.DEVICE_NAME.refreshParameterValue();
-		RuntimeParameters.APPLICATION_PATH.refreshParameterValue();
+		RuntimeParameters.APP.refreshParameterValue();
 		RuntimeParameters.BROWSER_NAME.refreshParameterValue();
 		RuntimeParameters.DEVICE_OPTIONS.refreshParameterValue();
 
@@ -187,7 +187,7 @@ public class RuntimeParametersTest {
 		assertThat("System parameters for empty property 'platformName' should be 'Android'", RuntimeParameters.PLATFORM_NAME.getValue(), Matchers.equalTo("Android"));
 		assertThat("System parameters for empty property 'platformVersion' should be 'null'", RuntimeParameters.PLATFORM_VERSION.getValue(), Matchers.isEmptyString());
 		assertThat("System parameters for empty property 'deviceName' should be 'Android Emulator'", RuntimeParameters.DEVICE_NAME.getValue(), Matchers.equalTo("Android Emulator"));
-		assertThat("System parameters for empty property 'app' should be '.'", RuntimeParameters.APPLICATION_PATH.getValue(), Matchers.equalTo("."));
+		assertThat("System parameters for empty property 'app' should be '.'", RuntimeParameters.APP.getValue(), Matchers.equalTo("."));
 		assertThat("System parameters for empty property 'browserName' should be 'null'", RuntimeParameters.BROWSER_NAME.getValue(), Matchers.isEmptyString());
 		assertThat("System parameters for empty property 'deviceOptions' should be 'null'", RuntimeParameters.DEVICE_OPTIONS.getValue(), Matchers.isEmptyString());
 		
