@@ -7,6 +7,8 @@ import org.junit.*;
 
 import java.nio.file.Paths;
 
+import static org.junit.Assert.assertEquals;
+
 public class PropertiesManagerTest {
 
 	@BeforeClass
@@ -17,13 +19,13 @@ public class PropertiesManagerTest {
 	public static void tearDownAfterClass() {
 	}
 
-	private PropertiesSelenium propertiesSelenium;
+	private PropertiesFileSettings propertiesFileSettings;
 
 	@Before
 	public void setUp() {
 		String path = System.getProperty("user.dir") + Paths.get("/src/test/resources/settings.properties");
 		Injector i = Guice.createInjector(PropertiesSettingsModule.init(path));
-		this.propertiesSelenium = i.getInstance(PropertiesSelenium.class);
+		this.propertiesFileSettings = i.getInstance(PropertiesFileSettings.class);
 	}
 
 	@After
@@ -32,28 +34,13 @@ public class PropertiesManagerTest {
 	}
 
 	@Test
-	public void testParamterGetChrome() {
-		assertEquals("", "chromedriver.exe", propertiesSelenium.getSeleniumChrome());
+	public void testParamter_1() {
+		assertEquals("", "How are you", propertiesFileSettings.getProperty_1());
 	}
 
 	@Test
-	public void testParamterGetFirefox() {
-		assertEquals("", "geckodriver.exe", propertiesSelenium.getSeleniumFirefox());
-	}
-
-	@Test
-	public void testParamterGetIE() {
-		assertEquals("", "IEDriverServer.exe", propertiesSelenium.getSeleniumIE());
-	}
-
-	@Test
-	public void testParamterGetEdge() {
-		assertEquals("", "edgedriver.exe", propertiesSelenium.getSeleniumEdge());
-	}
-
-	@Test
-	public void testParamterGetOpera() {
-		assertEquals("", "operadriver.exe", propertiesSelenium.getSeleniumOpera());
+	public void testParamter_2() {
+		assertEquals("", "What is your today success", propertiesFileSettings.getProperty_2());
 	}
 
 	// @Ignore
@@ -62,9 +49,9 @@ public class PropertiesManagerTest {
 		PropertiesSettingsModule.delInstance();
 
 		Injector i = Guice.createInjector(PropertiesSettingsModule.init());
-		PropertiesSelenium propertiesSelenium = i.getInstance(PropertiesSelenium.class);
+		PropertiesFileSettings propertiesFileSettings = i.getInstance(PropertiesFileSettings.class);
 
-		assertEquals("", "./lib/webdrivers/chrome/chromedriver.exe", propertiesSelenium.getSeleniumChrome());
+		assertEquals("", "This is value for prop 1", propertiesFileSettings.getProperty_1());
 	}
 
 }

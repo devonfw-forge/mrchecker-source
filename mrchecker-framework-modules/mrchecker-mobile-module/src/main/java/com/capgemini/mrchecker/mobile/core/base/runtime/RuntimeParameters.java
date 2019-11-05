@@ -115,8 +115,6 @@ public enum RuntimeParameters implements RuntimeParametersI {
 				break;
 
 			case "PLATFORM_NAME":
-				paramValue = paramValue.toLowerCase();
-
 				if (paramValue.equals("android")) {
 					paramValue = "Android";
 				} else if (paramValue.equals("ios")) {
@@ -124,7 +122,6 @@ public enum RuntimeParameters implements RuntimeParametersI {
 				}
 				break;
 			case "DEVICE_NAME":
-				paramValue = paramValue.toLowerCase();
 				if (paramValue.equals("android")) {
 					paramValue = "Android Emulator";
 				}
