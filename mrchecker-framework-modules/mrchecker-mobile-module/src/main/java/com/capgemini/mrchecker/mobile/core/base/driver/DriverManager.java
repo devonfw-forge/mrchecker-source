@@ -7,29 +7,21 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.capgemini.mrchecker.mobile.core.base.exceptions.BFAppiumServerNotConnectedException;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import io.appium.java_client.remote.MobileCapabilityType;
-import io.appium.java_client.remote.MobilePlatform;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-
-import java.io.File;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.MobileElement;
-import java.net.URL;
-import java.nio.file.Paths;
-
 public class DriverManager {
+
+	public DriverManager(){}
 
 	private static ThreadLocal<INewMobileDriver> drivers = new ThreadLocal<INewMobileDriver>();
 
 	// Setup default variables
-	private static final int                IMPLICITYWAITTIMER     = 2;                                    // in seconds
 	private static       PropertiesFileSettings propertiesFileSettings;
 
 	@Inject
@@ -68,12 +60,26 @@ public class DriverManager {
 	public static INewMobileDriver getDriver() {
 		INewMobileDriver driver = drivers.get();
 		if (driver == null) {
-			driver = createDriver();
+			BFLogger.logDebug("Creating new " + RuntimeParameters.PLATFORM_NAME.toString() + " WebDriver.");
+			driver = setupAppiumServer();
 			drivers.set(driver);
 			BFLogger.logDebug("driver:" + driver.toString());
 		}
 		return driver;
 	}
+
+	//TODO:  Add driver per device Platform. Do not forget to build start() and stop() for each of them.
+//	public static AndroidDriver getDriverAndroid() {
+//		AndroidDriver driver = drivers.get();
+//		if (driver == null) {
+//			BFLogger.logDebug("Creating new Android " + RuntimeParameters.PLATFORM_NAME.toString() + " WebDriver.");
+//			driver = setupAndroidSession();
+//			drivers.set(driver);
+//			BFLogger.logDebug("driver:" + driver.toString());
+//		}
+//		return driver;
+//	}
+
 
 	public static void closeDriver() {
 		INewMobileDriver driver = drivers.get();
@@ -85,7 +91,7 @@ public class DriverManager {
 				driver.quit();
 			} catch (WebDriverException e) {
 				BFLogger.logDebug("Ooops! Something went wrong while closing the driver: ");
-				e.printStackTrace();
+				BFLogger.logError(e.getMessage());
 			} finally {
 				driver = null;
 				drivers.remove();
@@ -98,37 +104,32 @@ public class DriverManager {
 	 */
 	private static INewMobileDriver createDriver() {
 		BFLogger.logDebug("Creating new " + RuntimeParameters.PLATFORM_NAME.toString() + " WebDriver.");
-		INewMobileDriver driver;
-		String appiumServerParameter = RuntimeParameters.APPIUM_SERVER_URL.getValue();
-		if (isEmpty(appiumServerParameter)) {
-//			driver = setupDevice();
-			driver = null;
-		} else {
-			driver = setupAppiumServer();
-		}
-//		driver.manage()
-//				.timeouts()
-//				.implicitlyWait(DriverManager.IMPLICITYWAITTIMER, TimeUnit.SECONDS);
-
-//		NewRemoteWebElement.setClickTimer();
+		INewMobileDriver driver = setupAppiumServer();
 		return driver;
 	}
 
-	private static boolean isEmpty(String appiumServerParameter) {
-		return appiumServerParameter == null || appiumServerParameter.trim()
-				.isEmpty();
-	}
-
 	/**
-	 * Method sets Selenium Grid
+	 * Method sets Appium session
 	 */
 	private static INewMobileDriver setupAppiumServer() {
 		try {
-			return Driver.APPIUM_SERVER.getDriver();
+			return new AppiumDriverManager().getDriver();
 		} catch (WebDriverException e) {
 			throw new BFAppiumServerNotConnectedException(e);
 		}
 	}
+
+	/**
+	 * Method sets Android session
+	 */
+	private static AndroidDriver setupAndroidSession() {
+		try {
+			return new AndroidDriverManager().getDriver();
+		} catch (WebDriverException e) {
+			throw new BFAppiumServerNotConnectedException(e);
+		}
+	}
+
 
 	/**
 	 * Method sets desired 'driver' depends on chosen parameters
@@ -350,49 +351,131 @@ public class DriverManager {
 //			}
 //
 //		},
-		APPIUM_SERVER {
-			@Override
-			public INewMobileDriver getDriver() {
+//		APPIUM_SERVER {
+//			@Override
+//			public INewMobileDriver getDriver() {
+//
+//				final String APPIUM_SERVER_URL = RuntimeParameters.DEVICE_URL.getValue() + "/wd/hub";
+//				BFLogger.logDebug("Connecting to the Appium Server: " + APPIUM_SERVER_URL);
+//
+//				DesiredCapabilities capabilities = new DesiredCapabilities();
+//				capabilities.setCapability(RuntimeParameters.AUTOMATION_NAME.getKey(), RuntimeParameters.AUTOMATION_NAME.getValue());
+//				capabilities.setCapability(RuntimeParameters.PLATFORM_NAME.getKey(), RuntimeParameters.PLATFORM_NAME.getValue());
+//				capabilities.setCapability(RuntimeParameters.PLATFORM_VERSION.getKey(), RuntimeParameters.PLATFORM_VERSION.getValue());
+//				capabilities.setCapability(RuntimeParameters.DEVICE_NAME.getKey(), RuntimeParameters.DEVICE_NAME.getValue());
+//				capabilities.setCapability(RuntimeParameters.APP.getKey(), RuntimeParameters.APP.getValue());
+//				capabilities.setCapability(RuntimeParameters.BROWSER_NAME.getKey(), RuntimeParameters.BROWSER_NAME.getValue());
+//
+//				// Set users device options
+//				RuntimeParameters.DEVICE_OPTIONS.getValues()
+//						.forEach((key, value) -> {
+//							BFLogger.logInfo("Device option: " + key + " " + value);
+//							capabilities.setCapability(key, value);
+//						});
+//
+//				NewAppiumDriver newRemoteWebDriver = null;
+//				try {
+//					URL url = new URL(APPIUM_SERVER_URL);
+//					//url = new URL("http://target_ip:used_port/wd/hub");
+//					//if it needs to use locally started server
+//					//then the target_ip is 127.0.0.1 or 0.0.0.0
+//					//the default port is 4723
+//					BFLogger.logDebug("Capabilities: " + capabilities.toJson());
+//					newRemoteWebDriver = new NewAppiumDriver(url, capabilities);
+//				} catch (MalformedURLException e) {
+//					BFLogger.logError("Unable connect to Appium Server URL: " + APPIUM_SERVER_URL);
+//				}
+//				return newRemoteWebDriver;
+//			}
+//		};
+//
+//
+//
+//		public INewMobileDriver getDriver() {
+//			return null;
+//		}
 
-				final String APPIUM_SERVER_URL = RuntimeParameters.APPIUM_SERVER_URL.getValue() + "/wd/hub";
-				BFLogger.logDebug("Connecting to the Appium Server: " + APPIUM_SERVER_URL);
+	}
 
-				DesiredCapabilities capabilities = new DesiredCapabilities();
-				capabilities.setCapability(RuntimeParameters.AUTOMATION_NAME.getKey(), RuntimeParameters.AUTOMATION_NAME.getValue());
-				capabilities.setCapability(RuntimeParameters.PLATFORM_NAME.getKey(), RuntimeParameters.PLATFORM_NAME.getValue());
-				capabilities.setCapability(RuntimeParameters.PLATFORM_VERSION.getKey(), RuntimeParameters.PLATFORM_VERSION.getValue());
-				capabilities.setCapability(RuntimeParameters.DEVICE_NAME.getKey(), RuntimeParameters.DEVICE_NAME.getValue());
-				capabilities.setCapability(RuntimeParameters.APP.getKey(), RuntimeParameters.APP.getValue());
-				capabilities.setCapability(RuntimeParameters.BROWSER_NAME.getKey(), RuntimeParameters.BROWSER_NAME.getValue());
 
-				// Set users device options
-				RuntimeParameters.DEVICE_OPTIONS.getValues()
-						.forEach((key, value) -> {
-							BFLogger.logInfo("Device option: " + key + " " + value);
-							capabilities.setCapability(key, value);
-						});
+	private interface IDriverManager{
 
-				NewAppiumDriver newRemoteWebDriver = null;
-				try {
-					URL url = new URL(APPIUM_SERVER_URL);
-					//url = new URL("http://target_ip:used_port/wd/hub");
-					//if it needs to use locally started server
-					//then the target_ip is 127.0.0.1 or 0.0.0.0
-					//the default port is 4723
-					BFLogger.logDebug("Capabilities: " + capabilities.toJson());
-					newRemoteWebDriver = new NewAppiumDriver(url, capabilities);
-				} catch (MalformedURLException e) {
-					BFLogger.logError("Unable connect to Appium Server URL: " + APPIUM_SERVER_URL);
-				}
-				return newRemoteWebDriver;
+		String getUrl();
+		<T extends AppiumDriver> T getDriver();
+		DesiredCapabilities getCapabilities();
+	}
+
+	private static class AppiumDriverManager implements IDriverManager{
+
+		public String getUrl(){
+			return RuntimeParameters.DEVICE_URL.getValue() + "/wd/hub";
+		}
+
+
+		public DesiredCapabilities getCapabilities(){
+			DesiredCapabilities capabilities = new DesiredCapabilities();
+			capabilities.setCapability(RuntimeParameters.AUTOMATION_NAME.getKey(), RuntimeParameters.AUTOMATION_NAME.getValue());
+			capabilities.setCapability(RuntimeParameters.PLATFORM_NAME.getKey(), RuntimeParameters.PLATFORM_NAME.getValue());
+			capabilities.setCapability(RuntimeParameters.PLATFORM_VERSION.getKey(), RuntimeParameters.PLATFORM_VERSION.getValue());
+			capabilities.setCapability(RuntimeParameters.DEVICE_NAME.getKey(), RuntimeParameters.DEVICE_NAME.getValue());
+			capabilities.setCapability(RuntimeParameters.APP.getKey(), RuntimeParameters.APP.getValue());
+			capabilities.setCapability(RuntimeParameters.BROWSER_NAME.getKey(), RuntimeParameters.BROWSER_NAME.getValue());
+
+			// Set users device options
+			RuntimeParameters.DEVICE_OPTIONS.getValues()
+					.forEach((key, value) -> {
+						BFLogger.logInfo("Device option: " + key + " " + value);
+						capabilities.setCapability(key, value);
+					});
+
+
+			BFLogger.logDebug("Capabilities: " + capabilities.toJson());
+			return capabilities;
+		}
+
+
+
+		public <T extends AppiumDriver> T getDriver(){
+
+			BFLogger.logDebug("Connecting to the Appium Server: " + getUrl());
+
+			NewAppiumDriver newRemoteWebDriver = null;
+			try {
+				URL url = new URL(getUrl());
+				//url = new URL("http://target_ip:used_port/wd/hub");
+				//if it needs to use locally started server
+				//then the target_ip is 127.0.0.1 or 0.0.0.0
+				//the default port is 4723
+
+				newRemoteWebDriver = new NewAppiumDriver(url, getCapabilities());
+			} catch (MalformedURLException e) {
+				BFLogger.logError("Unable connect to Appium Server URL: " + getUrl());
 			}
+			return (T) newRemoteWebDriver;
 		};
 
 
+	}
 
-		public INewMobileDriver getDriver() {
-			return null;
+	private static class AndroidDriverManager extends AppiumDriverManager implements IDriverManager{
+
+		//TODO:  Is it possible to connect to Android without Appium Server  /wd/hub  sub-url ?
+		public String getUrl(){
+			return RuntimeParameters.DEVICE_URL.getValue() + "/wd/hub";
 		}
+
+
+		@Override
+		public DesiredCapabilities getCapabilities(){
+			DesiredCapabilities capabilities = super.getCapabilities();
+			String key = "";
+			String value = "";
+			capabilities.setCapability(key, value);
+			return capabilities;
+		};
+
+
+		@Override public AndroidDriver getDriver(){return null;};
 
 	}
 
