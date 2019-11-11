@@ -18,8 +18,12 @@ public class BasePageTest {
 	}
 	
 	private static class MyPage extends BasePage {
-		
+
+
+
 		public String myMethod() {
+			getDriver().getTitle();
+			getDriver().getCurrentUrl();
 			return "Welcome";
 		}
 	}

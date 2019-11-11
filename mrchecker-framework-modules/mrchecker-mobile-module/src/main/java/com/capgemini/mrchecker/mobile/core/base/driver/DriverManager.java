@@ -17,9 +17,7 @@ import java.net.URL;
 
 public class DriverManager {
 
-	public DriverManager(){}
-
-	private static ThreadLocal<INewMobileDriver> drivers = new ThreadLocal<INewMobileDriver>();
+	private static ThreadLocal<INewMobileDriver> drivers = new ThreadLocal<>();
 
 	// Setup default variables
 	private static       PropertiesFileSettings propertiesFileSettings;
@@ -68,17 +66,17 @@ public class DriverManager {
 		return driver;
 	}
 
-	//TODO:  Add driver per device Platform. Do not forget to build start() and stop() for each of them.
-//	public static AndroidDriver getDriverAndroid() {
-//		AndroidDriver driver = drivers.get();
-//		if (driver == null) {
-//			BFLogger.logDebug("Creating new Android " + RuntimeParameters.PLATFORM_NAME.toString() + " WebDriver.");
-//			driver = setupAndroidSession();
-//			drivers.set(driver);
-//			BFLogger.logDebug("driver:" + driver.toString());
-//		}
-//		return driver;
-//	}
+	public static AndroidDriver getDriverAndroid() {
+		//TODO:  Validate cast !!!!!
+		NewAndroidDriver driver = (NewAndroidDriver) drivers.get();
+		if (driver == null) {
+			BFLogger.logDebug("Creating new Android " + RuntimeParameters.PLATFORM_NAME.toString() + " WebDriver.");
+			driver = setupAndroidSession();
+			drivers.set(driver);
+			BFLogger.logDebug("driver:" + driver.toString());
+		}
+		return driver;
+	}
 
 
 	public static void closeDriver() {
@@ -113,7 +111,7 @@ public class DriverManager {
 	 */
 	private static INewMobileDriver setupAppiumServer() {
 		try {
-			return new AppiumDriverManager().getDriver();
+			return new DriverManagerForAppium().getDriver();
 		} catch (WebDriverException e) {
 			throw new BFAppiumServerNotConnectedException(e);
 		}
@@ -122,9 +120,9 @@ public class DriverManager {
 	/**
 	 * Method sets Android session
 	 */
-	private static AndroidDriver setupAndroidSession() {
+	private static NewAndroidDriver setupAndroidSession() {
 		try {
-			return new AndroidDriverManager().getDriver();
+			return new DriverManagerForAndroid().getDriver();
 		} catch (WebDriverException e) {
 			throw new BFAppiumServerNotConnectedException(e);
 		}
@@ -401,11 +399,11 @@ public class DriverManager {
 	private interface IDriverManager{
 
 		String getUrl();
-		<T extends AppiumDriver> T getDriver();
+		<T extends NewAppiumDriver> INewMobileDriver getDriver();
 		DesiredCapabilities getCapabilities();
 	}
 
-	private static class AppiumDriverManager implements IDriverManager{
+	private static class DriverManagerForAppium implements IDriverManager{
 
 		public String getUrl(){
 			return RuntimeParameters.DEVICE_URL.getValue() + "/wd/hub";
@@ -435,11 +433,11 @@ public class DriverManager {
 
 
 
-		public <T extends AppiumDriver> T getDriver(){
+		public INewMobileDriver getDriver(){
 
 			BFLogger.logDebug("Connecting to the Appium Server: " + getUrl());
 
-			NewAppiumDriver newRemoteWebDriver = null;
+			INewMobileDriver newRemoteWebDriver = null;
 			try {
 				URL url = new URL(getUrl());
 				//url = new URL("http://target_ip:used_port/wd/hub");
@@ -451,13 +449,13 @@ public class DriverManager {
 			} catch (MalformedURLException e) {
 				BFLogger.logError("Unable connect to Appium Server URL: " + getUrl());
 			}
-			return (T) newRemoteWebDriver;
+			return newRemoteWebDriver;
 		};
 
 
 	}
 
-	private static class AndroidDriverManager extends AppiumDriverManager implements IDriverManager{
+	private static class DriverManagerForAndroid extends DriverManagerForAppium implements IDriverManager{
 
 		//TODO:  Is it possible to connect to Android without Appium Server  /wd/hub  sub-url ?
 		public String getUrl(){
@@ -475,7 +473,7 @@ public class DriverManager {
 		};
 
 
-		@Override public AndroidDriver getDriver(){return null;};
+		@Override public NewAndroidDriver getDriver(){return null;};
 
 	}
 

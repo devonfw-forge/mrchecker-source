@@ -3,6 +3,7 @@ package com.capgemini.mrchecker.mobile.core;
 
 
 import com.capgemini.mrchecker.mobile.core.base.driver.DriverManager;
+import com.capgemini.mrchecker.mobile.core.base.driver.INewMobileDriver;
 import com.capgemini.mrchecker.mobile.core.base.properties.PropertiesFileSettings;
 import com.capgemini.mrchecker.mobile.core.base.runtime.RuntimeParameters;
 import com.capgemini.mrchecker.test.core.BaseTest;
@@ -30,7 +31,7 @@ abstract public class BasePage implements ITestObserver {
 		// Get analytics instance created in BaseTets
 		analytics = BaseTest.getAnalytics();
 		
-		// Get and then set properties information from selenium.settings file
+		// Get and then set properties information from mobile.settings file
 		propertiesFileSettings = setPropertiesSettings();
 		
 		// Read System or maven parameters
@@ -48,7 +49,7 @@ abstract public class BasePage implements ITestObserver {
 		this(getDriver());
 	}
 	
-	public BasePage(DriverManager driver) {
+	public BasePage(INewMobileDriver driver) {
 		// Add given module to Test core Observable list
 		this.addObserver();
 		
@@ -105,15 +106,15 @@ abstract public class BasePage implements ITestObserver {
 		return "";
 	}
 	
-	public static DriverManager getDriver() {
+	public static INewMobileDriver getDriver() {
 		if (BasePage.driver == null) {
 			// Create module driver
 			BasePage.driver = new DriverManager(propertiesFileSettings);
 		}
-		return BasePage.driver;
+		return BasePage.driver.getDriver();
 		
 	}
-	
+
 	private static PropertiesFileSettings setPropertiesSettings() {
 		// Get and then set properties information from settings.properties file
 		PropertiesFileSettings propertiesFileSettings = Guice.createInjector(PropertiesSettingsModule.init())
