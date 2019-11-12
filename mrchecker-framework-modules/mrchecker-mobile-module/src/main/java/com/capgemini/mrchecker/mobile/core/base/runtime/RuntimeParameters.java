@@ -33,6 +33,7 @@ public enum RuntimeParameters implements RuntimeParametersI {
 	DEVICE_NAME(MobileCapabilityType.DEVICE_NAME, "Android Emulator"),
 	APP(MobileCapabilityType.APP, "."),
 	BROWSER_NAME(MobileCapabilityType.BROWSER_NAME, ""),
+	NEW_COMMAND_TIMEOUT(MobileCapabilityType.NEW_COMMAND_TIMEOUT, "4000"),
 	DEVICE_OPTIONS("deviceOptions", "") {
 		public Map<String, Object> getValues() {
 			return Arrays.asList(this.paramValue.split(";"))
@@ -84,7 +85,7 @@ public enum RuntimeParameters implements RuntimeParametersI {
 		return this.paramValue;
 	}
 
-	//@Override
+	@Override
 	public String getKey() {
 		return this.paramName;
 	}
@@ -139,6 +140,8 @@ public enum RuntimeParameters implements RuntimeParametersI {
 			}
 			break;
 		case "BROWSER_NAME":
+			break;
+		case "NEW_COMMAND_TIMEOUT":
 			break;
 		case "APP":
 			break;

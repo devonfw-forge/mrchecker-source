@@ -17,6 +17,9 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.google.inject.Guice;
 
 import io.qameta.allure.Attachment;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.UnhandledAlertException;
 
 abstract public class BasePage implements ITestObserver {
 	
@@ -95,15 +98,22 @@ abstract public class BasePage implements ITestObserver {
 	public ModuleType getModuleType() {
 		return ModuleType.MOBILE;
 	}
-	
+
 	@Attachment("Screenshot on failure")
-	public String makeScreenshotOnFailure() {
-		return "";
+	public byte[] makeScreenshotOnFailure() {
+		byte[] screenshot = null;
+		try {
+			screenshot = ((TakesScreenshot) DriverManager.getDriver()).getScreenshotAs(OutputType.BYTES);
+		} catch (UnhandledAlertException e) {
+			BFLogger.logDebug("[makeScreenshotOnFailure] Unable to take screenshot.");
+		}
+		return screenshot;
 	}
-	
+
 	@Attachment("Source Page on failure")
 	public String makeSourcePageOnFailure() {
-		return "";
+		return DriverManager.getDriver()
+				.getPageSource();
 	}
 	
 	public static INewMobileDriver getDriver() {

@@ -1,5 +1,6 @@
 package com.capgemini.mrchecker.mobile.core.base.runtime;
 
+import io.appium.java_client.remote.MobileCapabilityType;
 import org.apache.commons.lang.BooleanUtils;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.IsInstanceOf;
@@ -32,6 +33,7 @@ public class RuntimeParametersTest {
 		values.put("deviceName", "magicAndroidEmulator");
 		values.put("app", "./magic/path");
 		values.put("browserName", "magicChrome");
+		values.put("newCommandTimeout", "4");
 		values.put("deviceOptions", "headless;window-size=1200x600;testEquals=FirstEquals=SecondEquals;--testMe;acceptInsecureCerts=true;maxInstances=3");
 
 		values.forEach(System::setProperty);
@@ -43,6 +45,7 @@ public class RuntimeParametersTest {
 		RuntimeParameters.DEVICE_NAME.refreshParameterValue();
 		RuntimeParameters.APP.refreshParameterValue();
 		RuntimeParameters.BROWSER_NAME.refreshParameterValue();
+		RuntimeParameters.NEW_COMMAND_TIMEOUT.refreshParameterValue();;
 		RuntimeParameters.DEVICE_OPTIONS.refreshParameterValue();
 	}
 
@@ -60,6 +63,7 @@ public class RuntimeParametersTest {
 		values.put("deviceName", "magicAndroidEmulator");
 		values.put("app", "./magic/path");
 		values.put("browserName", "magicChrome");
+		values.put("newCommandTimeout", "8000");
 
 		assertThat("System parameters for empty property 'deviceUrl' should be 'http://192.168.0.1:1234'", RuntimeParameters.DEVICE_URL.getValue(), Matchers.equalTo("http://192.168.0.1:1234"));
 		assertThat("System parameters for empty property 'automationName' should be 'magicAutomationName'", RuntimeParameters.AUTOMATION_NAME.getValue(), Matchers.equalTo("magicAutomationName"));
@@ -68,6 +72,7 @@ public class RuntimeParametersTest {
 		assertThat("System parameters for empty property 'deviceName' should be 'magicAndroidEmulator'", RuntimeParameters.DEVICE_NAME.getValue(), Matchers.equalTo("magicAndroidEmulator"));
 		assertThat("System parameters for empty property 'app' should be './magic/path'", RuntimeParameters.APP.getValue(), Matchers.equalTo("./magic/path"));
 		assertThat("System parameters for empty property 'browserName' should be 'magicChrome'", RuntimeParameters.BROWSER_NAME.getValue(), Matchers.equalTo("magicChrome"));
+		assertThat("System parameters for empty property 'newCommandTimeout' should be '4'", RuntimeParameters.NEW_COMMAND_TIMEOUT.getValue(), Matchers.equalTo("4"));
 		assertThat(
 				"System parameters for empty property 'browserOptions' should be 'headless;window-size=1200x600;testEquals=FirstEquals=SecondEquals;--testMe;acceptInsecureCerts=true;maxInstances=3'",
 				RuntimeParameters.DEVICE_OPTIONS.getValue(),
@@ -183,6 +188,7 @@ public class RuntimeParametersTest {
 		RuntimeParameters.DEVICE_NAME.refreshParameterValue();
 		RuntimeParameters.APP.refreshParameterValue();
 		RuntimeParameters.BROWSER_NAME.refreshParameterValue();
+		RuntimeParameters.NEW_COMMAND_TIMEOUT.refreshParameterValue();
 		RuntimeParameters.DEVICE_OPTIONS.refreshParameterValue();
 
 		assertThat("System parameters for empty property 'deviceUrl' should be 'http://127.0.0.1:4723'", RuntimeParameters.DEVICE_URL.getValue(), Matchers.equalTo("http://127.0.0.1:4723"));
@@ -192,6 +198,7 @@ public class RuntimeParametersTest {
 		assertThat("System parameters for empty property 'deviceName' should be 'Android Emulator'", RuntimeParameters.DEVICE_NAME.getValue(), Matchers.equalTo("Android Emulator"));
 		assertThat("System parameters for empty property 'app' should be '.'", RuntimeParameters.APP.getValue(), Matchers.equalTo("."));
 		assertThat("System parameters for empty property 'browserName' should be 'null'", RuntimeParameters.BROWSER_NAME.getValue(), Matchers.isEmptyString());
+		assertThat("System parameters for empty property 'newCommandTimeout' should be '4000'", RuntimeParameters.NEW_COMMAND_TIMEOUT.getValue(), Matchers.equalTo("4000"));
 		assertThat("System parameters for empty property 'deviceOptions' should be 'null'", RuntimeParameters.DEVICE_OPTIONS.getValue(), Matchers.isEmptyString());
 
 	}

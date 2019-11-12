@@ -75,7 +75,12 @@ public enum RuntimeParametersSelenium implements RuntimeParametersI {
 	public Map<String, Object> getValues() {
 		return null;
 	}
-	
+
+	@Override
+	public String getKey() {
+		return this.paramName;
+	}
+
 	@Override
 	public String toString() {
 		return paramName + "=" + this.getValue();
