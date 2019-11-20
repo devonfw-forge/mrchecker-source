@@ -46,6 +46,19 @@
         </repository>
     </repositories>
 
+    <properties>
+        <version>7.2.0.1-SNAPSHOT</version>
+
+        <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
+
+        <mrchecker-core-module.version>4.12.1.3-SNAPSHOT</mrchecker-core-module.version>
+
+        <!-- Lib/package version settings -->
+        <io.appium.java.client.version>7.2.0</io.appium.java.client.version>
+        <selenium.version>3.141.59</selenium.version>
+
+    </properties>
+
     <dependencies>
 
         <!-- Dependency to other MrChecker Test Framework modules -->
@@ -54,6 +67,8 @@
             <artifactId>mrchecker-core-module</artifactId>
             <version>${mrchecker-core-module.version}</version>
         </dependency>
+
+
 
         <!-- Hashes sensitive data -->
         <dependency>
@@ -66,6 +81,46 @@
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-junit4</artifactId>
         </dependency>
+
+
+        <!--This dependency is necessary for Appium to connect through  Selenium plugin. -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium.version}</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>*</artifactId>
+                    <groupId>com.google.code.gson</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>htmlunit-driver</artifactId>
+                    <groupId>*</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>*</artifactId>
+                    <groupId>net.sourceforge.htmlunit</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-support</artifactId>
+            <version>${selenium.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-api</artifactId>
+            <version>${selenium.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
 
 
         <!--This dependency is necessary for Appium plugin. -->
@@ -106,17 +161,7 @@
         <url>http://github.com/devonfw/devonfw-testing/tree/master</url>
     </scm>
 
-    <properties>
-        <version>7.2.0.1-SNAPSHOT</version>
 
-        <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
-
-        <mrchecker-core-module.version>4.12.1.3-SNAPSHOT</mrchecker-core-module.version>
-
-        <!-- Lib/package version settings -->
-         <io.appium.java.client.version>7.2.0</io.appium.java.client.version>
-
-    </properties>
 
 
     <!-- Build goals/actions -->

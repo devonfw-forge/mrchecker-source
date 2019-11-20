@@ -1,6 +1,6 @@
 mvn clean compile -DskipTests
 
-mvn clean compile test  -Dapp="D:\\Repo\\mrchecker-source\\mrchecker-framework-modules\\mrchecker-mobile-module\\src\\test\\resources\\Simple_App_v2.0.1_apkpure.com.apk" -DautomationName="UiAutomator1" -Dthread.count=1
+mvn clean compile test  -Dapp="C:\\Repo\\mrchecker-source\\mrchecker-framework-modules\\mrchecker-mobile-module\\src\\test\\resources\\Simple_App_v2.0.1_apkpure.com.apk" -DautomationName="UiAutomator1" -Dthread.count=1
 
 
 

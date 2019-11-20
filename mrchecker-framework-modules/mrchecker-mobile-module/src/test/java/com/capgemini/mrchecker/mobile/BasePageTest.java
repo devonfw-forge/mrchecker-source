@@ -20,11 +20,13 @@ public class BasePageTest {
 			BFLogger.logDebug("TITLE: " + getDriver().getPageSource());
 
 //			File file  = ((TakesScreenshot)getDriver()).getScreenshotAs(OutputType.FILE);
-//			try {
+//			 try {
 //				FileUtils.copyFile(file, new File("Screenshot.jpg"));
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
+//			 } catch (IOException e) {
+//			 	e.printStackTrace();
+//			 }
+
+
 			return "Welcome";
 		}
 	}
