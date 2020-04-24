@@ -42,11 +42,11 @@ https://oss.sonatype.org/content/repositories/snapshots/com/capgemini/ntc/''', n
 		    setJenkinsJobDescription();
 		    boolean isWorkingBranchMaster = isWorkingBranchMaster();
     
-            docker.image('lucst/devonfwe2e:v2-0.4').inside(){
-                    stageBuildCompile();
-                    stageUnitTests();
-                    stageDeploy(env.VERSION);
-                }
+
+             stageBuildCompile();
+             stageUnitTests();
+             stageDeploy(env.VERSION);
+
             currentBuild.result = 'SUCCESS';
         } catch (Exception e) {
             sendMail(e);
@@ -84,7 +84,7 @@ def private void setJenkinsJobVariables(){
     env.JOB_NAME_UPSTREAM="Mr Checker"
 	env.BUILD_DISPLAY_NAME_UPSTREAM = env.BUILD_TAG
 	env.BUILD_URL_UPSTREAM = env.BUILD_URL  + 'console'
-	env.GIT_CREDENTIALS = "gitchudzik"
+	env.GIT_CREDENTIALS = "mrcheckergithub"
     env.JENKINS_CREDENTIALS = "0c089c76-f103-4f97-8d2d-c31830d2c21d" //jenkins_slave user;
     
 
