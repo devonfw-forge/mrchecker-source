@@ -16,7 +16,7 @@ def call(){
             junit "**/${env.APP_WORKSPACE}target/surefire-reports/TEST-*.xml"
             sh"""
                     cd ${env.APP_WORKSPACE}
-                    mvn -q allure:report ${env.MVN_PARAMETERS}
+                    mvn -q site:site ${env.MVN_PARAMETERS}
                 """
             if (fileExists("${env.APP_WORKSPACE}target/site/allure-report/index.html")) {
                 echo("Before publish allure");
