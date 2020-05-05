@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 import org.apache.log4j.Appender;
@@ -112,8 +113,7 @@ public class BFLoggerInstance {
 	
 	private File getLogFile() {
 		if (logFile == null) {
-			String path = getDirectory().getPath() + "\\" + getAppenderName() + ".log";
-			logFile = new File(path);
+			logFile = new File(getDirectory().getPath(),getAppenderName() + ".log");
 			logFile.deleteOnExit();
 		}
 		return logFile;
