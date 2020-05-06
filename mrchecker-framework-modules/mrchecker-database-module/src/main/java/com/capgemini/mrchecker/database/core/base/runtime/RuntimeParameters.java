@@ -24,6 +24,11 @@ public enum RuntimeParameters implements RuntimeParametersI {
 	}
 
 	@Override
+	public String getKey() {
+		return this.paramName;
+	}
+
+	@Override
 	public String toString() {
 		return paramName + "=" + this.getValue();
 	}
