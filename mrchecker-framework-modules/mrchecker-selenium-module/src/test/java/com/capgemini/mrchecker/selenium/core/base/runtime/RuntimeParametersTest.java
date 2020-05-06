@@ -16,18 +16,19 @@ import org.junit.Test;
 
 public class RuntimeParametersTest {
 	
-	private static final Map<String, String>	STARTUP_PARAMETERS_VALUES	= new LinkedHashMap<String, String>() {
-																				{
-																					put("browser", "magicbrowser");
-																					put("browserVersion", "11.0");
-																					put("seleniumGrid", "smth");
-																					put("os", "linux");
-																					put("browserOptions",
-																							"headless;window-size=1200x600;testEquals=FirstEquals=SecondEquals;--testMe;acceptInsecureCerts=true;maxInstances=3");
-																				}
-																			};
-	public static final String					DEFAULT_BROWSER_VALUE		= "chrome";
-	public static final String					BROWSER_OPTIONS_TEST_KEY	= "browserOptionsTestKey";
+	private static final Map<String, String> STARTUP_PARAMETERS_VALUES = new LinkedHashMap<String, String>() {
+		{
+			put("browser", "magicbrowser");
+			put("browserVersion", "11.0");
+			put("seleniumGrid", "smth");
+			put("os", "linux");
+			put("browserOptions",
+					"headless;window-size=1200x600;testEquals=FirstEquals=SecondEquals;--testMe;acceptInsecureCerts=true;maxInstances=3");
+		}
+	};
+	
+	public static final String	DEFAULT_BROWSER_VALUE		= "chrome";
+	public static final String	BROWSER_OPTIONS_TEST_KEY	= "browserOptionsTestKey";
 	
 	@Before
 	public void setUp() {
@@ -114,7 +115,7 @@ public class RuntimeParametersTest {
 		shouldBrowserOptionBeOfClass("blue", String.class);
 	}
 	
-	private void shouldBrowserOptionBeOfClass(String value, Class clazz) {
+	private void shouldBrowserOptionBeOfClass(String value, Class<?> clazz) {
 		System.setProperty("browserOptions", BROWSER_OPTIONS_TEST_KEY + "=" + value);
 		
 		refreshAllParameters();
@@ -145,13 +146,13 @@ public class RuntimeParametersTest {
 		browserOptionsValues.forEach((key, value) -> {
 			try {
 				String browserOption = Arrays.stream(browserOptions)
-						.filter(s -> s.contains(key))
+						.filter(s -> s.startsWith(key))
 						.findFirst()
 						.orElseThrow(Exception::new);
 				
-				assertThat(browserOption.contains(value.toString()), Matchers.equalTo(true));
+				assertThat(browserOption.endsWith(value.toString()), Matchers.equalTo(true));
 			} catch (Exception e) {
-				fail(key + "does NOT exist");
+				fail(key + " does NOT exist");
 			}
 		});
 	}
