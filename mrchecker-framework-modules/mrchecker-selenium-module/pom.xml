@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -15,28 +15,29 @@
     <name>MrChecker - Selenium - Module</name>
     <description>MrChecker Test Framework Selenium supports:
         * Malleable resolution
-            * Remote Web Design
-            * Mobile browsers 
+        * Remote Web Design
+        * Mobile browsers
         * Support for many browsers
-            * Internet Explorer, Edge
-            * Chrome, Firefox
-	     * ChromeHeadless
-            * Safari
+        * Internet Explorer, Edge
+        * Chrome, Firefox
+        * ChromeHeadless
+        * Safari
         * User friendly actions
-            * elementCheckBox
-            * elementDropdown, etc. 
+        * elementCheckBox
+        * elementDropdown, etc.
         * Ubiquise test execution
-            * locally
-            * against Selenium Grid through Jenkins
+        * locally
+        * against Selenium Grid through Jenkins
         * Page Object Model architecture
         * Selenium WebDriver with Java
         * Update Observers
 
-Based on Selenium 3.8.1</description>
+        Based on Selenium 3.141.59
+    </description>
     <url>https://github.com/devonfw/devonfw-testing</url>
 
     <organization>
-        <name>Capgemini  - Nearshore Test Center - Poland</name>
+        <name>Capgemini - Nearshore Test Center - Poland</name>
         <url>http://nsc.capgemini.com/nearshoretestcenter</url>
     </organization>
 
@@ -44,7 +45,7 @@ Based on Selenium 3.8.1</description>
         <developer>
             <name>Lukasz Stefaniszyn</name>
             <email>lukasz.stefaniszyn@capgemini.com</email>
-            <organization>Capgemini  - Nearshore Test Center - Poland</organization>
+            <organization>Capgemini - Nearshore Test Center - Poland</organization>
             <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
         </developer>
     </developers>
@@ -63,15 +64,14 @@ Based on Selenium 3.8.1</description>
     </scm>
 
     <properties>
-        <version>3.8.2.2</version>
-
+        <version>3.141.59.1-SNAPSHOT</version>
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
-
-        <mrchecker-core-module.version>4.12.1.2</mrchecker-core-module.version>
+        <mrchecker-core-module.version>4.12.1.3</mrchecker-core-module.version>
 
         <!-- Selenium settings -->
-        <selenium.version>3.8.1</selenium.version>
+        <selenium.version>3.141.59</selenium.version>
+
 
         <!-- Test tools -->
         <jsoup.version>1.11.2</jsoup.version>
@@ -118,6 +118,20 @@ Based on Selenium 3.8.1</description>
             <artifactId>selenium-java</artifactId>
             <version>${selenium.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-support</artifactId>
+            <version>${selenium.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-api</artifactId>
+            <version>${selenium.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+
         <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
@@ -189,8 +203,6 @@ Based on Selenium 3.8.1</description>
                 </exclusion>
             </exclusions>
         </dependency>
-
-
 
 
     </dependencies>

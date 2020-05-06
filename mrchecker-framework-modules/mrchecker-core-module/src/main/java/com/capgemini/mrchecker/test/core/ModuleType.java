@@ -5,5 +5,6 @@ public enum ModuleType {
 	WEBAPI,
 	DATABASE,
 	SECURITY,
+	MOBILE,
 	EXAMPLE
 }
