@@ -62,7 +62,7 @@
 
         
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
-	    <mrchecker-core-module.version>4.12.1.2</mrchecker-core-module.version>
+	    <mrchecker-core-module.version>4.12.1.4-SNAPSHOT</mrchecker-core-module.version>
         <jpa.version>2.2</jpa.version>
         <jpa.version>2.2</jpa.version>
 
