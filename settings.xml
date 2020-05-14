@@ -23,7 +23,7 @@
 			<repositories>
 				<repository>
 					<id>maven-releases</id>
-					<url>http://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 					<layout>default</layout>
 					<releases>
 						<enabled>true</enabled>
@@ -34,7 +34,7 @@
 				</repository>
 				<repository>
 					<id>maven-snapshots</id>
-					<url>http://oss.sonatype.org/content/repositories/snapshots</url>
+					<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 					<layout>default</layout>
 					<releases>
 						<enabled>false</enabled>
@@ -45,7 +45,7 @@
 				</repository>
 				<repository>
 					<id>central</id>
-					<url>http://central.maven.org/maven2/</url>
+					<url>https://central.maven.org/maven2/</url>
 					<snapshots>
 						<enabled>true</enabled>
 						<updatePolicy>always</updatePolicy>
