@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import org.hamcrest.Matchers;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,6 +35,19 @@ public class RuntimeParametersTest {
 	public void setUp() {
 		STARTUP_PARAMETERS_VALUES.forEach(System::setProperty);
 		refreshAllParameters();
+	}
+	
+	@After
+	public void tearDown() {
+		// System.out.println("**************************************");
+		// System.getProperties()
+		// .forEach((k, v) -> System.out.println(k + ":" + v));
+		STARTUP_PARAMETERS_VALUES.forEach((k, v) -> System.clearProperty(k));
+		refreshAllParameters();
+		// System.out.println("--------------------------------------");
+		// System.getProperties()
+		// .forEach((k, v) -> System.out.println(k + ":" + v));
+		
 	}
 	
 	private static void refreshAllParameters() {
