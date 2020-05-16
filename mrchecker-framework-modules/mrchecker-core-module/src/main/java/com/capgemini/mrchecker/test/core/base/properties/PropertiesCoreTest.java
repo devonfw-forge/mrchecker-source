@@ -4,35 +4,36 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class PropertiesCoreTest {
-	private String  coreDefaultEnvironmentName = "DEV";
-	private boolean coreIsAnalyticsEnabled     = true;
-	private boolean coreIsEncryptionEnabled    = false;
-
+	
+	private String	coreDefaultEnvironmentName	= "DEV";
+	private boolean	coreIsAnalyticsEnabled		= true;
+	private boolean	coreIsEncryptionEnabled		= false;
+	
 	@Inject(optional = true)
 	private void setIsAnalyticsEnabled(@Named("core.isAnalyticsEnabled") String status) {
-		this.coreIsAnalyticsEnabled = status.toLowerCase()
-				.equals("false") ? false : true;
+		this.coreIsAnalyticsEnabled = !status.toLowerCase()
+				.equals("false");
 	}
-
+	
 	@Inject(optional = true)
 	private void setIsEncryptionEnabled(@Named("core.isEncryptionEnabled") String status) {
 		this.coreIsEncryptionEnabled = status.toLowerCase()
-				.equals("true") ? true : false;
+				.equals("true");
 	}
-
+	
 	@Inject(optional = true)
-	private void setDefaultEnvironmentName(@Named("core.defaultEnvironmentName") String status) {
-		this.coreDefaultEnvironmentName = status;
+	private void setDefaultEnvironmentName(@Named("core.defaultEnvironmentName") String coreDefaultEnvironmentName) {
+		this.coreDefaultEnvironmentName = coreDefaultEnvironmentName;
 	}
-
+	
 	public boolean isAnalyticsEnabled() {
-		return this.coreIsAnalyticsEnabled;
+		return coreIsAnalyticsEnabled;
 	}
-
+	
 	public boolean isEncryptionEnabled() {
 		return coreIsEncryptionEnabled;
 	}
-
+	
 	public String getDefaultEnvironmentName() {
 		return coreDefaultEnvironmentName;
 	}

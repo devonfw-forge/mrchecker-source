@@ -7,7 +7,9 @@
     <artifactId>mrchecker-test-framework</artifactId>
     <version>2.4.2-SNAPSHOT</version>
     <name>MrChecker</name>
-    <description>MrChecker Test Framework is an automated testing framework for functional testing of web applications, native mobile apps, webservices and database.</description>
+    <description>MrChecker Test Framework is an automated testing framework for functional testing of web applications,
+        native mobile apps, webservices and database.
+    </description>
     <url>https://github.com/devonfw/devonfw-testing</url>
     <packaging>pom</packaging>
 
@@ -108,7 +110,8 @@
         <rest-assured.version>3.0.6</rest-assured.version>
 
         <!-- Allure Annotations -->
-        <allure-junit4-listener.version>2.6.0</allure-junit4-listener.version> <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-junit4 -->
+        <allure-junit4-listener.version>2.6.0
+        </allure-junit4-listener.version> <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-junit4 -->
     </properties>
 
 
