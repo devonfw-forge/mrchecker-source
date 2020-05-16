@@ -1,14 +1,14 @@
 package com.capgemini.mrchecker.test.core.base.encryption.providers;
 
-import java.io.InputStream;
-import java.util.Objects;
-import java.util.Scanner;
-
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
-import org.jasypt.properties.PropertyValueEncryptionUtils;
 
 import com.capgemini.mrchecker.test.core.base.encryption.IDataEncryptionService;
 import com.capgemini.mrchecker.test.core.exceptions.BFSecureModuleException;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.properties.PropertyValueEncryptionUtils;
+
+import java.io.InputStream;
+import java.util.Objects;
+import java.util.Scanner;
 
 /**
  * Basic data encryption service to encapsulate and isolate the encryption/decryption logic.

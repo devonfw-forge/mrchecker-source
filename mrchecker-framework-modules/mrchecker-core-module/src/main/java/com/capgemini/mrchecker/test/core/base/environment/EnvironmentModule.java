@@ -1,14 +1,14 @@
 package com.capgemini.mrchecker.test.core.base.environment;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import com.capgemini.mrchecker.test.core.base.environment.providers.SpreadsheetEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.runtime.RuntimeParametersCore;
 import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class EnvironmentModule extends AbstractModule {
 	

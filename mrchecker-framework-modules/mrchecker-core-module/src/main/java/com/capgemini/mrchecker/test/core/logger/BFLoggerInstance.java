@@ -1,22 +1,14 @@
 package com.capgemini.mrchecker.test.core.logger;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+import org.apache.log4j.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Paths;
 import java.util.Arrays;
-
-import org.apache.log4j.Appender;
-import org.apache.log4j.AsyncAppender;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 
 public class BFLoggerInstance {
 	

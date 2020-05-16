@@ -1,16 +1,16 @@
 package com.capgemini.mrchecker.test.core.base.encryption;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Paths;
-
 import com.capgemini.mrchecker.test.core.base.encryption.providers.DataEncryptionService;
 import com.capgemini.mrchecker.test.core.exceptions.BFSecureModuleException;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Paths;
 
 public class DataEncryptionModule extends AbstractModule {
 	

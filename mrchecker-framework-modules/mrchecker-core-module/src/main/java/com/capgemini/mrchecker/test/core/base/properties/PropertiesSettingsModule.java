@@ -1,17 +1,19 @@
 package com.capgemini.mrchecker.test.core.base.properties;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Paths;
-import java.util.Properties;
-
 import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
+import org.apache.commons.io.IOUtils;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Paths;
+import java.util.Objects;
+import java.util.Properties;
 
 @Singleton
 public class PropertiesSettingsModule extends AbstractModule {
@@ -28,7 +30,7 @@ public class PropertiesSettingsModule extends AbstractModule {
 	
 	@Override
 	protected void configure() {
-		try {
+		try (InputStream propertiesSource = this.propertiesSource){
 			Properties properties = new Properties();
 			properties.load(propertiesSource);
 			Names.bindProperties(binder(), properties);
@@ -38,19 +40,18 @@ public class PropertiesSettingsModule extends AbstractModule {
 	}
 	
 	public static PropertiesSettingsModule init() {
-		try (InputStream fileSource = new FileInputStream(DEFAULT_FILE_SOURCE_FILE_PATH)) {
+		try {
+			InputStream fileSource = new FileInputStream(DEFAULT_FILE_SOURCE_FILE_PATH);
 			return PropertiesSettingsModule.init(fileSource);
 		} catch (FileNotFoundException e) {
 			throw new BFInputDataException("Default file not found in: " + DEFAULT_FILE_SOURCE_FILE_PATH);
-		} catch (IOException e) {
-			throw new BFInputDataException("Error while processing properties default file: " + DEFAULT_FILE_SOURCE_FILE_PATH);
 		}
 	}
 	
 	public static PropertiesSettingsModule init(InputStream propertiesSource) {
-		if (instance == null) {
+		if (Objects.isNull(instance)) {
 			synchronized (PropertiesSettingsModule.class) {
-				if (instance == null) {
+				if (Objects.isNull(instance)) {
 					instance = new PropertiesSettingsModule(propertiesSource);
 				}
 			}

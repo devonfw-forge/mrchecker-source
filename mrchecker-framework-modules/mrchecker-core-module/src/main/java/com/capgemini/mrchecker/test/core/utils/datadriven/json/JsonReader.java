@@ -1,15 +1,14 @@
 package com.capgemini.mrchecker.test.core.utils.datadriven.json;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
+import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class JsonReader {
 	

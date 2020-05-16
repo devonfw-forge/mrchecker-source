@@ -1,13 +1,10 @@
 package com.capgemini.mrchecker.test.core.testsuits;
 
-import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.platform.suite.api.SelectPackages;
+import org.junit.runner.RunWith;
 
-import com.googlecode.junittoolbox.SuiteClasses;
-
-// @RunWith(ParallelTestClassRunner.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@SuiteClasses({ "../unit/*.class", "../unit/**/*.class", "!../testsuits/*.class" })
+@RunWith(JUnitPlatform.class)
+@SelectPackages("com.capgemini.mrchecker.test.core.unit")
 public class UnitTestsSuite {
-	
 }

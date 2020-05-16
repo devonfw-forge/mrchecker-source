@@ -3,181 +3,177 @@ package com.capgemini.mrchecker.test.core;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import org.junit.AssumptionViolatedException;
-import org.junit.rules.ExternalResource;
-import org.junit.rules.TestWatcher;
-import org.junit.runner.Description;
-import org.junit.runners.model.MultipleFailureException;
-import org.junit.runners.model.Statement;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.*;
 
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
-import io.qameta.allure.Attachment;
-
-public class BaseTestWatcher extends TestWatcher {
-	private BaseTest	baseTest;
-	private long		iStart;
+public class BaseTestWatcher implements BeforeAllCallback, BeforeTestExecutionCallback, TestWatcher, AfterTestExecutionCallback, AfterAllCallback, ITestObservable {
 	
-	static final ThreadLocal<List<ITestObserver>> observers = new ThreadLocal<List<ITestObserver>>() {
-		@Override
-		protected List<ITestObserver> initialValue() {
-			return new ArrayList<ITestObserver>();
-		}
-	};
+	// TODO: fix multithread
+	private long iStart;
 	
-	public static class TestClassRule extends ExternalResource {
-		
-		static final ThreadLocal<List<ITestObserver>> classObservers = new ThreadLocal<List<ITestObserver>>() {
-			@Override
-			protected List<ITestObserver> initialValue() {
-				return new ArrayList<ITestObserver>();
-			}
-		};
-		
-		@Override
-		protected void after() {
-			classObservers.get()
-					.clear();
-		}
-	}
+	private static final ThreadLocal<List<ITestObserver>>	observers		= ThreadLocal.withInitial(ArrayList::new);
+	private static final ThreadLocal<List<ITestObserver>>	classObservers	= ThreadLocal.withInitial(ArrayList::new);
 	
-	public BaseTestWatcher(BaseTest baseTest) {
-		this.baseTest = baseTest;
+	@Override
+	public void beforeAll(ExtensionContext extensionContext) throws Exception {
+		String testName = extensionContext.getTestClass()
+				.get()
+				.getName();
+		BFLogger.logInfo("\"" + testName + "\"" + " - CLASS STARTED.");
 	}
 	
 	@Override
-	public Statement apply(final Statement base, final Description description) {
-		return new Statement() {
-			@Override
-			public void evaluate() throws Throwable {
-				List<Throwable> errors = new ArrayList<Throwable>();
-				
-				try {
-					starting(description);
-					base.evaluate();
-					succeeded(description);
-				} catch (org.junit.internal.AssumptionViolatedException e) {
-					errors.add(e);
-					skippedQuietly(e, description, errors);
-				} catch (Throwable e) {
-					errors.add(e);
-					failed(e, description);
-				} finally {
-					finished(description);
-				}
-				
-				MultipleFailureException.assertEmpty(errors);
-			}
-		};
-	}
-	
-	@Override
-	protected void starting(Description description) {
-		String testName = description.getDisplayName();
-		this.startingTestWatcher(testName);
-	}
-	
-	public void startingTestWatcher(String testName) {
-		BFLogger.RestrictedMethods.startSeparateLog(); // start logging for single test
-		BFLogger.logInfo("\"" + testName + "\"" + ". STARTED.");
-		this.iStart = System.currentTimeMillis(); // start timing
+	public void beforeTestExecution(ExtensionContext extensionContext) {
+		BFLogger.RestrictedMethods.startSeparateLog();
+		String testName = extensionContext.getDisplayName();
+		BFLogger.logInfo("\"" + testName + "\"" + " - STARTED.");
+		iStart = System.currentTimeMillis();
 		BaseTest.getAnalytics()
 				.sendClassName();
-		baseTest.setUp(); // Executed as a Before for each test
+		// baseTest.setUp();
 	}
 	
 	@Override
-	protected void finished(Description description) {
-		String testName = description.getDisplayName();
-		this.finishedTestWatcher(testName);
+	public void testDisabled(ExtensionContext context, Optional<String> reason) {
+		String testName = context.getDisplayName();
+		BFLogger.logInfo("\"" + testName + "\"" + " - DISABLED.");
 	}
 	
-	public void finishedTestWatcher(String testName) {
+	@Override
+	public void testSuccessful(ExtensionContext context) {
+		String testName = context.getDisplayName();
+		BFLogger.logInfo("\"" + testName + "\"" + " - PASSED.");
+		classObservers.get()
+				.forEach(ITestObserver::onTestSuccess);
+		observers.get()
+				.forEach(ITestObserver::onTestSuccess);
+	}
+	
+	@Override
+	public void testAborted(ExtensionContext context, Throwable cause) {
+		String testName = context.getDisplayName();
+		BFLogger.logInfo("\"" + testName + "\"" + " - ABORTED.");
+	}
+	
+	@Override
+	public void testFailed(ExtensionContext context, Throwable cause) {
+		String testName = context.getDisplayName();
+		BFLogger.logInfo("\"" + testName + "\"" + " - FAILED.");
+		classObservers.get()
+				.forEach(ITestObserver::onTestFailure);
+		observers.get()
+				.forEach(ITestObserver::onTestFailure);
+	}
+	
+	@Override
+	public void afterTestExecution(ExtensionContext extensionContext) throws Exception {
 		this.iStart = System.currentTimeMillis() - this.iStart; // end timing
+		String testName = extensionContext.getDisplayName();
+		BFLogger.logInfo("\"" + testName + "\"" + " - FINISHED.");
 		printTimeExecutionLog(testName);
-		baseTest.tearDown(); // Executed as a After for each test
-		makeLogForTest(); // Finish logging and add created log as an Allure attachment
+		// baseTest.tearDown();
+		makeLogForTest();
 		observers.get()
 				.forEach(ITestObserver::onTestFinish);
 	}
 	
-	@Override
-	protected void succeeded(Description description) {
-		String testName = description.getDisplayName();
-		succeededTestWatcher(testName);
-	}
-	
-	public void succeededTestWatcher(String testName) {
-		BFLogger.logInfo("\"" + testName + "\"" + ". PASSED.");
-		// Run test observers
-		TestClassRule.classObservers.get()
-				.forEach(ITestObserver::onTestSuccess);
-		observers.get()
-				.forEach(ITestObserver::onTestSuccess);
+	// TODO: fix that
+	// @Attachment("Log file")
+	public void makeLogForTest() {
+		BFLogger.RestrictedMethods.dumpSeparateLog();
 	}
 	
 	@Override
-	protected void failed(Throwable e, Description description) {
-		String testName = description.getDisplayName();
-		failedTestWatcher(testName);
-	}
-	
-	public void failedTestWatcher(String testName) {
-		BFLogger.logInfo("\"" + testName + "\"" + ".FAILED.");
-		// Run test observers
-		TestClassRule.classObservers.get()
-				.forEach(ITestObserver::onTestFailure);
-		observers.get()
-				.forEach(ITestObserver::onTestFailure);
-	}
-	
-	@Attachment("Log file")
-	public String makeLogForTest() {
-		return BFLogger.RestrictedMethods.dumpSeparateLog();
-	}
-	
-	public static void addObserver(ITestObserver observer) {
-		BFLogger.logDebug("To add observer: " + observer.toString());
-		
-		boolean anyMatchTestClassObservers = TestClassRule.classObservers.get()
-				.stream()
-				.anyMatch(x -> x.getModuleType()
-						.equals(observer.getModuleType()));
-		
-		boolean anyMatchMethodObservers = observers.get()
-				.stream()
-				.anyMatch(x -> x.getModuleType()
-						.equals(observer.getModuleType()));
-		
+	public void afterAll(ExtensionContext extensionContext) {
 		BFLogger.logDebug("BaseTestWatcher.observers: " + BaseTestWatcher.observers.get()
 				.toString());
-		BFLogger.logDebug("TestClassRule.classObservers: " + TestClassRule.classObservers.get()
+		BFLogger.logDebug("BaseTestWatcher.classObservers: " + classObservers.get()
+				.toString());
+		
+		classObservers.get()
+				.forEach(ITestObserver::onTestClassFinish);
+		BaseTestWatcher.observers.get()
+				.forEach(ITestObserver::onTestClassFinish);
+		
+		observers.get()
+				.clear();
+		classObservers.get()
+				.clear();
+		BFLogger.logDebug("All observers cleared.");
+	}
+	
+	private void printTimeExecutionLog(String testName) {
+		BFLogger.logInfo("\"" + testName + "\"" + getFormattedTestDuration());
+	}
+	
+	private String getFormattedTestDuration() {
+		return String.format(" - DURATION: %1.2f min", (float) iStart / (60 * 1000));
+	}
+	
+	@Override
+	public void addObserver(ITestObserver observer) {
+		BFLogger.logDebug("To add observer: " + observer.toString());
+		
+		boolean anyMatchTestClassObservers = isObserverAlreadyAdded(classObservers.get(), observer);
+		boolean anyMatchMethodObservers = isObserverAlreadyAdded(observers.get(), observer);
+		
+		BFLogger.logDebug("BaseTestWatcher.observers: " + observers.get()
+				.toString());
+		BFLogger.logDebug("TestClassRule.classObservers: " + classObservers.get()
 				.toString());
 		
 		if (!(anyMatchMethodObservers | anyMatchTestClassObservers)) {
-			if (isAddedFromBeforeClassMethod()) {
-				TestClassRule.classObservers.get()
+			if (isAddedFromBeforeAllMethod()) {
+				classObservers.get()
 						.add(observer);
 			} else {
 				observers.get()
 						.add(observer);
 			}
 			BFLogger.logDebug("Added observer: " + observer.toString());
-			
 		}
-		
 	}
 	
-	public static void removeObserver(ITestObserver observer) {
+	private boolean isObserverAlreadyAdded(List<ITestObserver> observers, ITestObserver observer) {
+		return observers.stream()
+				.anyMatch(x -> x.getModuleType()
+						.equals(observer.getModuleType()));
+	}
+	
+	private static boolean isAddedFromBeforeAllMethod() {
+		for (StackTraceElement elem : Thread.currentThread()
+				.getStackTrace()) {
+			try {
+				Method method = Class.forName(elem.getClassName())
+						.getDeclaredMethod(elem.getMethodName());
+				if (method.getDeclaredAnnotation(BeforeAll.class) != null) {
+					return true;
+				}
+			} catch (SecurityException | ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				continue;
+			}
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public void removeObserver(ITestObserver observer) {
 		BFLogger.logDebug("To remove observer: " + observer.toString());
 		
-		if (isAddedFromBeforeClassMethod()) {
-			TestClassRule.classObservers.get()
+		if (isAddedFromBeforeAllMethod()) {
+			classObservers.get()
 					.remove(observer);
 			BFLogger.logDebug("Removed observer: " + observer.toString());
 		} else {
-			if (!TestClassRule.classObservers.get()
+			if (classObservers.get()
 					.isEmpty()) {
 				observers.get()
 						.remove(observer);
@@ -185,49 +181,4 @@ public class BaseTestWatcher extends TestWatcher {
 			}
 		}
 	}
-	
-	@SuppressWarnings("deprecation")
-	private void skippedQuietly(org.junit.internal.AssumptionViolatedException e, Description description, List<Throwable> errors) {
-		try {
-			if (e instanceof AssumptionViolatedException) {
-				skipped((AssumptionViolatedException) e, description);
-			} else {
-				skipped(e, description);
-			}
-		} catch (Throwable e1) {
-			errors.add(e1);
-		}
-	}
-	
-	private static boolean isAddedFromBeforeClassMethod() {
-		for (StackTraceElement elem : Thread.currentThread()
-				.getStackTrace()) {
-			try {
-				Method method = Class.forName(elem.getClassName())
-						.getDeclaredMethod(elem.getMethodName());
-				if (method.getDeclaredAnnotation(org.junit.BeforeClass.class) != null) {
-					// Adding from BeforeClass-annotated method
-					return true;
-				}
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				continue;
-			}
-		}
-		return false;
-	}
-	
-	private void printTimeExecutionLog(String testName) {
-		BFLogger.logInfo("Test: \"" + testName + "\". " + getFormatedTestDuration());
-	}
-	
-	private String getFormatedTestDuration() {
-		return String.format(" Duration: %1.2f min", (float) this.iStart / (60 * 1000));
-	}
-	
 }

@@ -1,18 +1,17 @@
 package com.capgemini.mrchecker.test.core.base.environment.providers;
 
-import java.io.IOException;
-import java.util.*;
-
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-
 import com.capgemini.mrchecker.test.core.base.encryption.IDataEncryptionService;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.runtime.RuntimeParametersCore;
 import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.google.inject.Singleton;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * This class is responsible for handling addresses of services. Addresses depends on currently set Environment. It is
