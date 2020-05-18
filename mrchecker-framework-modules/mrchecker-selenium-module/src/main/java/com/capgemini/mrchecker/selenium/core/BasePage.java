@@ -13,9 +13,9 @@ import com.capgemini.mrchecker.selenium.core.newDrivers.DriverManager;
 import com.capgemini.mrchecker.selenium.core.newDrivers.INewWebDriver;
 import com.capgemini.mrchecker.selenium.core.utils.WindowUtils;
 import com.capgemini.mrchecker.test.core.BaseTest;
-import com.capgemini.mrchecker.test.core.IPlugin;
+import com.capgemini.mrchecker.test.core.ITestObserver;
 import com.capgemini.mrchecker.test.core.ModuleType;
-import com.capgemini.mrchecker.test.core.PluginManager;
+import com.capgemini.mrchecker.test.core.TestObserversManager;
 import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
@@ -24,7 +24,7 @@ import com.google.inject.Guice;
 
 import io.qameta.allure.Attachment;
 
-abstract public class BasePage implements IBasePage, IPlugin {
+abstract public class BasePage implements IBasePage, ITestObserver {
 	
 	// in seconds; this value should be used for very shot delay purpose e.g. to
 	// wait for JavaScript take effort on element
@@ -40,8 +40,8 @@ abstract public class BasePage implements IBasePage, IPlugin {
 	private static WebDriverWait	webDriverWait;
 	private BasePage				parent;
 	
-	private PluginManager	pluginManager	= PluginManager.getInstance();
-	private boolean			isInitialized	= false;
+	private TestObserversManager	testObserversManager	= TestObserversManager.getInstance();
+	private boolean					isInitialized			= false;
 	
 	private static IEnvironmentService	environmentService;
 	private final static IAnalytics		analytics;
@@ -90,7 +90,7 @@ abstract public class BasePage implements IBasePage, IPlugin {
 	
 	@Override
 	public void initialize() {
-		pluginManager.addPlugin(this);
+		testObserversManager.addObserver(this);
 		isInitialized = true;
 	}
 	
@@ -118,7 +118,7 @@ abstract public class BasePage implements IBasePage, IPlugin {
 		BFLogger.logDebug("BasePage.onTestFinish   " + this.getClass()
 				.getSimpleName());
 		
-		pluginManager.removePlugin(this);
+		testObserversManager.removeObserver(this);
 	}
 	
 	@Override
