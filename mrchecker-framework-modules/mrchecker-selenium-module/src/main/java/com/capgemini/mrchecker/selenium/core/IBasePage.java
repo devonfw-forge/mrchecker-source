@@ -1,6 +1,8 @@
 package com.capgemini.mrchecker.selenium.core;
 
-public interface IBasePage {
+import com.capgemini.mrchecker.test.core.IPage;
+
+public interface IBasePage extends IPage {
 	
 	boolean isLoaded();
 	

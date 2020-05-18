@@ -2,7 +2,7 @@ package com.capgemini.mrchecker.test.core.base.properties;
 
 public class PropertiesManagerTest {
 	
-	// @BeforeClass
+	// @BeforeAll
 	// public static void setUpBeforeClass() throws Exception {
 	// }
 	//

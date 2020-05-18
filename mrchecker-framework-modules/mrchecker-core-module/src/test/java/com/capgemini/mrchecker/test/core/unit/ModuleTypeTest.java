@@ -1,6 +1,6 @@
 package com.capgemini.mrchecker.test.core.unit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.test.core.ModuleType;
 

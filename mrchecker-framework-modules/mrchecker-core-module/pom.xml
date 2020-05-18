@@ -184,6 +184,11 @@
             <artifactId>allure-junit5</artifactId>
 
         </dependency>
+
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-java-commons</artifactId>
+        </dependency>
         <dependency>
             <!-- Allure report generator -->
             <groupId>io.qameta.allure</groupId>

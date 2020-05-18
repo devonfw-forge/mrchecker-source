@@ -1,17 +1,17 @@
 package com.capgemini.mrchecker.test.core.unit;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.test.core.BaseTest;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
-@Ignore
+@Disabled
 public class LoggerTest extends BaseTest {
 	
-	@BeforeClass
+	@BeforeAll
 	public static void beforeClass() {
 		System.out.println("LoggerTest.beforeClass()");
 		BFLogger.logDebug("LoggerTest.beforeClass()");
@@ -31,7 +31,7 @@ public class LoggerTest extends BaseTest {
 		BFLogger.logInfo("Info-TestFailed");
 	}
 	
-	@AfterClass
+	@AfterAll
 	public static void afterClass() {
 		System.out.println("LoggerTest.afterClass()");
 		BFLogger.logDebug("LoggerTest.afterClass()");

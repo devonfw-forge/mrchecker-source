@@ -3,10 +3,11 @@ package com.capgemini.mrchecker.test.core.unit.base.environment;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.test.core.base.environment.EnvironmentModule;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
@@ -18,7 +19,7 @@ public class EnvironmentModuleTest {
 	
 	public static final String NO_FILE_PATH = "no file path";
 	
-	@BeforeClass
+	@BeforeAll
 	public static void setUpClass() {
 		SpreadsheetEnvironmentService.delInstance();
 	}
@@ -35,9 +36,9 @@ public class EnvironmentModuleTest {
 		assertThat(environmentService, is(notNullValue()));
 	}
 	
-	@Test(expected = BFInputDataException.class)
+	@Test
 	public void shouldCreateThrowExceptionWhenWrongFile() {
-		Guice.createInjector(new EnvironmentModule(NO_FILE_PATH))
-				.getInstance(IEnvironmentService.class);
+		assertThrows(BFInputDataException.class, () -> Guice.createInjector(new EnvironmentModule(NO_FILE_PATH))
+				.getInstance(IEnvironmentService.class));
 	}
 }

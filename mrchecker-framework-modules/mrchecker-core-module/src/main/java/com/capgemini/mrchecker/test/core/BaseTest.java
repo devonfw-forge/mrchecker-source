@@ -46,6 +46,7 @@ public abstract class BaseTest implements IBaseTest {
 	
 	public BaseTest() {
 		getAnalytics().sendClassName();
+		
 	}
 	
 	public static IEnvironmentService getEnvironmentService() {
@@ -74,6 +75,7 @@ public abstract class BaseTest implements IBaseTest {
 		 */
 		
 		// Get and then set properties information from settings.properties file
+		// TODO: do we need GUICE? in injects properties to PropertiesCoreTest.class
 		propertiesCoreTest = Guice.createInjector(PropertiesSettingsModule.init())
 				.getInstance(PropertiesCoreTest.class);
 	}

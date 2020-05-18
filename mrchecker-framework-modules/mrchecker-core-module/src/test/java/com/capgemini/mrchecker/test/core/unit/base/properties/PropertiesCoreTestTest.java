@@ -4,8 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesCoreTest;
 
@@ -14,10 +14,10 @@ public class PropertiesCoreTestTest {
 	public static final boolean	DEFAULT_ANALYTICS	= true;
 	public static final boolean	DEFAULT_ENCRYPTION	= false;
 	
-	private PropertiesCoreTest sut;
+	private static PropertiesCoreTest sut;
 	
-	@Before
-	public void setUp() {
+	@BeforeAll
+	public static void setUpClass() {
 		sut = new PropertiesCoreTest();
 	}
 	

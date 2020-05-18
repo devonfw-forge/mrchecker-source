@@ -1,22 +1,22 @@
 package com.capgemini.mrchecker.test.core;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
+
+import io.qameta.allure.Attachment;
 
 public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	
 	// TODO: fix multithread
 	private long iStart;
 	
-	private static final ThreadLocal<List<ITestObserver>>	observers		= ThreadLocal.withInitial(ArrayList::new);
-	private static final ThreadLocal<List<ITestObserver>>	classObservers	= ThreadLocal.withInitial(ArrayList::new);
+	// private final ThreadLocal<List<ITestObserver>> observers = ThreadLocal.withInitial(ArrayList::new);
+	// private final ThreadLocal<List<ITestObserver>> classObservers = ThreadLocal.withInitial(ArrayList::new);
+	
+	private final TestObserversManager testObserversManager = TestObserversManager.getInstance();
 	
 	@Override
 	public void beforeAll(ExtensionContext extensionContext) throws Exception {
@@ -47,10 +47,12 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	public void testSuccessful(ExtensionContext context) {
 		String testName = context.getDisplayName();
 		BFLogger.logInfo("\"" + testName + "\"" + " - PASSED.");
-		classObservers.get()
+		testObserversManager.getAllObservers()
 				.forEach(ITestObserver::onTestSuccess);
-		observers.get()
-				.forEach(ITestObserver::onTestSuccess);
+		// classObservers.get()
+		// .forEach(ITestObserver::onTestSuccess);
+		// observers.get()
+		// .forEach(ITestObserver::onTestSuccess);
 	}
 	
 	@Override
@@ -63,10 +65,12 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	public void testFailed(ExtensionContext context, Throwable cause) {
 		String testName = context.getDisplayName();
 		BFLogger.logInfo("\"" + testName + "\"" + " - FAILED.");
-		classObservers.get()
+		testObserversManager.getAllObservers()
 				.forEach(ITestObserver::onTestFailure);
-		observers.get()
-				.forEach(ITestObserver::onTestFailure);
+		// classObservers.get()
+		// .forEach(ITestObserver::onTestFailure);
+		// observers.get()
+		// .forEach(ITestObserver::onTestFailure);
 	}
 	
 	@Override
@@ -77,32 +81,41 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 		printTimeExecutionLog(testName);
 		((IBaseTest) extensionContext.getRequiredTestInstance()).tearDown();
 		makeLogForTest();
-		observers.get()
+		testObserversManager.getAllObservers()
 				.forEach(ITestObserver::onTestFinish);
+		// observers.get()
+		// .forEach(ITestObserver::onTestFinish);
 	}
 	
 	// TODO: fix that
-	// @Attachment("Log file")
+	@Attachment("Log file")
 	public void makeLogForTest() {
 		BFLogger.RestrictedMethods.dumpSeparateLog();
 	}
 	
 	@Override
 	public void afterAll(ExtensionContext extensionContext) {
-		BFLogger.logDebug("BaseTestWatcher.observers: " + BaseTestExecutionObserver.observers.get()
-				.toString());
-		BFLogger.logDebug("BaseTestWatcher.classObservers: " + classObservers.get()
+		BFLogger.logDebug(getClass().getName() + ".observers: " + testObserversManager.getAllObservers()
 				.toString());
 		
-		classObservers.get()
-				.forEach(ITestObserver::onTestClassFinish);
-		BaseTestExecutionObserver.observers.get()
-				.forEach(ITestObserver::onTestClassFinish);
+		// BFLogger.logDebug(getClass().getName() + ".observers: " + observers.get()
+		// .toString());
+		// BFLogger.logDebug(getClass().getName() + ".classObservers: " + classObservers.get()
+		// .toString());
 		
-		observers.get()
-				.clear();
-		classObservers.get()
-				.clear();
+		testObserversManager.getAllObservers()
+				.forEach(ITestObserver::onTestClassFinish);
+		// classObservers.get()
+		// .forEach(ITestObserver::onTestClassFinish);
+		// observers.get()
+		// .forEach(ITestObserver::onTestClassFinish);
+		
+		testObserversManager.removeAllObservers();
+		// observers.get()
+		// .clear();
+		// classObservers.get()
+		// .clear();
+		
 		BFLogger.logDebug("All observers cleared.");
 	}
 	
@@ -114,71 +127,71 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 		return String.format(" - DURATION: %1.2f min", (float) iStart / (60 * 1000));
 	}
 	
-	@Override
-	public void addObserver(ITestObserver observer) {
-		BFLogger.logDebug("To add observer: " + observer.toString());
-		
-		boolean anyMatchTestClassObservers = isObserverAlreadyAdded(classObservers.get(), observer);
-		boolean anyMatchMethodObservers = isObserverAlreadyAdded(observers.get(), observer);
-		
-		BFLogger.logDebug("BaseTestWatcher.observers: " + observers.get()
-				.toString());
-		BFLogger.logDebug("TestClassRule.classObservers: " + classObservers.get()
-				.toString());
-		
-		if (!(anyMatchMethodObservers | anyMatchTestClassObservers)) {
-			if (isAddedFromBeforeAllMethod()) {
-				classObservers.get()
-						.add(observer);
-			} else {
-				observers.get()
-						.add(observer);
-			}
-			BFLogger.logDebug("Added observer: " + observer.toString());
-		}
-	}
-	
-	private boolean isObserverAlreadyAdded(List<ITestObserver> observers, ITestObserver observer) {
-		return observers.stream()
-				.anyMatch(x -> x.getModuleType()
-						.equals(observer.getModuleType()));
-	}
-	
-	private static boolean isAddedFromBeforeAllMethod() {
-		for (StackTraceElement elem : Thread.currentThread()
-				.getStackTrace()) {
-			try {
-				Method method = Class.forName(elem.getClassName())
-						.getDeclaredMethod(elem.getMethodName());
-				if (method.getDeclaredAnnotation(BeforeAll.class) != null) {
-					return true;
-				}
-			} catch (SecurityException | ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				continue;
-			}
-		}
-		
-		return false;
-	}
-	
-	@Override
-	public void removeObserver(ITestObserver observer) {
-		BFLogger.logDebug("To remove observer: " + observer.toString());
-		
-		if (isAddedFromBeforeAllMethod()) {
-			classObservers.get()
-					.remove(observer);
-			BFLogger.logDebug("Removed observer: " + observer.toString());
-		} else {
-			if (classObservers.get()
-					.isEmpty()) {
-				observers.get()
-						.remove(observer);
-				BFLogger.logDebug("Removed observer: " + observer.toString());
-			}
-		}
-	}
+	// @Override
+	// public void addObserver(ITestObserver observer) {
+	// BFLogger.logDebug("To add observer: " + observer.toString());
+	//
+	// boolean anyMatchTestClassObservers = isObserverAlreadyAdded(classObservers.get(), observer);
+	// boolean anyMatchMethodObservers = isObserverAlreadyAdded(observers.get(), observer);
+	//
+	// BFLogger.logDebug(getClass().getName() + ".observers: " + observers.get()
+	// .toString());
+	// BFLogger.logDebug(getClass().getName() + "classObservers: " + classObservers.get()
+	// .toString());
+	//
+	// if (!(anyMatchMethodObservers | anyMatchTestClassObservers)) {
+	// if (isAddedFromBeforeAllMethod()) {
+	// classObservers.get()
+	// .add(observer);
+	// } else {
+	// observers.get()
+	// .add(observer);
+	// }
+	// BFLogger.logDebug("Added observer: " + observer.toString());
+	// }
+	// }
+	//
+	// private boolean isObserverAlreadyAdded(List<ITestObserver> observers, ITestObserver observer) {
+	// return observers.stream()
+	// .anyMatch(x -> x.getModuleType()
+	// .equals(observer.getModuleType()));
+	// }
+	//
+	// private static boolean isAddedFromBeforeAllMethod() {
+	// for (StackTraceElement elem : Thread.currentThread()
+	// .getStackTrace()) {
+	// try {
+	// Method method = Class.forName(elem.getClassName())
+	// .getDeclaredMethod(elem.getMethodName());
+	// if (method.getDeclaredAnnotation(BeforeAll.class) != null) {
+	// return true;
+	// }
+	// } catch (SecurityException | ClassNotFoundException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// } catch (NoSuchMethodException e) {
+	// continue;
+	// }
+	// }
+	//
+	// return false;
+	// }
+	//
+	// @Override
+	// public void removeObserver(ITestObserver observer) {
+	// BFLogger.logDebug("To remove observer: " + observer.toString());
+	//
+	// if (isAddedFromBeforeAllMethod()) {
+	// classObservers.get()
+	// .remove(observer);
+	// BFLogger.logDebug("Removed observer: " + observer.toString());
+	// } else {
+	// if (classObservers.get()
+	// .isEmpty()) {
+	// observers.get()
+	// .remove(observer);
+	// BFLogger.logDebug("Removed observer: " + observer.toString());
+	// }
+	// }
+	// }
 }

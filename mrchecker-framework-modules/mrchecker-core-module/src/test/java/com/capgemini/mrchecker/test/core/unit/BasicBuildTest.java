@@ -2,12 +2,12 @@ package com.capgemini.mrchecker.test.core.unit;
 
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.test.core.BaseTest;
 
-@Ignore
+@Disabled
 public class BasicBuildTest extends BaseTest {
 	
 	@Test

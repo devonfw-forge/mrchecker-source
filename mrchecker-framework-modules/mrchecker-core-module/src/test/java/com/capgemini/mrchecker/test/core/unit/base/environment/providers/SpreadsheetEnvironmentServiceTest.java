@@ -2,17 +2,17 @@ package com.capgemini.mrchecker.test.core.unit.base.environment.providers;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.util.Arrays;
 
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.test.core.base.encryption.IDataEncryptionService;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
@@ -56,12 +56,12 @@ public class SpreadsheetEnvironmentServiceTest {
 	public static final String	DECRYPTED_VALUE_FROM_MOCK					= "DECRYPTED_VALUE";
 	public static final String	NO_SUCH_KEY									= "NO_SUCH_KEY";
 	
-	@BeforeClass
+	@BeforeAll
 	public static void setUpClass() {
 		SpreadsheetEnvironmentService.delInstance();
 	}
 	
-	@After
+	@AfterEach
 	public void tearDown() {
 		SpreadsheetEnvironmentService.delInstance();
 	}
@@ -70,12 +70,12 @@ public class SpreadsheetEnvironmentServiceTest {
 		return (SpreadsheetEnvironmentService) SpreadsheetEnvironmentService.getInstance();
 	}
 	
-	private static SpreadsheetEnvironmentService initAndGetSut(String csvData, String env) throws IOException {
+	private static SpreadsheetEnvironmentService initAndGetSut(String csvData, String env) {
 		SpreadsheetEnvironmentService.init(csvData, env);
 		return getSut();
 	}
 	
-	private static SpreadsheetEnvironmentService initAndGetSut() throws IOException {
+	private static SpreadsheetEnvironmentService initAndGetSut() {
 		return initAndGetSut(CORRECT_CSV_DATA, TEST_ENV);
 	}
 	
@@ -85,12 +85,12 @@ public class SpreadsheetEnvironmentServiceTest {
 	}
 	
 	@Test
-	public void shouldInitOnce() throws IOException {
+	public void shouldInitOnce() {
 		assertThat(initAndGetSut(), is(notNullValue()));
 	}
 	
 	@Test
-	public void shouldInitTwice() throws IOException {
+	public void shouldInitTwice() {
 		IEnvironmentService firstRef = initAndGetSut();
 		IEnvironmentService secondRef = initAndGetSut();
 		
@@ -99,24 +99,24 @@ public class SpreadsheetEnvironmentServiceTest {
 	}
 	
 	@Test
-	public void shouldInitMultiThread() throws IOException {
+	public void shouldInitMultiThread() {
 		// TODO: implement multi thread check
 	}
 	
 	// TODO: implement that
-	@Ignore
-	@Test(expected = BFInputDataException.class)
-	public void shouldInitThrowExceptionWhenUnparsableInput() throws IOException {
-		initAndGetSut(UNPARSABLE_CSV_DATA, TEST_ENV);
-	}
-	
-	@Test(expected = BFInputDataException.class)
-	public void shouldInitThrowExceptionWhenEnvNotFound() throws IOException {
-		initAndGetSut(CORRECT_CSV_DATA, NO_SUCH_ENV);
+	@Disabled
+	@Test
+	public void shouldInitThrowExceptionWhenUnparsableInput() {
+		assertThrows(BFInputDataException.class, () -> initAndGetSut(UNPARSABLE_CSV_DATA, TEST_ENV));
 	}
 	
 	@Test
-	public void shouldDelInstance() throws IOException {
+	public void shouldInitThrowExceptionWhenEnvNotFound() {
+		assertThrows(BFInputDataException.class, () -> initAndGetSut(CORRECT_CSV_DATA, NO_SUCH_ENV));
+	}
+	
+	@Test
+	public void shouldDelInstance() {
 		assertThat(initAndGetSut(), is(notNullValue()));
 		
 		SpreadsheetEnvironmentService.delInstance();
@@ -125,7 +125,7 @@ public class SpreadsheetEnvironmentServiceTest {
 	}
 	
 	@Test
-	public void shouldGetValue() throws IOException {
+	public void shouldGetValue() {
 		initAndGetSut();
 		
 		String testEnv_Value1 = getSut().getValue(CORRECT_CSV_DATA_ARRAY[1][0]);
@@ -136,7 +136,7 @@ public class SpreadsheetEnvironmentServiceTest {
 	}
 	
 	@Test
-	public void shouldGetValueReturnDecryptedValue() throws IOException {
+	public void shouldGetValueReturnDecryptedValue() {
 		initAndGetSut();
 		IDataEncryptionService dataEncryptionServiceMock = mock(IDataEncryptionService.class);
 		when(dataEncryptionServiceMock.isEncrypted(anyString())).thenReturn(true);
@@ -148,7 +148,7 @@ public class SpreadsheetEnvironmentServiceTest {
 	}
 	
 	@Test
-	public void shouldGetValueReturnOriginalValueWhenDataNotEncrypted() throws IOException {
+	public void shouldGetValueReturnOriginalValueWhenDataNotEncrypted() {
 		initAndGetSut();
 		IDataEncryptionService dataEncryptionServiceMock = mock(IDataEncryptionService.class);
 		when(dataEncryptionServiceMock.isEncrypted(anyString())).thenReturn(false);
@@ -158,22 +158,22 @@ public class SpreadsheetEnvironmentServiceTest {
 		assertThat(getSut().getValue(CORRECT_CSV_DATA_ARRAY[1][0]), is(equalTo(CORRECT_CSV_DATA_ARRAY[1][2])));
 	}
 	
-	@Test(expected = BFInputDataException.class)
-	public void shouldGetValueThrowExceptionWhenKeyIsNotFound() throws IOException {
+	@Test
+	public void shouldGetValueThrowExceptionWhenKeyIsNotFound() {
 		initAndGetSut();
 		
-		getSut().getValue(NO_SUCH_KEY);
+		assertThrows(BFInputDataException.class, () -> getSut().getValue(NO_SUCH_KEY));
 	}
 	
 	@Test
-	public void shouldGetEnvironmentReturnValue() throws IOException {
+	public void shouldGetEnvironmentReturnValue() {
 		initAndGetSut();
 		
 		assertThat(getSut().getEnvironment(), is(equalTo(TEST_ENV)));
 	}
 	
 	@Test
-	public void shouldSetDataEnryptionService() throws IOException {
+	public void shouldSetDataEnryptionService() {
 		initAndGetSut();
 		IDataEncryptionService dataEncryptionServiceMock = mock(IDataEncryptionService.class);
 		
@@ -181,16 +181,16 @@ public class SpreadsheetEnvironmentServiceTest {
 	}
 	
 	@Test
-	public void shouldSetnEvironment() throws IOException {
+	public void shouldSetnEvironment() {
 		initAndGetSut();
 		
 		getSut().setEnvironment(DEFAULT_ENV_WHEN_NO_ENVIRONMENT_SERVICE_SET);
 	}
 	
-	@Test(expected = BFInputDataException.class)
-	public void shouldSetnEvironmentThrowExceptionWhenNoSuchEnvironment() throws IOException {
+	@Test
+	public void shouldSetEnvironmentThrowExceptionWhenNoSuchEnvironment() {
 		initAndGetSut();
 		
-		getSut().setEnvironment(NO_SUCH_ENV);
+		assertThrows(BFInputDataException.class, () -> getSut().setEnvironment(NO_SUCH_ENV));
 	}
 }

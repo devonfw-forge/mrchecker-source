@@ -3,7 +3,7 @@ package com.capgemini.mrchecker.selenium;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.test.core.BaseTest;
@@ -23,6 +23,7 @@ public class BasePageTest extends BaseTest {
 	@Test
 	public void testGetDriver() {
 		TestPage testPage = new TestPage();
+		testPage.initialize();
 		assertEquals("", "Google", testPage.pageTitle());
 		
 	}

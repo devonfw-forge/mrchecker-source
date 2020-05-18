@@ -2,12 +2,7 @@ package com.capgemini.mrchecker.selenium.core;
 
 import java.util.List;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.UnhandledAlertException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -18,9 +13,9 @@ import com.capgemini.mrchecker.selenium.core.newDrivers.DriverManager;
 import com.capgemini.mrchecker.selenium.core.newDrivers.INewWebDriver;
 import com.capgemini.mrchecker.selenium.core.utils.WindowUtils;
 import com.capgemini.mrchecker.test.core.BaseTest;
-import com.capgemini.mrchecker.test.core.BaseTestWatcher;
-import com.capgemini.mrchecker.test.core.ITestObserver;
+import com.capgemini.mrchecker.test.core.IPlugin;
 import com.capgemini.mrchecker.test.core.ModuleType;
+import com.capgemini.mrchecker.test.core.PluginManager;
 import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
@@ -29,7 +24,7 @@ import com.google.inject.Guice;
 
 import io.qameta.allure.Attachment;
 
-abstract public class BasePage implements IBasePage, ITestObserver {
+abstract public class BasePage implements IBasePage, IPlugin {
 	
 	// in seconds; this value should be used for very shot delay purpose e.g. to
 	// wait for JavaScript take effort on element
@@ -43,8 +38,10 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	
 	private static DriverManager	driver	= null;
 	private static WebDriverWait	webDriverWait;
+	private BasePage				parent;
 	
-	private BasePage parent;
+	private PluginManager	pluginManager	= PluginManager.getInstance();
+	private boolean			isInitialized	= false;
 	
 	private static IEnvironmentService	environmentService;
 	private final static IAnalytics		analytics;
@@ -79,7 +76,6 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	
 	public BasePage(INewWebDriver driver, BasePage parent) {
 		// Add given module to Test core Observable list
-		this.addObserver();
 		
 		webDriverWait = new WebDriverWait(getDriver(), BasePage.EXPLICITYWAITTIMER);
 		
@@ -93,8 +89,14 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	}
 	
 	@Override
-	public void addObserver() {
-		BaseTestWatcher.addObserver(this);
+	public void initialize() {
+		pluginManager.addPlugin(this);
+		isInitialized = true;
+	}
+	
+	@Override
+	public boolean isInitialized() {
+		return isInitialized;
 	}
 	
 	@Override
@@ -115,7 +117,8 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	public void onTestFinish() {
 		BFLogger.logDebug("BasePage.onTestFinish   " + this.getClass()
 				.getSimpleName());
-		BaseTestWatcher.removeObserver(this);
+		
+		pluginManager.removePlugin(this);
 	}
 	
 	@Override

@@ -1,12 +1,5 @@
 package com.capgemini.mrchecker.test.core.base.properties;
 
-import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
-import com.capgemini.mrchecker.test.core.logger.BFLogger;
-import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
-import com.google.inject.name.Names;
-import org.apache.commons.io.IOUtils;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,22 +8,23 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Properties;
 
+import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
+import com.capgemini.mrchecker.test.core.logger.BFLogger;
+import com.google.inject.AbstractModule;
+import com.google.inject.Singleton;
+import com.google.inject.name.Names;
+
 @Singleton
 public class PropertiesSettingsModule extends AbstractModule {
 	
 	private static final String DEFAULT_FILE_SOURCE_FILE_PATH = System.getProperty("user.dir") + Paths.get("/src/resources/settings.properties");
 	
 	private static PropertiesSettingsModule	instance;
-	private final InputStream				propertiesSource;
-	
-	private PropertiesSettingsModule(InputStream propertiesSource) {
-		this.propertiesSource = propertiesSource;
-		BFLogger.logDebug("Properties settings source=" + propertiesSource.toString());
-	}
+	private InputStream						propertiesSource;
 	
 	@Override
 	protected void configure() {
-		try (InputStream propertiesSource = this.propertiesSource){
+		try (InputStream propertiesSource = this.propertiesSource) {
 			Properties properties = new Properties();
 			properties.load(propertiesSource);
 			Names.bindProperties(binder(), properties);
@@ -52,10 +46,15 @@ public class PropertiesSettingsModule extends AbstractModule {
 		if (Objects.isNull(instance)) {
 			synchronized (PropertiesSettingsModule.class) {
 				if (Objects.isNull(instance)) {
-					instance = new PropertiesSettingsModule(propertiesSource);
+					instance = new PropertiesSettingsModule();
 				}
 			}
 		}
+		
+		// TODO check multithread
+		instance.propertiesSource = propertiesSource;
+		BFLogger.logDebug("Properties settings source=" + propertiesSource.toString());
+		
 		return instance;
 	}
 	

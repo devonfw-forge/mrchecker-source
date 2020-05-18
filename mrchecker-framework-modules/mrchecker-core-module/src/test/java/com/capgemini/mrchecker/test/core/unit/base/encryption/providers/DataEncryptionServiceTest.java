@@ -2,13 +2,14 @@ package com.capgemini.mrchecker.test.core.unit.base.encryption.providers;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.test.core.base.encryption.IDataEncryptionService;
 import com.capgemini.mrchecker.test.core.base.encryption.providers.DataEncryptionService;
@@ -26,12 +27,12 @@ public class DataEncryptionServiceTest {
 	public static final String	CIPHERTEXT_2		= "ENC(QTkxI0hWAyTDXdDJd8a9mP8lGGnngflplukqzFj5nj4=)";
 	public static final String	PLAINTEXT_2			= "another plain text";
 	
-	@BeforeClass
+	@BeforeAll
 	public static void setUpClass() {
 		DataEncryptionService.delInstance();
 	}
 	
-	@After
+	@AfterEach
 	public void tearDown() {
 		DataEncryptionService.delInstance();
 	}
@@ -70,9 +71,9 @@ public class DataEncryptionServiceTest {
 		assertThat(firstRef, is(equalTo(secondRef)));
 	}
 	
-	@Test(expected = BFSecureModuleException.class)
-	public void shouldInitThrowExceptionWhenSecretSourceIsEmpty() throws IOException {
-		initAndGetSut(SECRET_EMPTY);
+	@Test
+	public void shouldInitThrowExceptionWhenSecretSourceIsEmpty() {
+		assertThrows(BFSecureModuleException.class, () -> initAndGetSut(SECRET_EMPTY));
 	}
 	
 	@Test
@@ -84,19 +85,19 @@ public class DataEncryptionServiceTest {
 		assertThat(getSut(), is(nullValue()));
 	}
 	
-	@Test(expected = BFSecureModuleException.class)
-	public void shouldSetSecretThrowExceptionWhenSecretIsNull() throws IOException {
-		initAndGetSut().setSecret(null);
+	@Test
+	public void shouldSetSecretThrowExceptionWhenSecretIsNull() {
+		assertThrows(BFSecureModuleException.class, () -> initAndGetSut().setSecret(null));
 	}
 	
-	@Test(expected = BFSecureModuleException.class)
-	public void shouldSetSecretThrowExceptionWhenSecretIsShort() throws IOException {
-		initAndGetSut().setSecret(SECRET_TOO_SHORT);
+	@Test
+	public void shouldSetSecretThrowExceptionWhenSecretIsShort() {
+		assertThrows(BFSecureModuleException.class, () -> initAndGetSut().setSecret(SECRET_TOO_SHORT));
 	}
 	
-	@Test(expected = BFSecureModuleException.class)
-	public void shouldSetSecretThrowExceptionWhenSecretIsTrimable() throws IOException {
-		initAndGetSut().setSecret(SECRET_TRIMABLE);
+	@Test
+	public void shouldSetSecretThrowExceptionWhenSecretIsTrimable() {
+		assertThrows(BFSecureModuleException.class, () -> initAndGetSut().setSecret(SECRET_TRIMABLE));
 	}
 	
 	@Test
@@ -138,13 +139,13 @@ public class DataEncryptionServiceTest {
 		assertThat(plaintextVal, is(equalTo(PLAINTEXT_2)));
 	}
 	
-	@Test(expected = BFSecureModuleException.class)
-	public void shouldDecryptThrowExceptionWhenCipherTextIsNull() throws IOException {
-		initAndGetSut().decrypt(null);
+	@Test
+	public void shouldDecryptThrowExceptionWhenCipherTextIsNull() {
+		assertThrows(BFSecureModuleException.class, () -> initAndGetSut().decrypt(null));
 	}
 	
 	@Test
-	public void shouldCreateMultiThread() throws IOException {
+	public void shouldCreateMultiThread() {
 		// TODO: implement multi thread check
 	}
 }

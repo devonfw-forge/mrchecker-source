@@ -3,10 +3,10 @@ package com.capgemini.mrchecker.test.core.unit;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.Computer;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.notification.Failure;
@@ -19,7 +19,7 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 /**
  * Class tests if exceptions thrown in each of method invoked in BaseTest lead to proper behavior (e.g. stop running).
  * Methods being tested:
- * <li>@BeforeClass method</li>
+ * <li>@BeforeAll method</li>
  * <li>setUp() method</li>
  * <li>sample test method</li>
  * <li>tearDown() method</li>
@@ -27,14 +27,14 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
  * what indicate program run stopped/run further
  */
 
-@Ignore
+@Disabled
 public class TestWatcherExceptionTest {
 	private static Computer		computer;
 	private static JUnitCore	jUnitCore;
 	private static Throwable	thrownException;
 	private static Object		object;
 	
-	@BeforeClass
+	@BeforeAll
 	public static void initJUnit() {
 		BFLogger.logInfo("Starting base test");
 		computer = new Computer();
@@ -107,10 +107,10 @@ public class TestWatcherExceptionTest {
 		assertNotNull("Object is null - program didn't run further after exception what implicate test watcher logic was rebuild", object);
 	}
 	
-	@Ignore
+	@Disabled
 	public static class SetUpClassExceptionTest extends BaseTest {
 		
-		@BeforeClass
+		@BeforeAll
 		public static void setUpClazz() {
 			BFLogger.logInfo(SetUpClassExceptionTest.class.getCanonicalName() + " -> setUpClazz()");
 			throw new BFInputDataException("Text exception");
@@ -131,7 +131,7 @@ public class TestWatcherExceptionTest {
 		
 	}
 	
-	@Ignore
+	@Disabled
 	public static class SetUpExceptionTest extends BaseTest {
 		
 		@Override
@@ -152,7 +152,7 @@ public class TestWatcherExceptionTest {
 		
 	}
 	
-	@Ignore
+	@Disabled
 	public static class TestMethodExceptionTest extends BaseTest {
 		
 		@Override
@@ -173,7 +173,7 @@ public class TestWatcherExceptionTest {
 		
 	}
 	
-	@Ignore
+	@Disabled
 	public static class TearDownExceptionTest extends BaseTest {
 		
 		@Override
@@ -191,13 +191,13 @@ public class TestWatcherExceptionTest {
 			throw new BFInputDataException("Text exception");
 		}
 		
-		@AfterClass
+		@AfterAll
 		public static void tearDownClazz() {
 			object = new Object();
 		}
 	}
 	
-	@Ignore
+	@Disabled
 	public static class TearDownClassExceptionTest extends BaseTest {
 		
 		@Override
@@ -213,7 +213,7 @@ public class TestWatcherExceptionTest {
 			object = new Object();
 		}
 		
-		@AfterClass
+		@AfterAll
 		public static void tearDownClazz() {
 			BFLogger.logInfo(TearDownClassExceptionTest.class.getCanonicalName() + " -> tearDownClazz()");
 			throw new BFInputDataException("Text exception");

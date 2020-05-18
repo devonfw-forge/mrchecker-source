@@ -3,10 +3,11 @@ package com.capgemini.mrchecker.test.core.unit.base.encryption;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.test.core.base.encryption.DataEncryptionModule;
 import com.capgemini.mrchecker.test.core.base.encryption.IDataEncryptionService;
@@ -18,12 +19,12 @@ public class DataEncryptionModuleTest {
 	
 	public static final String NO_FILE_PATH = "no file path";
 	
-	@BeforeClass
+	@BeforeAll
 	public static void setUpClass() {
 		DataEncryptionService.delInstance();
 	}
 	
-	@After
+	@AfterEach
 	public void tearDown() {
 		DataEncryptionService.delInstance();
 	}
@@ -35,9 +36,9 @@ public class DataEncryptionModuleTest {
 		assertThat(dataEncryptionService, is(notNullValue()));
 	}
 	
-	@Test(expected = BFSecureModuleException.class)
+	@Test
 	public void shouldCreateThrowExceptionWhenWrongFile() {
-		Guice.createInjector(new DataEncryptionModule(NO_FILE_PATH))
-				.getInstance(IDataEncryptionService.class);
+		assertThrows(BFSecureModuleException.class, () -> Guice.createInjector(new DataEncryptionModule(NO_FILE_PATH))
+				.getInstance(IDataEncryptionService.class));
 	}
 }
