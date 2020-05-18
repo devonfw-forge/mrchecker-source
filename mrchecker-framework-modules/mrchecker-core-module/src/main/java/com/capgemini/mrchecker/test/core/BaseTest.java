@@ -16,8 +16,8 @@ import com.capgemini.mrchecker.test.core.base.runtime.RuntimeParametersCore;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.google.inject.Guice;
 
-@ExtendWith(BaseTestWatcher.class)
 @Execution(ExecutionMode.CONCURRENT)
+@ExtendWith(BaseTestExecutionObserver.class)
 public abstract class BaseTest implements IBaseTest {
 	// TODO: to be deleted?
 	private static PropertiesCoreTest propertiesCoreTest;
@@ -31,6 +31,18 @@ public abstract class BaseTest implements IBaseTest {
 		setEnvironmentInstance(propertiesCoreTest.isEncryptionEnabled());
 		setAnalytics(propertiesCoreTest.isAnalyticsEnabled());
 	}
+	
+	// @RegisterExtension
+	// protected ITestExecutionObserver testExecutionObserver;
+	//
+	// public BaseTest() {
+	// this(new BaseTestExecutionObserver());
+	// }
+	//
+	// public BaseTest(ITestExecutionObserver testExecutionObserver) {
+	// this.testExecutionObserver = testExecutionObserver;
+	// getAnalytics().sendClassName();
+	// }
 	
 	public BaseTest() {
 		getAnalytics().sendClassName();

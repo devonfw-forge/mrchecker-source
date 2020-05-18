@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.extension.*;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
-public class BaseTestWatcher implements BeforeAllCallback, BeforeTestExecutionCallback, TestWatcher, AfterTestExecutionCallback, AfterAllCallback, ITestObservable {
+public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	
 	// TODO: fix multithread
 	private long iStart;
@@ -34,7 +34,7 @@ public class BaseTestWatcher implements BeforeAllCallback, BeforeTestExecutionCa
 		iStart = System.currentTimeMillis();
 		BaseTest.getAnalytics()
 				.sendClassName();
-		// baseTest.setUp();
+		((IBaseTest) extensionContext.getRequiredTestInstance()).setUp();
 	}
 	
 	@Override
@@ -75,7 +75,7 @@ public class BaseTestWatcher implements BeforeAllCallback, BeforeTestExecutionCa
 		String testName = extensionContext.getDisplayName();
 		BFLogger.logInfo("\"" + testName + "\"" + " - FINISHED.");
 		printTimeExecutionLog(testName);
-		// baseTest.tearDown();
+		((IBaseTest) extensionContext.getRequiredTestInstance()).tearDown();
 		makeLogForTest();
 		observers.get()
 				.forEach(ITestObserver::onTestFinish);
@@ -89,14 +89,14 @@ public class BaseTestWatcher implements BeforeAllCallback, BeforeTestExecutionCa
 	
 	@Override
 	public void afterAll(ExtensionContext extensionContext) {
-		BFLogger.logDebug("BaseTestWatcher.observers: " + BaseTestWatcher.observers.get()
+		BFLogger.logDebug("BaseTestWatcher.observers: " + BaseTestExecutionObserver.observers.get()
 				.toString());
 		BFLogger.logDebug("BaseTestWatcher.classObservers: " + classObservers.get()
 				.toString());
 		
 		classObservers.get()
 				.forEach(ITestObserver::onTestClassFinish);
-		BaseTestWatcher.observers.get()
+		BaseTestExecutionObserver.observers.get()
 				.forEach(ITestObserver::onTestClassFinish);
 		
 		observers.get()
