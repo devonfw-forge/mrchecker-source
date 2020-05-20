@@ -43,6 +43,7 @@
 
     <modules>
         <module>mrchecker-core-module</module>
+        <module>mrchecker-selenium-module</module>
         <!--                <module>mrchecker-security-module</module>
                        <module>mrchecker-webapi-module</module>
                        <module>mrchecker-database-module</module> -->
@@ -357,7 +358,7 @@
 
                 <plugin>
                     <groupId>io.qameta.allure</groupId>
-                    <artifactId>allure-maven</artifactId>
+                    <artifactId>junit.platform.versionn</artifactId>
                     <version>${allure-maven.version}</version>
                     <configuration>
                         <reportVersion>2.4.1</reportVersion>

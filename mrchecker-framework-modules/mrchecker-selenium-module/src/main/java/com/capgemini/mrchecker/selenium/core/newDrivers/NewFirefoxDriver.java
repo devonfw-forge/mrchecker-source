@@ -11,20 +11,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundException;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.Button;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.CheckBox;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.DropdownListElement;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.HorizontalSliderElement;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.IFrame;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.InputTextElement;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.LabelElement;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.ImageElement;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.ListElements;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.MenuElement;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.NavigationBarElement;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.RadioButtonElement;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.TabElement;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.TooltipElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.*;
 
 public final class NewFirefoxDriver extends FirefoxDriver implements INewWebDriver {
 	
@@ -46,7 +33,7 @@ public final class NewFirefoxDriver extends FirefoxDriver implements INewWebDriv
 	@Override
 	public List<WebElement> findElements(By by) {
 		BasePage.getAnalytics()
-						.sendMethodEvent(BasePage.analitycsCategoryName);
+				.sendMethodEvent(BasePage.ANALYTICS_CATEGORY_NAME);
 		return DriverExtention.convertWebElementList(super.findElements(by));
 	}
 	
@@ -57,7 +44,7 @@ public final class NewFirefoxDriver extends FirefoxDriver implements INewWebDriv
 	@Override
 	public WebElement findElement(By by) throws BFElementNotFoundException {
 		BasePage.getAnalytics()
-						.sendMethodEvent(BasePage.analitycsCategoryName);
+				.sendMethodEvent(BasePage.ANALYTICS_CATEGORY_NAME);
 		WebElement elementFromDriver = null;
 		try {
 			elementFromDriver = super.findElement(by);
@@ -194,8 +181,8 @@ public final class NewFirefoxDriver extends FirefoxDriver implements INewWebDriv
 	
 	@Override
 	public RadioButtonElement elementRadioButton(By selector,
-					By inputChildsSelector,
-					List<String> listSelectedAttributes) {
+			By inputChildsSelector,
+			List<String> listSelectedAttributes) {
 		return driverExtention.elementRadioButton(selector, inputChildsSelector, listSelectedAttributes);
 	}
 	
@@ -223,7 +210,7 @@ public final class NewFirefoxDriver extends FirefoxDriver implements INewWebDriv
 	public LabelElement elementLabel(By selector) {
 		return driverExtention.elementLabel(selector);
 	}
-
+	
 	@Override
 	public ImageElement elementImage(By selector) {
 		return driverExtention.elementImage(selector);
@@ -291,11 +278,11 @@ public final class NewFirefoxDriver extends FirefoxDriver implements INewWebDriv
 	
 	@Override
 	public HorizontalSliderElement elementHorizontalSlider(final By sliderContainerSelector,
-					final By sliderSelector,
-					final By valueSelector,
-					final BigDecimal minRange,
-					final BigDecimal maxRange,
-					final BigDecimal step) {
+			final By sliderSelector,
+			final By valueSelector,
+			final BigDecimal minRange,
+			final BigDecimal maxRange,
+			final BigDecimal step) {
 		return driverExtention.elementHorizontalSlider(sliderContainerSelector, sliderSelector, valueSelector, minRange, maxRange, step);
 	}
 	

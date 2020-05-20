@@ -55,7 +55,7 @@ public class WindowUtils {
 	 * 
 	 * @param title
 	 *            - title/part of title, at which you want to get driver
-	 * @param switchToGivenURL
+	 * @param switchToGiven
 	 *            - true if you want switch on this window, false if the another one
 	 */
 	public static void switchToWindowByTitle(String title, boolean switchToGiven) {

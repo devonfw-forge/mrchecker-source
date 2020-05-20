@@ -1,6 +1,6 @@
 package com.capgemini.mrchecker.test.core;
 
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.capgemini.mrchecker.test.core.analytics.AnalyticsProvider;
 import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
@@ -14,11 +14,13 @@ import com.capgemini.mrchecker.test.core.base.runtime.RuntimeParametersCore;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.google.inject.Guice;
 
-// @Execution(ExecutionMode.CONCURRENT)
-@ExtendWith(BaseTestExecutionObserver.class)
 public abstract class BaseTest implements IBaseTest {
 	// TODO: to be deleted?
 	private static PropertiesCoreTest propertiesCoreTest;
+	
+	// TODO: use guice to allow testing????
+	@RegisterExtension
+	public static final ITestExecutionObserver BASE_TEST_EXECUTION_OBSERVER = BaseTestExecutionObserver.getInstance();
 	
 	private static IEnvironmentService	environmentService;
 	private static IAnalytics			analytics;
@@ -30,22 +32,6 @@ public abstract class BaseTest implements IBaseTest {
 		setRuntimeParametersCore(propertiesCoreTest.getDefaultEnvironmentName());
 		setEnvironmentInstance(propertiesCoreTest.isEncryptionEnabled());
 		setAnalytics(propertiesCoreTest.isAnalyticsEnabled());
-	}
-	
-	// @RegisterExtension
-	// protected ITestExecutionObserver testExecutionObserver;
-	//
-	// public BaseTest() {
-	// this(new BaseTestExecutionObserver());
-	// }
-	//
-	// public BaseTest(ITestExecutionObserver testExecutionObserver) {
-	// this.testExecutionObserver = testExecutionObserver;
-	// getAnalytics().sendClassName();
-	// }
-	
-	public BaseTest() {
-		getAnalytics().sendClassName();
 	}
 	
 	public static IEnvironmentService getEnvironmentService() {
@@ -75,7 +61,7 @@ public abstract class BaseTest implements IBaseTest {
 		 */
 		
 		// Get and then set properties information from settings.properties file
-		// TODO: do we need GUICE? in injects properties to PropertiesCoreTest.class
+		// TODO: do we need GUICE? it injects properties to PropertiesCoreTest.class
 		propertiesCoreTest = Guice.createInjector(PropertiesSettingsModule.init())
 				.getInstance(PropertiesCoreTest.class);
 	}

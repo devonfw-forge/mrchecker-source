@@ -13,7 +13,7 @@ public interface IAnalytics {
 		sendClassName(packageName, className, "");
 	}
 	
-	default void sendMethodEvent(String analitycsCategoryName, String eventName) {
+	default void sendMethodEvent(String analyticsCategoryName, String eventName) {
 	}
 	
 	default void sendMethodEvent(String analyticsCategoryName) {

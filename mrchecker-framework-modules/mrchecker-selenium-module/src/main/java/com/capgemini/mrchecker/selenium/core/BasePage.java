@@ -13,10 +13,7 @@ import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundExcepti
 import com.capgemini.mrchecker.selenium.core.newDrivers.DriverManager;
 import com.capgemini.mrchecker.selenium.core.newDrivers.INewWebDriver;
 import com.capgemini.mrchecker.selenium.core.utils.WindowUtils;
-import com.capgemini.mrchecker.test.core.BaseTest;
-import com.capgemini.mrchecker.test.core.ITestObserver;
-import com.capgemini.mrchecker.test.core.ModuleType;
-import com.capgemini.mrchecker.test.core.TestObserversManager;
+import com.capgemini.mrchecker.test.core.*;
 import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
@@ -41,12 +38,13 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	private static WebDriverWait	webDriverWait;
 	private BasePage				parent;
 	
-	private static final TestObserversManager	TEST_OBSERVERS_MANAGER	= TestObserversManager.getInstance();
-	private boolean								isInitialized			= false;
+	private static final ITestExecutionObserver TEST_EXECUTION_OBSERVER = BaseTestExecutionObserver.getInstance();
+	
+	private boolean isInitialized = false;
 	
 	private static IEnvironmentService	environmentService;
 	private final static IAnalytics		ANALYTICS;
-	private final static String			ANALYTICS_CATEGORY_NAME	= "Selenium-NewDrivers";
+	public final static String			ANALYTICS_CATEGORY_NAME	= "Selenium-NewDrivers";
 	
 	private final static PropertiesSelenium PROPERTIES_SELENIUM;
 	
@@ -91,7 +89,7 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	
 	@Override
 	public void initialize() {
-		TEST_OBSERVERS_MANAGER.addObserver(this);
+		TEST_EXECUTION_OBSERVER.addObserver(this);
 		isInitialized = true;
 	}
 	
@@ -119,7 +117,7 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 		BFLogger.logDebug("BasePage.onTestFinish   " + getClass()
 				.getSimpleName());
 		
-		TEST_OBSERVERS_MANAGER.removeObserver(this);
+		TEST_EXECUTION_OBSERVER.removeObserver(this);
 	}
 	
 	@Override

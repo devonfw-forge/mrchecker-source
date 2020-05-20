@@ -5,20 +5,16 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.ExecuteMethod;
-import org.openqa.selenium.remote.RemoteExecuteMethod;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.Response;
+import org.openqa.selenium.remote.*;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundException;
 import com.capgemini.mrchecker.selenium.core.exceptions.BFInitializationException;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.*;
 
 public final class NewRemoteWebDriver extends RemoteWebDriver implements INewWebDriver {
 	
@@ -57,7 +53,7 @@ public final class NewRemoteWebDriver extends RemoteWebDriver implements INewWeb
 	@Override
 	public List<WebElement> findElements(By by) {
 		BasePage.getAnalytics()
-						.sendMethodEvent(BasePage.analitycsCategoryName);
+				.sendMethodEvent(BasePage.ANALYTICS_CATEGORY_NAME);
 		return DriverExtention.convertWebElementList(super.findElements(by));
 	}
 	
@@ -68,7 +64,7 @@ public final class NewRemoteWebDriver extends RemoteWebDriver implements INewWeb
 	@Override
 	public WebElement findElement(By by) throws BFElementNotFoundException {
 		BasePage.getAnalytics()
-						.sendMethodEvent(BasePage.analitycsCategoryName);
+				.sendMethodEvent(BasePage.ANALYTICS_CATEGORY_NAME);
 		WebElement elementFromDriver = null;
 		try {
 			elementFromDriver = super.findElement(by);
@@ -207,8 +203,8 @@ public final class NewRemoteWebDriver extends RemoteWebDriver implements INewWeb
 	
 	@Override
 	public RadioButtonElement elementRadioButton(By selector,
-					By inputChildsSelector,
-					List<String> listSelectedAttributes) {
+			By inputChildsSelector,
+			List<String> listSelectedAttributes) {
 		return driverExtention.elementRadioButton(selector, inputChildsSelector, listSelectedAttributes);
 	}
 	
@@ -236,10 +232,12 @@ public final class NewRemoteWebDriver extends RemoteWebDriver implements INewWeb
 	public LabelElement elementLabel(By selector) {
 		return driverExtention.elementLabel(selector);
 	}
-
+	
 	@Override
-	public ImageElement elementImage(By selector) { return driverExtention.elementImage(selector); }
-
+	public ImageElement elementImage(By selector) {
+		return driverExtention.elementImage(selector);
+	}
+	
 	@Override
 	public TabElement elementTab(By selector) {
 		return driverExtention.elementTab(selector);
@@ -302,11 +300,11 @@ public final class NewRemoteWebDriver extends RemoteWebDriver implements INewWeb
 	
 	@Override
 	public HorizontalSliderElement elementHorizontalSlider(final By sliderContainerSelector,
-					final By sliderSelector,
-					final By valueSelector,
-					final BigDecimal minRange,
-					final BigDecimal maxRange,
-					final BigDecimal step) {
+			final By sliderSelector,
+			final By valueSelector,
+			final BigDecimal minRange,
+			final BigDecimal maxRange,
+			final BigDecimal step) {
 		return driverExtention.elementHorizontalSlider(sliderContainerSelector, sliderSelector, valueSelector, minRange, maxRange, step);
 	}
 	

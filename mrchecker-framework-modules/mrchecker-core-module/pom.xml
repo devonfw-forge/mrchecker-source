@@ -259,31 +259,5 @@
 
     <!-- Build goals/actions -->
     <build>
-        <!--        <plugins>-->
-        <!--            <plugin>-->
-        <!--                <groupId>org.jacoco</groupId>-->
-        <!--                <artifactId>jacoco-maven-plugin</artifactId>-->
-        <!--                <version>${jacoco-maven-plugin.version}</version>-->
-        <!--                <executions>-->
-        <!--                    <execution>-->
-        <!--                        <id>default-prepare-agent</id>-->
-        <!--                        <goals>-->
-        <!--                            <goal>prepare-agent</goal>-->
-        <!--                        </goals>-->
-        <!--                        <configuration>-->
-        <!--                            <destFile>${project.build.directory}/jacoco.exec</destFile>-->
-        <!--                            <propertyName>surefireArgLine</propertyName>-->
-        <!--                        </configuration>-->
-        <!--                    </execution>-->
-        <!--                    <execution>-->
-        <!--                        <id>coverage-report</id>-->
-        <!--                        <phase>post-integration-test</phase>-->
-        <!--                        <goals>-->
-        <!--                            <goal>report</goal>-->
-        <!--                        </goals>-->
-        <!--                    </execution>-->
-        <!--                </executions>-->
-        <!--            </plugin>-->
-        <!--        </plugins>-->
     </build>
 </project>
