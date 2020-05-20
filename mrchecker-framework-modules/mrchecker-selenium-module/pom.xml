@@ -9,8 +9,9 @@
         <groupId>com.capgemini.mrchecker</groupId>
         <version>3.0.1-SNAPSHOT</version>
     </parent>
+
     <artifactId>mrchecker-selenium-module</artifactId>
-    <version>3.141.59.2-SNAPSHOT</version>
+    <version>4.0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>MrChecker - Selenium - Module</name>
     <description>MrChecker Test Framework Selenium supports:

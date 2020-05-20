@@ -1,7 +1,6 @@
 package com.capgemini.mrchecker.selenium.core.utils;
 
-import java.awt.AWTException;
-import java.awt.Robot;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.util.Set;
@@ -244,7 +243,7 @@ public class WindowUtils {
 		long startTime = System.currentTimeMillis();
 		Set<String> allBrowserWindows = BasePage.getDriver()
 				.getWindowHandles();
-		int tmp_timeout = BasePage.PROGRESSBARWAITTIMER;
+		int tmp_timeout = BasePage.PROGRESS_BAR_WAIT_TIMER;
 		while (allBrowserWindows.size() < 2) {
 			TimeUtills.waitMiliseconds(1000);
 			if (tmp_timeout-- <= 0)

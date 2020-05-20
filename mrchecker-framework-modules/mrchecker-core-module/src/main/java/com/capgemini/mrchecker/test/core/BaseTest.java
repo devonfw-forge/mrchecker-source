@@ -1,8 +1,6 @@
 package com.capgemini.mrchecker.test.core;
 
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import com.capgemini.mrchecker.test.core.analytics.AnalyticsProvider;
 import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
@@ -16,7 +14,7 @@ import com.capgemini.mrchecker.test.core.base.runtime.RuntimeParametersCore;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.google.inject.Guice;
 
-@Execution(ExecutionMode.CONCURRENT)
+// @Execution(ExecutionMode.CONCURRENT)
 @ExtendWith(BaseTestExecutionObserver.class)
 public abstract class BaseTest implements IBaseTest {
 	// TODO: to be deleted?
@@ -26,6 +24,8 @@ public abstract class BaseTest implements IBaseTest {
 	private static IAnalytics			analytics;
 	
 	static {
+		// TODO: to be deleted?
+		// TODO: check what is selected when running submodules
 		setProperties();
 		setRuntimeParametersCore(propertiesCoreTest.getDefaultEnvironmentName());
 		setEnvironmentInstance(propertiesCoreTest.isEncryptionEnabled());
@@ -46,7 +46,6 @@ public abstract class BaseTest implements IBaseTest {
 	
 	public BaseTest() {
 		getAnalytics().sendClassName();
-		
 	}
 	
 	public static IEnvironmentService getEnvironmentService() {
@@ -61,6 +60,7 @@ public abstract class BaseTest implements IBaseTest {
 		return analytics;
 	}
 	
+	// TODO: do be deleted
 	private static void setRuntimeParametersCore(String defaultEnvironmentName) {
 		RuntimeParametersCore.ENV.setDefaultValue(defaultEnvironmentName);
 		RuntimeParametersCore.ENV.refreshParameterValue();
@@ -90,7 +90,7 @@ public abstract class BaseTest implements IBaseTest {
 					.getInstance(IDataEncryptionService.class);
 			environmentInstance.setDataEncryptionService(encryptionService);
 		}
-		BaseTest.setEnvironmentService(environmentInstance);
+		setEnvironmentService(environmentInstance);
 	}
 	
 	private static void setAnalytics(Boolean isAnalyticsEnabled) {

@@ -79,8 +79,8 @@
         <!-- Allure reporting -->
         <aspectj.version>1.9.5</aspectj.version>
         <allure-junit5.version>2.13.3</allure-junit5.version>
-        <allure-maven-report-generator.version>2.10.0
-        </allure-maven-report-generator.version>  <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-maven -->
+        <allure-maven.version>2.10.0
+        </allure-maven.version>  <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-maven -->
 
 
         <!-- Cucumber version -->
@@ -193,7 +193,7 @@
             <!-- Allure report generator -->
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-maven</artifactId>
-            <version>${allure-maven-report-generator.version}</version>
+            <version>${allure-maven.version}</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
@@ -259,28 +259,31 @@
 
     <!-- Build goals/actions -->
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>coverage-initialize</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>coverage-report</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+        <!--        <plugins>-->
+        <!--            <plugin>-->
+        <!--                <groupId>org.jacoco</groupId>-->
+        <!--                <artifactId>jacoco-maven-plugin</artifactId>-->
+        <!--                <version>${jacoco-maven-plugin.version}</version>-->
+        <!--                <executions>-->
+        <!--                    <execution>-->
+        <!--                        <id>default-prepare-agent</id>-->
+        <!--                        <goals>-->
+        <!--                            <goal>prepare-agent</goal>-->
+        <!--                        </goals>-->
+        <!--                        <configuration>-->
+        <!--                            <destFile>${project.build.directory}/jacoco.exec</destFile>-->
+        <!--                            <propertyName>surefireArgLine</propertyName>-->
+        <!--                        </configuration>-->
+        <!--                    </execution>-->
+        <!--                    <execution>-->
+        <!--                        <id>coverage-report</id>-->
+        <!--                        <phase>post-integration-test</phase>-->
+        <!--                        <goals>-->
+        <!--                            <goal>report</goal>-->
+        <!--                        </goals>-->
+        <!--                    </execution>-->
+        <!--                </executions>-->
+        <!--            </plugin>-->
+        <!--        </plugins>-->
     </build>
-
 </project>

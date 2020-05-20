@@ -7,8 +7,11 @@ import java.util.Objects;
 import com.capgemini.mrchecker.test.core.base.encryption.providers.DataEncryptionService;
 
 public class TestObserversManager {
-	private static TestObserversManager	instance;
-	private final List<ITestObserver>	observers	= new ArrayList<>();
+	private static TestObserversManager instance;
+	
+	// TODO: introduce an object pool?
+	private final ThreadLocal<List<ITestObserver>>	observers		= ThreadLocal.withInitial(ArrayList::new);
+	private final ThreadLocal<List<ITestObserver>>	classObservers	= ThreadLocal.withInitial(ArrayList::new);
 	
 	public static TestObserversManager getInstance() {
 		if (Objects.isNull(instance)) {
@@ -23,18 +26,21 @@ public class TestObserversManager {
 	}
 	
 	public void addObserver(ITestObserver observer) {
-		observers.add(observer);
+		observers.get()
+				.add(observer);
 	}
 	
 	public void removeObserver(ITestObserver observer) {
-		observers.remove(observer);
+		observers.get()
+				.remove(observer);
 	}
 	
 	public void removeAllObservers() {
-		observers.clear();
+		observers.get()
+				.clear();
 	}
 	
 	public List<ITestObserver> getAllObservers() {
-		return new ArrayList<>(observers);
+		return new ArrayList<>(observers.get());
 	}
 }

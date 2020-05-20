@@ -10,13 +10,10 @@ import io.qameta.allure.Attachment;
 
 public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	
-	// TODO: fix multithread
-	private long iStart;
+	// TODO: fix multi thread
+	private final ThreadLocal<Long> stopwatch = ThreadLocal.withInitial(() -> 0L);
 	
-	// private final ThreadLocal<List<ITestObserver>> observers = ThreadLocal.withInitial(ArrayList::new);
-	// private final ThreadLocal<List<ITestObserver>> classObservers = ThreadLocal.withInitial(ArrayList::new);
-	
-	private final TestObserversManager testObserversManager = TestObserversManager.getInstance();
+	private static final TestObserversManager TEST_OBSERVERS_MANAGER = TestObserversManager.getInstance();
 	
 	@Override
 	public void beforeAll(ExtensionContext extensionContext) throws Exception {
@@ -31,7 +28,7 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 		BFLogger.RestrictedMethods.startSeparateLog();
 		String testName = extensionContext.getDisplayName();
 		BFLogger.logInfo("\"" + testName + "\"" + " - STARTED.");
-		iStart = System.currentTimeMillis();
+		stopwatch.set(System.currentTimeMillis());
 		BaseTest.getAnalytics()
 				.sendClassName();
 		((IBaseTest) extensionContext.getRequiredTestInstance()).setUp();
@@ -47,7 +44,7 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	public void testSuccessful(ExtensionContext context) {
 		String testName = context.getDisplayName();
 		BFLogger.logInfo("\"" + testName + "\"" + " - PASSED.");
-		testObserversManager.getAllObservers()
+		TEST_OBSERVERS_MANAGER.getAllObservers()
 				.forEach(ITestObserver::onTestSuccess);
 		// classObservers.get()
 		// .forEach(ITestObserver::onTestSuccess);
@@ -65,7 +62,7 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	public void testFailed(ExtensionContext context, Throwable cause) {
 		String testName = context.getDisplayName();
 		BFLogger.logInfo("\"" + testName + "\"" + " - FAILED.");
-		testObserversManager.getAllObservers()
+		TEST_OBSERVERS_MANAGER.getAllObservers()
 				.forEach(ITestObserver::onTestFailure);
 		// classObservers.get()
 		// .forEach(ITestObserver::onTestFailure);
@@ -75,13 +72,13 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	
 	@Override
 	public void afterTestExecution(ExtensionContext extensionContext) throws Exception {
-		this.iStart = System.currentTimeMillis() - this.iStart; // end timing
+		stopwatch.set(System.currentTimeMillis() - stopwatch.get()); // end timing
 		String testName = extensionContext.getDisplayName();
 		BFLogger.logInfo("\"" + testName + "\"" + " - FINISHED.");
 		printTimeExecutionLog(testName);
 		((IBaseTest) extensionContext.getRequiredTestInstance()).tearDown();
 		makeLogForTest();
-		testObserversManager.getAllObservers()
+		TEST_OBSERVERS_MANAGER.getAllObservers()
 				.forEach(ITestObserver::onTestFinish);
 		// observers.get()
 		// .forEach(ITestObserver::onTestFinish);
@@ -95,7 +92,7 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	
 	@Override
 	public void afterAll(ExtensionContext extensionContext) {
-		BFLogger.logDebug(getClass().getName() + ".observers: " + testObserversManager.getAllObservers()
+		BFLogger.logDebug(getClass().getName() + ".observers: " + TEST_OBSERVERS_MANAGER.getAllObservers()
 				.toString());
 		
 		// BFLogger.logDebug(getClass().getName() + ".observers: " + observers.get()
@@ -103,14 +100,14 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 		// BFLogger.logDebug(getClass().getName() + ".classObservers: " + classObservers.get()
 		// .toString());
 		
-		testObserversManager.getAllObservers()
+		TEST_OBSERVERS_MANAGER.getAllObservers()
 				.forEach(ITestObserver::onTestClassFinish);
 		// classObservers.get()
 		// .forEach(ITestObserver::onTestClassFinish);
 		// observers.get()
 		// .forEach(ITestObserver::onTestClassFinish);
 		
-		testObserversManager.removeAllObservers();
+		TEST_OBSERVERS_MANAGER.removeAllObservers();
 		// observers.get()
 		// .clear();
 		// classObservers.get()
@@ -124,7 +121,7 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	}
 	
 	private String getFormattedTestDuration() {
-		return String.format(" - DURATION: %1.2f min", (float) iStart / (60 * 1000));
+		return String.format(" - DURATION: %1.2f min", (float) stopwatch.get() / (60 * 1000));
 	}
 	
 	// @Override

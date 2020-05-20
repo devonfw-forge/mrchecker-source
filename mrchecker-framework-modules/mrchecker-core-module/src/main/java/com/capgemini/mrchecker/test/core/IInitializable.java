@@ -1,6 +1,6 @@
 package com.capgemini.mrchecker.test.core;
 
-public interface Initializable {
+public interface IInitializable {
 	void initialize();
 	
 	boolean isInitialized();

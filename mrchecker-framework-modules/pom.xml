@@ -42,11 +42,10 @@
 
 
     <modules>
-        <!--         <module>mrchecker-core-module</module>
-                <module>mrchecker-selenium-module</module>
-                <module>mrchecker-security-module</module>
-                <module>mrchecker-webapi-module</module>
-                <module>mrchecker-database-module</module> -->
+        <module>mrchecker-core-module</module>
+        <!--                <module>mrchecker-security-module</module>
+                       <module>mrchecker-webapi-module</module>
+                       <module>mrchecker-database-module</module> -->
         <!-- <module>build-tools</module> -->
     </modules>
 
@@ -84,7 +83,6 @@
         <!-- Tests executors -->
         <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
         <surefire.provider.version>1.3.2</surefire.provider.version>
-        <thread.count>8</thread.count>
 
         <!-- Test tools -->
         <hamcrest.version>1.3</hamcrest.version>
@@ -116,6 +114,7 @@
         <aspectj.version>1.9.5</aspectj.version>
         <allure-junit5.version>2.13.3</allure-junit5.version>
         <allure-java-commons.version>2.13.3</allure-java-commons.version>
+        <allure-maven.version>2.10.0</allure-maven.version>
     </properties>
 
     <dependencyManagement>
@@ -230,6 +229,14 @@
             </dependency>
 
             <dependency>
+                <!-- Test listener. Binds Junit exec to Allure annotation -->
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>${allure-maven.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-java-commons</artifactId>
                 <version>${allure-java-commons.version}</version>
@@ -303,9 +310,6 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
                     <configuration>
-                        <parallel>classes</parallel>
-                        <perCoreThreadCount>false</perCoreThreadCount>
-                        <threadCount>${thread.count}</threadCount>
                         <includes>
                             <include>**/*.class</include>
                         </includes>
@@ -315,13 +319,14 @@
                         </excludes>
                         <argLine>
                             -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                            ${surefireArgLine}
                         </argLine>
-                        <systemProperties>
+                        <properties>
                             <property>
-                                <name>junit.jupiter.extensions.autodetection.enabled</name>
-                                <value>true</value>
+                                <name>listener</name>
+                                <value>io.qameta.allure.junit5.AllureJunit5</value>
                             </property>
-                        </systemProperties>
+                        </properties>
                     </configuration>
                     <dependencies>
                         <dependency>
@@ -336,7 +341,6 @@
                         </dependency>
                     </dependencies>
                 </plugin>
-
 
                 <!-- Generate report for maven site goal -->
                 <plugin>
@@ -354,30 +358,10 @@
                 <plugin>
                     <groupId>io.qameta.allure</groupId>
                     <artifactId>allure-maven</artifactId>
-                    <version>${allure-junit5.version}</version>
+                    <version>${allure-maven.version}</version>
                     <configuration>
                         <reportVersion>2.4.1</reportVersion>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${jacoco-maven-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>coverage-initialize</id>
-                            <goals>
-                                <goal>prepare-agent</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>coverage-report</id>
-                            <phase>post-integration-test</phase>
-                            <goals>
-                                <goal>report</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
 
@@ -391,14 +375,34 @@
                     <target>8</target>
                 </configuration>
             </plugin>
-
-
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-tests</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco.exec</destFile>
+                            <propertyName>surefireArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>coverage-report</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-
     </build>
 
     <profiles>
-
         <profile>
             <!-- RELEASE -->
             <id>release</id>
@@ -535,6 +539,7 @@
             </build>
 
             <reporting>
+                <excludeDefaults>true</excludeDefaults>
                 <plugins>
                     <!-- Report project information -->
                     <plugin>
@@ -604,6 +609,7 @@
     </profiles>
 
     <reporting>
+        <excludeDefaults>true</excludeDefaults>
         <plugins>
             <!-- Report project information -->
             <plugin>

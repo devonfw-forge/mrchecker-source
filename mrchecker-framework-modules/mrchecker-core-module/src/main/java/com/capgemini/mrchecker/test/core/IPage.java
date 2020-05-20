@@ -1,4 +1,4 @@
 package com.capgemini.mrchecker.test.core;
 
-public interface IPage extends Initializable {
+public interface IPage extends IInitializable {
 }
