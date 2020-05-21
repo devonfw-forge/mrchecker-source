@@ -11,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
+import io.qameta.allure.Attachment;
+
 public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	
 	private static BaseTestExecutionObserver instance;
@@ -64,7 +66,7 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	}
 	
 	// TODO: fix that
-	// @Attachment("Log file")
+	@Attachment("Log file")
 	public void makeLogForTest() {
 		BFLogger.RestrictedMethods.dumpSeparateLog();
 	}
@@ -82,7 +84,7 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 		BFLogger.logInfo("\"" + testName + "\"" + " - PASSED.");
 		observers.get()
 				.forEach(ITestObserver::onTestSuccess);
-		afterEach(context);
+		afterEach();
 		classObservers.get()
 				.forEach(ITestObserver::onTestSuccess);
 	}
@@ -91,7 +93,7 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	public void testAborted(ExtensionContext context, Throwable cause) {
 		String testName = context.getDisplayName();
 		BFLogger.logInfo("\"" + testName + "\"" + " - ABORTED.");
-		afterEach(context);
+		afterEach();
 	}
 	
 	@Override
@@ -100,13 +102,13 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 		BFLogger.logInfo("\"" + testName + "\"" + " - FAILED.");
 		observers.get()
 				.forEach(ITestObserver::onTestFailure);
-		afterEach(context);
+		afterEach();
 		classObservers.get()
 				.forEach(ITestObserver::onTestFailure);
 		
 	}
 	
-	private void afterEach(ExtensionContext extensionContext) {
+	private void afterEach() {
 		observers.get()
 				.forEach(ITestObserver::onTestFinish);
 	}

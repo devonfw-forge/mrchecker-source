@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
-import com.capgemini.mrchecker.test.core.base.runtime.RuntimeParametersI;
+import com.capgemini.mrchecker.test.core.base.runtime.IRuntimeParameters;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 /**
@@ -15,7 +15,7 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
  * 
  * @author LUSTEFAN
  */
-public enum RuntimeParametersSelenium implements RuntimeParametersI {
+public enum RuntimeParametersSelenium implements IRuntimeParameters {
 	
 	BROWSER("browser", "chrome"),
 	BROWSER_VERSION("browserVersion", ""),
@@ -75,12 +75,12 @@ public enum RuntimeParametersSelenium implements RuntimeParametersI {
 	public Map<String, Object> getValues() {
 		return null;
 	}
-
+	
 	@Override
 	public String getKey() {
 		return this.paramName;
 	}
-
+	
 	@Override
 	public String toString() {
 		return paramName + "=" + this.getValue();

@@ -1,14 +1,14 @@
 package com.capgemini.mrchecker.test.core.base.environment;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import com.capgemini.mrchecker.test.core.base.environment.providers.SpreadsheetEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.runtime.RuntimeParametersCore;
 import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class EnvironmentModule extends AbstractModule {
 	
@@ -29,10 +29,11 @@ public class EnvironmentModule extends AbstractModule {
 	}
 	
 	@Provides
+	@SuppressWarnings("unused")
 	IEnvironmentService provideSpreadsheetEnvironmentService() {
 		String environment = RuntimeParametersCore.ENV.getValue();
 		String path = System.getProperty("user.dir") + Paths.get(envParamsFilePath);
-		String csvData = null;
+		String csvData;
 		try {
 			csvData = new String(Files.readAllBytes(Paths.get(path)));
 		} catch (IOException e) {

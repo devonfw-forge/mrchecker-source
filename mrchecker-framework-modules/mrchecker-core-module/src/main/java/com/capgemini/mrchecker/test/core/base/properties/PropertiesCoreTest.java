@@ -10,18 +10,21 @@ public class PropertiesCoreTest {
 	private boolean	coreIsEncryptionEnabled		= false;
 	
 	@Inject(optional = true)
+	@SuppressWarnings("unused")
 	private void setIsAnalyticsEnabled(@Named("core.isAnalyticsEnabled") String status) {
 		this.coreIsAnalyticsEnabled = !status.toLowerCase()
 				.equals("false");
 	}
 	
 	@Inject(optional = true)
+	@SuppressWarnings("unused")
 	private void setIsEncryptionEnabled(@Named("core.isEncryptionEnabled") String status) {
 		this.coreIsEncryptionEnabled = status.toLowerCase()
 				.equals("true");
 	}
 	
 	@Inject(optional = true)
+	@SuppressWarnings("unused")
 	private void setDefaultEnvironmentName(@Named("core.defaultEnvironmentName") String coreDefaultEnvironmentName) {
 		this.coreDefaultEnvironmentName = coreDefaultEnvironmentName;
 	}

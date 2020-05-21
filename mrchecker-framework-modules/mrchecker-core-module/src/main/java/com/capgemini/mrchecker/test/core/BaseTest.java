@@ -20,6 +20,7 @@ public abstract class BaseTest implements IBaseTest {
 	
 	// TODO: use guice to allow testing????
 	@RegisterExtension
+	@SuppressWarnings("unused")
 	public static final ITestExecutionObserver BASE_TEST_EXECUTION_OBSERVER = BaseTestExecutionObserver.getInstance();
 	
 	private static IEnvironmentService	environmentService;

@@ -1,12 +1,13 @@
 package com.capgemini.mrchecker.test.core.utils.datadriven;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
+
 import gherkin.deps.com.google.gson.GsonBuilder;
 import gherkin.deps.com.google.gson.JsonArray;
 import gherkin.deps.com.google.gson.JsonParser;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 
 /**
  * @author is an utility to handle JSON deserialization boilerplate for JParamRunner data driven cases. It has no state,

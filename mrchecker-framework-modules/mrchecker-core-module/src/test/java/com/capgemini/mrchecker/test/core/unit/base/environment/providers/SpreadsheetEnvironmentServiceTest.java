@@ -13,6 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import com.capgemini.mrchecker.test.core.base.encryption.IDataEncryptionService;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
@@ -20,6 +21,7 @@ import com.capgemini.mrchecker.test.core.base.environment.providers.SpreadsheetE
 import com.capgemini.mrchecker.test.core.base.runtime.RuntimeParametersCore;
 import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
 
+@ResourceLock(value = "RuntimeParametersCoreTest.class")
 public class SpreadsheetEnvironmentServiceTest {
 	
 	public static final String		TEST_ENV				= "TEST_ENV";
@@ -173,7 +175,7 @@ public class SpreadsheetEnvironmentServiceTest {
 	}
 	
 	@Test
-	public void shouldSetDataEnryptionService() {
+	public void shouldSetDataEncryptionService() {
 		initAndGetSut();
 		IDataEncryptionService dataEncryptionServiceMock = mock(IDataEncryptionService.class);
 		
@@ -181,7 +183,7 @@ public class SpreadsheetEnvironmentServiceTest {
 	}
 	
 	@Test
-	public void shouldSetnEvironment() {
+	public void shouldSetEnvironment() {
 		initAndGetSut();
 		
 		getSut().setEnvironment(DEFAULT_ENV_WHEN_NO_ENVIRONMENT_SERVICE_SET);

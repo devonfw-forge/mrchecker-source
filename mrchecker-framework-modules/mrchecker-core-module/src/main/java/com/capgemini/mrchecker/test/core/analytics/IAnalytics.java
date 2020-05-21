@@ -2,6 +2,7 @@ package com.capgemini.mrchecker.test.core.analytics;
 
 public interface IAnalytics {
 	
+	@SuppressWarnings("unused")
 	default void sendClassName(String packageName, String className, String description) {
 	}
 	
@@ -13,6 +14,7 @@ public interface IAnalytics {
 		sendClassName(packageName, className, "");
 	}
 	
+	@SuppressWarnings("unused")
 	default void sendMethodEvent(String analyticsCategoryName, String eventName) {
 	}
 	

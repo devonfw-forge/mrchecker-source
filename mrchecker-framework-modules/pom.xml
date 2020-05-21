@@ -90,10 +90,14 @@
         <junit.jupiter.version>5.6.2</junit.jupiter.version>
         <junit.platform.version>1.6.2</junit.platform.version>
         <junit.vintage.version>5.6.2</junit.vintage.version>
+        <junit.params.version>5.6.2</junit.params.version>
+        <junit4.version>4.12</junit4.version>
         <mockito.version>1.8.5</mockito.version>
         <joda-time.version>2.9.9</joda-time.version>
-        <commons-csv.version>1.1</commons-csv.version>
+        <commons-csv.version>1.8</commons-csv.version>
+        <commons-lang3.version>3.1</commons-lang3.version>
         <JUnitParams.version>1.0.4</JUnitParams.version>
+
 
         <!-- Dependency Injection -->
         <guice.version>4.1.0</guice.version>
@@ -127,48 +131,6 @@
                 <version>${guice.version}</version>
             </dependency>
 
-            <!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all -->
-            <dependency>
-                <groupId>org.hamcrest</groupId>
-                <artifactId>hamcrest-all</artifactId>
-                <version>${hamcrest.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-csv</artifactId>
-                <version>${commons-csv.version}</version>
-            </dependency>
-
-
-            <!--This dependency is necessary for JUnit plugin. -->
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
-                <version>${junit.jupiter.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-api</artifactId>
-                <version>${junit.jupiter.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.junit.platform</groupId>
-                <artifactId>junit-platform-runner</artifactId>
-                <version>${junit.platform.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.junit.vintage</groupId>
-                <artifactId>junit-vintage-engine</artifactId>
-                <version>${junit.vintage.version}</version>
-                <scope>test</scope>
-            </dependency>
-
             <dependency>
                 <groupId>pl.pragmatists</groupId>
                 <artifactId>JUnitParams</artifactId>
@@ -181,18 +143,6 @@
                 <version>${surefire.provider.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>${mockito.version}</version>
-            </dependency>
-
-            <!-- For time and date dependency actions -->
-            <dependency>
-                <groupId>joda-time</groupId>
-                <artifactId>joda-time</artifactId>
-                <version>${joda-time.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.json</groupId>
@@ -246,6 +196,85 @@
         </dependencies>
     </dependencyManagement>
 
+
+    <!-- The bellow dependencies will ba automatically included in modules -->
+    <dependencies>
+        <!--This dependency is necessary for JUnit plugin. -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.jupiter.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.jupiter.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.params.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-runner</artifactId>
+            <version>${junit.platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit.vintage.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit4.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Test tools -->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>${hamcrest.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+        </dependency>
+
+        <!-- Various tools -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>${commons-csv.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+
+        <!-- For time and date dependency actions -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${joda-time.version}</version>
+        </dependency>
+
+    </dependencies>
 
     <!-- Build goals/actions -->
     <build>

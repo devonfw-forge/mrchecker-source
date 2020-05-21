@@ -1,11 +1,13 @@
 package com.capgemini.mrchecker.test.core.base.runtime;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * This class stores various system properties
  *
  * @author LUSTEFAN
  */
-public enum RuntimeParametersCore implements RuntimeParametersI {
+public enum RuntimeParametersCore implements IRuntimeParameters {
 	
 	ENV("env", "DEV");
 	
@@ -49,6 +51,6 @@ public enum RuntimeParametersCore implements RuntimeParametersI {
 	}
 	
 	private boolean isSystemParameterEmpty(String systemParameterValue) {
-		return (null == systemParameterValue || "".equals(systemParameterValue) || "null".equals(systemParameterValue));
+		return (StringUtils.isEmpty(systemParameterValue) || "null".equals(systemParameterValue));
 	}
 }

@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.After;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import com.capgemini.mrchecker.test.core.base.environment.EnvironmentModule;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
@@ -15,6 +16,7 @@ import com.capgemini.mrchecker.test.core.base.environment.providers.SpreadsheetE
 import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
 import com.google.inject.Guice;
 
+@ResourceLock(value = "RuntimeParametersCoreTest.class")
 public class EnvironmentModuleTest {
 	
 	public static final String NO_FILE_PATH = "no file path";
