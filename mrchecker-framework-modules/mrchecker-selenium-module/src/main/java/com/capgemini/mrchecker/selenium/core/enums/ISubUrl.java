@@ -1,5 +1,5 @@
 package com.capgemini.mrchecker.selenium.core.enums;
 
-public interface SubUrl {
+public interface ISubUrl {
 	String subURL();
 }

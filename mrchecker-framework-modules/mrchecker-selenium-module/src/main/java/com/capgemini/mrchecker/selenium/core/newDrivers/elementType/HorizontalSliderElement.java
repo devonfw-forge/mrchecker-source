@@ -52,12 +52,12 @@ public class HorizontalSliderElement extends BasicElement {
 	 * 
 	 * @return BigDecimal representing position's value.
 	 * @throws NumberFormatException
+	 *             e
 	 */
 	
 	public BigDecimal getCurrentSliderValue() throws NumberFormatException {
-		@SuppressWarnings("deprecation")
 		WebElement currentValueElement = this.getElement()
-						.findElement(this.valueSelector);
+				.findElement(this.valueSelector);
 		String value = currentValueElement.getText();
 		if (value == null || value.isEmpty()) {
 			value = getValueAttributeOfWebElement(currentValueElement);
@@ -96,7 +96,7 @@ public class HorizontalSliderElement extends BasicElement {
 	/**
 	 * Sets the highest possible value of horizontal slider's position.
 	 * 
-	 * @param minRange
+	 * @param maxRange
 	 *            BigDecimal
 	 */
 	public void setMaxRange(BigDecimal maxRange) {
@@ -140,8 +140,8 @@ public class HorizontalSliderElement extends BasicElement {
 	 */
 	public Dimension getDimensions() {
 		return this.getElement()
-						.findElement(sliderSelector)
-						.getSize();
+				.findElement(sliderSelector)
+				.getSize();
 	}
 	
 	/**
@@ -161,7 +161,7 @@ public class HorizontalSliderElement extends BasicElement {
 	public BigDecimal getStepWidth() {
 		BigDecimal rangeDiff = maxRange.subtract(minRange);
 		BigDecimal numberOfSteps = rangeDiff.setScale(1)
-						.divide(step.setScale(1));
+				.divide(step.setScale(1));
 		return new BigDecimal(getWidth()).divide(numberOfSteps);
 	}
 	
@@ -191,7 +191,7 @@ public class HorizontalSliderElement extends BasicElement {
 		String message = "Chosen method doesn't exist.";
 		int counter = 0;
 		BasePage.getDriver()
-						.mouseLeftClick(getElement().findElement(sliderSelector));
+				.mouseLeftClick(getElement().findElement(sliderSelector));
 		position = verifyAndCorrectPositionValue(position);
 		while (position.compareTo(getCurrentSliderValue()) != 0 || counter > getMaxNumberOfSteps()) {
 			if (position.compareTo(getCurrentSliderValue()) > 0) {
@@ -246,10 +246,10 @@ public class HorizontalSliderElement extends BasicElement {
 	 * @see BigDecimal
 	 */
 	public BigDecimal verifyAndCorrectPositionValue(BigDecimal position) {
-		if (position.compareTo(getMinRange()) == -1) {
+		if (position.compareTo(getMinRange()) < 0) {
 			BFLogger.logInfo("Position value: " + position + " will be set to minimum value: " + getMinRange());
 			position = getMinRange();
-		} else if (position.compareTo(getMaxRange()) == 1) {
+		} else if (position.compareTo(getMaxRange()) > 0) {
 			BFLogger.logInfo("Position value: " + position + " will be set to maximum value: " + getMaxRange());
 			position = getMaxRange();
 		}
@@ -283,28 +283,28 @@ public class HorizontalSliderElement extends BasicElement {
 	
 	private int calculateMaxNumberOfSteps() {
 		return getMaxRange().subtract(getMinRange())
-						.divide(getStep())
-						.intValueExact();
+				.divide(getStep())
+				.intValueExact();
 	}
 	
 	private void performKeypress(CharSequence key) {
 		BasePage.getAction()
-						.sendKeys(key)
-						.build()
-						.perform();
+				.sendKeys(key)
+				.build()
+				.perform();
 	}
 	
 	private void performMouseMove(int side) {
 		int offset = getStepWidth()
-						.intValue();
+				.intValue();
 		if (side == MOUSE_MOVE_LEFT)
 			offset = -offset;
 		BasePage.getAction()
-						.clickAndHold()
-						.moveByOffset(offset, 0)
-						.release()
-						.build()
-						.perform();
+				.clickAndHold()
+				.moveByOffset(offset, 0)
+				.release()
+				.build()
+				.perform();
 	}
 	
 }

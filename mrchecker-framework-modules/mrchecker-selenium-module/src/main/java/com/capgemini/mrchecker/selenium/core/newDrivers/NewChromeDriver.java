@@ -18,15 +18,16 @@ import com.capgemini.mrchecker.test.core.BaseTest;
 
 public final class NewChromeDriver extends ChromeDriver implements INewWebDriver {
 	
-	private DriverExtention driverExtention;
+	private final DriverExtension driverExtension;
 	
+	// TODO: class instance passed outside before it's been created
 	public NewChromeDriver() {
-		driverExtention = new DriverExtention(this);
+		driverExtension = new DriverExtension(this);
 	}
 	
 	public NewChromeDriver(ChromeOptions options) {
 		super(options);
-		driverExtention = new DriverExtention(this);
+		driverExtension = new DriverExtension(this);
 	}
 	
 	@Override
@@ -42,7 +43,7 @@ public final class NewChromeDriver extends ChromeDriver implements INewWebDriver
 	public List<WebElement> findElements(By by) {
 		BaseTest.getAnalytics()
 				.sendMethodEvent(BasePage.ANALYTICS_CATEGORY_NAME);
-		return DriverExtention.convertWebElementList(super.findElements(by));
+		return DriverExtension.convertWebElementList(super.findElements(by));
 	}
 	
 	/**
@@ -53,7 +54,7 @@ public final class NewChromeDriver extends ChromeDriver implements INewWebDriver
 	public WebElement findElement(By by) throws BFElementNotFoundException {
 		BaseTest.getAnalytics()
 				.sendMethodEvent(BasePage.ANALYTICS_CATEGORY_NAME);
-		WebElement elementFromDriver = null;
+		WebElement elementFromDriver;
 		try {
 			elementFromDriver = super.findElement(by);
 		} catch (NoSuchElementException e) {
@@ -68,7 +69,7 @@ public final class NewChromeDriver extends ChromeDriver implements INewWebDriver
 	 * 
 	 * @param by
 	 *            selector
-	 * @param timeout
+	 * @param timeOut
 	 *            - maximum time to wait for search WebElement
 	 * @return found WebElement object
 	 * @author
@@ -76,7 +77,7 @@ public final class NewChromeDriver extends ChromeDriver implements INewWebDriver
 	 */
 	@Override
 	public WebElement findElementDynamic(By by, int timeOut) throws BFElementNotFoundException {
-		return driverExtention.findElementDynamic(by, timeOut);
+		return driverExtension.findElementDynamic(by, timeOut);
 	}
 	
 	/**
@@ -91,7 +92,7 @@ public final class NewChromeDriver extends ChromeDriver implements INewWebDriver
 	 */
 	@Override
 	public WebElement findElementDynamic(By by) throws BFElementNotFoundException {
-		return driverExtention.findElementDynamic(by);
+		return driverExtension.findElementDynamic(by);
 	}
 	
 	/**
@@ -107,7 +108,7 @@ public final class NewChromeDriver extends ChromeDriver implements INewWebDriver
 	 */
 	@Override
 	public List<WebElement> findElementDynamics(By by, int timeOut) {
-		return driverExtention.findElementsDynamic(by, timeOut);
+		return driverExtension.findElementsDynamic(by, timeOut);
 	}
 	
 	/**
@@ -121,17 +122,17 @@ public final class NewChromeDriver extends ChromeDriver implements INewWebDriver
 	 */
 	@Override
 	public List<WebElement> findElementDynamics(By by) {
-		return driverExtention.findElementsDynamic(by);
+		return driverExtension.findElementsDynamic(by);
 	}
 	
 	@Override
 	public WebElement waitForElement(final By selector) {
-		return driverExtention.waitForElement(selector);
+		return driverExtension.waitForElement(selector);
 	}
 	
 	@Override
 	public WebElement waitForElementVisible(final By selector) {
-		return driverExtention.waitForElementVisible(selector);
+		return driverExtension.waitForElementVisible(selector);
 	}
 	
 	/**
@@ -146,7 +147,7 @@ public final class NewChromeDriver extends ChromeDriver implements INewWebDriver
 	 */
 	@Override
 	public WebElement waitUntilElementIsClickable(final By selector) {
-		return driverExtention.waitUntilElementIsClickable(selector);
+		return driverExtension.waitUntilElementIsClickable(selector);
 	}
 	
 	/**
@@ -159,7 +160,7 @@ public final class NewChromeDriver extends ChromeDriver implements INewWebDriver
 	 */
 	@Override
 	public WebElement findElementQuietly(WebElement elementToSearchIn, By searchedBySelector) {
-		return driverExtention.findElementQuietly(elementToSearchIn, searchedBySelector);
+		return driverExtension.findElementQuietly(elementToSearchIn, searchedBySelector);
 	}
 	
 	/**
@@ -171,130 +172,130 @@ public final class NewChromeDriver extends ChromeDriver implements INewWebDriver
 	 */
 	@Override
 	public WebElement findElementQuietly(By searchedBySelector) {
-		return driverExtention.findElementQuietly(null, searchedBySelector);
+		return driverExtension.findElementQuietly(null, searchedBySelector);
 	}
 	
 	@Override
 	public void waitForPageLoaded() {
-		driverExtention.waitForPageLoaded();
+		driverExtension.waitForPageLoaded();
 		
 	}
 	
 	@Override
 	public Button elementButton(By selector) {
-		return driverExtention.elementButton(selector);
+		return driverExtension.elementButton(selector);
 	}
 	
 	@Override
 	public RadioButtonElement elementRadioButton(By selector) {
-		return driverExtention.elementRadioButton(selector);
+		return driverExtension.elementRadioButton(selector);
 	}
 	
 	@Override
 	public RadioButtonElement elementRadioButton(By selector, By inputChildsSelector) {
-		return driverExtention.elementRadioButton(selector, inputChildsSelector);
+		return driverExtension.elementRadioButton(selector, inputChildsSelector);
 	}
 	
 	@Override
 	public RadioButtonElement elementRadioButton(By selector,
 			By inputChildsSelector,
 			List<String> listSelectedAttributes) {
-		return driverExtention.elementRadioButton(selector, inputChildsSelector, listSelectedAttributes);
+		return driverExtension.elementRadioButton(selector, inputChildsSelector, listSelectedAttributes);
 	}
 	
 	@Override
 	public InputTextElement elementInputText(By selector) {
-		return driverExtention.elementInputText(selector);
+		return driverExtension.elementInputText(selector);
 	}
 	
 	@Override
 	public DropdownListElement elementDropdownList(By selector) {
-		return driverExtention.elementDropdownList(selector);
+		return driverExtension.elementDropdownList(selector);
 	}
 	
 	@Override
 	public ListElements elementList(By selector) {
-		return driverExtention.elementList(selector);
+		return driverExtension.elementList(selector);
 	}
 	
 	@Override
 	public CheckBox elementCheckbox(By selector) {
-		return driverExtention.elementCheckbox(selector);
+		return driverExtension.elementCheckbox(selector);
 	}
 	
 	@Override
 	public LabelElement elementLabel(By selector) {
-		return driverExtention.elementLabel(selector);
+		return driverExtension.elementLabel(selector);
 	}
 	
 	@Override
 	public ImageElement elementImage(By selector) {
-		return driverExtention.elementImage(selector);
+		return driverExtension.elementImage(selector);
 	}
 	
 	@Override
 	public IFrame elementIFrame(By selector) {
-		return driverExtention.elementIFrame(selector);
+		return driverExtension.elementIFrame(selector);
 	}
 	
 	@Override
 	public TabElement elementTab(By selector) {
-		return driverExtention.elementTab(selector);
+		return driverExtension.elementTab(selector);
 	}
 	
 	@Override
 	public TabElement elementTab(By selector, By inputChildsSelector) {
-		return driverExtention.elementTab(selector, inputChildsSelector);
+		return driverExtension.elementTab(selector, inputChildsSelector);
 	}
 	
 	@Override
 	public TabElement elementTab(By selector, By inputChildsSelector, List<String> listSelectedAttributes) {
-		return driverExtention.elementTab(selector, inputChildsSelector, listSelectedAttributes);
+		return driverExtension.elementTab(selector, inputChildsSelector, listSelectedAttributes);
 	}
 	
 	@Override
 	public NavigationBarElement elementNavigationBar(By selector) {
-		return driverExtention.elementNavigationBar(selector);
+		return driverExtension.elementNavigationBar(selector);
 	}
 	
 	@Override
 	public NavigationBarElement elementNavigationBar(By selector, By inputChildsSelector) {
-		return driverExtention.elementNavigationBar(selector, inputChildsSelector);
+		return driverExtension.elementNavigationBar(selector, inputChildsSelector);
 	}
 	
 	@Override
 	public TooltipElement elementTooltip(By cssSelector) {
-		return driverExtention.elementTooltip(cssSelector);
+		return driverExtension.elementTooltip(cssSelector);
 	}
 	
 	@Override
 	public MenuElement elementMenu(By selector) {
-		return driverExtention.elementMenu(selector);
+		return driverExtension.elementMenu(selector);
 	}
 	
 	@Override
 	public MenuElement elementMenu(By selector, By childsSelector) {
-		return driverExtention.elementMenu(selector, childsSelector);
+		return driverExtension.elementMenu(selector, childsSelector);
 	}
 	
 	@Override
 	public MenuElement elementMenu(By selector, By childsSelector, By subMenuSelector) {
-		return driverExtention.elementMenu(selector, childsSelector, subMenuSelector);
+		return driverExtension.elementMenu(selector, childsSelector, subMenuSelector);
 	}
 	
 	@Override
 	public MenuElement elementMenu(By selector, By childsSelector, By subMenuSelector, By childsSubMenuSelector) {
-		return driverExtention.elementMenu(selector, childsSelector, subMenuSelector, childsSubMenuSelector);
+		return driverExtension.elementMenu(selector, childsSelector, subMenuSelector, childsSubMenuSelector);
 	}
 	
 	@Override
 	public HorizontalSliderElement elementHorizontalSlider(final By sliderContainerSelector) {
-		return driverExtention.elementHorizontalSlider(sliderContainerSelector);
+		return driverExtension.elementHorizontalSlider(sliderContainerSelector);
 	}
 	
 	@Override
 	public HorizontalSliderElement elementHorizontalSlider(final By sliderContainerSelector, final By sliderSelector, final By valueSelector) {
-		return driverExtention.elementHorizontalSlider(sliderContainerSelector, sliderSelector, valueSelector);
+		return driverExtension.elementHorizontalSlider(sliderContainerSelector, sliderSelector, valueSelector);
 	}
 	
 	@Override
@@ -304,22 +305,22 @@ public final class NewChromeDriver extends ChromeDriver implements INewWebDriver
 			final BigDecimal minRange,
 			final BigDecimal maxRange,
 			final BigDecimal step) {
-		return driverExtention.elementHorizontalSlider(sliderContainerSelector, sliderSelector, valueSelector, minRange, maxRange, step);
+		return driverExtension.elementHorizontalSlider(sliderContainerSelector, sliderSelector, valueSelector, minRange, maxRange, step);
 	}
 	
 	@Override
 	public void mouseRightClick(By selector) {
-		driverExtention.mouseRightClick(selector);
+		driverExtension.mouseRightClick(selector);
 	}
 	
 	@Override
 	public void mouseLeftClick(By selector) {
-		driverExtention.mouseLeftClick(selector);
+		driverExtension.mouseLeftClick(selector);
 	}
 	
 	@Override
 	public void mouseLeftClick(WebElement element) {
-		driverExtention.mouseLeftClick(element);
+		driverExtension.mouseLeftClick(element);
 	}
 	
 	public static void main(String[] args) {

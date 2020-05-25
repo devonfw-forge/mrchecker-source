@@ -4,8 +4,8 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 public class BFComponentStateException extends AssertionError {
 	
-	private static final long serialVersionUID = 2453124693849726543L;
-	private static String exceptionMessage;
+	private static final long	serialVersionUID	= 2453124693849726543L;
+	private static String		exceptionMessage;
 	
 	/**
 	 * This exception should be thrown when component state is not as expected, which prevents performing certain
@@ -14,8 +14,11 @@ public class BFComponentStateException extends AssertionError {
 	 * [Button]. Component is [disabled]."
 	 * 
 	 * @param componentName
+	 *            component name
 	 * @param action
+	 *            action
 	 * @param actualState
+	 *            actual state
 	 */
 	public BFComponentStateException(String componentName, String action, String actualState) {
 		super(generateExceptionMessage(componentName, action, actualState));

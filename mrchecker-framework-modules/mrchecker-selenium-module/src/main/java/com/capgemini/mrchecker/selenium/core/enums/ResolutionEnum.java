@@ -17,14 +17,12 @@ public enum ResolutionEnum implements IResolutionList {
 	iPhoneX(375, 812),
 	SamsungS9(360, 740),
 	Nexus9(1024, 768),
-	AndroidOne(320, 569),
+	AndroidOne(320, 569);
 	
-	;
+	private final int	width;
+	private final int	height;
 	
-	private int	width;
-	private int	height;
-	
-	private ResolutionEnum(int width, int height) {
+	ResolutionEnum(int width, int height) {
 		this.width = width;
 		this.height = height;
 	}
@@ -39,6 +37,5 @@ public enum ResolutionEnum implements IResolutionList {
 	
 	public String toString() {
 		return "Widht:" + getWidth() + " Height:" + getHeight();
-		
 	}
 }

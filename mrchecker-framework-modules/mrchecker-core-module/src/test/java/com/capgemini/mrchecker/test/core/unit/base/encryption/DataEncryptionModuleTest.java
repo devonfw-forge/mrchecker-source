@@ -8,13 +8,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import com.capgemini.mrchecker.test.core.base.encryption.DataEncryptionModule;
 import com.capgemini.mrchecker.test.core.base.encryption.IDataEncryptionService;
 import com.capgemini.mrchecker.test.core.base.encryption.providers.DataEncryptionService;
 import com.capgemini.mrchecker.test.core.exceptions.BFSecureModuleException;
+import com.capgemini.mrchecker.test.core.tags.UnitTest;
 import com.google.inject.Guice;
 
+@UnitTest
+@ResourceLock(value = "DataEncryptionService.class")
 public class DataEncryptionModuleTest {
 	
 	public static final String NO_FILE_PATH = "no file path";

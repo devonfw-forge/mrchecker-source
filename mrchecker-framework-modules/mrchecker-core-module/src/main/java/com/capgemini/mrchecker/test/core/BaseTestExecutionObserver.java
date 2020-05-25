@@ -151,7 +151,7 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 		
 		BFLogger.logDebug(getClass().getName() + ".observers: " + observers.get()
 				.toString());
-		BFLogger.logDebug(getClass().getName() + "classObservers: " + classObservers.get()
+		BFLogger.logDebug(getClass().getName() + ".classObservers: " + classObservers.get()
 				.toString());
 		
 		if (!(anyMatchMethodObservers | anyMatchTestClassObservers)) {

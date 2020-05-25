@@ -14,8 +14,10 @@ import com.capgemini.mrchecker.test.core.base.environment.EnvironmentModule;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.environment.providers.SpreadsheetEnvironmentService;
 import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
+import com.capgemini.mrchecker.test.core.tags.UnitTest;
 import com.google.inject.Guice;
 
+@UnitTest
 @ResourceLock(value = "RuntimeParametersCoreTest.class")
 public class EnvironmentModuleTest {
 	

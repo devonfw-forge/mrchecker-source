@@ -3,11 +3,13 @@ package com.capgemini.mrchecker.selenium;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.test.core.BaseTest;
 
+@Disabled
 public class BasePageTest extends BaseTest {
 	
 	@Override

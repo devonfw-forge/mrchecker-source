@@ -108,6 +108,8 @@
         <!-- Hashes sensitive data -->
         <org.jasypt.version>1.9.2</org.jasypt.version>
 
+        <jackson-databind.version>2.11.0</jackson-databind.version>
+
         <!-- Static analyze settings -->
         <formatter-maven-plugin.version>2.7.1</formatter-maven-plugin.version>
         <style_format.directory>${pom.basedir}/../../resources/style_format</style_format.directory>
@@ -119,6 +121,7 @@
         <aspectj.version>1.9.5</aspectj.version>
         <allure-junit5.version>2.13.3</allure-junit5.version>
         <allure-java-commons.version>2.13.3</allure-java-commons.version>
+        <allure-junit-platform.version>2.13.3</allure-junit-platform.version>
         <allure-maven.version>2.10.0</allure-maven.version>
     </properties>
 
@@ -176,6 +179,14 @@
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-junit5</artifactId>
                 <version>${allure-junit5.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <!-- Test listener. Binds Junit exec to Allure annotation -->
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-junit-platform</artifactId>
+                <version>${allure-junit-platform.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -387,7 +398,7 @@
 
                 <plugin>
                     <groupId>io.qameta.allure</groupId>
-                    <artifactId>junit.platform.versionn</artifactId>
+                    <artifactId>allure-maven</artifactId>
                     <version>${allure-maven.version}</version>
                     <configuration>
                         <reportVersion>2.4.1</reportVersion>

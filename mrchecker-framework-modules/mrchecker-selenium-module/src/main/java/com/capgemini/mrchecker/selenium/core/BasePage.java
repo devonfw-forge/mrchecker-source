@@ -63,20 +63,14 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	}
 	
 	public static IAnalytics getAnalytics() {
-		return BasePage.ANALYTICS;
+		return ANALYTICS;
 	}
 	
 	public BasePage() {
-		this(getDriver(), null);
+		this(null);
 	}
 	
 	public BasePage(BasePage parent) {
-		this(getDriver(), parent);
-	}
-	
-	public BasePage(INewWebDriver driver, BasePage parent) {
-		// Add given module to Test core Observable list
-		
 		webDriverWait = new WebDriverWait(getDriver(), BasePage.EXPLICIT_WAIT_TIMER);
 		setParent(parent);
 		
@@ -88,13 +82,13 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	}
 	
 	@Override
-	public void initialize() {
+	public final void initialize() {
 		TEST_EXECUTION_OBSERVER.addObserver(this);
 		isInitialized = true;
 	}
 	
 	@Override
-	public boolean isInitialized() {
+	public final boolean isInitialized() {
 		return isInitialized;
 	}
 	
@@ -134,6 +128,7 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	}
 	
 	@Attachment("Screenshot on failure")
+	@SuppressWarnings("UnusedReturnValue")
 	public byte[] makeScreenshotOnFailure() {
 		byte[] screenshot = null;
 		try {
@@ -145,6 +140,7 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	}
 	
 	@Attachment("Source Page on failure")
+	@SuppressWarnings("UnusedReturnValue")
 	public String makeSourcePageOnFailure() {
 		return DriverManager.getDriver()
 				.getPageSource();
@@ -160,24 +156,17 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	}
 	
 	public static INewWebDriver getDriver() {
-		if (Objects.isNull(BasePage.driver)) {
-			BasePage.driver = new DriverManager(PROPERTIES_SELENIUM);
+		if (Objects.isNull(driver)) {
+			driver = new DriverManager(PROPERTIES_SELENIUM);
 		}
-		return BasePage.driver.getDriver();
+		return driver.getDriver();
 		
-	}
-	
-	public static void navigateBack() {
-		navigateBack(true);
 	}
 	
 	/**
 	 * Navigates to previous site (works like pressing browsers 'Back' button)
-	 * 
-	 * @param andWait
-	 *            - wait for progress bars to load if true
 	 */
-	public static void navigateBack(boolean andWait) {
+	public static void navigateBack() {
 		getDriver().navigate()
 				.back();
 		getDriver().waitForPageLoaded();
@@ -201,7 +190,6 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 		BFLogger.logDebug(getClass().getName() + ": Opening  page: " + url);
 		getDriver().get(url);
 		getDriver().waitForPageLoaded();
-		
 	}
 	
 	public boolean isUrlAndPageTitleAsCurrentPage(String url) {
@@ -224,7 +212,9 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	 * BFElementNotFoundException
 	 * 
 	 * @throws BFElementNotFoundException
+	 *             BFElementNotFoundException
 	 * @param cssSelector
+	 *            cssSelector
 	 * @return false if element have an attribute displayed = none, otherwise return true;
 	 */
 	public static boolean isElementDisplayed(By cssSelector) {
@@ -242,12 +232,14 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	 * throw BFElementNotFoundException
 	 * 
 	 * @throws BFElementNotFoundException
+	 *             BFElementNotFoundException
 	 * @param cssSelector
+	 *            cssSelector
 	 * @param parent
+	 *            parent
 	 * @return false if element have an attribute displayed = none, otherwise return true;
 	 */
 	public static boolean isElementDisplayed(By cssSelector, WebElement parent) {
-		@SuppressWarnings("deprecation")
 		List<WebElement> elements = parent.findElements(cssSelector);
 		if (elements.isEmpty()) {
 			throw new BFElementNotFoundException(cssSelector);
@@ -260,7 +252,9 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	 * Check if given selector is displayed on the page and it contain a specific text
 	 * 
 	 * @param cssSelector
+	 *            cssSelector
 	 * @param text
+	 *            text
 	 * @return true if a given element is displayed with a specific text
 	 * @throws BFElementNotFoundException
 	 *             if element is not found in DOM
@@ -286,7 +280,9 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	 * Check if given selector is displayed on the page
 	 * 
 	 * @param selector
+	 *            selector
 	 * @param parent
+	 *            parent
 	 * @return true if a given element is displayed
 	 */
 	public static boolean isElementDisplayedNoException(By selector, WebElement parent) {
@@ -301,6 +297,7 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	 * Check if given selector is displayed on the page
 	 * 
 	 * @param selector
+	 *            selector
 	 * @return true if a given element is displayed
 	 */
 	public static boolean isElementDisplayedNoException(By selector) {
@@ -353,6 +350,7 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	 * Open link in new tab
 	 * 
 	 * @param url
+	 *            url
 	 */
 	public static void openInNewTab(String url) {
 		JavascriptExecutor js = (JavascriptExecutor) getDriver();
@@ -362,9 +360,8 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	
 	private static PropertiesSelenium setPropertiesSettings() {
 		// Get and then set properties information from selenium.settings file
-		PropertiesSelenium propertiesSelenium = Guice.createInjector(PropertiesSettingsModule.init())
+		return Guice.createInjector(PropertiesSettingsModule.init())
 				.getInstance(PropertiesSelenium.class);
-		return propertiesSelenium;
 	}
 	
 	private static void setRuntimeParametersSelenium() {

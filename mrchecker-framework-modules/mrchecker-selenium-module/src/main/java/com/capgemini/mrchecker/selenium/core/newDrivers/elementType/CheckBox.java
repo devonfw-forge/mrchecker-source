@@ -1,90 +1,89 @@
 package com.capgemini.mrchecker.selenium.core.newDrivers.elementType;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.capgemini.mrchecker.selenium.core.exceptions.BFComponentStateException;
 import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundException;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class CheckBox extends BasicElement {
 	
 	private By inputChildsSelector;
 	
-	public CheckBox(By cssSelector)
 	/**
 	 * @param cssSelector
 	 *            - selector of CheckBox element's set
 	 **/
-	{
+	public CheckBox(By cssSelector) {
 		this(cssSelector, By.cssSelector("input"));
 	}
 	
+	/**
+	 * @param cssSelector
+	 *            - selector of CheckBox element's set
+	 * @param inputChildsSelector
+	 *            - selector of relative path from CheckBox element's set to basic input element
+	 **/
 	public CheckBox(By cssSelector, By inputChildsSelector) {
-		/**
-		 * @param cssSelector
-		 *            - selector of CheckBox element's set
-		 * @param inputChildsSelector
-		 *            - selector of relative path from CheckBox element's set to basic input element
-		 **/
 		super(ElementType.CHECKBOX, cssSelector);
 		setInputChildsSelector(inputChildsSelector);
 	}
 	
 	public void setCheckBoxByIndex(int index) {
-		this.setCheckBoxByIndexTo(index, true);
+		setCheckBoxByIndexTo(index, true);
 	}
 	
 	public void setCheckBoxByValue(String value) {
-		this.setCheckBoxByValueTo(value, true);
+		setCheckBoxByValueTo(value, true);
 	}
 	
 	public void setCheckBoxByText(String text) {
-		this.setCheckBoxByTextTo(text, true);
+		setCheckBoxByTextTo(text, true);
 	}
 	
 	public void unsetCheckBoxByIndex(int index) {
-		this.setCheckBoxByIndexTo(index, false);
+		setCheckBoxByIndexTo(index, false);
 	}
 	
 	public void unsetCheckBoxByValue(String value) {
-		this.setCheckBoxByValueTo(value, false);
+		setCheckBoxByValueTo(value, false);
 	}
 	
 	public void unsetCheckBoxByText(String text) {
-		this.setCheckBoxByTextTo(text, false);
+		setCheckBoxByTextTo(text, false);
 	}
 	
 	public void setAllCheckBoxes() {
-		this.setAllCheckBoxesTo(true);
+		setAllCheckBoxesTo(true);
 	}
 	
 	public void unsetAllCheckBoxes() {
-		this.setAllCheckBoxesTo(false);
+		setAllCheckBoxesTo(false);
 	}
 	
 	public boolean isCheckBoxSetByIndex(int index) {
-		return this.getCheckBoxesList()
+		return getCheckBoxesList()
 				.get(index)
 				.isSelected();
 	}
 	
 	public boolean isCheckBoxSetByValue(String value) {
-		return this.getCheckBoxesList()
-				.get(this.getCheckBoxIndexByValue(value))
+		return getCheckBoxesList()
+				.get(getCheckBoxIndexByValue(value))
 				.isSelected();
 	}
 	
 	public boolean isCheckBoxSetByText(String text) {
-		return this.getCheckBoxesList()
-				.get(this.getCheckBoxIndexByText(text))
+		return getCheckBoxesList()
+				.get(getCheckBoxIndexByText(text))
 				.isSelected();
 	}
 	
 	public boolean isAllCheckboxesSet() {
-		return this.isAllCheckBoxesSetTo(true);
+		return isAllCheckBoxesSetTo(true);
 	}
 	
 	public List<String> getTextList() {
@@ -92,20 +91,20 @@ public class CheckBox extends BasicElement {
 	}
 	
 	private List<WebElement> getCheckBoxesList() {
-		return this.getElement()
+		return getElement()
 				.findElements(inputChildsSelector);
 	}
 	
 	private void setCheckBoxByIndexTo(int index, boolean destination) {
-		if (this.getCheckBoxesList()
+		if (getCheckBoxesList()
 				.get(index)
 				.isSelected() != destination) {
-			this.getCheckBoxesList()
+			getCheckBoxesList()
 					.get(index)
 					.click();
 		}
 		
-		boolean currentState = this.getCheckBoxesList()
+		boolean currentState = getCheckBoxesList()
 				.get(index)
 				.isSelected();
 		if (currentState != destination) {
@@ -115,15 +114,15 @@ public class CheckBox extends BasicElement {
 	}
 	
 	private void setCheckBoxByValueTo(String value, boolean destination) {
-		this.setCheckBoxToByAttribute(value, "value", destination);
+		setCheckBoxToByAttribute(value, destination);
 	}
 	
 	private void setCheckBoxByTextTo(String text, boolean destination) {
-		this.setCheckBoxByIndexTo(this.getCheckBoxIndexByText(text), destination);
+		setCheckBoxByIndexTo(getCheckBoxIndexByText(text), destination);
 	}
 	
 	private int getCheckBoxIndexByText(String text) {
-		List<String> textsList = this.getTextList();
+		List<String> textsList = getTextList();
 		for (int i = 0; i < textsList.size(); i++) {
 			if (textsList.get(i)
 					.equals(text.trim())) {
@@ -134,7 +133,7 @@ public class CheckBox extends BasicElement {
 	}
 	
 	private int getCheckBoxIndexByValue(String value) {
-		List<WebElement> checkBoxesList = this.getCheckBoxesList();
+		List<WebElement> checkBoxesList = getCheckBoxesList();
 		for (int i = 0; i < checkBoxesList.size(); i++) {
 			if (checkBoxesList.get(i)
 					.getAttribute("value")
@@ -145,12 +144,12 @@ public class CheckBox extends BasicElement {
 		throw new BFElementNotFoundException("Checkbox with value " + value + " wasn't found.");
 	}
 	
-	private void setCheckBoxToByAttribute(String value, String attribute, boolean destination) {
-		List<WebElement> checkboxesList = this.getCheckBoxesList();
+	private void setCheckBoxToByAttribute(String value, boolean destination) {
+		List<WebElement> checkboxesList = getCheckBoxesList();
 		WebElement currentElement;
-		for (int i = 0; i < checkboxesList.size(); i++) {
-			currentElement = checkboxesList.get(i);
-			if (currentElement.getAttribute(attribute)
+		for (WebElement webElement : checkboxesList) {
+			currentElement = webElement;
+			if (currentElement.getAttribute("value")
 					.equals(value) && currentElement.isSelected() != destination) {
 				currentElement.click();
 			}
@@ -158,25 +157,25 @@ public class CheckBox extends BasicElement {
 	}
 	
 	private void setAllCheckBoxesTo(boolean destination) {
-		List<WebElement> checkboxesList = this.getCheckBoxesList();
-		for (int i = 0; i < checkboxesList.size(); i++) {
-			if (checkboxesList.get(i)
+		List<WebElement> checkboxesList = getCheckBoxesList();
+		for (WebElement webElement : checkboxesList) {
+			if (webElement
 					.isSelected() != destination) {
-				checkboxesList.get(i)
+				webElement
 						.click();
 			}
 		}
 		
-		if (!this.isAllCheckBoxesSetTo(destination)) {
+		if (!isAllCheckBoxesSetTo(destination)) {
 			throw new BFComponentStateException(ElementType.CHECKBOX.toString(), "set/unset",
-					"setting to " + String.valueOf(destination));
+					"setting to " + destination);
 		}
 	}
 	
 	private boolean isAllCheckBoxesSetTo(boolean destination) {
-		List<WebElement> checkboxesList = this.getCheckBoxesList();
-		for (int i = 0; i < checkboxesList.size(); i++) {
-			if (checkboxesList.get(i)
+		List<WebElement> checkboxesList = getCheckBoxesList();
+		for (WebElement webElement : checkboxesList) {
+			if (webElement
 					.isSelected() != destination) {
 				return false;
 			}
@@ -185,6 +184,6 @@ public class CheckBox extends BasicElement {
 	}
 	
 	private void setInputChildsSelector(By selector) {
-		this.inputChildsSelector = selector;
+		inputChildsSelector = selector;
 	}
 }

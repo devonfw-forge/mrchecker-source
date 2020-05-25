@@ -20,7 +20,9 @@ import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.environment.providers.SpreadsheetEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.runtime.RuntimeParametersCore;
 import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
+import com.capgemini.mrchecker.test.core.tags.UnitTest;
 
+@UnitTest
 @ResourceLock(value = "RuntimeParametersCoreTest.class")
 public class SpreadsheetEnvironmentServiceTest {
 	

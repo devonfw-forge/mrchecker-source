@@ -3,7 +3,9 @@ package com.capgemini.mrchecker.test.core.unit.analytics;
 import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.test.core.analytics.AnalyticsProvider;
+import com.capgemini.mrchecker.test.core.tags.UnitTest;
 
+@UnitTest
 public class AnalyticsProviderTest {
 	
 	public static final String DEFAULT_CATEGORY = "DEFAULT_CATEGORY";
@@ -22,5 +24,4 @@ public class AnalyticsProviderTest {
 	public void shouldDisabledAnalyticsSendMethodEventDoNothing() {
 		AnalyticsProvider.DISABLED.sendMethodEvent(DEFAULT_CATEGORY);
 	}
-	
 }

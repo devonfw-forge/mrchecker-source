@@ -1,115 +1,115 @@
 package com.capgemini.mrchecker.selenium.core.newDrivers.elementType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundException;
 import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by LKURZAJ on 07.03.2017.
  */
 public class NavigationBarElement extends BasicElement {
 	
-	private By inputChildsSelector;
+	private final By inputChildsSelector;
 	
+	/**
+	 * @param cssSelector
+	 *            - selector of Navigation Bar element's set
+	 **/
 	public NavigationBarElement(By cssSelector) {
-		/**
-		 * @param cssSelector
-		 *            - selector of Navigation Bar element's set
-		 **/
 		this(cssSelector, By.cssSelector("li"));
 	}
 	
+	/**
+	 * @param cssSelector
+	 *            - selector of Navigation Bar element's set
+	 **/
 	public NavigationBarElement(By cssSelector, By inputChildsSelector) {
-		/**
-		 * @param cssSelector
-		 *            - selector of Navigation Bar element's set
-		 **/
 		super(ElementType.NAVIGATION_BAR, cssSelector);
 		this.inputChildsSelector = inputChildsSelector;
 	}
 	
 	public List<String> getItemsTextList() {
-		List<WebElement> listElems = this.getItems();
+		List<WebElement> listElems = getItems();
 		List<String> out = new ArrayList<>();
 		
-		for (int i = 0; i < listElems.size(); i++) {
-			out.add(listElems.get(i)
+		for (WebElement listElem : listElems) {
+			out.add(listElem
 					.getText());
 		}
 		return out;
 	}
 	
 	public String getFirstItemText() {
-		return this.getItemsTextList()
+		return getItemsTextList()
 				.get(0);
 	}
 	
 	public String getActiveItemText() {
-		List<WebElement> listItems = this.getItems();
-		for (int i = 0; i < listItems.size(); i++) {
-			if (listItems.get(i)
+		List<WebElement> listItems = getItems();
+		for (WebElement listItem : listItems) {
+			if (listItem
 					.getAttribute("class")
 					.contains("active")) {
-				return listItems.get(i)
+				return listItem
 						.getText();
 			}
 		}
-		throw new BFElementNotFoundException("Any active item was found in " + this.getElement()
+		throw new BFElementNotFoundException("Any active item was found in " + getElement()
 				.toString());
 	}
 	
 	public void clickFirstItem() {
-		this.getItems()
+		getItems()
 				.get(0)
 				.click();
 	}
 	
 	public void clickActiveItem() {
-		this.getItems()
-				.get(this.getDepth() - 1)
+		getItems()
+				.get(getDepth() - 1)
 				.click();
 	}
 	
 	public void clickItemByIndex(int index) {
-		if (index > 0 && index >= this.getItems()
+		if (index > 0 && index >= getItems()
 				.size()) {
-			throw new BFInputDataException("Index " + String.valueOf(index) + " larger than list's size: "
-					+ String.valueOf(this.getItems()
-							.size()));
+			throw new BFInputDataException("Index " + index + " larger than list's size: "
+					+ getItems()
+							.size());
 		}
-		this.getItems()
+		getItems()
 				.get(index)
 				.click();
 	}
 	
 	public void clickItemByText(String text) {
-		for (int i = 0; i < this.getItems()
+		for (int i = 0; i < getItems()
 				.size(); i++) {
-			if (this.getItems()
+			if (getItems()
 					.get(i)
 					.getText()
 					.equals(text)) {
-				this.getItems()
+				getItems()
 						.get(i)
 						.click();
 				return;
 			}
 		}
-		throw new BFElementNotFoundException("Item with text: " + text + " wasn't found in " + this.getText());
+		throw new BFElementNotFoundException("Item with text: " + text + " wasn't found in " + getText());
 	}
 	
 	public int getDepth() {
-		return this.getItems()
+		return getItems()
 				.size();
 	}
 	
 	private List<WebElement> getItems() {
-		return this.getElement()
-				.findElements(this.inputChildsSelector);
+		return getElement()
+				.findElements(inputChildsSelector);
 	}
 }

@@ -8,7 +8,9 @@ import static org.junit.Assert.assertThat;
 import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.test.core.exceptions.BFWaitingTimeoutException;
+import com.capgemini.mrchecker.test.core.tags.UnitTest;
 
+@UnitTest
 public class BFWaitingTimeoutExceptionTest {
 	public static final String	COMPONENT_NAME		= "COMPONENT_NAME";
 	public static final int		TIMEOUT				= 10;

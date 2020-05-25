@@ -8,7 +8,9 @@ import static org.junit.Assert.assertThat;
 import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.test.core.exceptions.BFSecureModuleException;
+import com.capgemini.mrchecker.test.core.tags.UnitTest;
 
+@UnitTest
 public class BFSecureModuleExceptionTest {
 	
 	public static final String	TEST_MESSAGE				= "TEST_MESSAGE";
@@ -43,5 +45,4 @@ public class BFSecureModuleExceptionTest {
 	public void shouldFormatMessageWhenNullFull() {
 		assertThat(new BFSecureModuleException(null, new Throwable()).getMessage(), is(equalTo(FORMATTED_MESSAGE_WHEN_NULL)));
 	}
-	
 }

@@ -6,13 +6,14 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 public class BFSeleniumGridNotConnectedException extends AssertionError {
 	
-	private static final long serialVersionUID = -1217616251968376336L;
-	private static String exceptionMessage;
+	private static final long	serialVersionUID	= -1217616251968376336L;
+	private static String		exceptionMessage;
 	
 	/**
 	 * This exception should be thrown when connection to Selenium Grid is not possible
 	 * 
 	 * @param e
+	 *            e
 	 */
 	public BFSeleniumGridNotConnectedException(WebDriverException e) {
 		super(generateExceptionMessage());

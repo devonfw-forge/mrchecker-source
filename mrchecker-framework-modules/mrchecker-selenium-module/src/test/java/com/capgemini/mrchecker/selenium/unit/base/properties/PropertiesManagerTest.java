@@ -1,4 +1,4 @@
-package com.capgemini.mrchecker.selenium.core.base.properties;
+package com.capgemini.mrchecker.selenium.unit.base.properties;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,8 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.Paths;
 
-import org.junit.*;
+import org.junit.jupiter.api.*;
 
+import com.capgemini.mrchecker.selenium.core.base.properties.PropertiesSelenium;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
 import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
 import com.google.inject.Guice;
@@ -16,17 +17,17 @@ import com.google.inject.Injector;
 
 public class PropertiesManagerTest {
 	
-	@BeforeClass
+	@BeforeAll
 	public static void setUpBeforeClass() {
 	}
 	
-	@AfterClass
+	@AfterAll
 	public static void tearDownAfterClass() {
 	}
 	
 	private PropertiesSelenium propertiesSelenium;
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		String path = System.getProperty("user.dir") + Paths.get("/src/test/resources/settings.properties");
 		try {
@@ -40,7 +41,7 @@ public class PropertiesManagerTest {
 		
 	}
 	
-	@After
+	@AfterEach
 	public void tearDown() {
 		PropertiesSettingsModule.delInstance();
 	}

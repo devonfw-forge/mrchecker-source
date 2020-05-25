@@ -7,11 +7,8 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 public class IFrame extends BasicElement implements IBasicElement {
 	
-	private By cssSelector;
-	
 	public IFrame(By cssSelector) {
 		super(ElementType.IFRAME, cssSelector);
-		this.cssSelector = cssSelector;
 		
 		BasePage.getDriver()
 				.switchTo()

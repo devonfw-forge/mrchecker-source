@@ -69,10 +69,10 @@
 
 
         <!-- Allure reporting -->
-        <aspectj.version>1.9.5</aspectj.version>
-        <allure-junit5.version>2.13.3</allure-junit5.version>
-        <allure-maven.version>2.10.0
-        </allure-maven.version>  <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-maven -->
+        <!--        <aspectj.version>1.9.5</aspectj.version>-->
+        <!--        <allure-junit5.version>2.13.3</allure-junit5.version>-->
+        <!--        <allure-junit-platform.version>2.13.3</allure-junit-platform.version>-->
+        <!--        <allure-maven.version>2.10.0</allure-maven.version>  &lt;!&ndash; https://mvnrepository.com/artifact/io.qameta.allure/allure-maven &ndash;&gt;-->
 
 
         <!-- Cucumber version -->
@@ -98,7 +98,6 @@
             <artifactId>junit-platform-surefire-provider</artifactId>
             <version>${surefire.provider.version}</version><!--$NO-MVN-MAN-VER$ -->
         </dependency>
-
 
         <!--This dependency is necessary for Logger. -->
         <dependency>
@@ -133,12 +132,19 @@
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-java-commons</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit-platform</artifactId>
+        </dependency>
+
         <dependency>
             <!-- Allure report generator -->
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-maven</artifactId>
             <version>${allure-maven.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>

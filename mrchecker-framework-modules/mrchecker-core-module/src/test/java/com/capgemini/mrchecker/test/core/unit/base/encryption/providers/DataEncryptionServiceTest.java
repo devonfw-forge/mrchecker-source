@@ -10,11 +10,15 @@ import java.io.IOException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import com.capgemini.mrchecker.test.core.base.encryption.IDataEncryptionService;
 import com.capgemini.mrchecker.test.core.base.encryption.providers.DataEncryptionService;
 import com.capgemini.mrchecker.test.core.exceptions.BFSecureModuleException;
+import com.capgemini.mrchecker.test.core.tags.UnitTest;
 
+@UnitTest
+@ResourceLock(value = "DataEncryptionService.class")
 public class DataEncryptionServiceTest {
 	
 	public static final String	SECRET_TOO_SHORT	= "1234567";

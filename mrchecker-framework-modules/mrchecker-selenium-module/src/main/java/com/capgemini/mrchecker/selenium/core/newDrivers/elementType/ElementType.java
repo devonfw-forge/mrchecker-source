@@ -17,9 +17,9 @@ enum ElementType {
 	HORIZONTAL_SLIDER("Horizontal Slider"),
 	IMAGE("Image");
 	
-	private String value;
+	private final String value;
 	
-	private ElementType(String value) {
+	ElementType(String value) {
 		this.value = value;
 	}
 	

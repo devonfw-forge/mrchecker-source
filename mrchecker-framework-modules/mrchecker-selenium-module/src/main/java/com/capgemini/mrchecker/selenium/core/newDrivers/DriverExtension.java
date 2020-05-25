@@ -3,8 +3,8 @@ package com.capgemini.mrchecker.selenium.core.newDrivers;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
@@ -18,12 +18,12 @@ import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundExcepti
 import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.*;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
-public class DriverExtention {
+public class DriverExtension {
 	
 	private INewWebDriver driver;
 	
-	public DriverExtention(INewWebDriver driver) {
-		this.setDriver(driver);
+	public DriverExtension(INewWebDriver driver) {
+		setDriver(driver);
 	}
 	
 	public INewWebDriver getDriver() {
@@ -31,7 +31,7 @@ public class DriverExtention {
 	}
 	
 	public WebElement findElementQuietly(By by) {
-		return this.findElementQuietly(null, by);
+		return findElementQuietly(null, by);
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -41,11 +41,7 @@ public class DriverExtention {
 		
 		WebElement element = null;
 		try {
-			if (null == elementToSearchIn) {
-				element = getDriver().findElement(by);
-			} else {
-				element = new NewRemoteWebElement(elementToSearchIn).findElement(by);
-			}
+			element = Objects.isNull(elementToSearchIn) ? getDriver().findElement(by) : new NewRemoteWebElement(elementToSearchIn).findElement(by);
 		} catch (NoSuchElementException e) {
 			BFLogger.logError("Element [" + by.toString() + "] was not found in given element");
 		}
@@ -66,13 +62,7 @@ public class DriverExtention {
 		BasePage.getAnalytics()
 				.sendMethodEvent(BasePage.ANALYTICS_CATEGORY_NAME);
 		long startTime = System.currentTimeMillis();
-		WebElement element;
-		if (null == elementToSearchIn) {
-			element = this.findElementDynamic(by);
-		} else {
-			element = findElementDynamicBasic(by, startTime);
-		}
-		return element;
+		return Objects.isNull(elementToSearchIn) ? findElementDynamic(by) : findElementDynamicBasic(by, startTime);
 	}
 	
 	private WebElement findElementDynamicBasic(By by, long startTime) throws BFElementNotFoundException {
@@ -81,10 +71,10 @@ public class DriverExtention {
 	}
 	
 	private WebElement findElementDynamicBasic(By by, long startTime, int timeOut) throws BFElementNotFoundException {
-		WebElement element = null;
+		WebElement element;
 		WebDriverWait wait = webDriverWait(timeOut);
 		try {
-			element = wait.until((Function<? super WebDriver, WebElement>) ExpectedConditions.presenceOfElementLocated(by));
+			element = wait.until(ExpectedConditions.presenceOfElementLocated(by));
 		} catch (TimeoutException | NoSuchElementException e) {
 			boolean isTimeout = true;
 			throw new BFElementNotFoundException(by, isTimeout, timeOut);
@@ -98,9 +88,9 @@ public class DriverExtention {
 				.sendMethodEvent(BasePage.ANALYTICS_CATEGORY_NAME);
 		long startTime = System.currentTimeMillis();
 		WebDriverWait wait = webDriverWait(timeOut);
-		List<WebElement> elements = new ArrayList<WebElement>();
+		List<WebElement> elements;
 		try {
-			elements = wait.until((Function<? super WebDriver, List<WebElement>>) ExpectedConditions.presenceOfAllElementsLocatedBy(by));
+			elements = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
 		} catch (BFElementNotFoundException | TimeoutException e) {
 			throw new BFElementNotFoundException(by, true, timeOut);
 		}
@@ -119,18 +109,13 @@ public class DriverExtention {
 		BasePage.getAnalytics()
 				.sendMethodEvent(BasePage.ANALYTICS_CATEGORY_NAME);
 		long startTime = System.currentTimeMillis();
-		WebElement element = null;
+		WebElement element;
 		
-		FluentWait<WebDriver> wait = new FluentWait<WebDriver>(driver);
+		FluentWait<WebDriver> wait = new FluentWait<>(driver);
 		wait.pollingEvery(250, TimeUnit.MILLISECONDS);
 		wait.withTimeout(2, TimeUnit.MINUTES);
 		try {
-			element = webDriverWait().until(new Function<WebDriver, WebElement>() {
-				@Override
-				public WebElement apply(WebDriver driver) {
-					return driver.findElement(by);
-				}
-			});
+			element = webDriverWait().until(driver -> driver.findElement(by));
 		} catch (TimeoutException | NoSuchElementException e) {
 			boolean isTimeout = true;
 			throw new BFElementNotFoundException(by, isTimeout, BasePage.EXPLICIT_WAIT_TIMER);
@@ -143,9 +128,9 @@ public class DriverExtention {
 		BasePage.getAnalytics()
 				.sendMethodEvent(BasePage.ANALYTICS_CATEGORY_NAME);
 		long startTime = System.currentTimeMillis();
-		WebElement element = null;
+		WebElement element;
 		try {
-			element = webDriverWait().until((Function<? super WebDriver, WebElement>) ExpectedConditions.elementToBeClickable(by));
+			element = webDriverWait().until(ExpectedConditions.elementToBeClickable(by));
 		} catch (TimeoutException | NoSuchElementException e) {
 			boolean isTimeout = true;
 			throw new BFElementNotFoundException(by, isTimeout, BasePage.EXPLICIT_WAIT_TIMER);
@@ -159,9 +144,9 @@ public class DriverExtention {
 				.sendMethodEvent(BasePage.ANALYTICS_CATEGORY_NAME);
 		long startTime = System.currentTimeMillis();
 		
-		WebElement element = null;
+		WebElement element;
 		try {
-			element = webDriverWait().until((Function<? super WebDriver, WebElement>) ExpectedConditions.visibilityOfElementLocated(by));
+			element = webDriverWait().until(ExpectedConditions.visibilityOfElementLocated(by));
 		} catch (TimeoutException | NoSuchElementException e) {
 			boolean isTimeout = true;
 			throw new BFElementNotFoundException(by, isTimeout, BasePage.EXPLICIT_WAIT_TIMER);
@@ -173,16 +158,12 @@ public class DriverExtention {
 	public void waitForPageLoaded() throws BFElementNotFoundException {
 		long startTime = System.currentTimeMillis();
 		final String jsVariable = "return document.readyState";
-		ExpectedCondition<Boolean> expectation = new ExpectedCondition<Boolean>() {
-			public Boolean apply(WebDriver driver) {
-				return ((JavascriptExecutor) driver).executeScript(jsVariable)
-						.equals("complete");
-			}
-		};
+		ExpectedCondition<Boolean> expectation = driver -> ((JavascriptExecutor) driver).executeScript(jsVariable)
+				.equals("complete");
 		int progressBarWaitTimer = BasePage.PROGRESS_BAR_WAIT_TIMER;
 		WebDriverWait wait = webDriverWait(progressBarWaitTimer);
 		try {
-			wait.until((Function<? super WebDriver, Boolean>) expectation);
+			wait.until(expectation);
 		} catch (TimeoutException | NoSuchElementException e) {
 			boolean isTimeout = true;
 			throw new BFElementNotFoundException(By.cssSelector(jsVariable), isTimeout, progressBarWaitTimer);
@@ -203,7 +184,7 @@ public class DriverExtention {
 	}
 	
 	static List<WebElement> convertWebElementList(List<WebElement> elementList) {
-		List<WebElement> elementsList = new ArrayList<WebElement>();
+		List<WebElement> elementsList = new ArrayList<>();
 		for (WebElement element : elementList) {
 			elementsList.add(new NewRemoteWebElement(element));
 		}

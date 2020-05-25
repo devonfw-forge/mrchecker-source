@@ -151,6 +151,11 @@
 
         <dependency>
             <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit-platform</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
             <artifactId>allure-java-commons</artifactId>
         </dependency>
 

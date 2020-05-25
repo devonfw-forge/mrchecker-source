@@ -12,7 +12,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import com.capgemini.mrchecker.test.core.base.runtime.RuntimeParametersCore;
+import com.capgemini.mrchecker.test.core.tags.UnitTest;
 
+@UnitTest
 @ResourceLock(value = "RuntimeParametersCoreTest.class")
 public class RuntimeParametersCoreTest {
 	

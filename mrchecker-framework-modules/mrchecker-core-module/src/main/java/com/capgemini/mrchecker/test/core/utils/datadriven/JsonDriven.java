@@ -2,6 +2,7 @@ package com.capgemini.mrchecker.test.core.utils.datadriven;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.Reader;
 
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
@@ -35,17 +36,25 @@ public final class JsonDriven {
 	
 	/**
 	 * @param fileName
+	 *            fileName
 	 * @return json from file or empty object when parsing file failed
 	 */
 	private static JsonArray fileToJson(String fileName) {
-		JsonArray jsonArray = new JsonArray();
 		try {
-			jsonArray = new JsonParser().parse(new FileReader(fileName))
-					.getAsJsonArray();
+			return readerToJson(new FileReader(fileName));
 		} catch (FileNotFoundException e) {
 			BFLogger.logError("Json file not found: " + fileName);
 		}
-		return jsonArray;
+		return new JsonArray();
 	}
 	
+	/**
+	 * @param Reader
+	 *            reader
+	 * @return json from reader
+	 */
+	private static JsonArray readerToJson(Reader reader) {
+		return new JsonParser().parse(reader)
+				.getAsJsonArray();
+	}
 }

@@ -15,8 +15,6 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 /**
  * This class contains utility functions related to date (matching, conversion etc.).
- * 
- * @author
  */
 public class DateUtils {
 	
@@ -28,15 +26,15 @@ public class DateUtils {
 	// MM/DD/YYYY regexp
 	public static final String DATE_REGEX = "(0?[1-9]|1[012])/(0?[1-9]|[12][0-9]|3[01])/((19|20)\\d\\d)";
 	// timestamp with 'AS OF' prefix regexp: AS OF MM/DD/YYYY HH:MM A/PM ET
-	public static final String AS_OF_TIMESTAMPT_REGEX = "(AS OF )" + DateUtils.DATE_REGEX + " "
+	public static final String		AS_OF_TIMESTAMPT_REGEX	= "(AS OF )" + DateUtils.DATE_REGEX + " "
 			+ DateUtils.TIME_12H_REGEX + "( ET)";
-	public static final String COMMON_DATE_REGEX = "\\d{2}/\\d{2}/\\d{4}";
-	public static final String US_DATE_FORMAT = "MM/dd/yyyy";
-	public static final String[] MOTHS = new String[] { "January", "February", "March", "April", "May", "June", "July",
-			"August", "September", "October", "November", "December" };
+	public static final String		COMMON_DATE_REGEX		= "\\d{2}/\\d{2}/\\d{4}";
+	public static final String		US_DATE_FORMAT			= "MM/dd/yyyy";
+	public static final String[]	MOTHS					= new String[] { "January", "February", "March", "April", "May", "June", "July",
+					"August", "September", "October", "November", "December" };
 	
-	private static final String HTTP_RESPONSE_DATE_REGEX = "(\\w+,\\s\\d{1,2}\\s\\w+\\s\\d{4}\\s\\d{2}:\\d{2}:\\d{2}\\s\\w{2,6})";
-	private static final String HTTP_RESPONSE_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
+	private static final String	HTTP_RESPONSE_DATE_REGEX	= "(\\w+,\\s\\d{1,2}\\s\\w+\\s\\d{4}\\s\\d{2}:\\d{2}:\\d{2}\\s\\w{2,6})";
+	private static final String	HTTP_RESPONSE_DATE_FORMAT	= "EEE, dd MMM yyyy HH:mm:ss zzz";
 	
 	/**
 	 * Matches date with MM/DD/YYYY pattern
