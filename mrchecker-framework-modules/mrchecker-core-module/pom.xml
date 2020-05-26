@@ -58,46 +58,18 @@
     <properties>
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
-        <JUnitParams.version>1.0.4</JUnitParams.version>
-
-        <!-- Tests executors -->
-        <junit-toolbox.version>2.4</junit-toolbox.version>
-
         <!-- Logger -->
         <log4j.version>2.2</log4j.version>
         <slf4j.version>1.7.21</slf4j.version>
-
-
-        <!-- Allure reporting -->
-        <!--        <aspectj.version>1.9.5</aspectj.version>-->
-        <!--        <allure-junit5.version>2.13.3</allure-junit5.version>-->
-        <!--        <allure-junit-platform.version>2.13.3</allure-junit-platform.version>-->
-        <!--        <allure-maven.version>2.10.0</allure-maven.version>  &lt;!&ndash; https://mvnrepository.com/artifact/io.qameta.allure/allure-maven &ndash;&gt;-->
-
 
         <!-- Cucumber version -->
         <cucumber.version>4.2.0</cucumber.version>
         <gherkin.cucumber.version>5.1.0</gherkin.cucumber.version>
         <cucumber-reporting.version>3.7.0</cucumber-reporting.version>
 
-        <!-- JSON support java 1.8 -->
-        <!--        <org.json.version>20160810</org.json.version>-->
-
     </properties>
 
     <dependencies>
-
-        <dependency>
-            <groupId>pl.pragmatists</groupId>
-            <artifactId>JUnitParams</artifactId>
-            <version>${JUnitParams.version}</version><!--$NO-MVN-MAN-VER$ -->
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-surefire-provider</artifactId>
-            <version>${surefire.provider.version}</version><!--$NO-MVN-MAN-VER$ -->
-        </dependency>
 
         <!--This dependency is necessary for Logger. -->
         <dependency>
@@ -125,48 +97,29 @@
             <!-- Test listener. Binds Junit exec to Allure annotation -->
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-junit5</artifactId>
-
         </dependency>
-
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-java-commons</artifactId>
         </dependency>
-
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-junit-platform</artifactId>
         </dependency>
-
         <dependency>
             <!-- Allure report generator -->
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-maven</artifactId>
-            <version>${allure-maven.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-            <version>${aspectj.version}</version>
         </dependency>
 
-
-        <!--This dependency is necessary for test suites runner with WildcardPatternSuite -->
-        <dependency>
-            <groupId>com.googlecode.junit-toolbox</groupId>
-            <artifactId>junit-toolbox</artifactId>
-            <version>${junit-toolbox.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-        </dependency>
-
-        <!--This dependency is necessary for Dependency Injection plugin. -->
-        <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
         </dependency>
 
         <dependency>
@@ -210,4 +163,5 @@
     <!-- Build goals/actions -->
     <build>
     </build>
+
 </project>

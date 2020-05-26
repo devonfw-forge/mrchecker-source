@@ -73,12 +73,8 @@
         <!-- Selenium settings -->
         <selenium.version>3.141.59</selenium.version>
 
-
         <!-- Test tools -->
         <jsoup.version>1.11.2</jsoup.version>
-
-        <!-- Tests executors -->
-        <surefire.provider.version>1.3.2</surefire.provider.version>
 
         <!-- Guava is a set of core libraries -->
         <google.guava.version>23.0</google.guava.version>
@@ -159,14 +155,6 @@
             <artifactId>allure-java-commons</artifactId>
         </dependency>
 
-
-        <!--This dependency is necessary for Dependency Injection plugin. -->
-        <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-        </dependency>
-
-
         <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
         <dependency>
             <groupId>org.jsoup</groupId>
@@ -186,7 +174,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
 
     </dependencies>
 

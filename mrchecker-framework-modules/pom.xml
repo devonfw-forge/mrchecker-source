@@ -91,7 +91,6 @@
         <junit.platform.version>1.6.2</junit.platform.version>
         <junit.vintage.version>5.6.2</junit.vintage.version>
         <junit.params.version>5.6.2</junit.params.version>
-        <junit4.version>4.12</junit4.version>
         <mockito.version>1.8.5</mockito.version>
         <joda-time.version>2.9.9</joda-time.version>
         <commons-csv.version>1.8</commons-csv.version>
@@ -129,9 +128,9 @@
         <dependencies>
 
             <dependency>
-                <groupId>com.google.inject</groupId>
-                <artifactId>guice</artifactId>
-                <version>${guice.version}</version>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-surefire-provider</artifactId>
+                <version>${surefire.provider.version}</version>
             </dependency>
 
             <dependency>
@@ -139,13 +138,6 @@
                 <artifactId>JUnitParams</artifactId>
                 <version>${JUnitParams.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>org.junit.platform</groupId>
-                <artifactId>junit-platform-surefire-provider</artifactId>
-                <version>${surefire.provider.version}</version>
-            </dependency>
-
 
             <dependency>
                 <groupId>org.json</groupId>
@@ -210,6 +202,14 @@
 
     <!-- The bellow dependencies will ba automatically included in modules -->
     <dependencies>
+
+        <!--This dependency is necessary for Dependency Injection plugin. -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+
         <!--This dependency is necessary for JUnit plugin. -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -241,13 +241,6 @@
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
             <version>${junit.vintage.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit4.version}</version>
             <scope>test</scope>
         </dependency>
 
