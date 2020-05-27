@@ -10,22 +10,21 @@ import java.util.Random;
 /**
  * This class contains utility functions related to numeric operation (getting random numbers, conversion to numbers,
  * comparison etc.).
- * 
- * @author
  */
 public class NumberUtils {
 	
 	private NumberUtils() {
 	}
 	
-	public static final String DOLLAR_REGEX = "\\$(?:0|[1-9]\\d{0,2}(?:,?\\d{3})*)(\\.\\d{2})";
-	public static final BigDecimal delta = new BigDecimal("0.02");
+	public static final String		DOLLAR_REGEX	= "\\$(?:0|[1-9]\\d{0,2}(?:,?\\d{3})*)(\\.\\d{2})";
+	public static final BigDecimal	delta			= new BigDecimal("0.02");
 	
 	/**
 	 * Checks if input text is a amount and returns value of it (ie. -$23.15 --> -23.15) Warning if given textValue is
 	 * null or empty return 0
 	 * 
-	 * @param textValue
+	 * @param text
+	 *            text
 	 * @return BigDecimal object with 2 decimal points precision
 	 */
 	public static BigDecimal getValueFromStringAmount(String text) {
@@ -40,6 +39,7 @@ public class NumberUtils {
 	 * null or empty return 0
 	 * 
 	 * @param textValue
+	 *            textValue
 	 * @return BigDecimal object with 2 decimal points precision
 	 */
 	public static BigDecimal convertTextValueToDecimal(String textValue) {
@@ -59,7 +59,8 @@ public class NumberUtils {
 	 * Removes '$' and ',' marks from passed textValue and convert to BigDecimal object Warning if given textValue is
 	 * null or empty return 0
 	 * 
-	 * @param textValue
+	 * @param textValues
+	 *            textValues
 	 * @return BigDecimal object with 2 decimal points precision
 	 */
 	public static BigDecimal[] convertTextValueToDecimal(final String[] textValues) {
@@ -70,7 +71,8 @@ public class NumberUtils {
 	 * Removes '$' and ',' marks from passed textValue and convert to BigDecimal object Warning if given textValue is
 	 * null or empty return 0
 	 * 
-	 * @param textValue
+	 * @param textValues
+	 *            textValues
 	 * @return BigDecimal object with 2 decimal points precision
 	 */
 	public static BigDecimal[] convertTextValueToDecimal(final Iterable<String> textValues) {
@@ -86,6 +88,7 @@ public class NumberUtils {
 	 * Checks if given text is representing a numerical value (can be negative value, and decimals)
 	 * 
 	 * @param textValue
+	 *            textValue
 	 * @return true when is numerical; false otherwise
 	 */
 	public static boolean isNumeric(String textValue) {
@@ -97,6 +100,7 @@ public class NumberUtils {
 	 * Checks if given text contain two decimal places
 	 * 
 	 * @param textValue
+	 *            textValue
 	 * @return boolean value
 	 */
 	public static boolean isTwoDecimalPlaces(String textValue) {
@@ -119,10 +123,7 @@ public class NumberUtils {
 		final BigDecimal acceptedDifference = BigDecimal.ONE;
 		BigDecimal absDifference = oneValue.subtract(secondValue)
 				.abs();
-		if (absDifference.compareTo(acceptedDifference) <= 0) {
-			return false;
-		}
-		return true;
+		return absDifference.compareTo(acceptedDifference) > 0;
 	}
 	
 	/**
@@ -141,8 +142,8 @@ public class NumberUtils {
 	 * To check is single value as String is correctly formated. That is should contains 2 decimal places
 	 * 
 	 * @param percent
+	 *            percent
 	 * @return true/false
-	 * @author
 	 */
 	public static boolean isPercentRoundedTo2decimalPlaces(String percent) {
 		String pr = percent.replaceAll("%", "")
@@ -161,6 +162,7 @@ public class NumberUtils {
 	 * @param number
 	 *            as text
 	 * @param precision
+	 *            precision
 	 * @return String with desired decimal points precision
 	 */
 	public static String convertNumberToXDecimalPoints(String number, int precision) {
@@ -179,6 +181,7 @@ public class NumberUtils {
 	 * @param numbersList
 	 *            as text list
 	 * @param precision
+	 *            precision
 	 * @return list of String with desired decimal points precision
 	 */
 	public static List<String> convertNumberToXDecimalPoints(List<String> numbersList, int precision) {
@@ -206,11 +209,9 @@ public class NumberUtils {
 		if (f1.compareTo(f2) == 0) {
 			return false;
 		}
-		if (f1.subtract(f2)
+		
+		return f1.subtract(f2)
 				.abs()
-				.compareTo(delta) <= 0) {
-			return false;
-		}
-		return true;
+				.compareTo(delta) > 0;
 	}
 }

@@ -1,6 +1,7 @@
 package com.capgemini.mrchecker.test.core.utils;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
@@ -21,9 +22,11 @@ public class JsonReader {
 	 * @return JSONObject
 	 */
 	public static JSONObject readJson(File jsonFile) {
-		try {
-			return readJson(new FileInputStream(jsonFile));
+		try (InputStream inputStream = new FileInputStream(jsonFile)) {
+			return readJson(inputStream);
 		} catch (FileNotFoundException e) {
+			throw new BFInputDataException("Not found JSON file: " + jsonFile.getName());
+		} catch (IOException e) {
 			throw new BFInputDataException("Unable to read JSON file: " + jsonFile.getName());
 		}
 	}
@@ -36,8 +39,8 @@ public class JsonReader {
 	 * @return JSONObject
 	 */
 	public static JSONObject readJson(InputStream jsonInputStream) {
-		try (InputStream jsonStream = jsonInputStream) {
-			return new JSONObject(IOUtils.toString(jsonStream));
+		try {
+			return new JSONObject(IOUtils.toString(jsonInputStream, StandardCharsets.UTF_8));
 		} catch (IOException e) {
 			throw new BFInputDataException("Unable to read JSON from the stream: " + jsonInputStream.toString());
 		}

@@ -1,6 +1,6 @@
 package com.capgemini.mrchecker.security;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.security.core.BasePage;
 

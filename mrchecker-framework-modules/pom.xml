@@ -44,9 +44,9 @@
     <modules>
         <module>mrchecker-core-module</module>
         <module>mrchecker-selenium-module</module>
-        <!--                <module>mrchecker-security-module</module>
-                       <module>mrchecker-webapi-module</module>
-                       <module>mrchecker-database-module</module> -->
+        <module>mrchecker-security-module</module>
+        <!--              <module>mrchecker-webapi-module</module>
+                    <module>mrchecker-database-module</module> -->
         <!-- <module>build-tools</module> -->
     </modules>
 
@@ -195,6 +195,13 @@
                 <artifactId>allure-java-commons</artifactId>
                 <version>${allure-java-commons.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>${aspectj.version}</version>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>

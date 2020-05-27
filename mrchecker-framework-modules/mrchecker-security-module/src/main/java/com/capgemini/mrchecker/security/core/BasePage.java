@@ -1,52 +1,55 @@
 package com.capgemini.mrchecker.security.core;
 
-import com.capgemini.mrchecker.test.core.BaseTest;
-import com.capgemini.mrchecker.test.core.BaseTestWatcher;
-import com.capgemini.mrchecker.test.core.ITestObserver;
-import com.capgemini.mrchecker.test.core.ModuleType;
+import com.capgemini.mrchecker.test.core.*;
 import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
 import com.capgemini.mrchecker.test.core.base.environment.EnvironmentModule;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.google.inject.Guice;
 
-abstract public class BasePage implements ITestObserver {
+abstract public class BasePage implements IPage, ITestObserver {
 	
 	private static IEnvironmentService	environmentService;
-	private final static IAnalytics		analytics;
-	public final static String			analitycsCategoryName	= "Security-Module";
+	private final static IAnalytics		ANALYTICS;
+	public final static String			ANALYTICS_CATEGORY_NAME	= "Security-Module";
+	
+	private static final ITestExecutionObserver TEST_EXECUTION_OBSERVER = BaseTestExecutionObserver.getInstance();
+	
+	private boolean isInitialized = false;
 	
 	static {
 		// Get analytics instance created in BaseTets
-		analytics = BaseTest.getAnalytics();
+		ANALYTICS = BaseTest.getAnalytics();
 		
 		// Read Environment variables either from environmnets.csv or any other input data.
-		setEnvironmetInstance();
+		setEnvironmentInstance();
 	}
 	
 	public static IAnalytics getAnalytics() {
-		return BasePage.analytics;
-	}
-	
-	public BasePage() {
-		this.addObserver();
+		return ANALYTICS;
 	}
 	
 	@Override
-	public void addObserver() {
-		BaseTestWatcher.addObserver(this);
+	public final void initialize() {
+		TEST_EXECUTION_OBSERVER.addObserver(this);
+		isInitialized = true;
+	}
+	
+	@Override
+	public final boolean isInitialized() {
+		return isInitialized;
 	}
 	
 	@Override
 	public void onTestFailure() {
-		BFLogger.logDebug("BasePage.onTestFailure    " + this.getClass()
+		BFLogger.logDebug("BasePage.onTestFailure    " + getClass()
 				.getSimpleName());
 	}
 	
 	@Override
 	public void onTestSuccess() {
 		// All actions needed while test method is success
-		BFLogger.logDebug("BasePage.onTestSuccess    " + this.getClass()
+		BFLogger.logDebug("BasePage.onTestSuccess    " + getClass()
 				.getSimpleName());
 	}
 	
@@ -55,7 +58,7 @@ abstract public class BasePage implements ITestObserver {
 		// All actions needed while test class is finishing
 		BFLogger.logDebug("BasePage.onTestFinish   " + this.getClass()
 				.getSimpleName());
-		BaseTestWatcher.removeObserver(this);
+		TEST_EXECUTION_OBSERVER.removeObserver(this);
 	}
 	
 	@Override
@@ -69,9 +72,8 @@ abstract public class BasePage implements ITestObserver {
 		return ModuleType.SECURITY;
 	}
 	
-	private static void setEnvironmetInstance() {
+	private static void setEnvironmentInstance() {
 		environmentService = Guice.createInjector(new EnvironmentModule())
 				.getInstance(IEnvironmentService.class);
 	}
-	
 }

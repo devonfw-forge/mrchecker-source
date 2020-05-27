@@ -11,7 +11,6 @@ import com.capgemini.mrchecker.test.core.base.properties.PropertiesCoreTest;
 import com.capgemini.mrchecker.test.core.tags.UnitTest;
 
 @UnitTest
-
 public class PropertiesCoreTestTest {
 	public static final String	DEFAULT_ENV			= "DEV";
 	public static final boolean	DEFAULT_ANALYTICS	= true;
