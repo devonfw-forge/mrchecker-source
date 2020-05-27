@@ -1,4 +1,4 @@
-package com.capgemini.mrchecker.webapi.soap;
+package com.capgemini.mrchecker.webapi.core.soap;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -7,21 +7,8 @@ import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.SOAPPart;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.soap.*;
+import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
@@ -50,7 +37,7 @@ public class SoapMessageGenerator {
 	 * </FahrenheitToCelsius>
 	 * </soap12:Body>
 	 * </soap12:Envelope>
-	 * 
+	 *
 	 * @param xmlRequestBody
 	 *            the body of the SOAP message pasted in XML format
 	 *            <FahrenheitToCelsius>
@@ -63,7 +50,7 @@ public class SoapMessageGenerator {
 	 * @throws SAXException
 	 */
 	public static SOAPMessage createSOAPmessage(String xmlRequestBody)
-					throws SOAPException, SAXException, IOException, ParserConfigurationException {
+			throws SOAPException, SAXException, IOException, ParserConfigurationException {
 		
 		SOAPElement body = stringToSOAPElement(xmlRequestBody);
 		
@@ -88,8 +75,8 @@ public class SoapMessageGenerator {
 	}
 	
 	public static String printSoapMessage(final SOAPMessage soapMessage)
-					throws TransformerFactoryConfigurationError,
-					TransformerConfigurationException, SOAPException, TransformerException {
+			throws TransformerFactoryConfigurationError,
+			TransformerConfigurationException, SOAPException, TransformerException {
 		final TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		final Transformer transformer = transformerFactory.newTransformer();
 		
@@ -98,7 +85,7 @@ public class SoapMessageGenerator {
 		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 		
 		final Source soapContent = soapMessage.getSOAPPart()
-						.getContent();
+				.getContent();
 		
 		final ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
 		final StreamResult result = new StreamResult(streamOut);
@@ -109,7 +96,7 @@ public class SoapMessageGenerator {
 	
 	/**
 	 * Transform a String to a SOAP element
-	 * 
+	 *
 	 * @param xmlRequestBody
 	 *            the string body representation
 	 * @return a SOAP element
@@ -119,17 +106,17 @@ public class SoapMessageGenerator {
 	 * @throws ParserConfigurationException
 	 */
 	private static SOAPElement stringToSOAPElement(String xmlRequestBody)
-					throws SOAPException, SAXException, IOException,
-					ParserConfigurationException {
+			throws SOAPException, SAXException, IOException,
+			ParserConfigurationException {
 		
 		// Load the XML text into a DOM Document
 		final DocumentBuilderFactory builderFactory = DocumentBuilderFactory
-						.newInstance();
+				.newInstance();
 		builderFactory.setNamespaceAware(true);
 		final InputStream stream = new ByteArrayInputStream(
-						xmlRequestBody.getBytes());
+				xmlRequestBody.getBytes());
 		final Document doc = builderFactory.newDocumentBuilder()
-						.parse(stream);
+				.parse(stream);
 		
 		// Use SAAJ to convert Document to SOAPElement
 		// Create SoapMessage

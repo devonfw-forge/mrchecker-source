@@ -5,10 +5,10 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 
 public class VirtualizedService {
 	
-	private WireMock		driver;
-	private WireMockServer	driverServer;
-	private String			httpHost;
-	private int				httpPort;
+	private final WireMock			driver;
+	private final WireMockServer	driverServer;
+	private final String			httpHost;
+	private final int				httpPort;
 	
 	VirtualizedService(WireMock driver, WireMockServer driverServer, String httpHost, int httpPort) {
 		this.driver = driver;
@@ -33,13 +33,11 @@ public class VirtualizedService {
 	public String getHttpHost() {
 		return httpHost;
 	}
-
-	public String getEndpointBaseUri(){
+	
+	public String getEndpointBaseUri() {
 		return getHttpHost() + ":" + getHttpPort();
 	}
-
-
-
+	
 	@Override
 	public String toString() {
 		return "Service for host " + getEndpointBaseUri();

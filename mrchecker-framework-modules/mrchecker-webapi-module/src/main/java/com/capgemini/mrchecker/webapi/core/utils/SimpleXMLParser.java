@@ -1,4 +1,4 @@
-package com.capgemini.mrchecker.webapi.pages.utils;
+package com.capgemini.mrchecker.webapi.core.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +35,9 @@ public class SimpleXMLParser {
 	 *            - input stream XML document representation
 	 * @return - normalized Document representation of XML
 	 * @throws IOException
+	 *             IOException
 	 * @throws SAXException
+	 *             SAXException
 	 */
 	public static Document convertToDocumentNormalized(InputStream inputStream) throws IOException, SAXException {
 		Document simpleXMLPageDocument = dBuilder.parse(inputStream);

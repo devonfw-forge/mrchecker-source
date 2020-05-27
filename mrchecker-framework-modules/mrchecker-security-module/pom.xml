@@ -75,10 +75,23 @@
             <artifactId>rest-assured</artifactId>
         </dependency>
 
-        <!-- Test listener. Binds Junit exec to Allure annotation -->
+        <!--This dependency is necessary for Allure generator plugin. -->
         <dependency>
+            <!-- Test listener. Binds Junit exec to Allure annotation -->
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-junit5</artifactId>
+            <version>${allure-junit5.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit-platform</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-java-commons</artifactId>
         </dependency>
 
 

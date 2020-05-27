@@ -9,7 +9,7 @@ public class BasePageTest {
 	@Test
 	public void test() {
 		MyPage myPage = new MyPage();
-		
+		myPage.initialize();
 		myPage.myMethod();
 	}
 	
