@@ -1,8 +1,8 @@
 package com.capgemini.mrchecker.database.base;
 
 import com.capgemini.mrchecker.database.base.database.MySqlDatabase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -11,7 +11,7 @@ public class EntityManagerTest {
 
 	private MySqlDatabase mySqlDatabase;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		mySqlDatabase = new MySqlDatabase();
 	}

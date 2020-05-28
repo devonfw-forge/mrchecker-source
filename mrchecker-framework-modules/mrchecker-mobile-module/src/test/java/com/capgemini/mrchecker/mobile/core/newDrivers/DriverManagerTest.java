@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import com.capgemini.mrchecker.mobile.core.base.driver.DriverManager;
 import com.capgemini.mrchecker.mobile.core.base.properties.PropertiesFileSettings;
@@ -17,6 +18,7 @@ import com.google.inject.Guice;
 
 import io.appium.java_client.remote.MobileCapabilityType;
 
+@ResourceLock("PropertiesFileSettings.class")
 public class DriverManagerTest {
 	
 	private DriverManager driverManager;

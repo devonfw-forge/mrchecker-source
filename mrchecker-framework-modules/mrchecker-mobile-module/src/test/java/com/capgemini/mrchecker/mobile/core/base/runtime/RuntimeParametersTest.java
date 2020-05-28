@@ -10,9 +10,11 @@ import java.util.Map;
 import org.apache.commons.lang.BooleanUtils;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.IsInstanceOf;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
+
+@ResourceLock("PropertiesFileSettings.class")
 
 public class RuntimeParametersTest {
 	
@@ -21,7 +23,7 @@ public class RuntimeParametersTest {
 	@BeforeEach
 	public void setUp() {
 		
-		values.put("deviceUrl", "http://192.168.0.1:1234");
+		values.put("deviceUrl", "http://0.0.0.0:4723");
 		values.put("automationName", "magicAutomationName");
 		values.put("platformName", "magic_Android");
 		values.put("platformVersion", "11.0");
@@ -41,18 +43,13 @@ public class RuntimeParametersTest {
 		RuntimeParameters.APP.refreshParameterValue();
 		RuntimeParameters.BROWSER_NAME.refreshParameterValue();
 		RuntimeParameters.NEW_COMMAND_TIMEOUT.refreshParameterValue();
-		;
 		RuntimeParameters.DEVICE_OPTIONS.refreshParameterValue();
-	}
-	
-	@AfterEach
-	public void tearDown() throws Exception {
 	}
 	
 	@Test
 	public void testGetProperty() {
 		
-		values.put("deviceUrl", "http://192.168.0.1:1234");
+		values.put("deviceUrl", "http://0.0.0.0:4723");
 		values.put("automationName", "magicAutomationName");
 		values.put("platformName", "magic_Android");
 		values.put("platformVersion", "11.0");
@@ -61,7 +58,7 @@ public class RuntimeParametersTest {
 		values.put("browserName", "magicChrome");
 		values.put("newCommandTimeout", "8000");
 		
-		assertThat("System parameters for empty property 'deviceUrl' should be 'http://192.168.0.1:1234'", RuntimeParameters.DEVICE_URL.getValue(), Matchers.equalTo("http://192.168.0.1:1234"));
+		assertThat("System parameters for empty property 'deviceUrl' should be 'http://0.0.0.0:4723'", RuntimeParameters.DEVICE_URL.getValue(), Matchers.equalTo("http://0.0.0.0:4723"));
 		assertThat("System parameters for empty property 'automationName' should be 'magicAutomationName'", RuntimeParameters.AUTOMATION_NAME.getValue(), Matchers.equalTo("magicAutomationName"));
 		assertThat("System parameters for empty property 'platformName' should be 'magic_Android'", RuntimeParameters.PLATFORM_NAME.getValue(), Matchers.equalTo("magic_Android"));
 		assertThat("System parameters for empty property 'platformVersion' should be '11.0'", RuntimeParameters.PLATFORM_VERSION.getValue(), Matchers.equalTo("11.0"));
@@ -129,7 +126,7 @@ public class RuntimeParametersTest {
 	@Test
 	public void testBrowserOptionsVariable() throws Exception {
 		
-		Map<String, Object> expected = new HashMap();
+		Map<String, Object> expected = new HashMap<>();
 		expected.put("testEquals", "FirstEquals=SecondEquals");
 		expected.put("headless", "");
 		expected.put("--testMe", "");
@@ -182,7 +179,7 @@ public class RuntimeParametersTest {
 		RuntimeParameters.NEW_COMMAND_TIMEOUT.refreshParameterValue();
 		RuntimeParameters.DEVICE_OPTIONS.refreshParameterValue();
 		
-		assertThat("System parameters for empty property 'deviceUrl' should be 'http://127.0.0.1:4723'", RuntimeParameters.DEVICE_URL.getValue(), Matchers.equalTo("http://127.0.0.1:4723"));
+		assertThat("System parameters for empty property 'deviceUrl' should be 'http://0.0.0.0:4723'", RuntimeParameters.DEVICE_URL.getValue(), Matchers.equalTo("http://0.0.0.0:4723"));
 		assertThat("System parameters for empty property 'automationName' should be 'Appium'", RuntimeParameters.AUTOMATION_NAME.getValue(), Matchers.equalTo("Appium"));
 		assertThat("System parameters for empty property 'platformName' should be 'Android'", RuntimeParameters.PLATFORM_NAME.getValue(), Matchers.equalTo("Android"));
 		assertThat("System parameters for empty property 'platformVersion' should be 'null'", RuntimeParameters.PLATFORM_VERSION.getValue(), Matchers.isEmptyString());

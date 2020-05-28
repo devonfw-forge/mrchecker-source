@@ -1,13 +1,13 @@
 package com.capgemini.mrchecker.database;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 public class BaseDatabaseTest {
 
 	@Test
 	public void test() {
 		MyDatabase myDatabase = new MyDatabase();
-
 		myDatabase.myMethod();
 	}
 

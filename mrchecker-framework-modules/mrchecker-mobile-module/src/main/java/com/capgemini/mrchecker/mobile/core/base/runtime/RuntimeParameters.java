@@ -29,7 +29,7 @@ public enum RuntimeParameters implements IRuntimeParameters {
 	
 	// GENERIC Capabilities
 	// http://appium.io/docs/en/writing-running-appium/caps/#general-capabilities
-	DEVICE_URL("deviceUrl", "http://127.0.0.1:4723"),
+	DEVICE_URL("deviceUrl", "http://0.0.0.0:4723"),
 	AUTOMATION_NAME(MobileCapabilityType.AUTOMATION_NAME, "Appium"),
 	PLATFORM_NAME(MobileCapabilityType.PLATFORM_NAME, "Android"),
 	PLATFORM_VERSION(MobileCapabilityType.PLATFORM_VERSION, ""),

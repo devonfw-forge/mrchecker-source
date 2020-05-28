@@ -1,10 +1,12 @@
 package com.capgemini.mrchecker.mobile;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import com.capgemini.mrchecker.mobile.core.BasePage;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
+@ResourceLock("PropertiesFileSettings.class")
 public class BasePageTest {
 	
 	@Test

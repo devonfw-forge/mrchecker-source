@@ -47,7 +47,7 @@
         <module>mrchecker-security-module</module>
         <module>mrchecker-webapi-module</module>
         <module>mrchecker-mobile-module</module>
-        <module>mrchecker-database-module</module>git
+        <module>mrchecker-database-module</module>
         <!-- <module>build-tools</module> -->
     </modules>
 

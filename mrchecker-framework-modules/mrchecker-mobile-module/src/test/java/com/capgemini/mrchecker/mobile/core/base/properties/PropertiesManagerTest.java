@@ -9,11 +9,13 @@ import java.nio.file.Paths;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+@ResourceLock("PropertiesFileSettings.class")
 public class PropertiesManagerTest {
 	
 	private PropertiesFileSettings propertiesFileSettings;
