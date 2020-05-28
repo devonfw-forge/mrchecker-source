@@ -5,13 +5,12 @@ import com.google.inject.name.Named;
 
 public class PropertiesFileSettings {
 	
-	private String property_1 = "How are you"; // default value
-	private String property_2 = "What is your today success"; // default value
+	private String	property_1	= "How are you";				// default value
+	private String	property_2	= "What is your today success";	// default value
 	
 	@Inject(optional = true)
 	private void setProperty_1(@Named("name.property_1") String path) {
-		this.property_1 = path;
-		
+		property_1 = path;
 	}
 	
 	public String getProperty_1() {
@@ -20,12 +19,10 @@ public class PropertiesFileSettings {
 	
 	@Inject(optional = true)
 	private void setProperty_2(@Named("name.property_2") String path) {
-		this.property_2 = path;
-		
+		property_2 = path;
 	}
 	
 	public String getProperty_2() {
-		return this.property_2;
+		return property_2;
 	}
-	
 }

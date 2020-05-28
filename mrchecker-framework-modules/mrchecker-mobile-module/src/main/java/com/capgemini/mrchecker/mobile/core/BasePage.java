@@ -1,15 +1,16 @@
 package com.capgemini.mrchecker.mobile.core;
 
+import java.util.Objects;
 
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.UnhandledAlertException;
 
 import com.capgemini.mrchecker.mobile.core.base.driver.DriverManager;
 import com.capgemini.mrchecker.mobile.core.base.driver.INewMobileDriver;
 import com.capgemini.mrchecker.mobile.core.base.properties.PropertiesFileSettings;
 import com.capgemini.mrchecker.mobile.core.base.runtime.RuntimeParameters;
-import com.capgemini.mrchecker.test.core.BaseTest;
-import com.capgemini.mrchecker.test.core.BaseTestWatcher;
-import com.capgemini.mrchecker.test.core.ITestObserver;
-import com.capgemini.mrchecker.test.core.ModuleType;
+import com.capgemini.mrchecker.test.core.*;
 import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
@@ -17,55 +18,56 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.google.inject.Guice;
 
 import io.qameta.allure.Attachment;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.UnhandledAlertException;
 
-abstract public class BasePage implements ITestObserver {
+abstract public class BasePage implements IPage, ITestObserver {
 	
 	private static DriverManager driver = null;
 	
-	private final static PropertiesFileSettings propertiesFileSettings;
-	private static IEnvironmentService environmentService;
-	private final static IAnalytics analytics;
-	public final static String analitycsCategoryName = "Mobile";
+	private final static PropertiesFileSettings	PROPERTIES_FILE_SETTINGS;
+	private static IEnvironmentService			environmentService;
+	private final static IAnalytics				ANALYTICS;
+	public final static String					ANALYTICS_CATEGORY_NAME	= "Mobile";
+	
+	private static final ITestExecutionObserver TEST_EXECUTION_OBSERVER = BaseTestExecutionObserver.getInstance();
+	
+	private boolean isInitialized = false;
 	
 	static {
 		// Get analytics instance created in BaseTets
-		analytics = BaseTest.getAnalytics();
+		ANALYTICS = BaseTest.getAnalytics();
 		
 		// Get and then set properties information from mobile.settings file
-		propertiesFileSettings = setPropertiesSettings();
+		PROPERTIES_FILE_SETTINGS = setPropertiesSettings();
 		
 		// Read System or maven parameters
 		setRuntimeParametersSelenium();
 		
 		// Read Environment variables either from environmnets.csv or any other input data.
-		setEnvironmetInstance();
+		setEnvironmentInstance();
 	}
 	
 	public static IAnalytics getAnalytics() {
-		return BasePage.analytics;
+		return ANALYTICS;
 	}
 	
 	public BasePage() {
-		this(getDriver());
-	}
-	
-	public BasePage(INewMobileDriver driver) {
-		// Add given module to Test core Observable list
-		this.addObserver();
-		
+		getDriver();
 	}
 	
 	@Override
-	public void addObserver() {
-		BaseTestWatcher.addObserver(this);
+	public final void initialize() {
+		TEST_EXECUTION_OBSERVER.addObserver(this);
+		isInitialized = true;
+	}
+	
+	@Override
+	public final boolean isInitialized() {
+		return isInitialized;
 	}
 	
 	@Override
 	public void onTestFailure() {
-		BFLogger.logDebug("BasePage.onTestFailure    " + this.getClass()
+		BFLogger.logDebug("BasePage.onTestFailure    " + getClass()
 				.getSimpleName());
 		makeScreenshotOnFailure();
 		makeSourcePageOnFailure();
@@ -74,21 +76,21 @@ abstract public class BasePage implements ITestObserver {
 	@Override
 	public void onTestSuccess() {
 		// All actions needed while test method is success
-		BFLogger.logDebug("BasePage.onTestSuccess    " + this.getClass()
+		BFLogger.logDebug("BasePage.onTestSuccess    " + getClass()
 				.getSimpleName());
 	}
 	
 	@Override
 	public void onTestFinish() {
 		// All actions needed while test class is finishing
-		BFLogger.logDebug("BasePage.onTestFinish   " + this.getClass()
+		BFLogger.logDebug("BasePage.onTestFinish   " + getClass()
 				.getSimpleName());
-		BaseTestWatcher.removeObserver(this);
+		TEST_EXECUTION_OBSERVER.removeObserver(this);
 	}
 	
 	@Override
 	public void onTestClassFinish() {
-		BFLogger.logDebug("BasePage.onTestClassFinish   " + this.getClass()
+		BFLogger.logDebug("BasePage.onTestClassFinish   " + getClass()
 				.getSimpleName());
 		BFLogger.logDebug("driver:" + getDriver().toString());
 		DriverManager.closeDriver();
@@ -98,7 +100,7 @@ abstract public class BasePage implements ITestObserver {
 	public ModuleType getModuleType() {
 		return ModuleType.MOBILE;
 	}
-
+	
 	@Attachment("Screenshot on failure")
 	public byte[] makeScreenshotOnFailure() {
 		byte[] screenshot = null;
@@ -109,7 +111,7 @@ abstract public class BasePage implements ITestObserver {
 		}
 		return screenshot;
 	}
-
+	
 	@Attachment("Source Page on failure")
 	public String makeSourcePageOnFailure() {
 		return DriverManager.getDriver()
@@ -117,19 +119,19 @@ abstract public class BasePage implements ITestObserver {
 	}
 	
 	public static INewMobileDriver getDriver() {
-		if (BasePage.driver == null) {
+		if (Objects.isNull(driver)) {
 			// Create module driver
-			BasePage.driver = new DriverManager(propertiesFileSettings);
+			driver = new DriverManager(PROPERTIES_FILE_SETTINGS);
 		}
-		return BasePage.driver.getDriver();
+		
+		return driver.getDriver();
 		
 	}
-
+	
 	private static PropertiesFileSettings setPropertiesSettings() {
 		// Get and then set properties information from settings.properties file
-		PropertiesFileSettings propertiesFileSettings = Guice.createInjector(PropertiesSettingsModule.init())
+		return Guice.createInjector(PropertiesSettingsModule.init())
 				.getInstance(PropertiesFileSettings.class);
-		return propertiesFileSettings;
 	}
 	
 	private static void setRuntimeParametersSelenium() {
@@ -139,7 +141,7 @@ abstract public class BasePage implements ITestObserver {
 		
 	}
 	
-	private static void setEnvironmetInstance() {
+	private static void setEnvironmentInstance() {
 		/*
 		 * Environment variables either from environmnets.csv or any other input data. For now there is no properties
 		 * settings file for Selenium module. In future, please have a look on Core Module IEnvironmentService

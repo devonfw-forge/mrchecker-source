@@ -55,6 +55,7 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 		stopwatch.set(System.currentTimeMillis());
 	}
 	
+	// TODO: who should handle logging?
 	@Override
 	public void afterTestExecution(ExtensionContext extensionContext) {
 		stopwatch.set(System.currentTimeMillis() - stopwatch.get()); // end timing
@@ -65,7 +66,6 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 		makeLogForTest();
 	}
 	
-	// TODO: fix that
 	@Attachment("Log file")
 	public void makeLogForTest() {
 		BFLogger.RestrictedMethods.dumpSeparateLog();

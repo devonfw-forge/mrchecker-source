@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>mrchecker-security-module</artifactId>
-    <version>2.0.1-SNAPSHOT</version>
+    <version>1.2.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>MrChecker - Security - Module</name>
     <description>MrChecker Test Framework Security supports:
@@ -56,7 +56,7 @@
     <properties>
 
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
-        <mrchecker-core-module.version>5.0.1-SNAPSHOT</mrchecker-core-module.version>
+        <mrchecker-core-module.version>5.6.2.1-SNAPSHOT</mrchecker-core-module.version>
 
     </properties>
 
@@ -80,7 +80,6 @@
             <!-- Test listener. Binds Junit exec to Allure annotation -->
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-junit5</artifactId>
-            <version>${allure-junit5.version}</version>
             <scope>test</scope>
         </dependency>
 

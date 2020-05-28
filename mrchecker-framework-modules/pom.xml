@@ -46,7 +46,8 @@
         <module>mrchecker-selenium-module</module>
         <module>mrchecker-security-module</module>
         <module>mrchecker-webapi-module</module>
-        <!--         <module>mrchecker-database-module</module> -->
+        <module>mrchecker-mobile-module</module>
+        <module>mrchecker-database-module</module>git
         <!-- <module>build-tools</module> -->
     </modules>
 
