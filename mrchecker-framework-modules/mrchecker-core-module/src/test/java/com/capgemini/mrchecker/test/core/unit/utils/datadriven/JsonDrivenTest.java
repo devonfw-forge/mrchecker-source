@@ -3,6 +3,7 @@ package com.capgemini.mrchecker.test.core.unit.utils.datadriven;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.*;
 
@@ -80,10 +81,13 @@ public class JsonDrivenTest {
 		assertThat(JsonDriven.provide(NO_SUCH_FILE, SimpleObject[].class).length, is(equalTo(0)));
 	}
 	
+	// TODO: implement that
 	@Test
 	@Disabled
-	public void shouldProvideEmptyArrayWhenFileCouldNotBeRead() {
-		assertThat(JsonDriven.provide("error file", SimpleObject[].class).length, is(equalTo(0)));
+	public void shouldCreateThrowIOExceptionWhenFileCouldNotBeRead() throws IOException {
+		try (FileOutputStream out = new FileOutputStream(tempFile)) {
+			assertThrows(IOException.class, () -> JsonDriven.provide(tempFile.getName(), SimpleObject[].class));
+		}
 	}
 }
 

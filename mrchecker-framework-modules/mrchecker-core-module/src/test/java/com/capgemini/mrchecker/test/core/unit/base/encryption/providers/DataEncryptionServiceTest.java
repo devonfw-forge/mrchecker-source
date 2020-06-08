@@ -6,9 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.*;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
@@ -18,7 +23,7 @@ import com.capgemini.mrchecker.test.core.exceptions.BFSecureModuleException;
 import com.capgemini.mrchecker.test.core.tags.UnitTest;
 
 @UnitTest
-@ResourceLock(value = "DataEncryptionService.class")
+@ResourceLock(value = "SingleThread")
 public class DataEncryptionServiceTest {
 	
 	public static final String	SECRET_TOO_SHORT	= "1234567";
@@ -30,6 +35,7 @@ public class DataEncryptionServiceTest {
 	public static final String	PLAINTEXT_1			= "plain text";
 	public static final String	CIPHERTEXT_2		= "ENC(QTkxI0hWAyTDXdDJd8a9mP8lGGnngflplukqzFj5nj4=)";
 	public static final String	PLAINTEXT_2			= "another plain text";
+	public static final int		THREAD_COUNT		= 4;
 	
 	@BeforeAll
 	public static void setUpClass() {
@@ -148,8 +154,40 @@ public class DataEncryptionServiceTest {
 		assertThrows(BFSecureModuleException.class, () -> initAndGetSut().decrypt(null));
 	}
 	
+	// TODO: implement multi thread
+	@Disabled
 	@Test
-	public void shouldCreateMultiThread() {
-		// TODO: implement multi thread check
+	public void shouldCreateMultiThread() throws InterruptedException {
+		Collection<InstanceGetter> tasks = new ArrayList<>();
+		for (int i = 0; i < THREAD_COUNT; i++) {
+			tasks.add(new InstanceGetter());
+		}
+		
+		ExecutorService executor = Executors.newFixedThreadPool(THREAD_COUNT);
+		List<Future<IDataEncryptionService>> encryptionServices = executor.invokeAll(tasks);
+		executor.shutdown();
+		executor.awaitTermination(100, TimeUnit.MILLISECONDS);
+		
+		encryptionServices.stream()
+				.map(iDataEncryptionServiceFuture -> {
+					try {
+						return iDataEncryptionServiceFuture.get();
+					} catch (InterruptedException | ExecutionException e) {
+						e.printStackTrace();
+					}
+					return null;
+				})
+				.forEach(s -> assertThat(s, is(equalTo(getSut()))));
+	}
+	
+	public static class InstanceGetter implements Callable<IDataEncryptionService> {
+		
+		private static final CyclicBarrier barrier = new CyclicBarrier(THREAD_COUNT);
+		
+		@Override
+		public IDataEncryptionService call() throws Exception {
+			barrier.await();
+			return getSut();
+		}
 	}
 }

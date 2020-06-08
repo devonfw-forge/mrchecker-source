@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -23,9 +22,12 @@ public class NavigationBarTest extends BaseTest {
 	private final static By			navigationBarSelector	= By.cssSelector("ol#breadcrumbs");
 	private final static By			childsSelector			= By.cssSelector("li");
 	
-	@AfterAll
-	public static void tearDownAll() {
-		
+	@Override
+	public void setUp() {
+		BasePage.getDriver()
+				.get(PageSubURLsEnum.WWW_FONT_URL.subURL() + PageSubURLsEnum.TABS.subURL());
+		navigationBarElement = BasePage.getDriver()
+				.elementNavigationBar(NavigationBarTest.navigationBarSelector);
 	}
 	
 	@Test
@@ -66,18 +68,5 @@ public class NavigationBarTest extends BaseTest {
 		NavigationBarElement navBarElem = BasePage.getDriver()
 				.elementNavigationBar(NavigationBarTest.navigationBarSelector, NavigationBarTest.childsSelector);
 		assertEquals(Arrays.asList("Home", "Tabs"), navBarElem.getItemsTextList());
-	}
-	
-	@Override
-	public void setUp() {
-		BasePage.getDriver()
-				.get(PageSubURLsEnum.WWW_FONT_URL.subURL() + PageSubURLsEnum.TABS.subURL());
-		this.navigationBarElement = BasePage.getDriver()
-				.elementNavigationBar(NavigationBarTest.navigationBarSelector);
-	}
-	
-	@Override
-	public void tearDown() {
-		
 	}
 }

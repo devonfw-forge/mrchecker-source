@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -29,9 +28,12 @@ public class TabTest extends BaseTest {
 	private final static By				tabChildsSelector		= By.cssSelector("li");
 	private final static List<String>	listSelectedAttributes	= Arrays.asList("ui-tabs-active ui-state-active");
 	
-	@AfterAll
-	public static void tearDownAll() {
-		
+	@Override
+	public void setUp() {
+		BasePage.getDriver()
+				.get(PageSubURLsEnum.WWW_FONT_URL.subURL() + PageSubURLsEnum.TABS.subURL());
+		tabObject = BasePage.getDriver()
+				.elementTab(TabTest.tabSelector);
 	}
 	
 	@Test
@@ -70,15 +72,4 @@ public class TabTest extends BaseTest {
 		assertTrue(tabObject.isItemSelectedByIndex(1));
 	}
 	
-	@Override
-	public void setUp() {
-		BasePage.getDriver()
-				.get(PageSubURLsEnum.WWW_FONT_URL.subURL() + PageSubURLsEnum.TABS.subURL());
-		this.tabObject = BasePage.getDriver()
-				.elementTab(TabTest.tabSelector);
-	}
-	
-	@Override
-	public void tearDown() {
-	}
 }

@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -30,9 +29,10 @@ public class MenuTest extends BaseTest {
 	private MenuElement		menuElement;
 	private MenuElement		menu2Element;
 	
-	@AfterAll
-	public static void tearDownAll() {
-		
+	@Override
+	public void setUp() {
+		BasePage.getDriver()
+				.get(PageSubURLsEnum.WWW_FONT_URL.subURL() + PageSubURLsEnum.MENU.subURL());
 	}
 	
 	@Test
@@ -105,17 +105,6 @@ public class MenuTest extends BaseTest {
 				.elementMenu(MenuTest.menu2Selector, MenuTest.menuChildsSelector,
 						MenuTest.subMenuSelector, MenuTest.subMenuChildsSelector);
 		menu2Element.selectSubMenuItemByText("FAQ", "Sub Menu Item 3");
-	}
-	
-	@Override
-	public void setUp() {
-		BasePage.getDriver()
-				.get(PageSubURLsEnum.WWW_FONT_URL.subURL() + PageSubURLsEnum.MENU.subURL());
-	}
-	
-	@Override
-	public void tearDown() {
-		
 	}
 	
 	private String getCurrentURL() {

@@ -1,9 +1,8 @@
 package com.capgemini.mrchecker.selenium.core.tests.webElements;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -21,9 +20,10 @@ public class InputTextTest extends BaseTest {
 	QuickFixSeleniumPage	quickFixSeleniumPage	= new QuickFixSeleniumPage();
 	private static By		firstNameInputText		= By.cssSelector("input[id='name_3_firstname']");
 	
-	@AfterAll
-	public static void tearDownAll() {
-		
+	@Override
+	public void setUp() {
+		BasePage.getDriver()
+				.get(PageSubURLsEnum.WWW_FONT_URL.subURL() + PageSubURLsEnum.REGISTRATION.subURL());
 	}
 	
 	@Test()
@@ -42,17 +42,5 @@ public class InputTextTest extends BaseTest {
 		// input some text into input text and verify value
 		inputElement.setInputText("John");
 		assertEquals("John", inputElement.getValue());
-	}
-	
-	@Override
-	public void setUp() {
-		BasePage.getDriver()
-				.get(PageSubURLsEnum.WWW_FONT_URL.subURL() + PageSubURLsEnum.REGISTRATION.subURL());
-		return;
-	}
-	
-	@Override
-	public void tearDown() {
-		// TODO Auto-generated method stub
 	}
 }

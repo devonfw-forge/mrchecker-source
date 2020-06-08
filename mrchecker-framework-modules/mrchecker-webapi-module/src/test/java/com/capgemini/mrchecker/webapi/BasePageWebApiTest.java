@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 import com.capgemini.mrchecker.test.core.BaseTest;
+import com.capgemini.mrchecker.test.core.PageFactory;
 import com.capgemini.mrchecker.webapi.core.BasePageWebAPI;
 
 @ResourceLock("PropertiesFileSettings.class")
@@ -21,12 +22,11 @@ public class BasePageWebApiTest extends BaseTest {
 	
 	@Test
 	public void test() {
-		MyPage myPage = new MyPage();
-		myPage.initialize();
+		MyPage myPage = PageFactory.createPage(MyPage.class);
 		myPage.myMethod();
 	}
 	
-	private static class MyPage extends BasePageWebAPI {
+	public static class MyPage extends BasePageWebAPI {
 		
 		public String myMethod() {
 			return "Welcome";

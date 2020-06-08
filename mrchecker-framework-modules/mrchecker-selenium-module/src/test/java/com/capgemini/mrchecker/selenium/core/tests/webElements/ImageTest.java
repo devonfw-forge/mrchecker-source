@@ -1,8 +1,7 @@
 package com.capgemini.mrchecker.selenium.core.tests.webElements;
 
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -19,9 +18,10 @@ public class ImageTest extends BaseTest {
 	QuickFixSeleniumPage	quickFixSeleniumPage	= new QuickFixSeleniumPage();
 	private static By		img1					= By.cssSelector("img");
 	
-	@AfterAll
-	public static void tearDownAll() {
-		
+	@Override
+	public void setUp() {
+		BasePage.getDriver()
+				.get(PageSubURLsEnum.TOOLS_QA.subURL() + PageSubURLsEnum.AUTOMATION_PRACTICE_FORM.subURL());
 	}
 	
 	@Test
@@ -30,17 +30,5 @@ public class ImageTest extends BaseTest {
 		assertTrue(BasePage.getDriver()
 				.elementImage(ImageTest.img1)
 				.isDisplayed());
-	}
-	
-	@Override
-	public void setUp() {
-		BasePage.getDriver()
-				.get(PageSubURLsEnum.TOOLS_QA.subURL() + PageSubURLsEnum.AUTOMATION_PRACTICE_FORM.subURL());
-		return;
-	}
-	
-	@Override
-	public void tearDown() {
-		// TODO Auto-generated method stub
 	}
 }

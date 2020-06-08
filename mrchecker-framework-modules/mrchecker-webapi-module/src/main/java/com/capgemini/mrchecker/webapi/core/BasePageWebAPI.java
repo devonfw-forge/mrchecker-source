@@ -11,7 +11,9 @@ import javax.xml.transform.TransformerException;
 
 import org.xml.sax.SAXException;
 
-import com.capgemini.mrchecker.test.core.*;
+import com.capgemini.mrchecker.test.core.BaseTest;
+import com.capgemini.mrchecker.test.core.ModuleType;
+import com.capgemini.mrchecker.test.core.Page;
 import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
@@ -22,17 +24,13 @@ import com.capgemini.mrchecker.webapi.core.soap.SoapMessageGenerator;
 import com.google.inject.Guice;
 import com.jamesmurty.utils.XMLBuilder;
 
-abstract public class BasePageWebAPI implements ITestObserver, IWebAPI {
+abstract public class BasePageWebAPI extends Page implements IWebAPI {
 	
 	private static DriverManager driver = null;
 	
 	private final static PropertiesFileSettings	propertiesFileSettings;
 	private final static IAnalytics				ANALYTICS;
 	public final static String					ANALYTICS_CATEGORY_NAME	= "WebAPI-Module";
-	
-	private static final ITestExecutionObserver TEST_EXECUTION_OBSERVER = BaseTestExecutionObserver.getInstance();
-	
-	private boolean isInitialized = false;
 	
 	static {
 		// Get analytics instance created in BaseTets
@@ -54,45 +52,6 @@ abstract public class BasePageWebAPI implements ITestObserver, IWebAPI {
 	
 	public BasePageWebAPI() {
 		getDriver();
-	}
-	
-	@Override
-	public final void initialize() {
-		TEST_EXECUTION_OBSERVER.addObserver(this);
-		isInitialized = true;
-	}
-	
-	@Override
-	public final boolean isInitialized() {
-		return isInitialized;
-	}
-	
-	@Override
-	public void onTestFailure() {
-		BFLogger.logDebug("BasePage.onTestFailure    " + this.getClass()
-				.getSimpleName());
-	}
-	
-	@Override
-	public void onTestSuccess() {
-		// All actions needed while test method is success
-		BFLogger.logDebug("BasePage.onTestSuccess    " + this.getClass()
-				.getSimpleName());
-	}
-	
-	@Override
-	public void onTestFinish() {
-		// All actions needed while test class is finishing
-		BFLogger.logDebug("BasePage.onTestFinish   " + this.getClass()
-				.getSimpleName());
-		TEST_EXECUTION_OBSERVER.removeObserver(this);
-	}
-	
-	@Override
-	public void onTestClassFinish() {
-		BFLogger.logDebug("BasePage.onTestClassFinish   " + this.getClass()
-				.getSimpleName());
-		BFLogger.logDebug("driver:" + getDriver().toString());
 	}
 	
 	@Override

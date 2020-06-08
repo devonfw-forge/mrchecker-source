@@ -9,5 +9,7 @@ public interface ITestObserver {
 	
 	void onTestClassFinish();
 	
+	void register();
+	
 	ModuleType getModuleType();
 }

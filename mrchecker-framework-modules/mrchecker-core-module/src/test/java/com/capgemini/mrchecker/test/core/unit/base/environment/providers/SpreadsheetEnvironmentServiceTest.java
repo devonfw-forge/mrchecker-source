@@ -3,7 +3,7 @@ package com.capgemini.mrchecker.test.core.unit.base.environment.providers;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -23,7 +23,7 @@ import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
 import com.capgemini.mrchecker.test.core.tags.UnitTest;
 
 @UnitTest
-@ResourceLock(value = "RuntimeParametersCoreTest.class")
+@ResourceLock(value = "SingleThread")
 public class SpreadsheetEnvironmentServiceTest {
 	
 	public static final String		TEST_ENV				= "TEST_ENV";
@@ -103,6 +103,7 @@ public class SpreadsheetEnvironmentServiceTest {
 	}
 	
 	@Test
+	@Disabled
 	public void shouldInitMultiThread() {
 		// TODO: implement multi thread check
 	}

@@ -18,7 +18,7 @@ import com.capgemini.mrchecker.test.core.tags.UnitTest;
 import com.google.inject.Guice;
 
 @UnitTest
-@ResourceLock(value = "RuntimeParametersCoreTest.class")
+@ResourceLock(value = "SingleThread")
 public class EnvironmentModuleTest {
 	
 	public static final String NO_FILE_PATH = "no file path";

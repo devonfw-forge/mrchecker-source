@@ -1,8 +1,6 @@
 package com.capgemini.mrchecker.webapi.core;
 
-import com.capgemini.mrchecker.test.core.IPage;
-
-public interface IWebAPI extends IPage {
+public interface IWebAPI {
 	
 	/**
 	 * @return URL Endpoint in String format

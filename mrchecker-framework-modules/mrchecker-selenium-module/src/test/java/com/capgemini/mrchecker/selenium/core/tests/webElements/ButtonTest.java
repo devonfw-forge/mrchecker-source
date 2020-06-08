@@ -1,9 +1,8 @@
 package com.capgemini.mrchecker.selenium.core.tests.webElements;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -20,9 +19,11 @@ public class ButtonTest extends BaseTest {
 	private QuickFixSeleniumPage	quickFixSeleniumPage	= new QuickFixSeleniumPage();
 	private static By				buttonSubmit			= By.cssSelector("button#submit");
 	
-	@AfterAll
-	public static void tearDownAll() {
-		
+	@Override
+	public void setUp() {
+		quickFixSeleniumPage = new QuickFixSeleniumPage();
+		BasePage.getDriver()
+				.get(PageSubURLsEnum.TOOLS_QA.subURL() + PageSubURLsEnum.AUTOMATION_PRACTICE_FORM.subURL());
 	}
 	
 	@Test
@@ -44,18 +45,5 @@ public class ButtonTest extends BaseTest {
 		assertTrue(BasePage.getDriver()
 				.getCurrentUrl()
 				.contains("&submit="));
-	}
-	
-	@Override
-	public void setUp() {
-		quickFixSeleniumPage = new QuickFixSeleniumPage();
-		BasePage.getDriver()
-				.get(PageSubURLsEnum.TOOLS_QA.subURL() + PageSubURLsEnum.AUTOMATION_PRACTICE_FORM.subURL());
-		return;
-	}
-	
-	@Override
-	public void tearDown() {
-		// TODO Auto-generated method stub
 	}
 }

@@ -3,34 +3,22 @@ package com.capgemini.mrchecker.selenium;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.test.core.BaseTest;
+import com.capgemini.mrchecker.test.core.utils.PageFactory;
 
-@Disabled
 public class BasePageTest extends BaseTest {
-	
-	@Override
-	public void setUp() {
-		
-	}
-	
-	@Override
-	public void tearDown() {
-		
-	}
 	
 	@Test
 	public void testGetDriver() {
-		TestPage testPage = new TestPage();
-		testPage.initialize();
+		TestPage testPage = PageFactory.getPageInstance(TestPage.class);
 		assertEquals("", "Google", testPage.pageTitle());
 		
 	}
 	
-	private class TestPage extends BasePage {
+	public static class TestPage extends BasePage {
 		
 		@Override
 		public boolean isLoaded() {

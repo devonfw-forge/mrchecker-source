@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
-
-import io.qameta.allure.Attachment;
+import com.capgemini.mrchecker.test.core.utils.Attachments;
 
 public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	
@@ -21,6 +21,8 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	
 	private final ThreadLocal<List<ITestObserver>>	observers		= ThreadLocal.withInitial(ArrayList::new);
 	private final ThreadLocal<List<ITestObserver>>	classObservers	= ThreadLocal.withInitial(ArrayList::new);
+	
+	public static final boolean DONT_CONSUME_EXCEPTION_IN_AFTERALL = false;
 	
 	private BaseTestExecutionObserver() {
 	}
@@ -38,79 +40,84 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	
 	@Override
 	public void beforeAll(ExtensionContext extensionContext) {
-		String testName = extensionContext.getTestClass()
-				.get()
+		String testName = extensionContext.getRequiredTestClass()
 				.getName();
 		BFLogger.logInfo("\"" + testName + "\"" + " - CLASS STARTED.");
 	}
 	
 	@Override
-	public void beforeTestExecution(ExtensionContext extensionContext) {
+	public void beforeTestExecution(ExtensionContext context) {
 		BFLogger.RestrictedMethods.startSeparateLog();
-		String testName = extensionContext.getDisplayName();
-		BFLogger.logInfo("\"" + testName + "\"" + " STARTED.");
+		logTestInfo(context, "STARTED");
 		BaseTest.getAnalytics()
 				.sendClassName();
-		((IBaseTest) extensionContext.getRequiredTestInstance()).setUp();
 		stopwatch.set(System.currentTimeMillis());
+		validateTestClassAndCallHook(context, BaseTest::setUp);
 	}
 	
-	// TODO: who should handle logging?
 	@Override
-	public void afterTestExecution(ExtensionContext extensionContext) {
+	public void afterTestExecution(ExtensionContext context) {
 		stopwatch.set(System.currentTimeMillis() - stopwatch.get()); // end timing
-		String testName = extensionContext.getDisplayName();
-		BFLogger.logInfo("\"" + testName + "\"" + " - FINISHED.");
+		String testName = logTestInfo(context, "FINISHED");
 		printTimeExecutionLog(testName);
-		((IBaseTest) extensionContext.getRequiredTestInstance()).tearDown();
-		makeLogForTest();
+		validateTestClassAndCallHook(context, BaseTest::tearDown);
 	}
 	
-	@Attachment("Log file")
-	public void makeLogForTest() {
-		BFLogger.RestrictedMethods.dumpSeparateLog();
+	private static void makeLogForTest() {
+		Attachments.attachToAllure(BFLogger.RestrictedMethods.dumpSeparateLog());
 	}
 	
 	@Override
 	public void testDisabled(ExtensionContext context, Optional<String> reason) {
-		String testName = context.getDisplayName();
-		BFLogger.logInfo("\"" + testName + "\"" + " - DISABLED.");
-		// TODO: add reason
-	}
-	
-	@Override
-	public void testSuccessful(ExtensionContext context) {
-		String testName = context.getDisplayName();
-		BFLogger.logInfo("\"" + testName + "\"" + " - PASSED.");
-		observers.get()
-				.forEach(ITestObserver::onTestSuccess);
-		afterEach();
-		classObservers.get()
-				.forEach(ITestObserver::onTestSuccess);
+		logTestInfo(context, "DISABLED");
+		reason.ifPresent(s -> BFLogger.logInfo("Reason: " + s));
 	}
 	
 	@Override
 	public void testAborted(ExtensionContext context, Throwable cause) {
-		String testName = context.getDisplayName();
-		BFLogger.logInfo("\"" + testName + "\"" + " - ABORTED.");
+		logTestInfo(context, "ABORTED");
+		afterEach();
+	}
+	
+	@Override
+	public void testSuccessful(ExtensionContext context) {
+		logTestInfo(context, "PASSED");
+		observers.get()
+				.forEach(ITestObserver::onTestSuccess);
+		classObservers.get()
+				.forEach(ITestObserver::onTestSuccess);
 		afterEach();
 	}
 	
 	@Override
 	public void testFailed(ExtensionContext context, Throwable cause) {
-		String testName = context.getDisplayName();
-		BFLogger.logInfo("\"" + testName + "\"" + " - FAILED.");
+		logTestInfo(context, "FAILED");
 		observers.get()
 				.forEach(ITestObserver::onTestFailure);
-		afterEach();
 		classObservers.get()
 				.forEach(ITestObserver::onTestFailure);
-		
+		afterEach();
+	}
+	
+	private static String logTestInfo(ExtensionContext context, String testStatus) {
+		String className = context.getRequiredTestClass()
+				.getName();
+		String testName = context.getDisplayName();
+		BFLogger.logInfo("\"" + className + "#" + testName + "\"" + " - " + testStatus + ".");
+		return testName;
 	}
 	
 	private void afterEach() {
 		observers.get()
 				.forEach(ITestObserver::onTestFinish);
+		makeLogForTest();
+	}
+	
+	private static void validateTestClassAndCallHook(ExtensionContext context, Consumer<BaseTest> hook) {
+		Object testClass = context.getRequiredTestInstance();
+		if (testClass instanceof BaseTest) {
+			hook.accept((BaseTest) testClass);
+		}
 	}
 	
 	@Override
@@ -140,6 +147,44 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	
 	private String getFormattedTestDuration() {
 		return String.format(" - DURATION: %1.2f min", (float) stopwatch.get() / (60 * 1000));
+	}
+	
+	@Override
+	public void handleBeforeAllMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+		logExceptionInfo(context, throwable, "@BeforeAll");
+	}
+	
+	@Override
+	public void handleBeforeEachMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+		logExceptionInfo(context, throwable, "@BeforeEach");
+	}
+	
+	@Override
+	public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+		logExceptionInfo(context, throwable, "@Test");
+	}
+	
+	@Override
+	public void handleAfterEachMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+		logExceptionInfo(context, throwable, "@AfterEach");
+	}
+	
+	@Override
+	public void handleAfterAllMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+		try {
+			logExceptionInfo(context, throwable, "@AfterAll");
+		} catch (Throwable e) {
+			if (DONT_CONSUME_EXCEPTION_IN_AFTERALL)
+				throw throwable;
+		}
+	}
+	
+	private void logExceptionInfo(ExtensionContext context, Throwable throwable, String annotationName) throws Throwable {
+		String className = context.getRequiredTestClass()
+				.getName();
+		String testName = context.getDisplayName();
+		BFLogger.logError("\"" + className + "#" + testName + "\"" + " - EXCEPTION in " + annotationName + ": " + throwable.getMessage());
+		throw throwable;
 	}
 	
 	@Override
@@ -182,10 +227,9 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 					return true;
 				}
 			} catch (SecurityException | ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				BFLogger.logDebug(e.getMessage());
 			} catch (NoSuchMethodException e) {
-				continue;
+				// do nothing
 			}
 		}
 		
@@ -196,11 +240,13 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	public void removeObserver(ITestObserver observer) {
 		BFLogger.logDebug("To remove observer: " + observer.toString());
 		
-		if (isAddedFromBeforeAllMethod()) {
+		if (classObservers.get()
+				.contains(observer)) {
 			classObservers.get()
 					.remove(observer);
 			BFLogger.logDebug("Removed observer: " + observer.toString());
 		} else {
+			// There must be at least one observer when finishing class
 			if (!classObservers.get()
 					.isEmpty()) {
 				observers.get()

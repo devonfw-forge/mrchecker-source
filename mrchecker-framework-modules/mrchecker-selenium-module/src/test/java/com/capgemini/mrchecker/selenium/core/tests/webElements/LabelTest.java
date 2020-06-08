@@ -1,9 +1,8 @@
 package com.capgemini.mrchecker.selenium.core.tests.webElements;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -21,9 +20,10 @@ public class LabelTest extends BaseTest {
 	
 	private static By text1Label = By.cssSelector("span.bcd");
 	
-	@AfterAll
-	public static void tearDownAll() {
-		
+	@Override
+	public void setUp() {
+		BasePage.getDriver()
+				.get(PageSubURLsEnum.TOOLS_QA.subURL() + PageSubURLsEnum.AUTOMATION_PRACTICE_FORM.subURL());
 	}
 	
 	@Test
@@ -42,17 +42,5 @@ public class LabelTest extends BaseTest {
 		assertEquals("bcd", BasePage.getDriver()
 				.elementLabel(LabelTest.text1Label)
 				.getClassName());
-	}
-	
-	@Override
-	public void setUp() {
-		BasePage.getDriver()
-				.get(PageSubURLsEnum.TOOLS_QA.subURL() + PageSubURLsEnum.AUTOMATION_PRACTICE_FORM.subURL());
-		return;
-	}
-	
-	@Override
-	public void tearDown() {
-		// TODO Auto-generated method stub
 	}
 }

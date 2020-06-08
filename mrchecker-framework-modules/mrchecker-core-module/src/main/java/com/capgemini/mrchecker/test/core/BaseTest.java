@@ -14,11 +14,9 @@ import com.capgemini.mrchecker.test.core.base.runtime.RuntimeParametersCore;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.google.inject.Guice;
 
-public abstract class BaseTest implements IBaseTest {
-	// TODO: to be deleted?
+public abstract class BaseTest {
 	private static PropertiesCoreTest propertiesCoreTest;
 	
-	// TODO: use guice to allow testing????
 	@RegisterExtension
 	@SuppressWarnings("unused")
 	public static final ITestExecutionObserver BASE_TEST_EXECUTION_OBSERVER = BaseTestExecutionObserver.getInstance();
@@ -27,8 +25,6 @@ public abstract class BaseTest implements IBaseTest {
 	private static IAnalytics			analytics;
 	
 	static {
-		// TODO: to be deleted?
-		// TODO: check what is selected when running submodules
 		setProperties();
 		setRuntimeParametersCore(propertiesCoreTest.getDefaultEnvironmentName());
 		setEnvironmentInstance(propertiesCoreTest.isEncryptionEnabled());
@@ -47,7 +43,6 @@ public abstract class BaseTest implements IBaseTest {
 		return analytics;
 	}
 	
-	// TODO: do be deleted
 	private static void setRuntimeParametersCore(String defaultEnvironmentName) {
 		RuntimeParametersCore.ENV.setDefaultValue(defaultEnvironmentName);
 		RuntimeParametersCore.ENV.refreshParameterValue();
@@ -62,7 +57,6 @@ public abstract class BaseTest implements IBaseTest {
 		 */
 		
 		// Get and then set properties information from settings.properties file
-		// TODO: do we need GUICE? it injects properties to PropertiesCoreTest.class
 		propertiesCoreTest = Guice.createInjector(PropertiesSettingsModule.init())
 				.getInstance(PropertiesCoreTest.class);
 	}
@@ -81,7 +75,13 @@ public abstract class BaseTest implements IBaseTest {
 	}
 	
 	private static void setAnalytics(Boolean isAnalyticsEnabled) {
-		BFLogger.logAnalytics("Is analytics enabled:" + isAnalyticsEnabled);
+		BFLogger.logAnalytics("Is analytics enabled: " + isAnalyticsEnabled);
 		analytics = isAnalyticsEnabled ? AnalyticsProvider.DISABLED : AnalyticsProvider.DISABLED;
+	}
+	
+	public void setUp() {
+	}
+	
+	public void tearDown() {
 	}
 }

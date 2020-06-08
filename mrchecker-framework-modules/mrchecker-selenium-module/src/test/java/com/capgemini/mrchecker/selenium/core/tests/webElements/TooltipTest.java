@@ -2,7 +2,6 @@ package com.capgemini.mrchecker.selenium.core.tests.webElements;
 
 import static org.junit.Assert.assertTrue;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -22,8 +21,10 @@ public class TooltipTest extends BaseTest {
 	private final static By	inputTextSelector		= By.cssSelector("input[id='age']");
 	TooltipElement			tooltipElement;
 	
-	@AfterAll
-	public static void tearDownAll() {
+	@Override
+	public void setUp() {
+		BasePage.getDriver()
+				.get(PageSubURLsEnum.WWW_FONT_URL.subURL() + PageSubURLsEnum.TOOLTIP.subURL());
 	}
 	
 	@Test
@@ -41,15 +42,5 @@ public class TooltipTest extends BaseTest {
 		
 		// check if tooltip text contains appropriate expression
 		assertTrue(this.tooltipElement.isTextContains("We ask for your age"));
-	}
-	
-	@Override
-	public void setUp() {
-		BasePage.getDriver()
-				.get(PageSubURLsEnum.WWW_FONT_URL.subURL() + PageSubURLsEnum.TOOLTIP.subURL());
-	}
-	
-	@Override
-	public void tearDown() {
 	}
 }

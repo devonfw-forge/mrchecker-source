@@ -15,7 +15,7 @@ import com.capgemini.mrchecker.test.core.base.runtime.RuntimeParametersCore;
 import com.capgemini.mrchecker.test.core.tags.UnitTest;
 
 @UnitTest
-@ResourceLock(value = "RuntimeParametersCoreTest.class")
+@ResourceLock(value = "SingleThread")
 public class RuntimeParametersCoreTest {
 	
 	private static final String	ENV_KEY					= "env";

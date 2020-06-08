@@ -3,17 +3,17 @@ package com.capgemini.mrchecker.security;
 import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.security.core.BasePage;
+import com.capgemini.mrchecker.test.core.utils.PageFactory;
 
 public class BasePageTest {
 	
 	@Test
 	public void test() {
-		MyPage myPage = new MyPage();
-		myPage.initialize();
+		MyPage myPage = PageFactory.getPageInstance(MyPage.class);
 		myPage.myMethod();
 	}
 	
-	private static class MyPage extends BasePage {
+	public static class MyPage extends BasePage {
 		
 		public String myMethod() {
 			return "Welcome";

@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
@@ -18,7 +19,7 @@ import com.capgemini.mrchecker.test.core.tags.UnitTest;
 import com.google.inject.Guice;
 
 @UnitTest
-@ResourceLock(value = "DataEncryptionService.class")
+@ResourceLock(value = "SingleThread")
 public class DataEncryptionModuleTest {
 	
 	public static final String NO_FILE_PATH = "no file path";
@@ -41,8 +42,14 @@ public class DataEncryptionModuleTest {
 	}
 	
 	@Test
-	public void shouldCreateThrowExceptionWhenWrongFile() {
+	public void shouldCreateThrowBFSecureModuleExceptionWhenWrongFile() {
 		assertThrows(BFSecureModuleException.class, () -> Guice.createInjector(new DataEncryptionModule(NO_FILE_PATH))
 				.getInstance(IDataEncryptionService.class));
+	}
+	
+	// TODO: implement that
+	@Disabled
+	public void shouldCreateThrowExceptionWhenFileCouldNotBeRead() {
+		
 	}
 }

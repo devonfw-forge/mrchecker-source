@@ -2,7 +2,6 @@ package com.capgemini.mrchecker.selenium.core.tests.webElements;
 
 import static org.junit.Assert.*;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -22,9 +21,12 @@ public class CheckBoxTest extends BaseTest {
 			.cssSelector("li.fields.pageFields_1:nth-child(3) div.radio_wrap");
 	CheckBox						checkBoxElement;
 	
-	@AfterAll
-	public static void tearDownAll() {
-		
+	@Override
+	public void setUp() {
+		BasePage.getDriver()
+				.get(PageSubURLsEnum.WWW_FONT_URL.subURL() + PageSubURLsEnum.REGISTRATION.subURL());
+		checkBoxElement = BasePage.getDriver()
+				.elementCheckbox(CheckBoxTest.hobbyCheckBoxSelector);
 	}
 	
 	@Test
@@ -66,15 +68,4 @@ public class CheckBoxTest extends BaseTest {
 		assertFalse(checkBoxElement.isAllCheckboxesSet());
 	}
 	
-	@Override
-	public void setUp() {
-		BasePage.getDriver()
-				.get(PageSubURLsEnum.WWW_FONT_URL.subURL() + PageSubURLsEnum.REGISTRATION.subURL());
-		this.checkBoxElement = BasePage.getDriver()
-				.elementCheckbox(CheckBoxTest.hobbyCheckBoxSelector);
-	}
-	
-	@Override
-	public void tearDown() {
-	}
 }

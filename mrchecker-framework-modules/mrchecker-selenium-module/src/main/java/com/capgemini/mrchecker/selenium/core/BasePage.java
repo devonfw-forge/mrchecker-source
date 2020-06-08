@@ -13,7 +13,9 @@ import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundExcepti
 import com.capgemini.mrchecker.selenium.core.newDrivers.DriverManager;
 import com.capgemini.mrchecker.selenium.core.newDrivers.INewWebDriver;
 import com.capgemini.mrchecker.selenium.core.utils.WindowUtils;
-import com.capgemini.mrchecker.test.core.*;
+import com.capgemini.mrchecker.test.core.BaseTest;
+import com.capgemini.mrchecker.test.core.ModuleType;
+import com.capgemini.mrchecker.test.core.Page;
 import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
@@ -22,7 +24,7 @@ import com.google.inject.Guice;
 
 import io.qameta.allure.Attachment;
 
-abstract public class BasePage implements IBasePage, ITestObserver {
+abstract public class BasePage extends Page implements IBasePage {
 	
 	// in seconds; this value should be used for very shot delay purpose e.g. to
 	// wait for JavaScript take effort on element
@@ -37,10 +39,6 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	private static DriverManager	driver	= null;
 	private static WebDriverWait	webDriverWait;
 	private BasePage				parent;
-	
-	private static final ITestExecutionObserver TEST_EXECUTION_OBSERVER = BaseTestExecutionObserver.getInstance();
-	
-	private boolean isInitialized = false;
 	
 	private static IEnvironmentService	environmentService;
 	private final static IAnalytics		ANALYTICS;
@@ -82,43 +80,15 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	}
 	
 	@Override
-	public final void initialize() {
-		TEST_EXECUTION_OBSERVER.addObserver(this);
-		isInitialized = true;
-	}
-	
-	@Override
-	public final boolean isInitialized() {
-		return isInitialized;
-	}
-	
-	@Override
 	public void onTestFailure() {
-		BFLogger.logDebug("BasePage.onTestFailure    " + getClass()
-				.getSimpleName());
+		super.onTestFailure();
 		makeScreenshotOnFailure();
 		makeSourcePageOnFailure();
 	}
 	
 	@Override
-	public void onTestSuccess() {
-		BFLogger.logDebug("BasePage.onTestSuccess    " + getClass()
-				.getSimpleName());
-	}
-	
-	@Override
-	public void onTestFinish() {
-		BFLogger.logDebug("BasePage.onTestFinish   " + getClass()
-				.getSimpleName());
-		
-		TEST_EXECUTION_OBSERVER.removeObserver(this);
-	}
-	
-	@Override
 	public void onTestClassFinish() {
-		BFLogger.logDebug("BasePage.onTestClassFinish   " + getClass()
-				.getSimpleName());
-		BFLogger.logDebug("driver:" + getDriver().toString());
+		super.onTestClassFinish();
 		DriverManager.closeDriver();
 	}
 	

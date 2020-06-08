@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -27,9 +26,12 @@ public class RadioButtonTest extends BaseTest {
 	private final static int			radioElementsCount		= 3;
 	private final static List<String>	possibleValues			= Arrays.asList("Single", "Married", "Divorced");
 	
-	@AfterAll
-	public static void tearDownAll() {
-		
+	@Override
+	public void setUp() {
+		BasePage.getDriver()
+				.get(PageSubURLsEnum.WWW_FONT_URL.subURL() + PageSubURLsEnum.REGISTRATION.subURL());
+		maritalStatusRadioButton = BasePage.getDriver()
+				.elementRadioButton(selectorMaritalStatus);
 	}
 	
 	@Test
@@ -68,19 +70,6 @@ public class RadioButtonTest extends BaseTest {
 		maritalStatusRadioButton.selectItemByIndex(2);
 		assertEquals(maritalStatusRadioButton.getSelectedItemIndex(), 2);
 		assertTrue(maritalStatusRadioButton.isItemSelectedByIndex(2));
-	}
-	
-	@Override
-	public void setUp() {
-		BasePage.getDriver()
-				.get(PageSubURLsEnum.WWW_FONT_URL.subURL() + PageSubURLsEnum.REGISTRATION.subURL());
-		this.maritalStatusRadioButton = BasePage.getDriver()
-				.elementRadioButton(selectorMaritalStatus);
-	}
-	
-	@Override
-	public void tearDown() {
-		// TODO Auto-generated method stub
 	}
 	
 }

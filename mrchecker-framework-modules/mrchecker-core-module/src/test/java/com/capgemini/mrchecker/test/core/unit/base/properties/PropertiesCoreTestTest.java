@@ -6,11 +6,13 @@ import static org.hamcrest.core.IsEqual.equalTo;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesCoreTest;
 import com.capgemini.mrchecker.test.core.tags.UnitTest;
 
 @UnitTest
+@ResourceLock(value = "SingleThread")
 public class PropertiesCoreTestTest {
 	public static final String	DEFAULT_ENV			= "DEV";
 	public static final boolean	DEFAULT_ANALYTICS	= true;
