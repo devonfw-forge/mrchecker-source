@@ -19,7 +19,7 @@ import com.google.inject.Guice;
 
 import io.qameta.allure.Attachment;
 
-abstract public class BasePage implements IPage, ITestObserver {
+abstract public class BasePage extends Page {
 	
 	private static DriverManager driver = null;
 	
@@ -55,44 +55,15 @@ abstract public class BasePage implements IPage, ITestObserver {
 	}
 	
 	@Override
-	public final void initialize() {
-		TEST_EXECUTION_OBSERVER.addObserver(this);
-		isInitialized = true;
-	}
-	
-	@Override
-	public final boolean isInitialized() {
-		return isInitialized;
-	}
-	
-	@Override
 	public void onTestFailure() {
-		BFLogger.logDebug("BasePage.onTestFailure    " + getClass()
-				.getSimpleName());
+		super.onTestFailure();
 		makeScreenshotOnFailure();
 		makeSourcePageOnFailure();
 	}
 	
 	@Override
-	public void onTestSuccess() {
-		// All actions needed while test method is success
-		BFLogger.logDebug("BasePage.onTestSuccess    " + getClass()
-				.getSimpleName());
-	}
-	
-	@Override
-	public void onTestFinish() {
-		// All actions needed while test class is finishing
-		BFLogger.logDebug("BasePage.onTestFinish   " + getClass()
-				.getSimpleName());
-		TEST_EXECUTION_OBSERVER.removeObserver(this);
-	}
-	
-	@Override
 	public void onTestClassFinish() {
-		BFLogger.logDebug("BasePage.onTestClassFinish   " + getClass()
-				.getSimpleName());
-		BFLogger.logDebug("driver:" + getDriver().toString());
+		super.onTestClassFinish();
 		DriverManager.closeDriver();
 	}
 	
@@ -149,5 +120,4 @@ abstract public class BasePage implements IPage, ITestObserver {
 		 */
 		
 	}
-	
 }

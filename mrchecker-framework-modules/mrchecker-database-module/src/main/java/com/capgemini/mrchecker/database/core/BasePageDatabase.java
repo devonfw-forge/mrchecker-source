@@ -15,7 +15,7 @@ import com.google.inject.Guice;
 
 import lombok.Getter;
 
-abstract public class BasePageDatabase implements IPage, ITestObserver, IDatabasePrefixHolder {
+abstract public class BasePageDatabase extends Page implements IDatabasePrefixHolder {
 	
 	private final static PropertiesFileSettings	PROPERTIES_FILE_SETTINGS;
 	private static IEnvironmentService			environmentService;
@@ -27,8 +27,6 @@ abstract public class BasePageDatabase implements IPage, ITestObserver, IDatabas
 	public final static String analyticsCategoryName = "Database-Module";
 	
 	private static final ITestExecutionObserver TEST_EXECUTION_OBSERVER = BaseTestExecutionObserver.getInstance();
-	
-	private boolean isInitialized = false;
 	
 	static {
 		// Get analytics instance created in BaseTest
@@ -48,47 +46,21 @@ abstract public class BasePageDatabase implements IPage, ITestObserver, IDatabas
 		assignEntityManager();
 	}
 	
-	@Override
-	public final void initialize() {
-		TEST_EXECUTION_OBSERVER.addObserver(this);
-		isInitialized = true;
-	}
-	
-	@Override
-	public final boolean isInitialized() {
-		return isInitialized;
-	}
-	
 	public static IAnalytics getANALYTICS() {
 		return ANALYTICS;
 	}
 	
 	@Override
 	public void onTestFailure() {
-		BFLogger.logDebug("BasePage.onTestFailure    " + getClass()
-				.getSimpleName());
+		super.onTestFailure();
 		closeSession();
-	}
-	
-	@Override
-	public void onTestSuccess() {
-		// All actions needed while test method is success
-		BFLogger.logDebug("BasePage.onTestSuccess    " + getClass()
-				.getSimpleName());
-	}
-	
-	@Override
-	public void onTestFinish() {
-		// All actions needed while test class is finishing
-		BFLogger.logDebug("BasePage.onTestFinish   " + getClass()
-				.getSimpleName());
-		TEST_EXECUTION_OBSERVER.removeObserver(this);
 	}
 	
 	@Override
 	public void onTestClassFinish() {
 		closeSession();
 		BFLogger.logDebug("Session for connection: [" + getDatabaseUnitName() + "] closed.");
+		super.onTestClassFinish();
 	}
 	
 	@Override
