@@ -36,7 +36,7 @@ public abstract class Page implements ITestObserver {
 	}
 	
 	@Override
-	public final void register() {
+	public final void addToTestExecutionObserver() {
 		TEST_EXECUTION_OBSERVER.addObserver(this);
 	}
 }

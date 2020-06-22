@@ -120,4 +120,27 @@ public class PageFactoryTest {
 		}
 	}
 	
+	@Test
+	public void shouldCreateChildPageByClassName() {
+		Page page = PageFactory.getPageInstance("com.capgemini.mrchecker.test.core.unit.utils.PageFactoryTest$ChildPage");
+		
+		assertThat(page, is(instanceOf(ChildPage.class)));
+	}
+	
+	@Test
+	public void shouldCreateChildPageByClassNameThrowException() {
+		assertThrows(BFInputDataException.class, () -> PageFactory.getPageInstance("com.capgemini.mrchecker.test.core.unit.utils.PageFactoryTest$NoSuchPage"));
+	}
+	
+	@Test
+	public void shouldCreateChildPageWithArgsByClassName() {
+		Page page = PageFactory.getPageInstance("com.capgemini.mrchecker.test.core.unit.utils.PageFactoryTest$ChildPageWithArgs", new Object(), 1);
+		
+		assertThat(page, is(instanceOf(ChildPageWithArgs.class)));
+	}
+	
+	@Test
+	public void shouldCreateChildPageWithArgsByClassNameThrowException() {
+		assertThrows(BFInputDataException.class, () -> PageFactory.getPageInstance("com.capgemini.mrchecker.test.core.unit.utils.PageFactoryTest$NoSuchPage", new Object(), 1));
+	}
 }

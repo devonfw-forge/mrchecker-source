@@ -41,6 +41,6 @@ public class PageTest {
 	
 	@Test
 	public void shouldRegister() {
-		SUT.register();
+		SUT.addToTestExecutionObserver();
 	}
 }

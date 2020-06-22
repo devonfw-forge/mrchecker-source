@@ -13,6 +13,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 import com.capgemini.mrchecker.test.core.BaseTest;
@@ -36,6 +38,8 @@ public class RunningTestsTest {
 	private static final boolean	CALLED		= true;
 	private static final boolean	NOT_CALLED	= false;
 	
+	public static final String CLASS_PREFIX = "com.capgemini.mrchecker.test.core.integration.RunningTestsTest$";
+	
 	@BeforeEach
 	public void setUp() {
 		isBaseTestSetupCalled = NOT_CALLED;
@@ -54,19 +58,26 @@ public class RunningTestsTest {
 		}
 	}
 	
-	@Test
-	public void shouldPassTestWithObserverAddedInTestMethod() {
+	@ParameterizedTest
+	@CsvFileSource(resources = "/datadriven/integration/running_tests.csv", numLinesToSkip = 1)
+	public void shouldRunTestBundle(String className,
+			int expectedOnTestSuccessCount,
+			int expectedOnTestFailureCount,
+			int expectedOnTestFinishCount,
+			int expectedOnTestClassFinishCount,
+			boolean expectedAreHooksCalled) throws ClassNotFoundException {
 		testObserver = mock(ITestObserver.class);
+		when(testObserver.getModuleType()).thenReturn(ModuleType.CORE);
 		
-		TestLauncher.launch(PassingTestWithObserverAddedInTestMethod.class);
+		TestLauncher.launch(CLASS_PREFIX + className);
 		
-		verify(testObserver, times(1)).onTestSuccess();
-		verify(testObserver, times(0)).onTestFailure();
-		verify(testObserver, times(1)).onTestFinish();
-		verify(testObserver, times(1)).onTestClassFinish();
+		verify(testObserver, times(expectedOnTestSuccessCount)).onTestSuccess();
+		verify(testObserver, times(expectedOnTestFailureCount)).onTestFailure();
+		verify(testObserver, times(expectedOnTestFinishCount)).onTestFinish();
+		verify(testObserver, times(expectedOnTestClassFinishCount)).onTestClassFinish();
 		
-		assertThat(isBaseTestSetupCalled, is(equalTo(CALLED)));
-		assertThat(isBaseTestTeardownCalled, is(equalTo(CALLED)));
+		assertThat(isBaseTestSetupCalled, is(equalTo(expectedAreHooksCalled)));
+		assertThat(isBaseTestTeardownCalled, is(equalTo(expectedAreHooksCalled)));
 	}
 	
 	@Feature("Running tests")
@@ -76,22 +87,6 @@ public class RunningTestsTest {
 		public void simpleTest() {
 			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 		}
-	}
-	
-	@Test
-	public void shouldPassTestWithObserverAddedTwiceInTestMethod() {
-		testObserver = mock(ITestObserver.class);
-		when(testObserver.getModuleType()).thenReturn(ModuleType.CORE);
-		
-		TestLauncher.launch(PassingTestWithObserverAddedTwiceInTestMethod.class);
-		
-		verify(testObserver, times(1)).onTestSuccess();
-		verify(testObserver, times(0)).onTestFailure();
-		verify(testObserver, times(1)).onTestFinish();
-		verify(testObserver, times(1)).onTestClassFinish();
-		
-		assertThat(isBaseTestSetupCalled, is(equalTo(CALLED)));
-		assertThat(isBaseTestTeardownCalled, is(equalTo(CALLED)));
 	}
 	
 	@Feature("Running tests")
@@ -137,18 +132,6 @@ public class RunningTestsTest {
 			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserverSecond);
 		}
-	}
-	
-	@Test
-	public void shouldPassTestWithObserverAddedInBeforeAll() {
-		testObserver = mock(ITestObserver.class);
-		
-		TestLauncher.launch(PassingTestWithObserverAddedInBeforeAll.class);
-		
-		verify(testObserver, times(1)).onTestSuccess();
-		verify(testObserver, times(0)).onTestFailure();
-		verify(testObserver, times(0)).onTestFinish();
-		verify(testObserver, times(1)).onTestClassFinish();
 	}
 	
 	@Feature("Running tests")
@@ -217,21 +200,6 @@ public class RunningTestsTest {
 		}
 	}
 	
-	@Test
-	public void shouldFailTestDueToFailingAssertion() {
-		testObserver = mock(ITestObserver.class);
-		
-		TestLauncher.launch(FailingTestDueToFailingAssertion.class);
-		
-		verify(testObserver, times(0)).onTestSuccess();
-		verify(testObserver, times(1)).onTestFailure();
-		verify(testObserver, times(0)).onTestFinish();
-		verify(testObserver, times(1)).onTestClassFinish();
-		
-		assertThat(isBaseTestSetupCalled, is(equalTo(CALLED)));
-		assertThat(isBaseTestTeardownCalled, is(equalTo(CALLED)));
-	}
-	
 	@Feature("Running tests")
 	@Muted
 	public static class FailingTestDueToFailingAssertion extends BaseTestWithHooks {
@@ -247,24 +215,9 @@ public class RunningTestsTest {
 		}
 	}
 	
-	@Test
-	public void shouldFailTestDueToExceptionInTestMethod() {
-		testObserver = mock(ITestObserver.class);
-		
-		TestLauncher.launch(TestDueToExceptionInTestMethod.class);
-		
-		verify(testObserver, times(0)).onTestSuccess();
-		verify(testObserver, times(1)).onTestFailure();
-		verify(testObserver, times(0)).onTestFinish();
-		verify(testObserver, times(1)).onTestClassFinish();
-		
-		assertThat(isBaseTestSetupCalled, is(equalTo(CALLED)));
-		assertThat(isBaseTestTeardownCalled, is(equalTo(CALLED)));
-	}
-	
 	@Feature("Running tests")
 	@Muted
-	public static class TestDueToExceptionInTestMethod extends BaseTestWithHooks {
+	public static class FailingTestDueToExceptionInTestMethod extends BaseTestWithHooks {
 		
 		@BeforeAll
 		public static void setUpClass() {
@@ -275,21 +228,6 @@ public class RunningTestsTest {
 		public void simpleTest() {
 			throw new RuntimeException();
 		}
-	}
-	
-	@Test
-	public void shouldFailTestDueToExceptionInBeforeAll() {
-		testObserver = mock(ITestObserver.class);
-		
-		TestLauncher.launch(FailingTestDueToExceptionInBeforeAll.class);
-		
-		verify(testObserver, times(0)).onTestSuccess();
-		verify(testObserver, times(0)).onTestFailure();
-		verify(testObserver, times(0)).onTestFinish();
-		verify(testObserver, times(1)).onTestClassFinish();
-		
-		assertThat(isBaseTestSetupCalled, is(equalTo(NOT_CALLED)));
-		assertThat(isBaseTestTeardownCalled, is(equalTo(NOT_CALLED)));
 	}
 	
 	@Feature("Running tests")
@@ -305,21 +243,6 @@ public class RunningTestsTest {
 		@Test
 		public void simpleTest() {
 		}
-	}
-	
-	@Test
-	public void shouldFailTestDueToExceptionInBeforeEach() {
-		testObserver = mock(ITestObserver.class);
-		
-		TestLauncher.launch(FailingTestDueToExceptionInBeforeEach.class);
-		
-		verify(testObserver, times(0)).onTestSuccess();
-		verify(testObserver, times(1)).onTestFailure();
-		verify(testObserver, times(0)).onTestFinish();
-		verify(testObserver, times(1)).onTestClassFinish();
-		
-		assertThat(isBaseTestSetupCalled, is(equalTo(NOT_CALLED)));
-		assertThat(isBaseTestTeardownCalled, is(equalTo(NOT_CALLED)));
 	}
 	
 	@Feature("Running tests")
@@ -341,21 +264,6 @@ public class RunningTestsTest {
 		}
 	}
 	
-	@Test
-	public void shouldFailTestThatPassedExecutionDueToExceptionInAfterEach() {
-		testObserver = mock(ITestObserver.class);
-		
-		TestLauncher.launch(FailingTestThatPassedExecutionDueToExceptionInAfterEach.class);
-		
-		verify(testObserver, times(0)).onTestSuccess();
-		verify(testObserver, times(1)).onTestFailure();
-		verify(testObserver, times(0)).onTestFinish();
-		verify(testObserver, times(1)).onTestClassFinish();
-		
-		assertThat(isBaseTestSetupCalled, is(equalTo(CALLED)));
-		assertThat(isBaseTestTeardownCalled, is(equalTo(CALLED)));
-	}
-	
 	@Feature("Running tests")
 	@Muted
 	public static class FailingTestThatPassedExecutionDueToExceptionInAfterEach extends BaseTestWithHooks {
@@ -373,21 +281,6 @@ public class RunningTestsTest {
 		@Test
 		public void simpleTest() {
 		}
-	}
-	
-	@Test
-	public void shouldFailTestThatFailedExecutionDueToExceptionInAfterEach() {
-		testObserver = mock(ITestObserver.class);
-		
-		TestLauncher.launch(FailingTestThatFailedExecutionDueToExceptionInAfterEach.class);
-		
-		verify(testObserver, times(0)).onTestSuccess();
-		verify(testObserver, times(1)).onTestFailure();
-		verify(testObserver, times(0)).onTestFinish();
-		verify(testObserver, times(1)).onTestClassFinish();
-		
-		assertThat(isBaseTestSetupCalled, is(equalTo(CALLED)));
-		assertThat(isBaseTestTeardownCalled, is(equalTo(CALLED)));
 	}
 	
 	@Feature("Running tests")
@@ -410,21 +303,6 @@ public class RunningTestsTest {
 		}
 	}
 	
-	@Test
-	public void shouldFailTestThatPassedExecutionDueToExceptionInAfterAll() {
-		testObserver = mock(ITestObserver.class);
-		
-		TestLauncher.launch(FailingTestThatPassedExecutionDueToExceptionInAfterAll.class);
-		
-		verify(testObserver, times(1)).onTestSuccess();
-		verify(testObserver, times(0)).onTestFailure();
-		verify(testObserver, times(0)).onTestFinish();
-		verify(testObserver, times(1)).onTestClassFinish();
-		
-		assertThat(isBaseTestSetupCalled, is(equalTo(CALLED)));
-		assertThat(isBaseTestTeardownCalled, is(equalTo(CALLED)));
-	}
-	
 	@Feature("Running tests")
 	@Muted
 	public static class FailingTestThatPassedExecutionDueToExceptionInAfterAll extends BaseTestWithHooks {
@@ -442,21 +320,6 @@ public class RunningTestsTest {
 		@Test
 		public void simpleTest() {
 		}
-	}
-	
-	@Test
-	public void shouldFailTestThatFailedExecutionDueToExceptionInAfterAll() {
-		testObserver = mock(ITestObserver.class);
-		
-		TestLauncher.launch(FailingTestThatFailedExecutionDueToExceptionInAfterAll.class);
-		
-		verify(testObserver, times(0)).onTestSuccess();
-		verify(testObserver, times(1)).onTestFailure();
-		verify(testObserver, times(0)).onTestFinish();
-		verify(testObserver, times(1)).onTestClassFinish();
-		
-		assertThat(isBaseTestSetupCalled, is(equalTo(CALLED)));
-		assertThat(isBaseTestTeardownCalled, is(equalTo(CALLED)));
 	}
 	
 	@Feature("Running tests")
@@ -479,21 +342,6 @@ public class RunningTestsTest {
 		}
 	}
 	
-	@Test
-	public void shouldDisableTestWithObserverAddedInTestMethod() {
-		testObserver = mock(ITestObserver.class);
-		
-		TestLauncher.launch(DisabledTestWithObserverAddedInTestMethod.class);
-		
-		verify(testObserver, times(0)).onTestSuccess();
-		verify(testObserver, times(0)).onTestFailure();
-		verify(testObserver, times(0)).onTestFinish();
-		verify(testObserver, times(0)).onTestClassFinish();
-		
-		assertThat(isBaseTestSetupCalled, is(equalTo(NOT_CALLED)));
-		assertThat(isBaseTestTeardownCalled, is(equalTo(NOT_CALLED)));
-	}
-	
 	@Feature("Running tests")
 	@Muted
 	public static class DisabledTestWithObserverAddedInTestMethod extends BaseTestWithHooks {
@@ -503,21 +351,6 @@ public class RunningTestsTest {
 		public void simpleTest() {
 			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 		}
-	}
-	
-	@Test
-	public void shouldDisableTestWithObserverAddedInBeforeAll() {
-		testObserver = mock(ITestObserver.class);
-		
-		TestLauncher.launch(DisabledTestWithObserverAddedInBeforeAll.class);
-		
-		verify(testObserver, times(0)).onTestSuccess();
-		verify(testObserver, times(0)).onTestFailure();
-		verify(testObserver, times(0)).onTestFinish();
-		verify(testObserver, times(1)).onTestClassFinish();
-		
-		assertThat(isBaseTestSetupCalled, is(equalTo(NOT_CALLED)));
-		assertThat(isBaseTestTeardownCalled, is(equalTo(NOT_CALLED)));
 	}
 	
 	@Feature("Running tests")
@@ -536,21 +369,6 @@ public class RunningTestsTest {
 		}
 	}
 	
-	@Test
-	public void shouldAbortTestWithObserverAddedInTestMethod() {
-		testObserver = mock(ITestObserver.class);
-		
-		TestLauncher.launch(AbortTestWithObserverAddedInTestMethod.class);
-		
-		verify(testObserver, times(0)).onTestSuccess();
-		verify(testObserver, times(0)).onTestFailure();
-		verify(testObserver, times(1)).onTestFinish();
-		verify(testObserver, times(1)).onTestClassFinish();
-		
-		assertThat(isBaseTestSetupCalled, is(equalTo(CALLED)));
-		assertThat(isBaseTestTeardownCalled, is(equalTo(CALLED)));
-	}
-	
 	@Feature("Running tests")
 	@Muted
 	public static class AbortTestWithObserverAddedInTestMethod extends BaseTestWithHooks {
@@ -560,21 +378,6 @@ public class RunningTestsTest {
 			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 			assumeFalse(true, "For test purpose");
 		}
-	}
-	
-	@Test
-	public void shouldAbortTestWithObserverAddedInBeforeAll() {
-		testObserver = mock(ITestObserver.class);
-		
-		TestLauncher.launch(AbortTestWithObserverAddedInBeforeAll.class);
-		
-		verify(testObserver, times(0)).onTestSuccess();
-		verify(testObserver, times(0)).onTestFailure();
-		verify(testObserver, times(0)).onTestFinish();
-		verify(testObserver, times(1)).onTestClassFinish();
-		
-		assertThat(isBaseTestSetupCalled, is(equalTo(CALLED)));
-		assertThat(isBaseTestTeardownCalled, is(equalTo(CALLED)));
 	}
 	
 	@Feature("Running tests")

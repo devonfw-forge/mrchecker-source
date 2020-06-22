@@ -26,6 +26,11 @@ public final class TestLauncher {
 		return launch(Collections.singletonList(testClass));
 	}
 	
+	public static TestExecutionSummary launch(String className) throws ClassNotFoundException {
+		
+		return launch((Class<? extends BaseTest>) Class.forName(className));
+	}
+	
 	public static TestExecutionSummary launch(List<Class<? extends BaseTest>> testClasses) {
 		SummaryGeneratingListener listener = new SummaryGeneratingListener();
 		
