@@ -10,7 +10,6 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.parallel.ResourceLock;
@@ -21,15 +20,12 @@ import com.capgemini.mrchecker.test.core.ModuleType;
 import com.capgemini.mrchecker.test.core.tags.UnitTest;
 import com.capgemini.mrchecker.test.core.utils.FileUtils;
 
-@Tag("one")
 @UnitTest
 @ResourceLock(value = "BaseTestExecutionObserver")
 public class BaseTestExecutionObserverTest {
 	private static final BaseTestExecutionObserver	SUT	= BaseTestExecutionObserver.getInstance();
 	private static final ExtensionContext			contextMock;
 	private static final ITestObserver				observerMock;
-	
-	public static String logFilePath = FileUtils.getLogFilePath();
 	
 	static {
 		contextMock = mock(ExtensionContext.class);
@@ -68,35 +64,35 @@ public class BaseTestExecutionObserverTest {
 	public void shouldCallBeforeAll() throws IOException {
 		SUT.beforeAll(contextMock);
 		
-		assertThat(FileUtils.getAllLinesInFile(logFilePath), containsString("- CLASS STARTED."));
+		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- CLASS STARTED."));
 	}
 	
 	@Test
 	public void shouldCallBeforeTestExecution() throws IOException {
 		SUT.beforeTestExecution(contextMock);
 		
-		assertThat(FileUtils.getAllLinesInFile(logFilePath), containsString("- STARTED."));
+		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- STARTED."));
 	}
 	
 	@Test
 	public void shouldCallAfterTestExecution() throws IOException {
 		SUT.afterTestExecution(contextMock);
 		
-		assertThat(FileUtils.getAllLinesInFile(logFilePath), containsString("- FINISHED."));
+		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- FINISHED."));
 	}
 	
 	@Test
 	public void shouldCallTestDisabled() throws IOException {
 		SUT.testDisabled(contextMock, Optional.of("Test_reason"));
 		
-		assertThat(FileUtils.getAllLinesInFile(logFilePath), containsString("- DISABLED."));
+		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- DISABLED."));
 	}
 	
 	@Test
 	public void shouldCallTestAborted() throws IOException {
 		SUT.testAborted(contextMock, new RuntimeException("Test_Exception"));
 		
-		assertThat(FileUtils.getAllLinesInFile(logFilePath), containsString("- ABORTED."));
+		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- ABORTED."));
 		verify(observerMock, times(1)).onTestFinish();
 	}
 	
@@ -104,7 +100,7 @@ public class BaseTestExecutionObserverTest {
 	public void shouldCallTestSuccessful() throws IOException {
 		SUT.testSuccessful(contextMock);
 		
-		assertThat(FileUtils.getAllLinesInFile(logFilePath), containsString("- PASSED."));
+		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- PASSED."));
 		verify(observerMock, times(1)).onTestSuccess();
 		verify(observerMock, times(1)).onTestFinish();
 	}
@@ -113,7 +109,7 @@ public class BaseTestExecutionObserverTest {
 	public void shouldCallTestFailed() throws IOException {
 		SUT.testFailed(contextMock, new RuntimeException("Test_Exception"));
 		
-		assertThat(FileUtils.getAllLinesInFile(logFilePath), containsString("- FAILED."));
+		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- FAILED."));
 		verify(observerMock, times(1)).onTestFailure();
 		verify(observerMock, times(1)).onTestFinish();
 	}
@@ -123,31 +119,31 @@ public class BaseTestExecutionObserverTest {
 		SUT.afterAll(contextMock);
 		
 		verify(observerMock, times(1)).onTestClassFinish();
-		assertThat(FileUtils.getAllLinesInFile(logFilePath), containsString("All observers cleared."));
+		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("All observers cleared."));
 	}
 	
 	@Test
 	public void shouldCallHandleBeforeAllMethodExecutionException() throws Throwable {
 		assertThrows(RuntimeException.class, () -> SUT.handleBeforeAllMethodExecutionException(contextMock, new RuntimeException()));
-		assertThat(FileUtils.getAllLinesInFile(logFilePath), containsString("- EXCEPTION in @BeforeAll:"));
+		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- EXCEPTION in @BeforeAll:"));
 	}
 	
 	@Test
 	public void shouldCallHandleBeforeEachMethodExecutionException() throws Throwable {
 		assertThrows(RuntimeException.class, () -> SUT.handleBeforeEachMethodExecutionException(contextMock, new RuntimeException()));
-		assertThat(FileUtils.getAllLinesInFile(logFilePath), containsString("- EXCEPTION in @BeforeEach:"));
+		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- EXCEPTION in @BeforeEach:"));
 	}
 	
 	@Test
 	public void shouldCallHandleTestExecutionException() throws Throwable {
 		assertThrows(RuntimeException.class, () -> SUT.handleTestExecutionException(contextMock, new RuntimeException()));
-		assertThat(FileUtils.getAllLinesInFile(logFilePath), containsString("- EXCEPTION in @Test:"));
+		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- EXCEPTION in @Test:"));
 	}
 	
 	@Test
 	public void shouldCallHandleAfterEachMethodExecutionException() throws Throwable {
 		assertThrows(RuntimeException.class, () -> SUT.handleAfterEachMethodExecutionException(contextMock, new RuntimeException()));
-		assertThat(FileUtils.getAllLinesInFile(logFilePath), containsString("- EXCEPTION in @AfterEach:"));
+		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- EXCEPTION in @AfterEach:"));
 	}
 	
 	@Test
@@ -157,7 +153,7 @@ public class BaseTestExecutionObserverTest {
 		} else {
 			SUT.handleAfterAllMethodExecutionException(contextMock, new RuntimeException());
 		}
-		assertThat(FileUtils.getAllLinesInFile(logFilePath), containsString("- EXCEPTION in @AfterAll:"));
+		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- EXCEPTION in @AfterAll:"));
 	}
 	
 	@Test

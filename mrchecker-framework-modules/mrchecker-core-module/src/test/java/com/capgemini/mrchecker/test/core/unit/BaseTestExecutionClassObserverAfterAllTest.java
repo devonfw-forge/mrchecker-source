@@ -29,7 +29,7 @@ public class BaseTestExecutionClassObserverAfterAllTest extends BaseTestExecutio
 		SUT.afterAll(contextMock);
 		
 		verify(observerMock, times(1)).onTestClassFinish();
-		assertThat(FileUtils.getAllLinesInFile(logFilePath), containsString("All observers cleared."));
+		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("All observers cleared."));
 		
 		SUT.testSuccessful(contextMock);
 		
