@@ -85,7 +85,7 @@ public class RunningTestsTest {
 	public static class PassingTestWithObserverAddedInTestMethod extends BaseTestWithHooks {
 		@Test
 		public void simpleTest() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 		}
 	}
 	
@@ -95,8 +95,8 @@ public class RunningTestsTest {
 		
 		@Test
 		public void simpleTest() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 		}
 	}
 	
@@ -129,8 +129,8 @@ public class RunningTestsTest {
 		
 		@Test
 		public void simpleTest() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserverSecond);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserverSecond);
 		}
 	}
 	
@@ -140,7 +140,7 @@ public class RunningTestsTest {
 		
 		@BeforeAll
 		public static void setUpClass() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 		}
 		
 		@Test
@@ -178,7 +178,7 @@ public class RunningTestsTest {
 		
 		@BeforeAll
 		public static void setUpClass() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 		}
 		
 		@Test
@@ -192,7 +192,7 @@ public class RunningTestsTest {
 		
 		@BeforeAll
 		public static void setUpClass() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserverSecond);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserverSecond);
 		}
 		
 		@Test
@@ -206,7 +206,7 @@ public class RunningTestsTest {
 		
 		@BeforeAll
 		public static void setUpClass() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 		}
 		
 		@Test
@@ -221,7 +221,7 @@ public class RunningTestsTest {
 		
 		@BeforeAll
 		public static void setUpClass() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 		}
 		
 		@Test
@@ -236,7 +236,7 @@ public class RunningTestsTest {
 		
 		@BeforeAll
 		public static void setUpClass() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 			throw new RuntimeException();
 		}
 		
@@ -251,7 +251,7 @@ public class RunningTestsTest {
 		
 		@BeforeAll
 		public static void setUpClass() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 		}
 		
 		@BeforeEach
@@ -270,7 +270,7 @@ public class RunningTestsTest {
 		
 		@BeforeAll
 		public static void setUpClass() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 		}
 		
 		@AfterEach
@@ -289,7 +289,7 @@ public class RunningTestsTest {
 		
 		@BeforeAll
 		public static void setUpClass() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 		}
 		
 		@AfterEach
@@ -309,7 +309,7 @@ public class RunningTestsTest {
 		
 		@BeforeAll
 		public static void setUpClass() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 		}
 		
 		@AfterAll
@@ -328,7 +328,7 @@ public class RunningTestsTest {
 		
 		@BeforeAll
 		public static void setUpClass() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 		}
 		
 		@AfterAll
@@ -349,7 +349,7 @@ public class RunningTestsTest {
 		@Disabled
 		@Test
 		public void simpleTest() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 		}
 	}
 	
@@ -359,7 +359,7 @@ public class RunningTestsTest {
 		
 		@BeforeAll
 		public static void setUpClass() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 		}
 		
 		@Disabled
@@ -375,7 +375,7 @@ public class RunningTestsTest {
 		
 		@Test
 		public void simpleTest() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 			assumeFalse(true, "For test purpose");
 		}
 	}
@@ -386,7 +386,7 @@ public class RunningTestsTest {
 		
 		@BeforeAll
 		public static void setUpClass() {
-			BASE_TEST_EXECUTION_OBSERVER.addObserver(testObserver);
+			TEST_EXECUTION_OBSERVER.addObserver(testObserver);
 		}
 		
 		@Test

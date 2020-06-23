@@ -14,22 +14,22 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
-import com.capgemini.mrchecker.test.core.BaseTestExecutionObserver;
 import com.capgemini.mrchecker.test.core.ITestObserver;
 import com.capgemini.mrchecker.test.core.ModuleType;
+import com.capgemini.mrchecker.test.core.TestExecutionObserver;
 import com.capgemini.mrchecker.test.core.tags.UnitTest;
 import com.capgemini.mrchecker.test.core.utils.FileUtils;
 
 @UnitTest
-@ResourceLock(value = "BaseTestExecutionObserver")
-public class BaseTestExecutionObserverTest {
-	private static final BaseTestExecutionObserver	SUT	= BaseTestExecutionObserver.getInstance();
-	private static final ExtensionContext			contextMock;
-	private static final ITestObserver				observerMock;
+@ResourceLock(value = "TestExecutionObserver")
+public class TestExecutionObserverTest {
+	private static final TestExecutionObserver	SUT	= TestExecutionObserver.getInstance();
+	private static final ExtensionContext		contextMock;
+	private static final ITestObserver			observerMock;
 	
 	static {
 		contextMock = mock(ExtensionContext.class);
-		when(contextMock.getTestClass()).thenReturn(Optional.of(BaseTestExecutionObserverTest.class));
+		when(contextMock.getTestClass()).thenReturn(Optional.of(TestExecutionObserverTest.class));
 		when(contextMock.getRequiredTestClass()).thenCallRealMethod();
 		when(contextMock.getDisplayName()).thenReturn("Test_name");
 		
@@ -50,12 +50,12 @@ public class BaseTestExecutionObserverTest {
 	
 	@Test
 	public void shouldGetInstance() {
-		assertThat(BaseTestExecutionObserver.getInstance(), is(notNullValue()));
+		assertThat(TestExecutionObserver.getInstance(), is(notNullValue()));
 	}
 	
 	@Test
 	public void shouldGetInstanceTwice() {
-		BaseTestExecutionObserver secondRef = BaseTestExecutionObserver.getInstance();
+		TestExecutionObserver secondRef = TestExecutionObserver.getInstance();
 		
 		assertThat(secondRef, is(equalTo(SUT)));
 	}
@@ -148,7 +148,7 @@ public class BaseTestExecutionObserverTest {
 	
 	@Test
 	public void shouldCallHandleAfterAllMethodExecutionException() throws Throwable {
-		if (BaseTestExecutionObserver.DONT_CONSUME_EXCEPTION_IN_AFTERALL) {
+		if (TestExecutionObserver.DONT_CONSUME_EXCEPTION_IN_AFTERALL) {
 			assertThrows(RuntimeException.class, () -> SUT.handleAfterAllMethodExecutionException(contextMock, new RuntimeException()));
 		} else {
 			SUT.handleAfterAllMethodExecutionException(contextMock, new RuntimeException());

@@ -10,7 +10,9 @@ import com.capgemini.mrchecker.mobile.core.base.driver.DriverManager;
 import com.capgemini.mrchecker.mobile.core.base.driver.INewMobileDriver;
 import com.capgemini.mrchecker.mobile.core.base.properties.PropertiesFileSettings;
 import com.capgemini.mrchecker.mobile.core.base.runtime.RuntimeParameters;
-import com.capgemini.mrchecker.test.core.*;
+import com.capgemini.mrchecker.test.core.BaseTest;
+import com.capgemini.mrchecker.test.core.ModuleType;
+import com.capgemini.mrchecker.test.core.Page;
 import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
@@ -27,10 +29,6 @@ abstract public class BasePage extends Page {
 	private static IEnvironmentService			environmentService;
 	private final static IAnalytics				ANALYTICS;
 	public final static String					ANALYTICS_CATEGORY_NAME	= "Mobile";
-	
-	private static final ITestExecutionObserver TEST_EXECUTION_OBSERVER = BaseTestExecutionObserver.getInstance();
-	
-	private boolean isInitialized = false;
 	
 	static {
 		// Get analytics instance created in BaseTets

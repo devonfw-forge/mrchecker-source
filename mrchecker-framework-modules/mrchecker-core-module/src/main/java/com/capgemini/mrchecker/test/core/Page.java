@@ -4,7 +4,7 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 public abstract class Page implements ITestObserver {
 	
-	protected static final ITestExecutionObserver TEST_EXECUTION_OBSERVER = BaseTestExecutionObserver.getInstance();
+	protected static final ITestExecutionObserver TEST_EXECUTION_OBSERVER = TestExecutionObserver.getInstance();
 	
 	protected Page() {
 	}

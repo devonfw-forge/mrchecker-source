@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.test.core.utils.FileUtils;
 
-public class BaseTestExecutionClassObserverAfterAllTest extends BaseTestExecutionObserverBaseTest {
+public class TestExecutionClassObserverAfterAllTest extends TestExecutionObserverBaseTest {
 	
 	@BeforeAll
 	public static void setUpClass() {

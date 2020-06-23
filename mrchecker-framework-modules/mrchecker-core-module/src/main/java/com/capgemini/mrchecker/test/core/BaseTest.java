@@ -19,7 +19,7 @@ public abstract class BaseTest {
 	
 	@RegisterExtension
 	@SuppressWarnings("unused")
-	public static final ITestExecutionObserver BASE_TEST_EXECUTION_OBSERVER = BaseTestExecutionObserver.getInstance();
+	public static final ITestExecutionObserver TEST_EXECUTION_OBSERVER = TestExecutionObserver.getInstance();
 	
 	private static IEnvironmentService	environmentService;
 	private static IAnalytics			analytics;

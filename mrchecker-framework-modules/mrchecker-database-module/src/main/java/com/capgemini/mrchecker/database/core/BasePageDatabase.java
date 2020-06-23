@@ -6,7 +6,9 @@ import javax.persistence.EntityManager;
 
 import com.capgemini.mrchecker.database.core.base.properties.PropertiesFileSettings;
 import com.capgemini.mrchecker.database.core.base.runtime.RuntimeParameters;
-import com.capgemini.mrchecker.test.core.*;
+import com.capgemini.mrchecker.test.core.BaseTest;
+import com.capgemini.mrchecker.test.core.ModuleType;
+import com.capgemini.mrchecker.test.core.Page;
 import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
@@ -25,8 +27,6 @@ abstract public class BasePageDatabase extends Page implements IDatabasePrefixHo
 	protected EntityManager entityManager = null;
 	
 	public final static String analyticsCategoryName = "Database-Module";
-	
-	private static final ITestExecutionObserver TEST_EXECUTION_OBSERVER = BaseTestExecutionObserver.getInstance();
 	
 	static {
 		// Get analytics instance created in BaseTest

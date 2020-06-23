@@ -13,9 +13,9 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.capgemini.mrchecker.test.core.utils.Attachments;
 
-public class BaseTestExecutionObserver implements ITestExecutionObserver {
+public class TestExecutionObserver implements ITestExecutionObserver {
 	
-	private static BaseTestExecutionObserver instance;
+	private static TestExecutionObserver instance;
 	
 	private final ThreadLocal<Long> stopwatch = ThreadLocal.withInitial(() -> 0L);
 	
@@ -24,14 +24,14 @@ public class BaseTestExecutionObserver implements ITestExecutionObserver {
 	
 	public static final boolean DONT_CONSUME_EXCEPTION_IN_AFTERALL = false;
 	
-	private BaseTestExecutionObserver() {
+	private TestExecutionObserver() {
 	}
 	
-	public static BaseTestExecutionObserver getInstance() {
+	public static TestExecutionObserver getInstance() {
 		if (Objects.isNull(instance)) {
-			synchronized (BaseTestExecutionObserver.class) {
+			synchronized (TestExecutionObserver.class) {
 				if (Objects.isNull(instance)) {
-					instance = new BaseTestExecutionObserver();
+					instance = new TestExecutionObserver();
 				}
 			}
 		}

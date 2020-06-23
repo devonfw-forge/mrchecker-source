@@ -13,10 +13,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.capgemini.mrchecker.test.core.BaseTestExecutionObserver;
+import com.capgemini.mrchecker.test.core.TestExecutionObserver;
 import com.capgemini.mrchecker.test.core.utils.FileUtils;
 
-public class BaseTestExecutionClassObserverTest extends BaseTestExecutionObserverBaseTest {
+public class TestExecutionClassObserverTest extends TestExecutionObserverBaseTest {
 	
 	@BeforeAll
 	public static void setUpClass() {
@@ -35,12 +35,12 @@ public class BaseTestExecutionClassObserverTest extends BaseTestExecutionObserve
 	
 	@Test
 	public void shouldGetInstance() {
-		assertThat(BaseTestExecutionObserver.getInstance(), is(notNullValue()));
+		assertThat(TestExecutionObserver.getInstance(), is(notNullValue()));
 	}
 	
 	@Test
 	public void shouldGetInstanceTwice() {
-		BaseTestExecutionObserver secondRef = BaseTestExecutionObserver.getInstance();
+		TestExecutionObserver secondRef = TestExecutionObserver.getInstance();
 		
 		assertThat(secondRef, is(equalTo(SUT)));
 	}
@@ -125,7 +125,7 @@ public class BaseTestExecutionClassObserverTest extends BaseTestExecutionObserve
 	
 	@Test
 	public void shouldCallHandleAfterAllMethodExecutionException() throws Throwable {
-		if (BaseTestExecutionObserver.DONT_CONSUME_EXCEPTION_IN_AFTERALL) {
+		if (TestExecutionObserver.DONT_CONSUME_EXCEPTION_IN_AFTERALL) {
 			assertThrows(RuntimeException.class, () -> SUT.handleAfterAllMethodExecutionException(contextMock, new RuntimeException()));
 		} else {
 			SUT.handleAfterAllMethodExecutionException(contextMock, new RuntimeException());
