@@ -1,4 +1,4 @@
-package com.capgemini.mrchecker.webapi.unit.core.base.runtime;
+package com.capgemini.mrchecker.webapi.core.base.runtime;
 
 import org.apache.commons.lang.StringUtils;
 

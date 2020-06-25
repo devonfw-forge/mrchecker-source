@@ -1,4 +1,4 @@
-package com.capgemini.mrchecker.webapi.unit.core.utils;
+package com.capgemini.mrchecker.webapi.core.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

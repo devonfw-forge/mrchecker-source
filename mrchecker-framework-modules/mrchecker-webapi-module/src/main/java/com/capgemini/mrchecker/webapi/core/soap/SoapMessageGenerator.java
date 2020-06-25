@@ -1,4 +1,4 @@
-package com.capgemini.mrchecker.webapi.unit.core.soap;
+package com.capgemini.mrchecker.webapi.core.soap;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

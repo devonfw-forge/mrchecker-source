@@ -1,4 +1,4 @@
-package com.capgemini.mrchecker.webapi.unit.core.base.driver;
+package com.capgemini.mrchecker.webapi.core.base.driver;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;

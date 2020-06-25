@@ -1,4 +1,4 @@
-package com.capgemini.mrchecker.webapi.unit.core.base.driver;
+package com.capgemini.mrchecker.webapi.core.base.driver;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -16,8 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 import com.capgemini.mrchecker.test.core.BaseTest;
+import com.capgemini.mrchecker.webapi.core.base.runtime.RuntimeParameters;
 import com.capgemini.mrchecker.webapi.tags.UnitTest;
-import com.capgemini.mrchecker.webapi.unit.core.base.runtime.RuntimeParameters;
 import com.github.tomakehurst.wiremock.client.WireMock;
 
 @UnitTest

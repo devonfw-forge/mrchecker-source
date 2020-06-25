@@ -1,4 +1,4 @@
-package com.capgemini.mrchecker.webapi.unit.core.utils;
+package com.capgemini.mrchecker.webapi.core.utils;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;

@@ -1,4 +1,4 @@
-package com.capgemini.mrchecker.webapi.unit.core;
+package com.capgemini.mrchecker.webapi.core;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -17,10 +17,10 @@ import com.capgemini.mrchecker.test.core.Page;
 import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
-import com.capgemini.mrchecker.webapi.unit.core.base.driver.DriverManager;
-import com.capgemini.mrchecker.webapi.unit.core.base.properties.PropertiesFileSettings;
-import com.capgemini.mrchecker.webapi.unit.core.base.runtime.RuntimeParameters;
-import com.capgemini.mrchecker.webapi.unit.core.soap.SoapMessageGenerator;
+import com.capgemini.mrchecker.webapi.core.base.driver.DriverManager;
+import com.capgemini.mrchecker.webapi.core.base.properties.PropertiesFileSettings;
+import com.capgemini.mrchecker.webapi.core.base.runtime.RuntimeParameters;
+import com.capgemini.mrchecker.webapi.core.soap.SoapMessageGenerator;
 import com.google.inject.Guice;
 import com.jamesmurty.utils.XMLBuilder;
 

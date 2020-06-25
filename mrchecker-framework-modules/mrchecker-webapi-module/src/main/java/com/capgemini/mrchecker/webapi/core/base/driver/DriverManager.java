@@ -1,4 +1,4 @@
-package com.capgemini.mrchecker.webapi.unit.core.base.driver;
+package com.capgemini.mrchecker.webapi.core.base.driver;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static io.restassured.RestAssured.given;
@@ -8,8 +8,8 @@ import java.net.ServerSocket;
 import java.util.Objects;
 
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
-import com.capgemini.mrchecker.webapi.unit.core.base.properties.PropertiesFileSettings;
-import com.capgemini.mrchecker.webapi.unit.core.base.runtime.RuntimeParameters;
+import com.capgemini.mrchecker.webapi.core.base.properties.PropertiesFileSettings;
+import com.capgemini.mrchecker.webapi.core.base.runtime.RuntimeParameters;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.common.FatalStartupException;

@@ -5,8 +5,8 @@ import org.junit.jupiter.api.parallel.ResourceLock;
 
 import com.capgemini.mrchecker.test.core.BaseTest;
 import com.capgemini.mrchecker.test.core.utils.PageFactory;
+import com.capgemini.mrchecker.webapi.core.BasePageWebAPI;
 import com.capgemini.mrchecker.webapi.tags.UnitTest;
-import com.capgemini.mrchecker.webapi.unit.core.BasePageWebAPI;
 
 @UnitTest
 @ResourceLock("PropertiesFileSettings.class")

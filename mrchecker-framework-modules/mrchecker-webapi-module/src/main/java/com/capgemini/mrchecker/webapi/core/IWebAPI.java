@@ -1,4 +1,4 @@
-package com.capgemini.mrchecker.webapi.unit.core;
+package com.capgemini.mrchecker.webapi.core;
 
 public interface IWebAPI {
 	

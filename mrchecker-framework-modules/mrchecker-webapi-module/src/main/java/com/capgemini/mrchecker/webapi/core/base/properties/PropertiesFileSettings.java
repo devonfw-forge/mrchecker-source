@@ -1,4 +1,4 @@
-package com.capgemini.mrchecker.webapi.unit.core.base.properties;
+package com.capgemini.mrchecker.webapi.core.base.properties;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
