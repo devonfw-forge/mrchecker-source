@@ -8,13 +8,17 @@ import java.io.InputStream;
 import java.nio.file.Paths;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import com.capgemini.mrchecker.selenium.core.base.properties.PropertiesSelenium;
+import com.capgemini.mrchecker.selenium.tags.UnitTest;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
 import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+@UnitTest
+@ResourceLock(value = "SingleThread")
 public class PropertiesManagerTest {
 	
 	@BeforeAll

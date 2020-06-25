@@ -1,7 +1,8 @@
 package com.capgemini.mrchecker.mobile.core.base.exceptions;
 
-import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import org.openqa.selenium.WebDriverException;
+
+import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 public class BFAppiumServerNotConnectedException extends AssertionError {
 	

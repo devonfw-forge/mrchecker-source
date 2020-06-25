@@ -17,9 +17,13 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import com.capgemini.mrchecker.selenium.core.base.runtime.RuntimeParametersSelenium;
+import com.capgemini.mrchecker.selenium.tags.UnitTest;
 
+@UnitTest
+@ResourceLock(value = "SingleThread")
 public class RuntimeParametersTest {
 	
 	private static final Map<String, String> STARTUP_PARAMETERS_VALUES = new LinkedHashMap<String, String>() {
