@@ -40,11 +40,13 @@
 
 
     <modules>
-        <!--         <module>mrchecker-core-module</module>
+                <module>mrchecker-core-module</module>
                 <module>mrchecker-selenium-module</module>
                 <module>mrchecker-security-module</module>
                 <module>mrchecker-webapi-module</module>
-                <module>mrchecker-database-module</module> -->
+                <module>mrchecker-database-module</module>
+                <module>mrchecker-mobile-module</module>
+                <module>mrchecker-example-module</module>
         <!-- <module>build-tools</module> -->
     </modules>
 
@@ -90,6 +92,7 @@
         <joda-time.version>2.9.9</joda-time.version>
         <commons-csv.version>1.1</commons-csv.version>
         <JUnitParams.version>1.0.4</JUnitParams.version>
+        <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
 
         <!-- Dependency Injection -->
         <guice.version>4.1.0</guice.version>
@@ -279,6 +282,8 @@
                             <exclude>**/RawTest.*</exclude>
                             <exclude>**/OutboxDocumentTest.*</exclude>
                         </excludes>
+                        <testFailureIgnore>true</testFailureIgnore> <!-- we want our build proceed despite errors -->
+                        <!-- <argLine>@{argLine}</argLine> -->
                     </configuration>
                 </plugin>
 
@@ -295,8 +300,30 @@
                     <artifactId>maven-project-info-reports-plugin</artifactId>
                     <version>${maven-project-info-reports-plugin.version}</version>
                 </plugin>
-
-
+                <plugin>
+                  <groupId>org.jacoco</groupId>
+                  <artifactId>jacoco-maven-plugin</artifactId>
+                  <version>${jacoco-maven-plugin.version}</version>
+                  <executions>
+                      <execution>
+                          <id>prepare-tests</id>
+                          <goals>
+                              <goal>prepare-agent</goal>
+                          </goals>
+                          <configuration>
+                              <destFile>${project.build.directory}/jacoco.exec</destFile>
+                              <propertyName>surefireArgLine</propertyName>
+                          </configuration>
+                      </execution>
+                      <execution>
+                          <id>coverage-report</id>
+                          <phase>prepare-package</phase>
+                          <goals>
+                              <goal>report</goal>
+                          </goals>
+                      </execution>
+                  </executions>
+                </plugin>
             </plugins>
 
         </pluginManagement>
