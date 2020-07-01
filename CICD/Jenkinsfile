@@ -18,7 +18,7 @@ pipeline{
 				echo "Testing ${env.module}"
 				sh """
 				cd ${env.workspace}
-				mvn jacoco:prepare-agent verify --projects ${env.module}
+				mvn jacoco:prepare-agent verify --projects ${env.module} -DseleniumGrid=selenium-hub:4444/wd/hub
 				"""
 			}
 		}
