@@ -37,8 +37,8 @@ pipeline{
 				downstreamJob = downstreamJob.join('/')
 				try{
 					build job: downstreamJob, propagate: false, wait: false
-				}catch{
-					println("ERROR! Cannot start the downstream job with name ${downstreamJob}")
+				}catch(Exception e){
+					println("ERROR! Cannot start the downstream job with name ${downstreamJob}. ${e}")
 				}
 			}
 		}
