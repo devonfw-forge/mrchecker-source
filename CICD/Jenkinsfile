@@ -26,7 +26,7 @@ pipeline{
 	post{
 		always{
 			archiveArtifacts artifacts: "${env.workspace}/${env.module}/target/*.jar", fingerprint: true
-			allure includeProperties: false, jdk: '', report: 'target/allure-report', results: [[path: 'target/allure-results']]
+			allure includeProperties: false, jdk: '', report: "${env.workspace}/${env.module}/target/allure-report", results: [[path: '${env.workspace}/${env.module}/target/allure-results']]
 			jacoco()
 			junit testResults:'**/surefire-reports/*.xml', healthScaleFactor: 0.0 //as I set the junit treshold to 0%
 		}
