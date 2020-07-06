@@ -1,0 +1,63 @@
+env.module = "${JOB_NAME}".split('/')[1]
+env.workspace = "mrchecker-framework-modules"
+pipeline{
+    agent {docker {image 'mrchecker/mrchecker:v1.1.3'}}
+    stages{
+        stage('Check code formatting'){
+            steps{
+              script{
+                sh """
+                cd ${env.workspace}
+                mvn formatter:validate --projects ${env.module}
+                """
+              }
+            }
+        }
+        stage('Check merge conflicts'){
+          when{
+            !branch 'develop' and !branch 'master'
+          }
+          steps{
+            script{
+              sh"""
+              cd ${env.workspace}
+              git format-patch develop --stdout | git-apply --check
+              """
+            }
+          }
+        }
+        stage('Deploy code to local repo'){
+          when{
+            branch 'develop' and branch 'master'
+          }
+          steps{
+            script{
+              sh"""
+              cd ${env.workspace}
+              mvn install
+              """
+            }
+          }
+        }
+        stage('Deploy code to remote repo'){
+          when{
+            branch 'develop' and branch 'master'
+            //some additional switch or user input
+          }
+          steps{
+            script{
+                withCredentials([
+                  usernamePassword(credentialsId: 'ossrh', passwordVariable: 'MAVEN_PASSWORD', usernameVariable: 'MAVEN_USER'),
+                  string(credentialsId: 'GPG_PASSWORD', variable: 'GPG_PASSWORD'), zip(credentialsId: 'gpg_sign_mrchecker', variable: 'GPG_HOMEDIR')
+                ]){
+                  //what with version number
+                  sh"""
+                  cd ${env.workspace}
+                  mvn -P release deploy
+                  """
+                }
+            }
+          }
+        }
+    }
+}
