@@ -24,7 +24,6 @@ public class BFLoggerInstance {
 	private static final String	logPattern	= "%d{yyyy-MM-dd 'at' HH:mm:ss z} %M - %m%x%n";
 	private static final Level	loggerLevel	= Level.DEBUG;
 	
-	private File	directory;
 	private File	logFile;
 	private String	appenderName;
 	private Logger	logger;
@@ -114,11 +113,9 @@ public class BFLoggerInstance {
 	}
 	
 	private File getDirectory() {
-		if (directory == null) {
-			directory = new File("./logs");
-			if (!directory.exists()) {
-				directory.mkdir();
-			}
+		File directory = new File("./logs");
+		if (!directory.exists()) {
+			directory.mkdir();
 		}
 		return directory;
 	}

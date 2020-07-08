@@ -124,34 +124,34 @@ public class TestExecutionObserverTest {
 	
 	@Test
 	public void shouldCallHandleBeforeAllMethodExecutionException() throws Throwable {
-		assertThrows(RuntimeException.class, () -> SUT.handleBeforeAllMethodExecutionException(contextMock, new RuntimeException()));
+		assertThrows(RuntimeException.class, () -> SUT.handleBeforeAllMethodExecutionException(contextMock, new RuntimeException("Test purpose exception")));
 		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- EXCEPTION in @BeforeAll:"));
 	}
 	
 	@Test
 	public void shouldCallHandleBeforeEachMethodExecutionException() throws Throwable {
-		assertThrows(RuntimeException.class, () -> SUT.handleBeforeEachMethodExecutionException(contextMock, new RuntimeException()));
+		assertThrows(RuntimeException.class, () -> SUT.handleBeforeEachMethodExecutionException(contextMock, new RuntimeException("Test purpose exception")));
 		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- EXCEPTION in @BeforeEach:"));
 	}
 	
 	@Test
 	public void shouldCallHandleTestExecutionException() throws Throwable {
-		assertThrows(RuntimeException.class, () -> SUT.handleTestExecutionException(contextMock, new RuntimeException()));
+		assertThrows(RuntimeException.class, () -> SUT.handleTestExecutionException(contextMock, new RuntimeException("Test purpose exception")));
 		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- EXCEPTION in @Test:"));
 	}
 	
 	@Test
 	public void shouldCallHandleAfterEachMethodExecutionException() throws Throwable {
-		assertThrows(RuntimeException.class, () -> SUT.handleAfterEachMethodExecutionException(contextMock, new RuntimeException()));
+		assertThrows(RuntimeException.class, () -> SUT.handleAfterEachMethodExecutionException(contextMock, new RuntimeException("Test purpose exception")));
 		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- EXCEPTION in @AfterEach:"));
 	}
 	
 	@Test
 	public void shouldCallHandleAfterAllMethodExecutionException() throws Throwable {
 		if (TestExecutionObserver.DONT_CONSUME_EXCEPTION_IN_AFTERALL) {
-			assertThrows(RuntimeException.class, () -> SUT.handleAfterAllMethodExecutionException(contextMock, new RuntimeException()));
+			assertThrows(RuntimeException.class, () -> SUT.handleAfterAllMethodExecutionException(contextMock, new RuntimeException("Test purpose exception")));
 		} else {
-			SUT.handleAfterAllMethodExecutionException(contextMock, new RuntimeException());
+			SUT.handleAfterAllMethodExecutionException(contextMock, new RuntimeException("Test purpose exception"));
 		}
 		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- EXCEPTION in @AfterAll:"));
 	}

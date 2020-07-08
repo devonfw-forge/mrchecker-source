@@ -12,7 +12,6 @@ import java.io.*;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
@@ -94,10 +93,5 @@ public class JsonReaderTest {
 	@Test
 	public void shouldReadFileThrowBFInputDataExceptionWhenNoFile() {
 		assertThrows(BFInputDataException.class, () -> JsonReader.readJson(new File(NO_SUCH_FILE)));
-	}
-	
-	@Test
-	@Disabled
-	public void shouldReadFileThrowBFInputDataExceptionWhenFileCouldNotBeRead() {
 	}
 }

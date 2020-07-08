@@ -11,7 +11,6 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
@@ -21,6 +20,7 @@ import com.capgemini.mrchecker.test.core.base.environment.providers.SpreadsheetE
 import com.capgemini.mrchecker.test.core.base.runtime.RuntimeParametersCore;
 import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
 import com.capgemini.mrchecker.test.core.tags.UnitTest;
+import com.capgemini.mrchecker.test.core.utils.ConcurrencyUtils;
 
 @UnitTest
 @ResourceLock(value = "SingleThread")
@@ -50,12 +50,6 @@ public class SpreadsheetEnvironmentServiceTest {
 		}
 	}
 	
-	// TODO: how to get string that cannot be parsed
-	public static final String UNPARSABLE_CSV_DATA = "\t,DEV," + TEST_ENV + "\n" +
-			"Key_1,DEV_Value1," + TEST_ENV + "_Value1\n" +
-			"Key_2,DEV_Value2," + TEST_ENV + "_Value2\n";
-	
-	// TODO: is it always true?
 	public static final String	DEFAULT_ENV_WHEN_NO_ENVIRONMENT_SERVICE_SET	= "DEV";
 	public static final String	DECRYPTED_VALUE_FROM_MOCK					= "DECRYPTED_VALUE";
 	public static final String	NO_SUCH_KEY									= "NO_SUCH_KEY";
@@ -103,16 +97,9 @@ public class SpreadsheetEnvironmentServiceTest {
 	}
 	
 	@Test
-	@Disabled
-	public void shouldInitMultiThread() {
-		// TODO: implement multi thread check
-	}
-	
-	// TODO: implement that
-	@Disabled
-	@Test
-	public void shouldInitThrowExceptionWhenUnparsableInput() {
-		assertThrows(BFInputDataException.class, () -> initAndGetSut(UNPARSABLE_CSV_DATA, TEST_ENV));
+	public void shouldInitMultithreaded() throws InterruptedException {
+		ConcurrencyUtils.getInstancesConcurrently(SpreadsheetEnvironmentServiceTest::initAndGetSut)
+				.forEach(s -> assertThat(s, is(equalTo(getSut()))));
 	}
 	
 	@Test

@@ -30,15 +30,15 @@ public class RuntimeParametersCoreTest {
 	
 	@BeforeEach
 	public void setUp() {
-		cleanUp();
+		cleanUpSystemProperties();
 	}
 	
 	@AfterAll
 	public static void tearDownClass() {
-		cleanUp();
+		cleanUpSystemProperties();
 	}
 	
-	private static void cleanUp() {
+	private static void cleanUpSystemProperties() {
 		System.clearProperty(ENV_KEY);
 		sut.setDefaultValue(ENV_DEFAULT_VALUE);
 		sut.refreshParameterValue();
@@ -70,7 +70,7 @@ public class RuntimeParametersCoreTest {
 	}
 	
 	@ParameterizedTest
-	@ValueSource(strings = { STRING_EMPTY, STRING_NULL_STRING, })
+	@ValueSource(strings = { STRING_EMPTY, STRING_NULL_STRING })
 	public void shouldEnvGetValueReturnDefaultValueWhenSystemPropertyIsSetToInvalidValueAndValueRefreshed(String invalidValue) {
 		setEnvSystemProperty(invalidValue);
 		sut.refreshParameterValue();

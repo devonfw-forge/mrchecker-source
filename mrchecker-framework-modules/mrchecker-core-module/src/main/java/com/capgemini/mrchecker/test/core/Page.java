@@ -11,19 +11,19 @@ public abstract class Page implements ITestObserver {
 	
 	@Override
 	public void onTestSuccess() {
-		BFLogger.logDebug("BasePage.onTestSuccess    " + getClass()
+		BFLogger.logDebug("Page.onTestSuccess    " + getClass()
 				.getSimpleName());
 	}
 	
 	@Override
 	public void onTestFailure() {
-		BFLogger.logDebug("BasePage.onTestFailure    " + getClass()
+		BFLogger.logDebug("Page.onTestFailure    " + getClass()
 				.getSimpleName());
 	}
 	
 	@Override
 	public void onTestFinish() {
-		BFLogger.logDebug("BasePage.onTestFinish   " + getClass()
+		BFLogger.logDebug("Page.onTestFinish    " + getClass()
 				.getSimpleName());
 		
 		TEST_EXECUTION_OBSERVER.removeObserver(this);
@@ -31,7 +31,7 @@ public abstract class Page implements ITestObserver {
 	
 	@Override
 	public void onTestClassFinish() {
-		BFLogger.logDebug("BasePage.onTestClassFinish   " + getClass()
+		BFLogger.logDebug("Page.onTestClassFinish    " + getClass()
 				.getSimpleName());
 	}
 	

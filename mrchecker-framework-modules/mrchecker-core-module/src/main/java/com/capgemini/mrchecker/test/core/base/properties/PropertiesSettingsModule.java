@@ -20,16 +20,17 @@ public class PropertiesSettingsModule extends AbstractModule {
 	private static final String DEFAULT_FILE_SOURCE_FILE_PATH = System.getProperty("user.dir") + Paths.get("/src/resources/settings.properties");
 	
 	private static PropertiesSettingsModule	instance;
-	private InputStream						propertiesSource;
+	private final ThreadLocal<InputStream>	propertiesSources	= new ThreadLocal<>();
 	
 	@Override
 	protected void configure() {
-		try (InputStream propertiesSource = this.propertiesSource) {
+		try (InputStream propertiesSource = propertiesSources.get()) {
 			Properties properties = new Properties();
 			properties.load(propertiesSource);
 			Names.bindProperties(binder(), properties);
 		} catch (IOException e) {
-			throw new BFInputDataException("Could not read from properties input source: " + propertiesSource.toString());
+			throw new BFInputDataException("Could not read from properties input source: " + propertiesSources.get()
+					.toString());
 		}
 	}
 	
@@ -51,8 +52,7 @@ public class PropertiesSettingsModule extends AbstractModule {
 			}
 		}
 		
-		// TODO check multithread
-		instance.propertiesSource = propertiesSource;
+		instance.propertiesSources.set(propertiesSource);
 		BFLogger.logDebug("Properties settings source=" + propertiesSource.toString());
 		
 		return instance;

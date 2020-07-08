@@ -3,7 +3,6 @@ package com.capgemini.mrchecker.test.core;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -15,7 +14,7 @@ import com.capgemini.mrchecker.test.core.utils.Attachments;
 
 public class TestExecutionObserver implements ITestExecutionObserver {
 	
-	private static TestExecutionObserver instance;
+	private static TestExecutionObserver instance = new TestExecutionObserver();
 	
 	private final ThreadLocal<Long> stopwatch = ThreadLocal.withInitial(() -> 0L);
 	
@@ -28,13 +27,6 @@ public class TestExecutionObserver implements ITestExecutionObserver {
 	}
 	
 	public static TestExecutionObserver getInstance() {
-		if (Objects.isNull(instance)) {
-			synchronized (TestExecutionObserver.class) {
-				if (Objects.isNull(instance)) {
-					instance = new TestExecutionObserver();
-				}
-			}
-		}
 		return instance;
 	}
 	

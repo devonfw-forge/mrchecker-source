@@ -38,11 +38,11 @@ public class SpreadsheetEnvironmentService implements IEnvironmentService {
 		setEnvironment(environmentName);
 	}
 	
-	public static void init(String path, String environment) {
+	public static void init(String csvData, String environment) {
 		if (Objects.isNull(instance)) {
 			synchronized (SpreadsheetEnvironmentService.class) {
 				if (Objects.isNull(instance)) {
-					instance = new SpreadsheetEnvironmentService(path, environment);
+					instance = new SpreadsheetEnvironmentService(csvData, environment);
 				}
 			}
 		}
@@ -65,7 +65,7 @@ public class SpreadsheetEnvironmentService implements IEnvironmentService {
 	 */
 	public void setEnvironment(String environmentName) {
 		this.environmentName = environmentName;
-		envColumnNumber = getEnvironmentNumber(this.environmentName);
+		envColumnNumber = getEnvironmentColumnNumber(this.environmentName);
 		updateServicesMapBasedOn();
 	}
 	
@@ -122,8 +122,7 @@ public class SpreadsheetEnvironmentService implements IEnvironmentService {
 		return value;
 	}
 	
-	// TODO: refactor that
-	private int getEnvironmentNumber(String environmentName) throws BFInputDataException {
+	private int getEnvironmentColumnNumber(String environmentName) throws BFInputDataException {
 		CSVRecord header = records.get(0);
 		for (int environmentNumber = 0; environmentNumber < header.size(); environmentNumber++) {
 			String environment = header.get(environmentNumber);

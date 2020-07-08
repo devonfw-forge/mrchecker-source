@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
@@ -28,7 +28,7 @@ public class EnvironmentModuleTest {
 		SpreadsheetEnvironmentService.delInstance();
 	}
 	
-	@After
+	@AfterEach
 	public void tearDown() {
 		SpreadsheetEnvironmentService.delInstance();
 	}
