@@ -34,7 +34,7 @@ pipeline{
             script{
               sh"""
               cd ${env.workspace}
-              #mvn install
+              #mvn install -DskipTests=true
               """
             }
           }
@@ -53,7 +53,7 @@ pipeline{
                   //what with version number
                   sh"""
                   cd ${env.workspace}
-                  #mvn -P release deploy
+                  #mvn -P release deploy -DskipTests=true
                   """
                 }
             }
