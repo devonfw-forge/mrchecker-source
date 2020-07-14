@@ -2,7 +2,12 @@ package com.capgemini.mrchecker.selenium.core.newDrivers;
 
 import static org.junit.Assert.assertTrue;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.selenium.core.base.properties.PropertiesSelenium;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;

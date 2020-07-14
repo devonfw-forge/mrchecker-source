@@ -7,7 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.Paths;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 import com.capgemini.mrchecker.selenium.core.base.properties.PropertiesSelenium;

@@ -1,6 +1,8 @@
 package com.capgemini.mrchecker.test.core.unit;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.clearInvocations;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

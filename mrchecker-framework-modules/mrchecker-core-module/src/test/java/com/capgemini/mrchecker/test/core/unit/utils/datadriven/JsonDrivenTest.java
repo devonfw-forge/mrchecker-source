@@ -4,7 +4,11 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.jupiter.api.AfterAll;

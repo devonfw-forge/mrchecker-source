@@ -1,13 +1,18 @@
 package com.capgemini.mrchecker.selenium.core.utils;
 
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.*;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebElement;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
 

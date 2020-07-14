@@ -6,7 +6,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -15,7 +20,20 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundException;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.*;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.Button;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.CheckBox;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.DropdownListElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.HorizontalSliderElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.IFrame;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.ImageElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.InputTextElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.LabelElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.ListElements;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.MenuElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.NavigationBarElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.RadioButtonElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.TabElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.TooltipElement;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 public class DriverExtension {

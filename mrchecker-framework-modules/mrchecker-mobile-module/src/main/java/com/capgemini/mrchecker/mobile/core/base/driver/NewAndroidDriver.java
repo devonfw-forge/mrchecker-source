@@ -7,10 +7,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import io.appium.java_client.android.AndroidDriver;
 
-// import com.capgemini.mrchecker.selenium.core.BasePage;
-// import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundException;
-// import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.*;
-
 public final class NewAndroidDriver extends AndroidDriver implements INewMobileDriver {
 	
 	public NewAndroidDriver(DesiredCapabilities capabilities) {

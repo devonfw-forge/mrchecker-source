@@ -11,7 +11,20 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundException;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.*;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.Button;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.CheckBox;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.DropdownListElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.HorizontalSliderElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.IFrame;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.ImageElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.InputTextElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.LabelElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.ListElements;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.MenuElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.NavigationBarElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.RadioButtonElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.TabElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.TooltipElement;
 
 public final class NewInternetExplorerDriver extends InternetExplorerDriver implements INewWebDriver {
 	
@@ -121,7 +134,8 @@ public final class NewInternetExplorerDriver extends InternetExplorerDriver impl
 	}
 	
 	/**
-	 * Try to find by dynamic List of elements - will wait {@link BasePage.EXPLICITYWAITTIMER} seconds for an element to
+	 * Try to find by dynamic List of elements - will wait {@link BasePage#EXPLICIT_WAIT_TIMER} seconds for an element
+	 * to
 	 * load on page. If element will not be found will throw an exception (PiAtElementNotLoadedException)
 	 * 
 	 * @param by
@@ -138,7 +152,7 @@ public final class NewInternetExplorerDriver extends InternetExplorerDriver impl
 	}
 	
 	/**
-	 * Waits {@link BasePage.EXPLICITYWAITTIMER} seconds until an element will be clickable. If element will not be
+	 * Waits {@link BasePage#EXPLICIT_WAIT_TIMER} seconds until an element will be clickable. If element will not be
 	 * clickable then throw an exception (BFElementNotFoundException)
 	 * 
 	 * @param selector

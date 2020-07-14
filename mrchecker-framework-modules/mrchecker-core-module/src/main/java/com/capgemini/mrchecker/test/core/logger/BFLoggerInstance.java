@@ -6,7 +6,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
-import org.apache.log4j.*;
+import org.apache.log4j.Appender;
+import org.apache.log4j.AsyncAppender;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;

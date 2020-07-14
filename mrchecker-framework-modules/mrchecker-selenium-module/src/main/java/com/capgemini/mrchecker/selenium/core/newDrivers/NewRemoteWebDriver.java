@@ -9,12 +9,29 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.*;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.ExecuteMethod;
+import org.openqa.selenium.remote.RemoteExecuteMethod;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.Response;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundException;
 import com.capgemini.mrchecker.selenium.core.exceptions.BFInitializationException;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.*;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.Button;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.CheckBox;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.DropdownListElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.HorizontalSliderElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.IFrame;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.ImageElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.InputTextElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.LabelElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.ListElements;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.MenuElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.NavigationBarElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.RadioButtonElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.TabElement;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.TooltipElement;
 
 public final class NewRemoteWebDriver extends RemoteWebDriver implements INewWebDriver {
 	
@@ -105,7 +122,7 @@ public final class NewRemoteWebDriver extends RemoteWebDriver implements INewWeb
 	 * 
 	 * @param by
 	 *            selector
-	 * @param timeout
+	 * @param timeOut
 	 *            - maximum time to wait for search WebElement
 	 * @return found WebElement object
 	 * @author
@@ -135,7 +152,7 @@ public final class NewRemoteWebDriver extends RemoteWebDriver implements INewWeb
 	 * 
 	 * @param by
 	 *            selector
-	 * @param timeout
+	 * @param timeOut
 	 *            - maximum time to wait for search WebElement
 	 * @return found WebElement object
 	 * @author
@@ -145,7 +162,8 @@ public final class NewRemoteWebDriver extends RemoteWebDriver implements INewWeb
 	}
 	
 	/**
-	 * Try to find by dynamic List of elements - will wait {@link BasePage.EXPLICITYWAITTIMER} seconds for an element to
+	 * Try to find by dynamic List of elements - will wait {@link BasePage#EXPLICIT_WAIT_TIMER} seconds for an element
+	 * to
 	 * load on page. If element will not be found will throw an exception (PiAtElementNotLoadedException)
 	 * 
 	 * @param by
@@ -166,7 +184,7 @@ public final class NewRemoteWebDriver extends RemoteWebDriver implements INewWeb
 	}
 	
 	/**
-	 * Waits {@link BasePage.EXPLICITYWAITTIMER} seconds until an element will be clickable. If element will not be
+	 * Waits {@link BasePage#EXPLICIT_WAIT_TIMER seconds until an element will be clickable. If element will not be
 	 * clickable then throw an exception (BFElementNotFoundException)
 	 * 
 	 * @param selector

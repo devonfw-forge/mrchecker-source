@@ -1,6 +1,6 @@
 package com.capgemini.mrchecker.selenium.core.exceptions;
 
-import java.awt.*;
+import java.awt.AWTException;
 import java.util.Arrays;
 
 public class BFRobotInitilizationException extends RuntimeException {

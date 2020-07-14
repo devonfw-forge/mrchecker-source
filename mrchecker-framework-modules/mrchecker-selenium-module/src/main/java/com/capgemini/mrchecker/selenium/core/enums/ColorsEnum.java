@@ -1,6 +1,6 @@
 package com.capgemini.mrchecker.selenium.core.enums;
 
-import java.awt.*;
+import java.awt.Color;
 
 public enum ColorsEnum {
 	

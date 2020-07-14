@@ -3,7 +3,13 @@ package com.capgemini.mrchecker.test.core.utils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -16,7 +22,7 @@ public class ConcurrencyUtils {
 	
 	public static <T> List<T> getInstancesConcurrently(Supplier<T> instanceSupplier) throws InterruptedException {
 		Collection<InstanceGetter<T>> tasks = new ArrayList<>();
-		InstanceGetter<T> instanceGetter = new InstanceGetter<T>(instanceSupplier);
+		InstanceGetter<T> instanceGetter = new InstanceGetter<>(instanceSupplier);
 		for (int i = 0; i < THREAD_COUNT; i++) {
 			tasks.add(instanceGetter);
 		}

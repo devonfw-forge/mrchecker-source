@@ -5,6 +5,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import org.junit.jupiter.api.Test;
@@ -36,5 +37,21 @@ public class BaseTestTest {
 		BaseTest.setEnvironmentService(envServiceMock);
 		
 		assertThat(BaseTest.getEnvironmentService(), is(equalTo(envServiceMock)));
+	}
+	
+	@Test
+	public void shouldCallSetUp() {
+		new BaseTest() {
+		}.setUp();
+		
+		assertTrue(true);
+	}
+	
+	@Test
+	public void shouldCallTearDown() {
+		new BaseTest() {
+		}.tearDown();
+		
+		assertTrue(true);
 	}
 }

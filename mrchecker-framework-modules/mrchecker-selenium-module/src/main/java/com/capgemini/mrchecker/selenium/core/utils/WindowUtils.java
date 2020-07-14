@@ -1,6 +1,7 @@
 package com.capgemini.mrchecker.selenium.core.utils;
 
-import java.awt.*;
+import java.awt.AWTException;
+import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.util.Set;
