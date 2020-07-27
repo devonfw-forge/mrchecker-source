@@ -180,12 +180,12 @@ public class JsoupHelper {
 		String selector = createStringSelector(elementToReturn);
 		
 		Elements rowListE = doc.body()
-						.select(selector);
+				.select(selector);
 		for (Element row : rowListE) {
 			String selectorOfElementTocheck = createStringSelector(elementToCheck);
 			String containsQuery = valueToCheck == null || valueToCheck.isEmpty()
-							? ""
-							: ":contains(" + valueToCheck + ")";
+					? ""
+					: ":contains(" + valueToCheck + ")";
 			Elements returnCandidates = row.select(selectorOfElementTocheck + containsQuery);
 			if (!returnCandidates.isEmpty())
 				result.add(row.cssSelector());
@@ -266,7 +266,7 @@ public class JsoupHelper {
 			By elementSelector = By.cssSelector(selector);
 			@SuppressWarnings("deprecation")
 			WebElement foundElement = BasePage.getDriver()
-							.findElement(elementSelector);
+					.findElement(elementSelector);
 			elementsToReturn.add(foundElement);
 		}
 		return elementsToReturn;
@@ -294,8 +294,7 @@ public class JsoupHelper {
 		} else if (isConversionToListRequired(innerHtml)) {
 			innerHtml = convertToList(innerHtml);
 		}
-		Document doc = Jsoup.parse("<html><body>" + innerHtml + "</body></html>");
-		return doc;
+		return Jsoup.parse("<html><body>" + innerHtml + "</body></html>");
 	}
 	
 	private static boolean isConversionToTableRequired(String innerHtml) {
@@ -312,46 +311,38 @@ public class JsoupHelper {
 	}
 	
 	private static String convertToTable(String innerHtml) {
-		innerHtml = "<table>" + innerHtml + "</table>";
-		return innerHtml;
+		return "<table>" + innerHtml + "</table>";
 	}
 	
 	private static boolean isConversionToListRequired(String innerHtml) {
 		if (innerHtml.contains("<ul") && innerHtml.contains("<ol")) {
 			return false;
 		} else {
-			if (innerHtml.contains("<li"))
-				return true;
+			return innerHtml.contains("<li");
 		}
-		return false;
 	}
 	
 	private static String convertToList(String innerHtml) {
-		innerHtml = "<ul>" + innerHtml + "</ul>";
-		return innerHtml;
+		return "<ul>" + innerHtml + "</ul>";
 	}
 	
 	private static Document initDocument() {
 		Document doc = Jsoup.parse(BasePage.getDriver()
-						.getPageSource());
+				.getPageSource());
 		return doc;
 	}
 	
 	private static String createStringSelector(By from) {
 		String selector = from.toString();
 		int substringBegin = from.toString()
-						.indexOf(":") + 2;
+				.indexOf(":") + 2;
 		selector = selector.substring(substringBegin);
 		selector = removeQuotes(selector);
 		return selector;
 	}
 	
 	private static String removeQuotes(String selector) {
-		String openingQuote = "=\\s*'";
-		String closingQuote = "'\\s*\\]";
-		selector = selector.replaceAll(openingQuote, "=");
-		selector = selector.replaceAll(closingQuote, "]");
-		return selector;
+		return selector.replaceAll("=\\s*'", "=")
+				.replaceAll("'\\s*]", "]");
 	}
-	
 }

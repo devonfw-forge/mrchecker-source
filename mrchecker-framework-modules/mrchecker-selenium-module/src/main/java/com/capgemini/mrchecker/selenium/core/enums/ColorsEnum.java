@@ -20,13 +20,13 @@ public enum ColorsEnum {
 	DARK_GREEN_BACKGROUND(33, 93, 49, 1),
 	YELLOW_COLUMN(255, 255, 0, 1);
 	
-	private String value;
-	private int r;
-	private int g;
-	private int b;
-	private int alpha;
+	private final String	value;
+	private final int		r;
+	private final int		g;
+	private final int		b;
+	private final int		alpha;
 	
-	private ColorsEnum(int r, int g, int b, int alpha) {
+	ColorsEnum(int r, int g, int b, int alpha) {
 		this.r = r;
 		this.g = g;
 		this.b = b;
@@ -48,6 +48,7 @@ public enum ColorsEnum {
 	
 	/**
 	 * @param css
+	 *            css
 	 * @return {@code ColorsEnum} constant for given CSS value
 	 */
 	public static ColorsEnum forCss(String css) {
@@ -62,7 +63,6 @@ public enum ColorsEnum {
 	
 	/**
 	 * @return Red value in color
-	 * @author
 	 */
 	public int getR() {
 		return r;
@@ -70,7 +70,6 @@ public enum ColorsEnum {
 	
 	/**
 	 * @return Green value in color
-	 * @author
 	 */
 	public int getG() {
 		return g;
@@ -78,7 +77,6 @@ public enum ColorsEnum {
 	
 	/**
 	 * @return Blue value in color
-	 * @author
 	 */
 	public int getB() {
 		return b;
@@ -86,7 +84,6 @@ public enum ColorsEnum {
 	
 	/**
 	 * @return Alpha value in color
-	 * @author
 	 */
 	public int getAlpha() {
 		return alpha;
@@ -94,7 +91,6 @@ public enum ColorsEnum {
 	
 	/**
 	 * @return {@link Color} for specified RGB values
-	 * @author
 	 */
 	public Color getColor() {
 		return new Color(r, g, b, alpha);

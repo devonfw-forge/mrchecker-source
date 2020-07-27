@@ -4,8 +4,6 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 /**
  * Time out exection for multi windows in browser to open
- * 
- * @author
  */
 public class BFWaittingForBrowserWindowsException extends RuntimeException {
 	

@@ -15,9 +15,9 @@ import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.CheckBox;
 import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.DropdownListElement;
 import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.HorizontalSliderElement;
 import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.IFrame;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.ImageElement;
 import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.InputTextElement;
 import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.LabelElement;
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.ImageElement;
 import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.ListElements;
 import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.MenuElement;
 import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.NavigationBarElement;
@@ -65,7 +65,9 @@ public interface INewWebDriver extends WebDriver {
 	 * e.g. PopUp
 	 * 
 	 * @param elementToSearchIn
+	 *            elementToSearchIn
 	 * @param searchedBySelector
+	 *            searchedBySelector
 	 * @return found WebElement or null if couldn't find
 	 */
 	WebElement findElementQuietly(WebElement elementToSearchIn, By searchedBySelector);
@@ -75,6 +77,7 @@ public interface INewWebDriver extends WebDriver {
 	 * e.g. PopUp
 	 * 
 	 * @param searchedBySelector
+	 *            searchedBySelector
 	 * @return found WebElement or null if couldn't find
 	 */
 	WebElement findElementQuietly(By searchedBySelector);
@@ -85,11 +88,11 @@ public interface INewWebDriver extends WebDriver {
 	 * 
 	 * @param by
 	 *            selector
-	 * @param timeout
+	 * @param timeOut
 	 *            - maximum time to wait for search WebElement
 	 * @return found WebElement object
-	 * @author
 	 * @throws BFElementNotFoundException
+	 *             BFElementNotFoundException BFElementNotFoundException
 	 */
 	WebElement findElementDynamic(By by, int timeOut) throws BFElementNotFoundException;
 	
@@ -100,8 +103,8 @@ public interface INewWebDriver extends WebDriver {
 	 * @param by
 	 *            selector
 	 * @return found WebElement object
-	 * @author
 	 * @throws BFElementNotFoundException
+	 *             BFElementNotFoundException BFElementNotFoundException
 	 */
 	WebElement findElementDynamic(By by) throws BFElementNotFoundException;
 	
@@ -111,47 +114,51 @@ public interface INewWebDriver extends WebDriver {
 	 * 
 	 * @param by
 	 *            selector
-	 * @param timeout
+	 * @param timeOut
 	 *            - maximum time to wait for search WebElement
 	 * @return found WebElement object
-	 * @author
 	 * @throws BFElementNotFoundException
+	 *             BFElementNotFoundException
 	 */
 	List<WebElement> findElementDynamics(By by, int timeOut);
 	
 	/**
-	 * Try to find by dynamic List of elements - will wait {@link BasePage.EXPLICITYWAITTIMER} seconds for an element to
+	 * Try to find by dynamic List of elements - will wait {@link BasePage#EXPLICIT_WAIT_TIMER} seconds for an element
+	 * to
 	 * load on page. If element will not be found then throw an exception (PiAtElementNotLoadedException)
 	 * 
 	 * @param by
 	 *            selector
 	 * @return found WebElement object
-	 * @author
 	 * @throws BFElementNotFoundException
+	 *             BFElementNotFoundException
 	 */
 	List<WebElement> findElementDynamics(By by);
 	
 	/**
-	 * Waits {@link BasePage.EXPLICITYWAITTIMER} seconds until an element will be enabled to action. If element after
+	 * Waits {@link {@link BasePage#EXPLICIT_WAIT_TIMER}} seconds until an element will be enabled to action. If element
+	 * after
 	 * this time will not be enabled then throw an exception (BFElementNotFoundException)
 	 * 
-	 * @param by
+	 * @param selector
 	 *            selector
 	 * @return WebElement object ready to click
-	 * @author
 	 * @throws BFElementNotFoundException
+	 *             BFElementNotFoundException
 	 */
 	WebElement waitForElement(final By selector);
 	
 	/**
-	 * Waits {@link BasePage.EXPLICITYWAITTIMER} seconds until an element will be clickable. If element will not be
+	 * Waits {@link {@link BasePage#EXPLICIT_WAIT_TIMER}} seconds until an element will be clickable. If element will
+	 * not be
 	 * clickable then throw an exception (BFElementNotFoundException)
 	 * 
-	 * @param by
+	 * @param selector
 	 *            selector
 	 * @return WebElement object ready to click
 	 * @author
 	 * @throws BFElementNotFoundException
+	 *             BFElementNotFoundException
 	 */
 	WebElement waitUntilElementIsClickable(final By selector);
 	
@@ -159,19 +166,19 @@ public interface INewWebDriver extends WebDriver {
 	 * Waits for element located by selector to become visible. Throws exception if element is not visible after
 	 * specified time period.
 	 * 
-	 * @param by
+	 * @param selector
 	 *            selector
 	 * @return found WebElement object
-	 * @author
 	 * @throws BFElementNotFoundException
+	 *             BFElementNotFoundException
 	 */
 	WebElement waitForElementVisible(final By selector);
 	
 	/**
 	 * This function force browser (especially usable for IE ) to wait till page is loaded
-	 * 
-	 * @param driver
+	 *
 	 * @throws BFElementNotFoundException
+	 *             BFElementNotFoundException
 	 */
 	void waitForPageLoaded();
 	
@@ -181,15 +188,15 @@ public interface INewWebDriver extends WebDriver {
 	Button elementButton(final By selector);
 	
 	/**
-	 * Operations on Radion Buttons
+	 * Operations on Radio Buttons
 	 */
 	RadioButtonElement elementRadioButton(final By selector);
 	
 	RadioButtonElement elementRadioButton(final By selector, final By inputChildsSelector);
 	
 	RadioButtonElement elementRadioButton(final By selector,
-					final By inputChildsSelector,
-					final List<String> listSelectedAttributes);
+			final By inputChildsSelector,
+			final List<String> listSelectedAttributes);
 	
 	/**
 	 * Operations on Input Text field
@@ -215,7 +222,7 @@ public interface INewWebDriver extends WebDriver {
 	 * Operations on Label
 	 */
 	LabelElement elementLabel(final By selector);
-
+	
 	/**
 	 * Operations on image
 	 */
@@ -252,18 +259,15 @@ public interface INewWebDriver extends WebDriver {
 	MenuElement elementMenu(final By selector, final By childsSelector, final By subMenuSelector);
 	
 	MenuElement elementMenu(final By selector,
-					final By childsSelector,
-					final By subMenuSelector,
-					final By childsSubMenuSelector);
-	
-	/**
-	 * Operations on Horizontal Slider
-	 */
+			final By childsSelector,
+			final By subMenuSelector,
+			final By childsSubMenuSelector);
 	
 	/**
 	 * Returns horizontal slider object for given container selector.
 	 * 
 	 * @param sliderContainerSelector
+	 *            sliderContainerSelector
 	 * @return HorizontalSliderElement
 	 * @see HorizontalSliderElement
 	 */
@@ -273,8 +277,11 @@ public interface INewWebDriver extends WebDriver {
 	 * Returns horizontal slider object for given container selector, slider selector and value selector.
 	 * 
 	 * @param sliderContainerSelector
+	 *            sliderContainerSelector
 	 * @param sliderSelector
+	 *            sliderSelector
 	 * @param valueSelector
+	 *            valueSelector
 	 * @return HorizontalSliderElement
 	 * @see HorizontalSliderElement
 	 */
@@ -285,20 +292,26 @@ public interface INewWebDriver extends WebDriver {
 	 * Also a range of possible steps and step's size should be defined to perform operations/
 	 * 
 	 * @param sliderContainerSelector
+	 *            sliderContainerSelector
 	 * @param sliderSelector
+	 *            sliderSelector
 	 * @param valueSelector
+	 *            valueSelector
 	 * @param minRange
+	 *            minRange
 	 * @param maxRange
+	 *            maxRange
 	 * @param step
+	 *            step
 	 * @return HorizontalSliderElement
 	 * @see HorizontalSliderElement
 	 */
 	HorizontalSliderElement elementHorizontalSlider(final By sliderContainerSelector,
-					final By sliderSelector,
-					final By valueSelector,
-					final BigDecimal minRange,
-					final BigDecimal maxRange,
-					final BigDecimal step);
+			final By sliderSelector,
+			final By valueSelector,
+			final BigDecimal minRange,
+			final BigDecimal maxRange,
+			final BigDecimal step);
 	
 	/**
 	 * Operations on iFrame
@@ -314,13 +327,14 @@ public interface INewWebDriver extends WebDriver {
 	 * Performs left mouse click on specific element
 	 * 
 	 * @param selector
+	 *            selector
 	 */
 	void mouseLeftClick(final By selector);
 	
 	/**
 	 * Performs left mouse click on specific element
 	 * 
-	 * @param web
+	 * @param element
 	 *            element
 	 */
 	void mouseLeftClick(WebElement element);

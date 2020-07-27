@@ -6,7 +6,7 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>2.4.2-SNAPSHOT</version>
+        <version>3.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>mrchecker-database-module</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -21,7 +21,8 @@
         Examples build on Hibernate as a JPA provider.
 
         IMPORTANT:
-        For easy of use Lombok library was used. In case of compilation issues please apply newest Lombok plugin for your IDE.
+        For easy of use Lombok library was used. In case of compilation issues please apply newest Lombok plugin for
+        your IDE.
     </description>
     <url>https://github.com/devonfw/devonfw-testing</url>
 
@@ -60,12 +61,10 @@
 
     <properties>
 
-        
-        <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
-	    <mrchecker-core-module.version>4.12.1.4-SNAPSHOT</mrchecker-core-module.version>
-        <jpa.version>2.2</jpa.version>
-        <jpa.version>2.2</jpa.version>
 
+        <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
+        <mrchecker-core-module.version>5.6.2.1-SNAPSHOT</mrchecker-core-module.version>
+        <jpa.version>2.2</jpa.version>
 
         <!-- Lib/package version settings -->
         <!-- <package.version>0.0.0</selenium.version> -->
@@ -108,11 +107,22 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--This dependency is necessary for Allure generator plugin. -->
+        <dependency>
+            <!-- Test listener. Binds Junit exec to Allure annotation -->
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-    <!-- Test listener. Binds Junit exec to Allure annotation -->
         <dependency>
             <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-junit4</artifactId>
+            <artifactId>allure-junit-platform</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-java-commons</artifactId>
         </dependency>
 
 

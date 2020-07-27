@@ -5,6 +5,7 @@ import static io.restassured.RestAssured.given;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Objects;
 
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.capgemini.mrchecker.webapi.core.base.properties.PropertiesFileSettings;
@@ -30,16 +31,14 @@ public class DriverManager {
 	
 	@Inject
 	public DriverManager(@Named("properties") PropertiesFileSettings propertiesFileSettings) {
-		
-		if (null == DriverManager.propertiesFileSettings) {
+		if (Objects.isNull(DriverManager.propertiesFileSettings)) {
 			DriverManager.propertiesFileSettings = propertiesFileSettings;
 		}
 		
-		this.start();
+		start();
 	}
 	
 	public void start() {
-		
 		if (DriverManager.propertiesFileSettings.isVirtualServerEnabled()) {
 			DriverManager.getDriverVirtualService();
 		}
@@ -51,19 +50,21 @@ public class DriverManager {
 			closeDriverVirtualServer();
 			BFLogger.logDebug("Closing Driver in stop()");
 		} catch (Exception e) {
+			// TODO: refactor that
 			e.printStackTrace();
 		}
 	}
 	
+	// TODO: refactor that
 	@Override
 	protected void finalize() throws Throwable {
 		super.finalize();
-		this.stop();
+		stop();
 	}
 	
 	public static void clearAllDrivers() {
-		driverVirtualizedService = new ThreadLocal<VirtualizedService>();
-//		driverVirtualizedService.remove();
+		driverVirtualizedService = new ThreadLocal<>();
+		// driverVirtualizedService.remove();
 	}
 	
 	public static WireMock getDriverVirtualService() {
@@ -89,7 +90,7 @@ public class DriverManager {
 		VirtualizedService virtualizedService = getVirtualizedService();
 		return virtualizedService.getHttpHost();
 	}
-
+	
 	public static String getEndpointBaseUri() {
 		VirtualizedService virtualizedService = getVirtualizedService();
 		return virtualizedService.getEndpointBaseUri();
@@ -97,7 +98,7 @@ public class DriverManager {
 	
 	private static VirtualizedService getVirtualizedService() {
 		VirtualizedService virtualizedService = driverVirtualizedService.get();
-		if (null == virtualizedService) {
+		if (Objects.isNull(virtualizedService)) {
 			virtualizedService = createDriverVirtualServer();
 			driverVirtualizedService.set(virtualizedService);
 		}
@@ -113,18 +114,18 @@ public class DriverManager {
 	public static void closeDriverVirtualServer() {
 		VirtualizedService virtualizedService = driverVirtualizedService.get();
 		
-		if (null != virtualizedService) {
+		if (!Objects.isNull(virtualizedService)) {
 			WireMock driver = virtualizedService.getDriver();
 			WireMockServer driverServer = virtualizedService.getDriverServer();
 			BFLogger.logDebug(
 					"Closing communication to Virualize Service under: " + driver.toString());
 			
 			try {
-				if (null != driver) {
+				if (!Objects.isNull(driver)) {
 					// driver.shutdown();
 				}
 				
-				if (null != driverServer) {
+				if (!Objects.isNull(driverServer)) {
 					driverServer.stop();
 				}
 				
@@ -195,7 +196,7 @@ public class DriverManager {
 			private int getPort() {
 				return RuntimeParameters.MOCK_HTTP_PORT.getValue()
 						.isEmpty()
-								? this.findFreePort()
+								? findFreePort()
 								: getInteger(RuntimeParameters.MOCK_HTTP_PORT.getValue());
 			}
 			
@@ -210,9 +211,7 @@ public class DriverManager {
 			 *             if unable to find a free port
 			 */
 			private int findFreePort() throws IllegalStateException {
-				ServerSocket socket = null;
-				try {
-					socket = new ServerSocket(0);
+				try (ServerSocket socket = new ServerSocket(0)) {
 					socket.setReuseAddress(true);
 					int port = socket.getLocalPort();
 					try {
@@ -222,14 +221,7 @@ public class DriverManager {
 					}
 					return port;
 				} catch (IOException e) {
-				} finally {
-					if (socket != null) {
-						try {
-							socket.close();
-						} catch (IOException e) {
-							// Ignore IOException on close()
-						}
-					}
+					// TODO: refactor that
 				}
 				throw new IllegalStateException("Could not find a free TCP/IP port to start embedded Jetty HTTP Server on");
 			}
@@ -249,6 +241,5 @@ public class DriverManager {
 		public VirtualizedService getDriver() {
 			return null;
 		}
-		
 	}
 }

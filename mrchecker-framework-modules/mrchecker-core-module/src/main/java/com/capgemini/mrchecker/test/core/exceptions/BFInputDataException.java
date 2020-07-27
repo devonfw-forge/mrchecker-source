@@ -4,8 +4,8 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 public class BFInputDataException extends AssertionError {
 	
-	private static final long serialVersionUID = 6054714830892676552L;
-	private static String exceptionMessage;
+	private static final long	serialVersionUID	= 6054714830892676552L;
+	private static String		exceptionMessage;
 	
 	/**
 	 * This exception should be thrown when test data contains false information, e.g.: invalid USER, USER without
@@ -14,6 +14,7 @@ public class BFInputDataException extends AssertionError {
 	 * not present.")" is going to create error message: "For user with USER [12341212]: Account is not present."
 	 * 
 	 * @param message
+	 *            message
 	 */
 	public BFInputDataException(String message) {
 		super(generateExceptionMessage(message));

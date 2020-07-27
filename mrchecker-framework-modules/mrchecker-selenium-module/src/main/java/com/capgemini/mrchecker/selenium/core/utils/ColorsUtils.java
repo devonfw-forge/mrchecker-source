@@ -15,14 +15,10 @@ public class ColorsUtils {
 	 * @param color
 	 *            from ColorsEnum
 	 * @return True if element text is displayed in black, false otherwise
-	 * @author
 	 */
 	public static boolean isElementTextInGivenColor(WebElement element, ColorsEnum color) {
 		String elementColor = element.getCssValue("color");
-		if (elementColor == null || !elementColor.contains(color.toString())) {
-			return false;
-		}
-		return true;
+		return elementColor != null && elementColor.contains(color.toString());
 	}
 	
 	/**
@@ -31,7 +27,6 @@ public class ColorsUtils {
 	 * @param validator
 	 *            - IColorValidator
 	 * @return True if element has correct color coresponding to IColorValidator, false otherwise
-	 * @author
 	 */
 	public static boolean isColorCorrectForValue(WebElement element, IColorValidator<WebElement> validator) {
 		return validator.isValid(element);

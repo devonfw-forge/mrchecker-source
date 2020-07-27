@@ -56,7 +56,7 @@ public class WindowUtils {
 	 * 
 	 * @param title
 	 *            - title/part of title, at which you want to get driver
-	 * @param switchToGivenURL
+	 * @param switchToGiven
 	 *            - true if you want switch on this window, false if the another one
 	 */
 	public static void switchToWindowByTitle(String title, boolean switchToGiven) {
@@ -244,7 +244,7 @@ public class WindowUtils {
 		long startTime = System.currentTimeMillis();
 		Set<String> allBrowserWindows = BasePage.getDriver()
 				.getWindowHandles();
-		int tmp_timeout = BasePage.PROGRESSBARWAITTIMER;
+		int tmp_timeout = BasePage.PROGRESS_BAR_WAIT_TIMER;
 		while (allBrowserWindows.size() < 2) {
 			TimeUtills.waitMiliseconds(1000);
 			if (tmp_timeout-- <= 0)

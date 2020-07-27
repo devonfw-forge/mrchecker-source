@@ -14,5 +14,4 @@ public class Button extends BasicElement {
 		ScrollUtils.scrollElementIntoView(getElement());
 		getElement().click();
 	}
-	
 }

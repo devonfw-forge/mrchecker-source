@@ -1,5 +1,7 @@
 package com.capgemini.mrchecker.selenium.core.base.environment;
 
+import java.util.Objects;
+
 import com.capgemini.mrchecker.test.core.BaseTest;
 import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
 
@@ -9,6 +11,7 @@ import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
  */
 public enum GetEnvironmentParam {
 	
+	// TODO: do we need that class in module?
 	// Name if enum must be in line with cell name in /src/resources/environments/environment.csv
 	WWW_FONT_URL,
 	TOOLS_QA,
@@ -17,20 +20,16 @@ public enum GetEnvironmentParam {
 	
 	public String getValue() {
 		
-		if (null == BaseTest.getEnvironmentService()) {
+		if (Objects.isNull(BaseTest.getEnvironmentService())) {
 			throw new BFInputDataException("Environment Parameters class wasn't initialized properly");
 		}
 		
 		return BaseTest.getEnvironmentService()
-				.getValue(this.name());
-		
+				.getValue(name());
 	}
 	
 	@Override
 	public String toString() {
-		
-		return this.getValue();
-		
+		return getValue();
 	}
-	
 }

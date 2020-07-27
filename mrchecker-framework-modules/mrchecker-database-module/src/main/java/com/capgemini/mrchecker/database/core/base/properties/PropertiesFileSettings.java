@@ -5,7 +5,7 @@ import com.google.inject.name.Named;
 
 public class PropertiesFileSettings {
 
-	private String dbDrivers  = "./lib/dbdrivers";
+	private final String dbDrivers  = "./lib/dbdrivers";
 	private String jdbcOracle = dbDrivers + "/oracle/ojdbc8.jar";
 	private String proxy      = "";
 

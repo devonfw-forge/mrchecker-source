@@ -1,6 +1,7 @@
 package com.capgemini.mrchecker.selenium.core.newDrivers.elementType;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -10,59 +11,58 @@ import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundExcepti
 
 public class RadioButtonElement extends BasicElement implements IBasicElement {
 	
-	private By inputChildsSelector;
-	private List<WebElement> listElements;
-	private List<String> listSelectedAttributes;
+	private By					inputChildsSelector;
+	private List<WebElement>	listElements;
+	private List<String>		listSelectedAttributes;
 	
-	public RadioButtonElement(By cssSelector)
 	/**
 	 * @param cssSelector
 	 *            - selector of Radio Button element's set
 	 **/
-	{
-		this(cssSelector, By.cssSelector("input"), Arrays.asList("selected"));
+	public RadioButtonElement(By cssSelector) {
+		this(cssSelector, By.cssSelector("input"), Collections.singletonList("selected"));
 	}
 	
+	/**
+	 * @param cssSelector
+	 *            - selector of Radio Button element's set
+	 * @param inputChildsSelector
+	 *            - selector of relative path from Radio Button element's set to basic input element
+	 **/
 	public RadioButtonElement(By cssSelector, By inputChildsSelector) {
-		/**
-		 * @param cssSelector
-		 *            - selector of Radio Button element's set
-		 * @param inputChildsSelector
-		 *            - selector of relative path from Radio Button element's set to basic input element
-		 **/
-		this(ElementType.INPUT_TEXT, cssSelector, inputChildsSelector, Arrays.asList("selected"));
+		this(ElementType.INPUT_TEXT, cssSelector, inputChildsSelector, Collections.singletonList("selected"));
 	}
 	
+	/**
+	 * @param cssSelector
+	 *            - selector of Radio Button element's set
+	 * @param inputChildsSelector
+	 *            - selector of relative path from Radio Button element's set to basic input element
+	 * @param listSelectedAttributes
+	 *            - list of class name describing selected item
+	 **/
 	public RadioButtonElement(By cssSelector, By inputChildsSelector, List<String> listSelectedAttributes) {
-		/**
-		 * @param cssSelector
-		 *            - selector of Radio Button element's set
-		 * @param inputChildsSelector
-		 *            - selector of relative path from Radio Button element's set to basic input element
-		 * @param listSelectedAttributes
-		 *            - list of class name describing selected item
-		 **/
 		this(ElementType.INPUT_TEXT, cssSelector, inputChildsSelector, listSelectedAttributes);
 	}
 	
+	/**
+	 * @param cssSelector
+	 *            - selector of Radio Button element's set
+	 * @param inputChildsSelector
+	 *            - selector of relative path from Radio Button element's set to basic input element
+	 * @param listSelectedAttributes
+	 *            - list of class name describing selected item
+	 **/
 	protected RadioButtonElement(ElementType elemType, By cssSelector, By inputChildsSelector,
 			List<String> listSelectedAttributes) {
-		/**
-		 * @param cssSelector
-		 *            - selector of Radio Button element's set
-		 * @param inputChildsSelector
-		 *            - selector of relative path from Radio Button element's set to basic input element
-		 * @param listSelectedAttributes
-		 *            - list of class name describing selected item
-		 **/
 		super(elemType, cssSelector);
 		setInputChildsSelector(inputChildsSelector);
 		setSelectedAttributes(listSelectedAttributes);
 	}
 	
 	public int getSelectedItemIndex() {
-		this.setItems();
-		return this.listElements.indexOf(getSelectedItem());
+		setItems();
+		return listElements.indexOf(getSelectedItem());
 	}
 	
 	public String getSelectedItemText() {
@@ -74,61 +74,61 @@ public class RadioButtonElement extends BasicElement implements IBasicElement {
 	}
 	
 	public List<String> getTextList() {
-		return Arrays.asList(this.getTextArray());
+		return Arrays.asList(getTextArray());
 	}
 	
 	public int getItemsCount() {
-		this.setItems();
-		return this.listElements.size();
+		setItems();
+		return listElements.size();
 	}
 	
 	public boolean isItemSelectedByText(String elementText) {
-		return this.getSelectedItemText()
+		return getSelectedItemText()
 				.equals(elementText);
 	}
 	
 	public boolean isItemSelectedByIndex(int elementIndex) {
-		return this.getSelectedItemIndex() == elementIndex;
+		return getSelectedItemIndex() == elementIndex;
 	}
 	
 	public boolean isItemSelectedByValue(String elementValue) {
-		return this.getSelectedItemValue()
+		return getSelectedItemValue()
 				.equals(elementValue);
 	}
 	
 	public void selectItemByText(String elementText) {
-		WebElement elementToClick = this.getItemByText(elementText);
+		WebElement elementToClick = getItemByText(elementText);
 		elementToClick.click();
-		this.checkIsItemClicked(elementToClick);
+		checkIsItemClicked(elementToClick);
 	}
 	
 	public void selectItemByIndex(int elementIndex) {
-		WebElement elementToClick = this.getItemByIndex(elementIndex);
+		WebElement elementToClick = getItemByIndex(elementIndex);
 		elementToClick.click();
-		this.checkIsItemClicked(elementToClick);
+		checkIsItemClicked(elementToClick);
 	}
 	
 	public void selectItemByValue(String elementValue) {
-		WebElement elementToClick = this.getItemByValue(elementValue);
+		WebElement elementToClick = getItemByValue(elementValue);
 		elementToClick.click();
-		this.checkIsItemClicked(elementToClick);
+		checkIsItemClicked(elementToClick);
 	}
 	
 	private void checkIsItemClicked(WebElement element) {
-		if (this.isItemSelected(element)) {
-			System.out.println(getElementTypeName() + ": " + this.toString() + " isn't clicked.");
+		if (isItemSelected(element)) {
+			System.out.println(getElementTypeName() + ": " + toString() + " isn't clicked.");
 		}
 	}
 	
 	private String[] getTextArray() {
-		return this.getElement()
+		return getElement()
 				.getText()
 				.trim()
 				.split("\n");
 	}
 	
 	private void setInputChildsSelector(By selector) {
-		this.inputChildsSelector = selector;
+		inputChildsSelector = selector;
 	}
 	
 	private void setSelectedAttributes(List<String> listSelectedAttributes) {
@@ -144,50 +144,48 @@ public class RadioButtonElement extends BasicElement implements IBasicElement {
 	}
 	
 	private void setItems() {
-		setListItems(this.getElement()
+		setListItems(getElement()
 				.findElements(inputChildsSelector));
 	}
 	
 	private WebElement getItemByIndex(int index) {
-		this.setItems();
+		setItems();
 		
-		if (this.listElements.isEmpty()) {
+		if (listElements.isEmpty()) {
 			throw new BFElementNotFoundException("Any " + getElementTypeName() + " element was found.");
 		}
 		
-		return this.listElements.get(index);
+		return listElements.get(index);
 	}
 	
 	private WebElement getItemByText(String visibleText) {
-		for (int i = 0; i < this.getItemsCount(); i++) {
-			if (this.listElements.get(i)
+		for (int i = 0; i < getItemsCount(); i++) {
+			if (listElements.get(i)
 					.getText()
 					.equals(visibleText)) {
-				return this.listElements.get(i);
+				return listElements.get(i);
 			}
 		}
 		throw new BFElementNotFoundException(getElementTypeName() + " with text: " + visibleText + " wasn't found in "
-				+ this.getTextArray()
-						.toString());
+				+ Arrays.toString(getTextArray()));
 	}
 	
 	private WebElement getItemByValue(String value) {
-		this.setItems();
-		for (int i = 0; i < this.getItemsCount(); i++) {
-			if (this.listElements.get(i)
+		setItems();
+		for (int i = 0; i < getItemsCount(); i++) {
+			if (listElements.get(i)
 					.getAttribute("value")
 					.equals(value)) {
-				return this.listElements.get(i);
+				return listElements.get(i);
 			}
 		}
 		throw new BFElementNotFoundException(
-				getElementTypeName() + " with value: " + value + " wasn't found in " + this.getTextArray()
-						.toString());
+				getElementTypeName() + " with value: " + value + " wasn't found in " + Arrays.toString(getTextArray()));
 	}
 	
 	private boolean isClassContainSelectionAttributes(String classAttribute) {
-		for (int i = 0; i < this.listSelectedAttributes.size(); i++) {
-			if (classAttribute.contains(this.listSelectedAttributes.get(i))) {
+		for (String listSelectedAttribute : listSelectedAttributes) {
+			if (classAttribute.contains(listSelectedAttribute)) {
 				return true;
 			}
 		}
@@ -195,15 +193,14 @@ public class RadioButtonElement extends BasicElement implements IBasicElement {
 	}
 	
 	private WebElement getSelectedItem() {
-		this.setItems();
-		for (int i = 0; i < this.listElements.size(); i++) {
-			if (this.isItemSelected(this.listElements.get(i))
-					|| isClassContainSelectionAttributes(this.listElements.get(i)
+		setItems();
+		for (WebElement listElement : listElements) {
+			if (isItemSelected(listElement)
+					|| isClassContainSelectionAttributes(listElement
 							.getAttribute("class"))) {
-				return this.listElements.get(i);
+				return listElement;
 			}
 		}
-		throw new BFElementNotFoundException("Any element is selected in " + this.getTextArray()
-				.toString());
+		throw new BFElementNotFoundException("Any element is selected in " + Arrays.toString(getTextArray()));
 	}
 }

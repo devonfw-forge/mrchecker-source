@@ -1,5 +1,6 @@
 package com.capgemini.mrchecker.test.core.base.environment;
 
+
 import com.capgemini.mrchecker.test.core.base.encryption.IDataEncryptionService;
 
 /**
@@ -17,9 +18,7 @@ public interface IEnvironmentService {
 	public void setEnvironment(String environmentName);
 	
 	/**
-	 * Sets environment (e.g. "QC1")
-	 * 
-	 * @param environmentName
+	 * Gets environment (e.g. "QC1")
 	 */
 	public String getEnvironment();
 	
@@ -30,13 +29,8 @@ public interface IEnvironmentService {
 	public String getValue(String serviceName);
 	
 	/**
-	 * @return source from Environment variables are taken. This could be file path
-	 */
-	public String dataSource();
-	
-	/**
 	 * @param service
-	 *          Optional encryption service to deal with encrypted test data.
+	 *            Optional encryption service to deal with encrypted test data.
 	 */
 	public void setDataEncryptionService(IDataEncryptionService service);
 	

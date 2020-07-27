@@ -1,16 +1,7 @@
 package com.capgemini.mrchecker.webapi.core;
 
-import com.capgemini.mrchecker.test.core.BaseTest;
-import com.capgemini.mrchecker.test.core.BaseTestWatcher;
-import com.capgemini.mrchecker.test.core.ITestObserver;
-import com.capgemini.mrchecker.test.core.ModuleType;
-import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
-import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
-import com.capgemini.mrchecker.test.core.logger.BFLogger;
-import com.capgemini.mrchecker.webapi.core.base.driver.DriverManager;
-import com.capgemini.mrchecker.webapi.core.base.properties.PropertiesFileSettings;
-import com.capgemini.mrchecker.webapi.core.base.runtime.RuntimeParameters;
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
@@ -20,21 +11,30 @@ import javax.xml.transform.TransformerException;
 
 import org.xml.sax.SAXException;
 
-import com.capgemini.mrchecker.webapi.soap.SoapMessageGenerator;
+import com.capgemini.mrchecker.test.core.BaseTest;
+import com.capgemini.mrchecker.test.core.ModuleType;
+import com.capgemini.mrchecker.test.core.Page;
+import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
+import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
+import com.capgemini.mrchecker.test.core.logger.BFLogger;
+import com.capgemini.mrchecker.webapi.core.base.driver.DriverManager;
+import com.capgemini.mrchecker.webapi.core.base.properties.PropertiesFileSettings;
+import com.capgemini.mrchecker.webapi.core.base.runtime.RuntimeParameters;
+import com.capgemini.mrchecker.webapi.core.soap.SoapMessageGenerator;
 import com.google.inject.Guice;
 import com.jamesmurty.utils.XMLBuilder;
 
-abstract public class BasePageWebAPI implements ITestObserver, IWebAPI {
+public abstract class BasePageWebAPI extends Page implements IWebAPI {
 	
 	private static DriverManager driver = null;
 	
 	private final static PropertiesFileSettings	propertiesFileSettings;
-	private final static IAnalytics				analytics;
-	public final static String					analitycsCategoryName	= "WebAPI-Module";
+	private final static IAnalytics				ANALYTICS;
+	public final static String					ANALYTICS_CATEGORY_NAME	= "WebAPI-Module";
 	
 	static {
 		// Get analytics instance created in BaseTets
-		analytics = BaseTest.getAnalytics();
+		ANALYTICS = BaseTest.getAnalytics();
 		
 		// Get and then set properties information from selenium.settings file
 		propertiesFileSettings = setPropertiesSettings();
@@ -43,53 +43,15 @@ abstract public class BasePageWebAPI implements ITestObserver, IWebAPI {
 		setRuntimeParametersWebApi();
 		
 		// Read Environment variables either from environmnets.csv or any other input data.
-		setEnvironmetInstance();
+		setEnvironmentInstance();
 	}
 	
 	public static IAnalytics getAnalytics() {
-		return BasePageWebAPI.analytics;
+		return ANALYTICS;
 	}
 	
 	public BasePageWebAPI() {
-		this(getDriver());
-	}
-	
-	public BasePageWebAPI(DriverManager driver) {
-		// Add given module to Test core Observable list
-		this.addObserver();
-	}
-	
-	@Override
-	public void addObserver() {
-		BaseTestWatcher.addObserver(this);
-	}
-	
-	@Override
-	public void onTestFailure() {
-		BFLogger.logDebug("BasePage.onTestFailure    " + this.getClass()
-						.getSimpleName());
-	}
-	
-	@Override
-	public void onTestSuccess() {
-		// All actions needed while test method is success
-		BFLogger.logDebug("BasePage.onTestSuccess    " + this.getClass()
-						.getSimpleName());
-	}
-	
-	@Override
-	public void onTestFinish() {
-		// All actions needed while test class is finishing
-		BFLogger.logDebug("BasePage.onTestFinish   " + this.getClass()
-						.getSimpleName());
-		BaseTestWatcher.removeObserver(this);
-	}
-	
-	@Override
-	public void onTestClassFinish() {
-		BFLogger.logDebug("BasePage.onTestClassFinish   " + this.getClass()
-						.getSimpleName());
-		BFLogger.logDebug("driver:" + getDriver().toString());
+		getDriver();
 	}
 	
 	@Override
@@ -98,7 +60,7 @@ abstract public class BasePageWebAPI implements ITestObserver, IWebAPI {
 	}
 	
 	public static DriverManager getDriver() {
-		if (BasePageWebAPI.driver == null) {
+		if (Objects.isNull(BasePageWebAPI.driver)) {
 			// Create module driver
 			BasePageWebAPI.driver = new DriverManager(propertiesFileSettings);
 		}
@@ -107,19 +69,18 @@ abstract public class BasePageWebAPI implements ITestObserver, IWebAPI {
 	
 	private static PropertiesFileSettings setPropertiesSettings() {
 		// Get and then set properties information from settings.properties file
-		PropertiesFileSettings propertiesFileSettings = Guice.createInjector(PropertiesSettingsModule.init())
-						.getInstance(PropertiesFileSettings.class);
-		return propertiesFileSettings;
+		return Guice.createInjector(PropertiesSettingsModule.init())
+				.getInstance(PropertiesFileSettings.class);
 	}
 	
 	private static void setRuntimeParametersWebApi() {
 		// Read System or maven parameters
 		BFLogger.logDebug(java.util.Arrays.asList(RuntimeParameters.values())
-						.toString());
+				.toString());
 		
 	}
 	
-	private static void setEnvironmetInstance() {
+	private static void setEnvironmentInstance() {
 		/*
 		 * Environment variables either from environmnets.csv or any other input data. For now there is no properties
 		 * settings file for Selenium module. In future, please have a look on Core Module IEnvironmentService
@@ -128,7 +89,7 @@ abstract public class BasePageWebAPI implements ITestObserver, IWebAPI {
 		
 	}
 	
-	public class SOAPTemplate {
+	public static class SOAPTemplate {
 		
 		private XMLBuilder xmlBody;
 		
@@ -146,9 +107,10 @@ abstract public class BasePageWebAPI implements ITestObserver, IWebAPI {
 			String message = "";
 			try {
 				SOAPMessage soapMessage = SoapMessageGenerator.createSOAPmessage(this.getRoot()
-								.asString());
+						.asString());
 				message = SoapMessageGenerator.printSoapMessage(soapMessage);
 			} catch (SOAPException | SAXException | IOException | ParserConfigurationException | TransformerException e) {
+				// TODO: refactor that
 				new Exception(e);
 			}
 			return message;
@@ -170,6 +132,7 @@ abstract public class BasePageWebAPI implements ITestObserver, IWebAPI {
 			try {
 				this.xmlBody = XMLBuilder.create(nodeName);
 			} catch (ParserConfigurationException | FactoryConfigurationError e) {
+				// TODO: refactor that
 				new Exception(e);
 			}
 		}

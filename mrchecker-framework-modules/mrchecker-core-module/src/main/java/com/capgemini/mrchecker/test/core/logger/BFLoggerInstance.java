@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Paths;
 import java.util.Arrays;
 
 import org.apache.log4j.Appender;
@@ -20,21 +19,20 @@ import com.google.common.io.Files;
 
 public class BFLoggerInstance {
 	
-	private final String FBEGIN = "Function: ";
-	private final String FEND = "END";
+	private static final String	FBEGIN	= "Function: ";
+	private static final String	FEND	= "END";
 	
 	static {
 		Logger.getRootLogger()
 				.removeAppender("console");
 	}
 	
-	private static final String logPattern = "%d{yyyy-MM-dd 'at' HH:mm:ss z} %M - %m%x%n";
-	private static final Level loggerLevel = Level.DEBUG;
+	private static final String	logPattern	= "%d{yyyy-MM-dd 'at' HH:mm:ss z} %M - %m%x%n";
+	private static final Level	loggerLevel	= Level.DEBUG;
 	
-	private File directory;
-	private File logFile;
-	private String appenderName;
-	private Logger logger;
+	private File	logFile;
+	private String	appenderName;
+	private Logger	logger;
 	
 	protected BFLoggerInstance() {
 	}
@@ -43,6 +41,7 @@ public class BFLoggerInstance {
 	 * Adds the selected appender to a new instance of AsyncAppender
 	 * 
 	 * @param appender
+	 *            appender
 	 * @return created AsyncAppender with appender attached
 	 */
 	private AsyncAppender wrapAsync(Appender appender) {
@@ -113,18 +112,16 @@ public class BFLoggerInstance {
 	
 	private File getLogFile() {
 		if (logFile == null) {
-			logFile = new File(getDirectory().getPath(),getAppenderName() + ".log");
+			logFile = new File(getDirectory().getPath(), getAppenderName() + ".log");
 			logFile.deleteOnExit();
 		}
 		return logFile;
 	}
 	
 	private File getDirectory() {
-		if (directory == null) {
-			directory = new File("./logs");
-			if (!directory.exists()) {
-				directory.mkdir();
-			}
+		File directory = new File("./logs");
+		if (!directory.exists()) {
+			directory.mkdir();
 		}
 		return directory;
 	}
@@ -209,8 +206,7 @@ public class BFLoggerInstance {
 	 */
 	protected String dumpSeparateLog() {
 		try {
-			String logTxt = Files.toString(getLogFile(), Charsets.UTF_8);
-			return logTxt;
+			return Files.toString(getLogFile(), Charsets.UTF_8);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return "";

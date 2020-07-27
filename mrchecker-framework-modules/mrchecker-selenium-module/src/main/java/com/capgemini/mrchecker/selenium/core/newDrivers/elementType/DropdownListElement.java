@@ -16,32 +16,32 @@ public class DropdownListElement extends BasicElement implements IBasicElement {
 	}
 	
 	public void selectDropdownByIndex(int index) {
-		this.getObject()
+		getObject()
 				.selectByIndex(index);
-		List<WebElement> list = this.getObject()
+		List<WebElement> list = getObject()
 				.getOptions();
 		
 		if (!list.get(index)
 				.isSelected()) {
 			throw new BFComponentStateException(ElementType.DROPDOWN.toString(), "select", "Option with index: "
-					+ String.valueOf(index) + " should be set from in " + this.getObject()
+					+ index + " should be set from in " + getObject()
 							.toString());
 		}
 	}
 	
 	public boolean isDropdownElementSelectedByIndex(int index) {
-		return this.getPossibleOptions()
+		return getPossibleOptions()
 				.get(index)
 				.isSelected();
 	}
 	
 	public void selectDropdownByValue(String value) {
-		value.trim();
-		this.getObject()
+		value = value.trim();
+		getObject()
 				.selectByValue(value);
-		if (!this.isDropdownElementSelectedByValue(value)) {
+		if (!isDropdownElementSelectedByValue(value)) {
 			throw new BFComponentStateException(ElementType.DROPDOWN.toString(), "select", "Option with value: "
-					+ String.valueOf(value) + " should be set from in " + this.getObject()
+					+ value + " should be set from in " + getObject()
 							.toString());
 		}
 	}
@@ -49,74 +49,74 @@ public class DropdownListElement extends BasicElement implements IBasicElement {
 	public void selectDropdownByVisibleText(String value) {
 		boolean flag = false;
 		
-		this.getObject()
+		getObject()
 				.selectByVisibleText(value);
 		
-		List<String> list = this.getAllSelectedOptionsText();
-		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i)
-					.equals(value))
+		List<String> list = getAllSelectedOptionsText();
+		for (String s : list) {
+			if (s.equals(value)) {
 				flag = true;
+				break;
+			}
 		}
 		
 		if (!flag) {
 			throw new RuntimeException(
-					"Option with text: " + value + " wasn't selected in " + this.getObject()
+					"Option with text: " + value + " wasn't selected in " + getObject()
 							.toString());
 		}
 	}
 	
 	public List<String> getAllSelectedOptionsText() {
-		List<WebElement> list = this.getObject()
+		List<WebElement> list = getObject()
 				.getAllSelectedOptions();
-		return this.getValuesFromWebElements(list);
+		return getValuesFromWebElements(list);
 	}
 	
 	public String getFirstSelectedOptionText() {
-		String output = this.getObject()
+		return getObject()
 				.getFirstSelectedOption()
 				.getText()
 				.trim();
-		return output;
 	}
 	
 	public int getAmountOfPossibleValues() {
-		List<WebElement> list = this.getObject()
+		List<WebElement> list = getObject()
 				.getOptions();
 		return list.size();
 	}
 	
 	public boolean isDropdownElementSelectedByValue(String value) {
-		int index = this.getIndexDropdownElementByValue(value);
-		return this.getPossibleOptions()
+		int index = getIndexDropdownElementByValue(value);
+		return getPossibleOptions()
 				.get(index)
 				.isSelected();
 	}
 	
 	private List<WebElement> getPossibleOptions() {
-		return this.getObject()
+		return getObject()
 				.getOptions();
 	}
 	
 	private List<String> getPossibleValuesText() {
-		List<WebElement> list = this.getObject()
+		List<WebElement> list = getObject()
 				.getOptions();
-		return this.getValuesFromWebElements(list);
+		return getValuesFromWebElements(list);
 	}
 	
 	private int getIndexDropdownElementByValue(String value) {
-		return this.getPossibleValuesText()
+		return getPossibleValuesText()
 				.indexOf(value);
 	}
 	
 	private Select getObject() {
-		return new Select(this.getElement());
+		return new Select(getElement());
 	}
 	
 	private List<String> getValuesFromWebElements(List<WebElement> list) {
-		List<String> output = new ArrayList<String>();
-		for (int i = 0; i < list.size(); i++) {
-			output.add(list.get(i)
+		List<String> output = new ArrayList<>();
+		for (WebElement webElement : list) {
+			output.add(webElement
 					.getText()
 					.trim());
 		}

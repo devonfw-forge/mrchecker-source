@@ -11,6 +11,9 @@ public class BFLogger {
 		
 	};
 	
+	private BFLogger() {
+	}
+	
 	public static BFLoggerInstance getLog() {
 		return loggers.get();
 	}
@@ -62,6 +65,9 @@ public class BFLogger {
 	 * @author
 	 */
 	public static class RestrictedMethods {
+		
+		private RestrictedMethods() {
+		}
 		
 		/**
 		 * WARING: Do not use this method outside of BaseTestWatcher Begin writing all logs to a separate file in

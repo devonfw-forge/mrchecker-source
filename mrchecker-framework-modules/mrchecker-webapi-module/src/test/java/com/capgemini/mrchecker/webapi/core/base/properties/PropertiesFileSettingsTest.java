@@ -2,80 +2,85 @@ package com.capgemini.mrchecker.webapi.core.base.properties;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
-import com.capgemini.mrchecker.webapi.core.base.properties.PropertiesFileSettings;
+import com.capgemini.mrchecker.webapi.tags.UnitTest;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+@UnitTest
+@ResourceLock("PropertiesFileSettings.class")
 public class PropertiesFileSettingsTest {
 	
-	@BeforeClass
+	@BeforeAll
 	public static void setUpBeforeClass() throws Exception {
 	}
 	
-	@AfterClass
+	@AfterAll
 	public static void tearDownAfterClass() throws Exception {
 	}
 	
 	private PropertiesFileSettings propertiesFileSettings;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 	}
 	
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		PropertiesSettingsModule.delInstance();
 	}
 	
 	@Test
-	public void testParameterEnableVirtualServer_True() {
+	public void testParameterEnableVirtualServer_True() throws FileNotFoundException {
 		String path = System.getProperty("user.dir") + Paths.get("/src/test/resources/settings.properties");
-		Injector i = Guice.createInjector(PropertiesSettingsModule.init(path));
+		Injector i = Guice.createInjector(PropertiesSettingsModule.init(new FileInputStream(path)));
 		this.propertiesFileSettings = i.getInstance(PropertiesFileSettings.class);
 		
 		assertEquals("", true, propertiesFileSettings.isVirtualServerEnabled());
 	}
 	
 	@Test
-	public void testParameterEnableVirtualServer_False() {
+	public void testParameterEnableVirtualServer_False() throws FileNotFoundException {
 		String path = System.getProperty("user.dir") + Paths.get("/src/test/resources/settings2.properties");
-		Injector i = Guice.createInjector(PropertiesSettingsModule.init(path));
+		Injector i = Guice.createInjector(PropertiesSettingsModule.init(new FileInputStream(path)));
 		this.propertiesFileSettings = i.getInstance(PropertiesFileSettings.class);
 		
 		assertEquals("", false, propertiesFileSettings.isVirtualServerEnabled());
 	}
 	
 	@Test
-	public void testParameterEnableVirtualServer_NoValue() {
+	public void testParameterEnableVirtualServer_NoValue() throws FileNotFoundException {
 		String path = System.getProperty("user.dir") + Paths.get("/src/test/resources/settings3.properties");
-		Injector i = Guice.createInjector(PropertiesSettingsModule.init(path));
+		Injector i = Guice.createInjector(PropertiesSettingsModule.init(new FileInputStream(path)));
 		this.propertiesFileSettings = i.getInstance(PropertiesFileSettings.class);
 		
 		assertEquals("", true, propertiesFileSettings.isVirtualServerEnabled());
 	}
 	
 	@Test
-	public void testParameterEnableVirtualServer_Text() {
+	public void testParameterEnableVirtualServer_Text() throws FileNotFoundException {
 		String path = System.getProperty("user.dir") + Paths.get("/src/test/resources/settings4.properties");
-		Injector i = Guice.createInjector(PropertiesSettingsModule.init(path));
+		Injector i = Guice.createInjector(PropertiesSettingsModule.init(new FileInputStream(path)));
 		this.propertiesFileSettings = i.getInstance(PropertiesFileSettings.class);
 		
 		assertEquals("", true, propertiesFileSettings.isVirtualServerEnabled());
 	}
 	
 	@Test
-	public void testParameterEnableVirtualServer_NoParameter() {
+	public void testParameterEnableVirtualServer_NoParameter() throws FileNotFoundException {
 		String path = System.getProperty("user.dir") + Paths.get("/src/test/resources/settings5.properties");
-		Injector i = Guice.createInjector(PropertiesSettingsModule.init(path));
+		Injector i = Guice.createInjector(PropertiesSettingsModule.init(new FileInputStream(path)));
 		this.propertiesFileSettings = i.getInstance(PropertiesFileSettings.class);
 		
 		assertEquals("", true, propertiesFileSettings.isVirtualServerEnabled());
