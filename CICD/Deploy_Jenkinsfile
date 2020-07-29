@@ -51,7 +51,7 @@ pipeline{
                 ]){
                   //, zip(credentialsId: 'gpg_sign_mrchecker', variable: 'GPG_HOMEDIR')
                   //what with version number
-                  def version = sh script: "cd ${env.workspace} &&  mvn help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true
+                  def version = sh script: "cd ${env.workspace} &&  mvn help:evaluate -Dexpression=project.version -q -DforceStdout --projects ${env.module}", returnStdout: true
                   if(version.contains('SNAPSHOT')){
                     sh"""
                     cd ${env.workspace}
