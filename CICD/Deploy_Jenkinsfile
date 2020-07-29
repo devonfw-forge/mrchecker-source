@@ -59,7 +59,7 @@ pipeline{
                   }
                   sh"""
                   cd ${env.workspace}
-                  mvn -P release deploy -DskipTests=true --projects ${env.module} -Dhomedir=${GPG_HOMEDIR}
+                  mvn -P release deploy -DskipTests=true --projects ${env.module} -Dgpg.homedir=${GPG_HOMEDIR}
                   """
                 }
             }
