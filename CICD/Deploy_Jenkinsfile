@@ -47,9 +47,8 @@ pipeline{
             script{
                 withCredentials([
                   usernamePassword(credentialsId: 'ossrh', passwordVariable: 'MAVEN_PASSWORD', usernameVariable: 'MAVEN_USER'),
-                  string(credentialsId: 'GPG_PASSWORD', variable: 'GPG_PASSWORD')//
+                  string(credentialsId: 'GPG_PASSWORD', variable: 'GPG_PASSWORD'),zip(credentialsId: 'gpg_sign_mrchecker', variable: 'GPG_HOMEDIR')
                 ]){
-                  //, zip(credentialsId: 'gpg_sign_mrchecker', variable: 'GPG_HOMEDIR')
                   //what with version number
                   def version = sh script: "cd ${env.workspace} &&  mvn help:evaluate -Dexpression=project.version -q -DforceStdout --projects ${env.module}", returnStdout: true
                   if(version.contains('SNAPSHOT')){
