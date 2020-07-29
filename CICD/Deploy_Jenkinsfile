@@ -14,9 +14,9 @@ pipeline{
             }
         }
         stage('Check merge conflicts'){
-          when{
-            !branch 'develop' and !branch 'master'
-          }
+          // when{
+          //   !branch 'develop' and !branch 'master'
+          // }
           steps{
             script{
               sh"""
