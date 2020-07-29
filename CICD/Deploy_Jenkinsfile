@@ -51,19 +51,16 @@ pipeline{
                 ]){
                   //what with version number
                   def version = sh script: "cd ${env.workspace} &&  mvn help:evaluate -Dexpression=project.version -q -DforceStdout --projects ${env.module}", returnStdout: true
-                  if(version.contains('SNAPSHOT')){
-                    sh"""
-                    cd ${env.workspace}
-                    mvn -P release deploy -DskipTests=true --projects ${env.module}
-                    """
+                  if(!version.contains('SNAPSHOT')){
+                    input "Proceed with deployment of ${env.module} with version: ${version}"
                   }
                   else{
-                    input "Proceede with deployment of ${env.module} with version: ${version}"
-                    sh"""
-                    cd ${env.workspace}
-                    mvn -P release deploy -DskipTests=true --projects ${env.module}
-                    """
+                    print "${env.module} ${version}"
                   }
+                  sh"""
+                  cd ${env.workspace}
+                  mvn -P release deploy -DskipTests=true --projects ${env.module} -Dhomedir=${GPG_HOMEDIR}
+                  """
                 }
             }
           }
