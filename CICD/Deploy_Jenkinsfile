@@ -6,10 +6,10 @@ pipeline{
         stage('Check code formatting'){
             steps{
               script{
-                sh """
-                cd ${env.workspace}
-                mvn formatter:validate --projects ${env.module}
-                """
+                // sh """
+                // cd ${env.workspace}
+                // mvn formatter:validate --projects ${env.module}
+                // """
               }
             }
         }
@@ -19,10 +19,10 @@ pipeline{
           // }
           steps{
             script{
-              sh"""
-              cd ${env.workspace}
-              git format-patch develop --stdout | git-apply --check
-              """
+              // sh"""
+              // cd ${env.workspace}
+              // git format-patch develop --stdout | git-apply --check
+              // """
             }
           }
         }
