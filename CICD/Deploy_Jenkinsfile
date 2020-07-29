@@ -27,23 +27,20 @@ pipeline{
           }
         }
         stage('Deploy code to local repo'){
-          when{
-            branch 'develop' and branch 'master'
-          }
           steps{
             script{
               sh"""
               cd ${env.workspace}
-              #mvn install -DskipTests=true
+              mvn install -DskipTests=true --projects ${env.module}
               """
             }
           }
         }
         stage('Deploy code to remote repo'){
-          when{
-            branch 'develop' and branch 'master'
-            //some additional switch or user input
-          }
+          // when{
+          //   branch 'develop' and branch 'master'
+          //   //some additional switch or user input
+          // }
           steps{
             script{
                 withCredentials([
@@ -51,10 +48,20 @@ pipeline{
                   string(credentialsId: 'GPG_PASSWORD', variable: 'GPG_PASSWORD'), zip(credentialsId: 'gpg_sign_mrchecker', variable: 'GPG_HOMEDIR')
                 ]){
                   //what with version number
-                  sh"""
-                  cd ${env.workspace}
-                  #mvn -P release deploy -DskipTests=true
-                  """
+                  def version = sh script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true
+                  if(version.contains('SNAPSHOT')){
+                    sh"""
+                    cd ${env.workspace}
+                    mvn -P release deploy -DskipTests=true --projects ${env.module}
+                    """
+                  }
+                  else{
+                    input "Proceede with deployment of ${env.module} with version: ${version}"
+                    sh"""
+                    cd ${env.workspace}
+                    mvn -P release deploy -DskipTests=true --projects ${env.module}
+                    """
+                  }
                 }
             }
           }
