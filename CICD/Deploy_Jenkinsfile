@@ -6,6 +6,7 @@ pipeline{
         stage('Check code formatting'){
             steps{
               script{
+                print('dummy step')
                 // sh """
                 // cd ${env.workspace}
                 // mvn formatter:validate --projects ${env.module}
@@ -19,6 +20,7 @@ pipeline{
           // }
           steps{
             script{
+              print('dummy step')
               // sh"""
               // cd ${env.workspace}
               // git format-patch develop --stdout | git-apply --check
