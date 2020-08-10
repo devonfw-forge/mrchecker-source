@@ -52,6 +52,10 @@ pipeline{
                   //what with version number
                   def version = sh script: "cd ${env.workspace} &&  mvn help:evaluate -Dexpression=project.version -q -DforceStdout --projects ${env.module}", returnStdout: true
                   if(!version.contains('SNAPSHOT')){
+                    snap = input message: 'Force snapshot release', parameters: [booleanParam(defaultValue: true, description: '', name: 'snapshot')]
+                    if (snap == true){
+                      version = "${version}-SNAPSHOT"
+                    }
                     input "Proceed with deployment of ${env.module} with version: ${version}"
                   }
                   else{
