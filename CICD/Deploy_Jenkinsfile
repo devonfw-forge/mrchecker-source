@@ -57,10 +57,22 @@ pipeline{
                   else{
                     print "${env.module} ${version}"
                   }
+                configFileProvider([configFile(fileId: 'deploy-maven-settings', targetLocation: 'settings.xml', variable: 'SETTINGS_PATH')]) {
                   sh"""
+                  set env.MAVEN_USER=${MAVEN_USER}
+                  set env.MAVEN_PASSWORD=${MAVEN_PASSWORD}
+
+                  ln -s ${GPG_HOMEDIR} /tmp/shortgpg
+                  ls -Lla /tmp/shortgpg
+                  ls -Lla /tmp/shortgpg/.gnupg
                   cd ${env.workspace}
-                  mvn -P release deploy -DskipTests=true --projects ${env.module} -Dgpg.homedir=${GPG_HOMEDIR}
+                  mvn -s ${SETTINGS_PATH} -P release deploy -DskipTests=true --projects ${env.module} -Dgpg.homedir=/tmp/shortgpg/.gnupg -Dgpg.passphrase=${GPG_PASSWORD}
                   """
+                  //https://lists.gnupg.org/pipermail/gnupg-users/2017-January/057451.
+                  //https://github.com/keybase/keybase-issues/issues/2798
+                  //https://github.com/microsoft/vscode-remote-release/issues/3168
+                  //https://github.com/samuelmeuli/action-maven-publish/issues/3
+                }
                 }
             }
           }
