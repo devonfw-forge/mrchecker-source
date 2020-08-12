@@ -33,7 +33,7 @@ pipeline{
             script{
               sh"""
               cd ${env.workspace}
-              mvn install -DskipTests=true --projects ${env.module}
+              mvn install -DskipTests=true --projects ${env.module} --also-make
               """
             }
           }
