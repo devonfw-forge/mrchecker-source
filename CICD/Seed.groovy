@@ -34,6 +34,13 @@ def makeJobs(configs,folders){
 				id('12314')
 				remote('\${it.repoUrl}')
 			}
+			branchSource{
+				defaultBranchPropertyStrategy {
+					props{
+						noTriggerBranchProperty()
+					}
+				}
+			}
 		}
 		orphanedItemStrategy{
 			discardOldItems{
