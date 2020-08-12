@@ -35,6 +35,9 @@ def makeJobs(configs,folders){
                     git{
                         id('12314')
                         remote('\${it.repoUrl}')
+                        traits{
+                            gitBranchDiscovery()
+                        }
                     }
                 }
                 strategy{
