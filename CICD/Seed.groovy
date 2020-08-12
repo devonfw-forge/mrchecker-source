@@ -55,12 +55,12 @@ def makeJobs(configs,folders){
             }
         }
         factory{
+            workflowBranchProjectFactory {
+                scriptPath('\${it.scriptPath}')
+            }
             pipelineBranchDefaultsProjectFactory {
                 scriptId('\${it.defaultScriptId}')
                 useSandbox(false)
-            }
-            workflowBranchProjectFactory {
-                scriptPath('\${it.scriptPath}')
             }
         }
         triggers{
