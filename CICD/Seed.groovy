@@ -20,55 +20,57 @@ print '\n'*5+'-'*80+'\n\t\t\tSCRIPT\n'
 print script
 print '\n'*5+'-'*80+'\n\t\t\tEND\n'
 node{
-	jobDsl scriptText: script
+    jobDsl scriptText: script
 }
 
 
 @NonCPS
 def makeJobs(configs,folders){
-	def jobTemplateText = """
-	multibranchPipelineJob("\${it.jenkinsFolder}/\${it.module}"){
-		description("Build source code and provide packages")
-		branchSources{
-			git{
-				id('12314')
-				remote('\${it.repoUrl}')
-			}
-			branchSource{
-				defaultBranchPropertyStrategy {
-					props{
-						noTriggerBranchProperty()
-					}
-				}
-			}
-		}
-		orphanedItemStrategy{
-			discardOldItems{
-				daysToKeep(30)
-			}
-		}
-		factory{
-			pipelineBranchDefaultsProjectFactory {
-				scriptId('\${it.defaultScriptId}')
-				useSandbox(false)
-			}
-			workflowBranchProjectFactory {
-				scriptPath('\${it.scriptPath}')
-			}
-		}
-		triggers{
-			cron("")
-		}
-	}
-	"""
-	def script = ''
-	def engine = new groovy.text.SimpleTemplateEngine()
-	def jobTemplate = engine.createTemplate(jobTemplateText)
+    def jobTemplateText = """
+    multibranchPipelineJob("\${it.jenkinsFolder}/\${it.module}"){
+        description("Build source code and provide packages")
+        branchSources{
+            git{
+                id('12314')
+                remote('\${it.repoUrl}')
+            }
+            branchSource{
+                strategy{
+                    defaultBranchPropertyStrategy {
+                        props{
+                            noTriggerBranchProperty()
+                        }
+                    }
+                }
+            }
+        }
+        orphanedItemStrategy{
+            discardOldItems{
+                daysToKeep(30)
+            }
+        }
+        factory{
+            pipelineBranchDefaultsProjectFactory {
+                scriptId('\${it.defaultScriptId}')
+                useSandbox(false)
+            }
+            workflowBranchProjectFactory {
+                scriptPath('\${it.scriptPath}')
+            }
+        }
+        triggers{
+            cron("")
+        }
+    }
+    """
+    def script = ''
+    def engine = new groovy.text.SimpleTemplateEngine()
+    def jobTemplate = engine.createTemplate(jobTemplateText)
     folders.each{
         script += "folder('${it}')\n"
     }
-	configs.each{
-		script += jobTemplate.make([it:it])
-	}
-	return script
+    configs.each{
+        script += jobTemplate.make([it:it])
+    }
+    return script
 }
