@@ -30,9 +30,11 @@ def makeJobs(configs,folders){
     multibranchPipelineJob("\${it.jenkinsFolder}/\${it.module}"){
         description("Build source code and provide packages")
         branchSources{
-            git{
-                id('12314')
-                remote('\${it.repoUrl}')
+            brancSource{
+                git{
+                    id('12314')
+                    remote('\${it.repoUrl}')
+                }
                 strategy{
                     defaultBranchPropertyStrategy {
                         props{
