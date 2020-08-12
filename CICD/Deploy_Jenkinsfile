@@ -70,7 +70,7 @@ pipeline{
                   ls -Lla /tmp/shortgpg
                   ls -Lla /tmp/shortgpg/.gnupg
                   cd ${env.workspace}
-                  mvn -s ${SETTINGS_PATH} -P release deploy -DskipTests=true --projects ${env.module} --also-make -Dgpg.homedir=/tmp/shortgpg/.gnupg -Dgpg.passphrase=${GPG_PASSWORD}
+                  mvn -s ${SETTINGS_PATH} -P release deploy -DskipTests=true --projects ${env.module} -Dgpg.homedir=/tmp/shortgpg/.gnupg -Dgpg.passphrase=${GPG_PASSWORD}
                   """
                   //https://lists.gnupg.org/pipermail/gnupg-users/2017-January/057451.
                   //https://github.com/keybase/keybase-issues/issues/2798
