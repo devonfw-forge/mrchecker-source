@@ -30,7 +30,7 @@ def makeJobs(configs,folders){
     multibranchPipelineJob("\${it.jenkinsFolder}/\${it.module}"){
         description("Build source code and provide packages")
         branchSources{
-            brancSource{
+            branchSource{
                 git{
                     id('12314')
                     remote('\${it.repoUrl}')
