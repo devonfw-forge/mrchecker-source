@@ -31,9 +31,11 @@ def makeJobs(configs,folders){
         description("Build source code and provide packages")
         branchSources{
             branchSource{
-                git{
-                    id('12314')
-                    remote('\${it.repoUrl}')
+                source{
+                    git{
+                        id('12314')
+                        remote('\${it.repoUrl}')
+                    }
                 }
                 strategy{
                     defaultBranchPropertyStrategy {
