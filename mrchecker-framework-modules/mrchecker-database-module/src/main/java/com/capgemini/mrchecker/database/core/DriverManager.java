@@ -3,6 +3,7 @@ package com.capgemini.mrchecker.database.core;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.Objects;
 
 public class DriverManager {
 
@@ -13,7 +14,7 @@ public class DriverManager {
 	}
 
 	private static EntityManagerFactory getEntityManagerFactory(String dbPrefix) {
-		return emf != null ? emf : Persistence.createEntityManagerFactory(dbPrefix);
+		return Objects.isNull(emf) ? Persistence.createEntityManagerFactory(dbPrefix) : emf;
 	}
 
 }

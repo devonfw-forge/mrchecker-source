@@ -19,10 +19,10 @@ public interface IDataEncryptionService {
 	 * its own decorators (prefix and/or suffix) to be added this way.
 	 * 
 	 * @param text
-	 *          Text to be encrypted.
+	 *            Text to be encrypted.
 	 * @return encrypted and decorated text as string
 	 * @throws BFSecureModuleException
-	 *           in case of encryption problems.
+	 *             in case of encryption problems.
 	 */
 	String encrypt(String text) throws BFSecureModuleException;
 	
@@ -33,16 +33,16 @@ public interface IDataEncryptionService {
 	 * cipher text.
 	 * 
 	 * @param text
-	 *          decorated cipher text.
+	 *            decorated cipher text.
 	 * @return decrypted text as string.
 	 * @throws BFSecureModuleException
-	 *           in case of decryption problems.
+	 *             in case of decryption problems.
 	 */
 	String decrypt(String text) throws BFSecureModuleException;
 	
 	/**
 	 * @param text
-	 *          plain text or cipher text.
+	 *            plain text or cipher text.
 	 * @return true, if the text is encrypted (is cipher text). This means only, that the text
 	 *         is decorated with a prefix and/or suffix the service defines. false otherwise.
 	 */
@@ -58,12 +58,12 @@ public interface IDataEncryptionService {
 	 * pass over to this method like e.g. the minimal accepted length of the secret.
 	 * 
 	 * @param secret
-	 *          secret to be used for data encryption/decryption. NOTE: "password1" is a bad
-	 *          secret. Something like "IM%&@N8932m>|j9123nG&kyYWB" is.
+	 *            secret to be used for data encryption/decryption. NOTE: "password1" is a bad
+	 *            secret. Something like "IM%&@N8932m>|j9123nG&kyYWB" is.
 	 * @throws BFSecureModuleException
-	 *           error setting the secret value (usually quality
-	 *           rules are not fulfilled.
+	 *             error setting the secret value (usually quality
+	 *             rules are not fulfilled.
 	 */
-	public void setSecret(String secret) throws BFSecureModuleException;
+	void setSecret(String secret) throws BFSecureModuleException;
 	
 }

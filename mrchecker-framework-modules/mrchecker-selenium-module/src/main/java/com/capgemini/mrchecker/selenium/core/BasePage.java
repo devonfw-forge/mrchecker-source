@@ -1,6 +1,7 @@
 package com.capgemini.mrchecker.selenium.core;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -18,9 +19,8 @@ import com.capgemini.mrchecker.selenium.core.newDrivers.DriverManager;
 import com.capgemini.mrchecker.selenium.core.newDrivers.INewWebDriver;
 import com.capgemini.mrchecker.selenium.core.utils.WindowUtils;
 import com.capgemini.mrchecker.test.core.BaseTest;
-import com.capgemini.mrchecker.test.core.BaseTestWatcher;
-import com.capgemini.mrchecker.test.core.ITestObserver;
 import com.capgemini.mrchecker.test.core.ModuleType;
+import com.capgemini.mrchecker.test.core.Page;
 import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
@@ -29,100 +29,71 @@ import com.google.inject.Guice;
 
 import io.qameta.allure.Attachment;
 
-abstract public class BasePage implements IBasePage, ITestObserver {
+abstract public class BasePage extends Page implements IBasePage {
 	
 	// in seconds; this value should be used for very shot delay purpose e.g. to
 	// wait for JavaScript take effort on element
-	public static final int EXPLICITY_SHORT_WAIT_TIME = 1;
+	public static final int EXPLICIT_SHORT_WAIT_TIME = 1;
 	
-	public static final int PROGRESSBARWAITTIMER = 60;
+	public static final int PROGRESS_BAR_WAIT_TIMER = 60;
 	// in seconds. timer used in findElementDynamic
-	public static final int EXPLICITYWAITTIMER = 20;
+	public static final int EXPLICIT_WAIT_TIMER = 20;
 	
 	public static final int MAX_COMPONENT_RELOAD_COUNT = 3;
 	
 	private static DriverManager	driver	= null;
 	private static WebDriverWait	webDriverWait;
-	
-	private BasePage parent;
+	private BasePage				parent;
 	
 	private static IEnvironmentService	environmentService;
-	private final static IAnalytics		analytics;
-	public final static String			analitycsCategoryName	= "Selenium-NewDrivers";
+	private final static IAnalytics		ANALYTICS;
+	public final static String			ANALYTICS_CATEGORY_NAME	= "Selenium-NewDrivers";
 	
-	private final static PropertiesSelenium propertiesSelenium;
+	private final static PropertiesSelenium PROPERTIES_SELENIUM;
+	
 	static {
 		// Get analytics instance created in BaseTets
-		analytics = BaseTest.getAnalytics();
+		ANALYTICS = BaseTest.getAnalytics();
 		
 		// Get and then set properties information from selenium.settings file
-		propertiesSelenium = setPropertiesSettings();
+		PROPERTIES_SELENIUM = setPropertiesSettings();
 		
 		// Read System or maven parameters
 		setRuntimeParametersSelenium();
 		
 		// Read Environment variables either from environmnets.csv or any other input data.
-		setEnvironmetInstance();
+		setEnvironmentInstance();
 	}
 	
 	public static IAnalytics getAnalytics() {
-		return BasePage.analytics;
+		return ANALYTICS;
 	}
 	
 	public BasePage() {
-		this(getDriver(), null);
+		this(null);
 	}
 	
 	public BasePage(BasePage parent) {
-		this(getDriver(), parent);
-	}
-	
-	public BasePage(INewWebDriver driver, BasePage parent) {
-		// Add given module to Test core Observable list
-		this.addObserver();
-		
-		webDriverWait = new WebDriverWait(getDriver(), BasePage.EXPLICITYWAITTIMER);
-		
-		this.setParent(parent);
+		webDriverWait = new WebDriverWait(getDriver(), BasePage.EXPLICIT_WAIT_TIMER);
+		setParent(parent);
 		
 		// If the page is not yet loaded, then load it
-		if (!(this.isLoaded())) { // In this scenario check if
-			this.load();
+		// TODO: check that
+		if (!isLoaded()) { // In this scenario check if
+			load();
 		}
-		
-	}
-	
-	@Override
-	public void addObserver() {
-		BaseTestWatcher.addObserver(this);
 	}
 	
 	@Override
 	public void onTestFailure() {
-		BFLogger.logDebug("BasePage.onTestFailure    " + this.getClass()
-				.getSimpleName());
+		super.onTestFailure();
 		makeScreenshotOnFailure();
 		makeSourcePageOnFailure();
 	}
 	
 	@Override
-	public void onTestSuccess() {
-		BFLogger.logDebug("BasePage.onTestSuccess    " + this.getClass()
-				.getSimpleName());
-	}
-	
-	@Override
-	public void onTestFinish() {
-		BFLogger.logDebug("BasePage.onTestFinish   " + this.getClass()
-				.getSimpleName());
-		BaseTestWatcher.removeObserver(this);
-	}
-	
-	@Override
 	public void onTestClassFinish() {
-		BFLogger.logDebug("BasePage.onTestClassFinish   " + this.getClass()
-				.getSimpleName());
-		BFLogger.logDebug("driver:" + getDriver().toString());
+		super.onTestClassFinish();
 		DriverManager.closeDriver();
 	}
 	
@@ -132,6 +103,7 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	}
 	
 	@Attachment("Screenshot on failure")
+	@SuppressWarnings("UnusedReturnValue")
 	public byte[] makeScreenshotOnFailure() {
 		byte[] screenshot = null;
 		try {
@@ -143,6 +115,7 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	}
 	
 	@Attachment("Source Page on failure")
+	@SuppressWarnings("UnusedReturnValue")
 	public String makeSourcePageOnFailure() {
 		return DriverManager.getDriver()
 				.getPageSource();
@@ -158,26 +131,17 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	}
 	
 	public static INewWebDriver getDriver() {
-		if (BasePage.driver == null) {
-			
-			BasePage.driver = new DriverManager(propertiesSelenium);
-			
+		if (Objects.isNull(driver)) {
+			driver = new DriverManager(PROPERTIES_SELENIUM);
 		}
-		return BasePage.driver.getDriver();
+		return driver.getDriver();
 		
-	}
-	
-	public static void navigateBack() {
-		navigateBack(true);
 	}
 	
 	/**
 	 * Navigates to previous site (works like pressing browsers 'Back' button)
-	 * 
-	 * @param andWait
-	 *            - wait for progress bars to load if true
 	 */
-	public static void navigateBack(boolean andWait) {
+	public static void navigateBack() {
 		getDriver().navigate()
 				.back();
 		getDriver().waitForPageLoaded();
@@ -192,7 +156,7 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	}
 	
 	public BasePage getParent() {
-		return this.parent;
+		return parent;
 	}
 	
 	public abstract String pageTitle();
@@ -201,7 +165,6 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 		BFLogger.logDebug(getClass().getName() + ": Opening  page: " + url);
 		getDriver().get(url);
 		getDriver().waitForPageLoaded();
-		
 	}
 	
 	public boolean isUrlAndPageTitleAsCurrentPage(String url) {
@@ -224,7 +187,9 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	 * BFElementNotFoundException
 	 * 
 	 * @throws BFElementNotFoundException
+	 *             BFElementNotFoundException
 	 * @param cssSelector
+	 *            cssSelector
 	 * @return false if element have an attribute displayed = none, otherwise return true;
 	 */
 	public static boolean isElementDisplayed(By cssSelector) {
@@ -242,12 +207,14 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	 * throw BFElementNotFoundException
 	 * 
 	 * @throws BFElementNotFoundException
+	 *             BFElementNotFoundException
 	 * @param cssSelector
+	 *            cssSelector
 	 * @param parent
+	 *            parent
 	 * @return false if element have an attribute displayed = none, otherwise return true;
 	 */
 	public static boolean isElementDisplayed(By cssSelector, WebElement parent) {
-		@SuppressWarnings("deprecation")
 		List<WebElement> elements = parent.findElements(cssSelector);
 		if (elements.isEmpty()) {
 			throw new BFElementNotFoundException(cssSelector);
@@ -260,7 +227,9 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	 * Check if given selector is displayed on the page and it contain a specific text
 	 * 
 	 * @param cssSelector
+	 *            cssSelector
 	 * @param text
+	 *            text
 	 * @return true if a given element is displayed with a specific text
 	 * @throws BFElementNotFoundException
 	 *             if element is not found in DOM
@@ -286,7 +255,9 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	 * Check if given selector is displayed on the page
 	 * 
 	 * @param selector
+	 *            selector
 	 * @param parent
+	 *            parent
 	 * @return true if a given element is displayed
 	 */
 	public static boolean isElementDisplayedNoException(By selector, WebElement parent) {
@@ -301,6 +272,7 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	 * Check if given selector is displayed on the page
 	 * 
 	 * @param selector
+	 *            selector
 	 * @return true if a given element is displayed
 	 */
 	public static boolean isElementDisplayedNoException(By selector) {
@@ -329,8 +301,8 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	}
 	
 	public static WebDriverWait getWebDriverWait() {
-		if (null == webDriverWait) {
-			BasePage.webDriverWait = new WebDriverWait(getDriver(), BasePage.EXPLICITYWAITTIMER);
+		if (Objects.isNull(webDriverWait)) {
+			BasePage.webDriverWait = new WebDriverWait(getDriver(), BasePage.EXPLICIT_WAIT_TIMER);
 		}
 		return BasePage.webDriverWait;
 	}
@@ -353,34 +325,31 @@ abstract public class BasePage implements IBasePage, ITestObserver {
 	 * Open link in new tab
 	 * 
 	 * @param url
+	 *            url
 	 */
 	public static void openInNewTab(String url) {
-		JavascriptExecutor js = (JavascriptExecutor) BasePage.getDriver();
+		JavascriptExecutor js = (JavascriptExecutor) getDriver();
 		js.executeScript("window.open(arguments[0], '_blank');", url);
 		WindowUtils.switchWindow(url, true);
 	}
 	
 	private static PropertiesSelenium setPropertiesSettings() {
 		// Get and then set properties information from selenium.settings file
-		PropertiesSelenium propertiesSelenium = Guice.createInjector(PropertiesSettingsModule.init())
+		return Guice.createInjector(PropertiesSettingsModule.init())
 				.getInstance(PropertiesSelenium.class);
-		return propertiesSelenium;
 	}
 	
 	private static void setRuntimeParametersSelenium() {
 		// Read System or maven parameters
 		BFLogger.logDebug(java.util.Arrays.asList(RuntimeParametersSelenium.values())
 				.toString());
-		
 	}
 	
-	private static void setEnvironmetInstance() {
+	private static void setEnvironmentInstance() {
 		/*
 		 * Environment variables either from environmnets.csv or any other input data. For now there is no properties
 		 * settings file for Selenium module. In future, please have a look on Core Module IEnvironmentService
 		 * environmetInstance = Guice.createInjector(new EnvironmentModule()) .getInstance(IEnvironmentService.class);
 		 */
-		
 	}
-	
 }

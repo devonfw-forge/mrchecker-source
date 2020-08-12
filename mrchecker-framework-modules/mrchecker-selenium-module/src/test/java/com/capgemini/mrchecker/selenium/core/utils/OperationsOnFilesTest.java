@@ -3,13 +3,13 @@ package com.capgemini.mrchecker.selenium.core.utils;
 import java.io.File;
 import java.io.IOException;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-import com.capgemini.mrchecker.selenium.core.utils.OperationsOnFiles;
-
+@Disabled
 public class OperationsOnFilesTest {
 	
 	private String	testSourceFile		= "sourceTest.txt";
@@ -25,7 +25,7 @@ public class OperationsOnFilesTest {
 	File	goodTargetFile;
 	File	badTargetfile;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws IOException {
 		goodSourceFile = new File(goodSourceFilePath);
 		badSourceFile = new File(badSourceFilePath);
@@ -33,13 +33,13 @@ public class OperationsOnFilesTest {
 		badTargetfile = new File(badTargetFilePath);
 		
 		Assert.assertTrue("Failed to create source directories.", goodSourceFile.getParentFile()
-						.mkdirs());
+				.mkdirs());
 		Assert.assertTrue("Failed to create source file.", goodSourceFile.createNewFile());
 		Assert.assertTrue("Failed to create target directories.", goodTargetFile.getParentFile()
-						.mkdirs());
+				.mkdirs());
 	}
 	
-	@After
+	@AfterEach
 	public void tearDown() throws IOException {
 		OperationsOnFiles.removeFileAndParentsIfEmpty(goodSourceFile.toPath());
 		OperationsOnFiles.removeFileAndParentsIfEmpty(goodTargetFile.toPath());

@@ -10,7 +10,7 @@ import com.capgemini.mrchecker.selenium.core.BasePage;
 
 public class ListElements extends BasicElement implements IBasicElement {
 	
-	private By cssSelector;
+	private final By cssSelector;
 	
 	public ListElements(By cssSelector) {
 		super(ElementType.LIST, cssSelector);
@@ -19,20 +19,20 @@ public class ListElements extends BasicElement implements IBasicElement {
 	
 	public Integer getSize() {
 		return BasePage.getDriver()
-						.findElementDynamics(this.cssSelector)
-						.size();
+				.findElementDynamics(cssSelector)
+				.size();
 		
 	}
 	
 	public List<WebElement> getList() {
 		return BasePage.getDriver()
-						.findElementDynamics(this.cssSelector);
+				.findElementDynamics(cssSelector);
 	}
 	
 	public List<String> getTextList() {
-		return this.getList()
-						.stream()
-						.map(element -> element.getText())
-						.collect(Collectors.toList());
+		return getList()
+				.stream()
+				.map(WebElement::getText)
+				.collect(Collectors.toList());
 	}
 }

@@ -1,54 +1,56 @@
 package com.capgemini.mrchecker.test.core.base.runtime;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * This class stores various system properties
  *
  * @author LUSTEFAN
  */
-public enum RuntimeParametersCore implements RuntimeParametersI {
-
+public enum RuntimeParametersCore implements IRuntimeParameters {
+	
 	ENV("env", "DEV");
-
-	private String paramName;
-	private String paramValue;
-	private String defaultValue;
-
-	private RuntimeParametersCore(String paramName, String defaultValue) {
+	
+	private final String	paramName;
+	private String			paramValue;
+	private String			defaultValue;
+	
+	RuntimeParametersCore(String paramName, String defaultValue) {
 		this.paramName = paramName;
 		this.defaultValue = defaultValue;
 		setValue();
 	}
-
+	
 	@Override
 	public String getValue() {
-		return this.paramValue;
+		return paramValue;
 	}
-
+	
 	@Override
 	public String getKey() {
-		return this.paramName;
+		return paramName;
 	}
-
+	
 	@Override
 	public String toString() {
-		return paramName + "=" + this.getValue();
+		return getKey() + "=" + getValue();
 	}
-
+	
 	@Override
 	public void refreshParameterValue() {
 		setValue();
 	}
-
+	
 	private void setValue() {
-		String systemParameterValue = System.getProperty(this.paramName);
-		this.paramValue = isSystemParameterEmpty(systemParameterValue) ? this.defaultValue : systemParameterValue;
+		String systemParameterValue = System.getProperty(paramName);
+		paramValue = isSystemParameterEmpty(systemParameterValue) ? defaultValue : systemParameterValue;
 	}
-
+	
 	public void setDefaultValue(String value) {
-		this.defaultValue = isSystemParameterEmpty(value) ? this.defaultValue : value;
+		defaultValue = isSystemParameterEmpty(value) ? defaultValue : value;
 	}
-
+	
 	private boolean isSystemParameterEmpty(String systemParameterValue) {
-		return (null == systemParameterValue || "".equals(systemParameterValue) || "null".equals(systemParameterValue));
+		return (StringUtils.isEmpty(systemParameterValue) || "null".equals(systemParameterValue));
 	}
 }

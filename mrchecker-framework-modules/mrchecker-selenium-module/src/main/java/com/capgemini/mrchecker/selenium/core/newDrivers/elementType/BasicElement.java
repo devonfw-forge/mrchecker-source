@@ -8,14 +8,14 @@ import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundExcepti
 
 public abstract class BasicElement implements IBasicElement {
 	
-	private ElementType type;
-	private By cssSelector;
+	private final ElementType	type;
+	private By					cssSelector;
 	
 	public BasicElement(ElementType type, By cssSelector) {
 		this.type = type;
 		this.setCssSelector(cssSelector);
 		
-		this.load();
+		load();
 	}
 	
 	@Override
@@ -25,14 +25,10 @@ public abstract class BasicElement implements IBasicElement {
 	
 	@Override
 	public String getElementTypeName() {
-		return this.type.toString();
+		return type.toString();
 	}
 	
 	public WebElement getElement() throws BFElementNotFoundException {
-		return getElement(0);
-	}
-	
-	public WebElement getElement(int timeOutInSec) throws BFElementNotFoundException {
 		return BasePage.getDriver()
 				.findElementDynamic(getCssSelector());
 	}
@@ -50,7 +46,7 @@ public abstract class BasicElement implements IBasicElement {
 	}
 	
 	public Boolean isDisplayed() {
-		return BasePage.isElementDisplayed(this.getCssSelector());
+		return BasePage.isElementDisplayed(getCssSelector());
 	}
 	
 	private By getCssSelector() {
@@ -60,5 +56,4 @@ public abstract class BasicElement implements IBasicElement {
 	private void setCssSelector(By cssSelector) {
 		this.cssSelector = cssSelector;
 	}
-	
 }

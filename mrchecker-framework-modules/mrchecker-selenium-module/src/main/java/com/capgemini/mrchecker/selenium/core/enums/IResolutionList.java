@@ -2,9 +2,9 @@ package com.capgemini.mrchecker.selenium.core.enums;
 
 public interface IResolutionList {
 	
-	public int getWidth();
+	int getWidth();
 	
-	public int getHeight();
+	int getHeight();
 	
-	public String toString();
+	String toString();
 }

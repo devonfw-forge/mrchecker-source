@@ -5,9 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.capgemini.mrchecker</groupId>
     <artifactId>mrchecker-test-framework</artifactId>
-    <version>2.4.2-SNAPSHOT</version>
+    <version>3.0.1-SNAPSHOT</version>
     <name>MrChecker</name>
-    <description>MrChecker Test Framework is an automated testing framework for functional testing of web applications, native mobile apps, webservices and database.</description>
+    <description>MrChecker Test Framework is an automated testing framework for functional testing of web applications,
+        native mobile apps, webservices and database.
+    </description>
     <url>https://github.com/devonfw/devonfw-testing</url>
     <packaging>pom</packaging>
 
@@ -69,30 +71,35 @@
 
 
     <properties>
-
-
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
         <!-- Report maven generator -->
         <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
         <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
 
+        <!--  Code coverage tools-->
+        <jacoco-maven-plugin.version>0.8.3</jacoco-maven-plugin.version>
+
         <!-- Java settings -->
         <java.compiler.version>1.8</java.compiler.version>
 
         <!-- Tests executors -->
-        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
-        <surefire.provider.version>1.0.0-M2</surefire.provider.version>
-        <thread.count>8</thread.count>
+        <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
+        <surefire.provider.version>1.3.2</surefire.provider.version>
 
         <!-- Test tools -->
         <hamcrest.version>1.3</hamcrest.version>
-        <junit.version>4.12</junit.version>
-        <mockito.version>1.8.5</mockito.version>
+        <junit.jupiter.version>5.6.2</junit.jupiter.version>
+        <junit.platform.version>1.6.2</junit.platform.version>
+        <junit.vintage.version>5.6.2</junit.vintage.version>
+        <junit.params.version>5.6.2</junit.params.version>
+        <mockito.version>2.27.0</mockito.version>
         <joda-time.version>2.9.9</joda-time.version>
-        <commons-csv.version>1.1</commons-csv.version>
+        <commons-csv.version>1.8</commons-csv.version>
+        <commons-lang3.version>3.1</commons-lang3.version>
         <JUnitParams.version>1.0.4</JUnitParams.version>
         <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
+
 
         <!-- Dependency Injection -->
         <guice.version>4.1.0</guice.version>
@@ -103,6 +110,8 @@
         <!-- Hashes sensitive data -->
         <org.jasypt.version>1.9.2</org.jasypt.version>
 
+        <jackson-databind.version>2.11.0</jackson-databind.version>
+
         <!-- Static analyze settings -->
         <formatter-maven-plugin.version>2.7.1</formatter-maven-plugin.version>
         <style_format.directory>${pom.basedir}/../../resources/style_format</style_format.directory>
@@ -111,62 +120,26 @@
         <rest-assured.version>3.0.6</rest-assured.version>
 
         <!-- Allure Annotations -->
-        <allure-junit4-listener.version>2.6.0</allure-junit4-listener.version> <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-junit4 -->
+        <aspectj.version>1.9.5</aspectj.version>
+        <allure-junit5.version>2.13.3</allure-junit5.version>
+        <allure-java-commons.version>2.13.3</allure-java-commons.version>
+        <allure-junit-platform.version>2.13.3</allure-junit-platform.version>
+        <allure-maven.version>2.10.0</allure-maven.version>
     </properties>
-
 
     <dependencyManagement>
         <dependencies>
-
-            <dependency>
-                <groupId>com.google.inject</groupId>
-                <artifactId>guice</artifactId>
-                <version>${guice.version}</version>
-            </dependency>
-
-            <!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all -->
-            <dependency>
-                <groupId>org.hamcrest</groupId>
-                <artifactId>hamcrest-all</artifactId>
-                <version>${hamcrest.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-csv</artifactId>
-                <version>${commons-csv.version}</version>
-            </dependency>
-
-
-            <!--This dependency is necessary for JUnit plugin. -->
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>pl.pragmatists</groupId>
-                <artifactId>JUnitParams</artifactId>
-                <version>${JUnitParams.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.junit.platform</groupId>
                 <artifactId>junit-platform-surefire-provider</artifactId>
                 <version>${surefire.provider.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>${mockito.version}</version>
-            </dependency>
 
-            <!-- For time and date dependency actions -->
             <dependency>
-                <groupId>joda-time</groupId>
-                <artifactId>joda-time</artifactId>
-                <version>${joda-time.version}</version>
+                <groupId>pl.pragmatists</groupId>
+                <artifactId>JUnitParams</artifactId>
+                <version>${JUnitParams.version}</version>
             </dependency>
 
             <dependency>
@@ -199,14 +172,123 @@
             <dependency>
                 <!-- Test listener. Binds Junit exec to Allure annotation -->
                 <groupId>io.qameta.allure</groupId>
-                <artifactId>allure-junit4</artifactId>
-                <version>${allure-junit4-listener.version}</version>
+                <artifactId>allure-junit5</artifactId>
+                <version>${allure-junit5.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <!-- Test listener. Binds Junit exec to Allure annotation -->
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-junit-platform</artifactId>
+                <version>${allure-junit-platform.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <!-- Test listener. Binds Junit exec to Allure annotation -->
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>${allure-maven.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-java-commons</artifactId>
+                <version>${allure-java-commons.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>${aspectj.version}</version>
             </dependency>
 
 
         </dependencies>
     </dependencyManagement>
 
+
+    <!-- The bellow dependencies will ba automatically included in modules -->
+    <dependencies>
+
+        <!--This dependency is necessary for Dependency Injection plugin. -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+
+        <!--This dependency is necessary for JUnit plugin. -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.jupiter.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.jupiter.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.params.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-runner</artifactId>
+            <version>${junit.platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit.vintage.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Test tools -->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>${hamcrest.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+        </dependency>
+
+        <!-- Various tools -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>${commons-csv.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+
+        <!-- For time and date dependency actions -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${joda-time.version}</version>
+        </dependency>
+
+    </dependencies>
 
     <!-- Build goals/actions -->
     <build>
@@ -231,7 +313,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.6.1</version>
+                    <version>3.8.1</version>
                     <configuration>
                         <source>${java.compiler.version}</source>
                         <target>${java.compiler.version}</target>
@@ -272,9 +354,6 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
                     <configuration>
-                        <parallel>classes</parallel>
-                        <perCoreThreadCount>false</perCoreThreadCount>
-                        <threadCount>${thread.count}</threadCount>
                         <includes>
                             <include>**/*.class</include>
                         </includes>
@@ -282,11 +361,30 @@
                             <exclude>**/RawTest.*</exclude>
                             <exclude>**/OutboxDocumentTest.*</exclude>
                         </excludes>
-                        <testFailureIgnore>true</testFailureIgnore> <!-- we want our build proceed despite errors -->
-                        <!-- <argLine>@{argLine}</argLine> -->
+                        <argLine>
+                            -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                            ${surefireArgLine}
+                        </argLine>
+                        <properties>
+                            <property>
+                                <name>listener</name>
+                                <value>io.qameta.allure.junit5.AllureJunit5</value>
+                            </property>
+                        </properties>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.aspectj</groupId>
+                            <artifactId>aspectjweaver</artifactId>
+                            <version>${aspectj.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.maven.surefire</groupId>
+                            <artifactId>surefire-api</artifactId>
+                            <version>${maven-surefire-plugin.version}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
-
 
                 <!-- Generate report for maven site goal -->
                 <plugin>
@@ -300,29 +398,14 @@
                     <artifactId>maven-project-info-reports-plugin</artifactId>
                     <version>${maven-project-info-reports-plugin.version}</version>
                 </plugin>
+
                 <plugin>
-                  <groupId>org.jacoco</groupId>
-                  <artifactId>jacoco-maven-plugin</artifactId>
-                  <version>${jacoco-maven-plugin.version}</version>
-                  <executions>
-                      <execution>
-                          <id>prepare-tests</id>
-                          <goals>
-                              <goal>prepare-agent</goal>
-                          </goals>
-                          <configuration>
-                              <destFile>${project.build.directory}/jacoco.exec</destFile>
-                              <propertyName>surefireArgLine</propertyName>
-                          </configuration>
-                      </execution>
-                      <execution>
-                          <id>coverage-report</id>
-                          <phase>prepare-package</phase>
-                          <goals>
-                              <goal>report</goal>
-                          </goals>
-                      </execution>
-                  </executions>
+                    <groupId>io.qameta.allure</groupId>
+                    <artifactId>allure-maven</artifactId>
+                    <version>${allure-maven.version}</version>
+                    <configuration>
+                        <reportVersion>2.4.1</reportVersion>
+                    </configuration>
                 </plugin>
             </plugins>
 
@@ -336,12 +419,34 @@
                     <target>8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-tests</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco.exec</destFile>
+                            <propertyName>surefireArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>coverage-report</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-
     </build>
 
     <profiles>
-
         <profile>
             <!-- RELEASE -->
             <id>release</id>
@@ -486,6 +591,7 @@
             </build>
 
             <reporting>
+                <excludeDefaults>true</excludeDefaults>
                 <plugins>
                     <!-- Report project information -->
                     <plugin>
@@ -555,6 +661,7 @@
     </profiles>
 
     <reporting>
+        <excludeDefaults>true</excludeDefaults>
         <plugins>
             <!-- Report project information -->
             <plugin>

@@ -7,5 +7,4 @@ public interface IBasicElement {
 	String getElementTypeName();
 	
 	WebElement load();
-	
 }

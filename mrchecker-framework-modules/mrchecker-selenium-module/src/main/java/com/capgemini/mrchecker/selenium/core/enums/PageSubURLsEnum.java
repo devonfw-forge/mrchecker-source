@@ -2,22 +2,22 @@ package com.capgemini.mrchecker.selenium.core.enums;
 
 import com.capgemini.mrchecker.selenium.core.base.environment.GetEnvironmentParam;
 
-public enum PageSubURLsEnum implements SubUrl {
+public enum PageSubURLsEnum implements ISubUrl {
 	
-	WWW_FONT_URL {
+	WWW_FONT_URL("") {
 		@Override
 		public String subURL() {
 			return GetEnvironmentParam.WWW_FONT_URL.getValue();
 		}
 	},
-	TOOLS_QA {
+	TOOLS_QA("") {
 		@Override
 		public String subURL() {
 			return GetEnvironmentParam.TOOLS_QA.getValue();
 		}
 	},
 	
-	WEB_SERVICE {
+	WEB_SERVICE("") {
 		@Override
 		public String subURL() {
 			return GetEnvironmentParam.WEB_SERVICE.getValue();
@@ -37,14 +37,10 @@ public enum PageSubURLsEnum implements SubUrl {
 	/*
 	 * Sub urls are used as real locations in Bank test environment
 	 */
-	private String subURL;
+	private final String subURL;
 	
-	private PageSubURLsEnum(String subURL) {
+	PageSubURLsEnum(String subURL) {
 		this.subURL = subURL;
-	};
-	
-	private PageSubURLsEnum() {
-		
 	}
 	
 	@Override
