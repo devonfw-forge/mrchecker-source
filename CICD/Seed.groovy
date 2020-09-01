@@ -10,7 +10,7 @@ def modules = ['mrchecker-core-module','mrchecker-database-module','mrchecker-ex
 def configs = []
 def folders = ['build','test','deploy']
 modules.each{
-    configs << new Config(jenkinsFolder:'build', scriptPath:'CICD/Jenkinsfile', repoUrl: repoUrl, module:it,defaultScriptId:'DefaultBuildJenkinsFile')
+    configs << new Config(jenkinsFolder:'build', scriptPath:'CICD/Build_Jenkinsfile', repoUrl: repoUrl, module:it,defaultScriptId:'DefaultBuildJenkinsFile')
     configs << new Config(jenkinsFolder:'test' , scriptPath:"mrchecker-framework-modules/${it}/Jenkinsfile", repoUrl: repoUrl, module:it, defaultScriptId:'DefaultTestJenkinsFile')
     configs << new Config(jenkinsFolder:'deploy', scriptPath:'CICD/Deploy_Jenkinsfile', repoUrl: repoUrl, module:it, defaultScriptId:'DefaultDeployJenkinsFile')
 }
