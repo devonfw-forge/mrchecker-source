@@ -135,7 +135,6 @@ abstract public class BasePage extends Page implements IBasePage {
 			driver = new DriverManager(PROPERTIES_SELENIUM);
 		}
 		return driver.getDriver();
-		
 	}
 	
 	/**
