@@ -10,7 +10,8 @@ public class DriverManager {
 	private static EntityManagerFactory emf;
 
 	public static EntityManager createEntityManager(String dbPrefix) {
-		return getEntityManagerFactory(dbPrefix).createEntityManager();
+		emf = getEntityManagerFactory(dbPrefix);
+		return emf.createEntityManager();
 	}
 
 	private static EntityManagerFactory getEntityManagerFactory(String dbPrefix) {

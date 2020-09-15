@@ -4,8 +4,8 @@ import java.util.Objects;
 
 import javax.persistence.EntityManager;
 
-import com.capgemini.mrchecker.database.core.base.properties.PropertiesFileSettings;
-import com.capgemini.mrchecker.database.core.base.runtime.RuntimeParameters;
+import com.capgemini.mrchecker.database.core.base.properties.PropertiesDatabase;
+import com.capgemini.mrchecker.database.core.base.runtime.RuntimeParametersDatabase;
 import com.capgemini.mrchecker.test.core.BaseTest;
 import com.capgemini.mrchecker.test.core.ModuleType;
 import com.capgemini.mrchecker.test.core.Page;
@@ -15,25 +15,22 @@ import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModul
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.google.inject.Guice;
 
-import lombok.Getter;
-
 abstract public class BasePageDatabase extends Page implements IDatabasePrefixHolder {
-	
-	private final static PropertiesFileSettings	PROPERTIES_FILE_SETTINGS;
+
+	protected EntityManager entityManager = null;
+
 	private static IEnvironmentService			environmentService;
 	private final static IAnalytics				ANALYTICS;
-	
-	@Getter
-	protected EntityManager entityManager = null;
-	
-	public final static String analyticsCategoryName = "Database-Module";
-	
+	public final static String ANALYTICS_CATEGORY_NAME = "Database-Module";
+
+	private final static PropertiesDatabase PROPERTIES_DATABASE;
+
 	static {
 		// Get analytics instance created in BaseTest
 		ANALYTICS = BaseTest.getAnalytics();
 		
 		// Get and then set properties information from selenium.settings file
-		PROPERTIES_FILE_SETTINGS = setPropertiesSettings();
+		PROPERTIES_DATABASE = setPropertiesSettings();
 		
 		// Read System or maven parameters
 		setRuntimeParametersDatabase();
@@ -46,7 +43,7 @@ abstract public class BasePageDatabase extends Page implements IDatabasePrefixHo
 		assignEntityManager();
 	}
 	
-	public static IAnalytics getANALYTICS() {
+	public static IAnalytics getAnalytics() {
 		return ANALYTICS;
 	}
 	
@@ -68,17 +65,17 @@ abstract public class BasePageDatabase extends Page implements IDatabasePrefixHo
 		return ModuleType.DATABASE;
 	}
 	
-	private static PropertiesFileSettings setPropertiesSettings() {
+	private static PropertiesDatabase setPropertiesSettings() {
 		// Get and then set properties information from settings.properties file
 		return Guice.createInjector(PropertiesSettingsModule.init())
-				.getInstance(PropertiesFileSettings.class);
+				.getInstance(PropertiesDatabase.class);
 	}
 	
 	private static void setRuntimeParametersDatabase() {
 		// Read System or maven parameters
-		BFLogger.logDebug(java.util.Arrays.asList(RuntimeParameters.values())
+		BFLogger.logDebug(java.util.Arrays.asList(RuntimeParametersDatabase.values())
 				.toString());
-		
+
 	}
 	
 	private void closeSession() {
@@ -92,14 +89,16 @@ abstract public class BasePageDatabase extends Page implements IDatabasePrefixHo
 			entityManager = DriverManager.createEntityManager(getDatabaseUnitName());
 		}
 	}
-	
+
+	public EntityManager getEntityManager() {
+		return entityManager;
+	}
+
 	private static void setEnvironmentInstance() {
 		/*
-		 * Environment variables either from environmnets.csv or any other input data. For now there is no properties
+		 * Environment variables either from environments.csv or any other input data. For now there is no properties
 		 * settings file for Selenium module. In future, please have a look on Core Module IEnvironmentService
-		 * environmetInstance = Guice.createInjector(new EnvironmentModule()) .getInstance(IEnvironmentService.class);
+		 * environmentInstance = Guice.createInjector(new EnvironmentModule()) .getInstance(IEnvironmentService.class);
 		 */
-		
 	}
-	
 }
