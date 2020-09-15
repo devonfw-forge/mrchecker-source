@@ -1,19 +1,19 @@
 package com.capgemini.mrchecker.database.core.base.runtime;
 
-import com.capgemini.mrchecker.test.core.base.runtime.IRuntimeParameters;
 import org.apache.commons.lang3.StringUtils;
 
-public enum RuntimeParameters implements IRuntimeParameters {
+import com.capgemini.mrchecker.test.core.base.runtime.IRuntimeParameters;
+
+public enum RuntimeParametersDatabase implements IRuntimeParameters {
 	
 	DATABASE_TYPE("databaseType", ""),
-	JPA_PROVIDER("provider", "hibernate"),
-	DATABASE_USERNAME("databaseUsername", "");
+	JPA_PROVIDER("provider", "hibernate");
 	
 	private final String	paramName;
 	private String			paramValue;
 	private final String	defaultValue;
 	
-	RuntimeParameters(String paramName, String defaultValue) {
+	RuntimeParametersDatabase(String paramName, String defaultValue) {
 		this.paramName = paramName;
 		this.defaultValue = defaultValue;
 		setValue();
@@ -38,20 +38,13 @@ public enum RuntimeParameters implements IRuntimeParameters {
 	public void refreshParameterValue() {
 		setValue();
 	}
-	
-	private void setValue() {
-		
-		String paramValue = System.getProperty(paramName);
-		paramValue = isSystemParameterEmpty(paramValue) ? defaultValue : paramValue.toLowerCase();
-		
-		switch (this.name()) {
-		}
-		
-		this.paramValue = paramValue;
+
+	protected void setValue() {
+		String paramValueFromSystem = System.getProperty(getKey());
+		this.paramValue = isSystemParameterEmpty(paramValueFromSystem) ? defaultValue : paramValueFromSystem;
 	}
 	
 	private boolean isSystemParameterEmpty(String systemParameterValue) {
 		return (StringUtils.isEmpty(systemParameterValue) || "null".equals(systemParameterValue));
 	}
-	
 }

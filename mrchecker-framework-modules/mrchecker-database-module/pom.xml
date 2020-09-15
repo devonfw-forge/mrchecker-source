@@ -132,17 +132,6 @@
     <!-- Build goals/actions -->
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <systemPropertyVariables>
-                        <db.connection.url>127.0.0.1:3306</db.connection.url>
-                        <db.username>root</db.username>
-                        <db.password>1234</db.password>
-                    </systemPropertyVariables>
-                </configuration>
-            </plugin>
             <!-- Plugins are taken from parent pom.xml -->
         </plugins>
     </build>

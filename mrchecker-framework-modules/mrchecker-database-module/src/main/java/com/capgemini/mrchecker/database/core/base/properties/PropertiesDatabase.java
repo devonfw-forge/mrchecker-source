@@ -3,28 +3,30 @@ package com.capgemini.mrchecker.database.core.base.properties;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class PropertiesFileSettings {
+public class PropertiesDatabase {
 
 	private final String dbDrivers  = "./lib/dbdrivers";
 	private String jdbcOracle = dbDrivers + "/oracle/ojdbc8.jar";
 	private String proxy      = "";
 
 	@Inject(optional = true)
+	@SuppressWarnings("unused")
 	private void setJdbcOracle(@Named("database.oracle") String path) {
-		this.jdbcOracle = path;
+		jdbcOracle = path;
 	}
 
 	public String getJdbcOracle() {
-		return this.jdbcOracle;
+		return jdbcOracle;
 	}
 
 	@Inject(optional = true)
+	@SuppressWarnings("unused")
 	private void setProxy(@Named("database.proxy") String path) {
-		this.proxy = path;
+		proxy = path;
 	}
 
 	public String getProxy() {
-		return this.proxy;
+		return proxy;
 	}
 
 }
