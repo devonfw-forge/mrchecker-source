@@ -19,7 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.test.core.TestExecutionObserver;
-import com.capgemini.mrchecker.test.core.utils.FileUtils;
+import com.capgemini.mrchecker.test.core.utils.FileTestUtils;
 
 public class TestExecutionClassObserverTest extends TestExecutionObserverBaseTest {
 	
@@ -54,35 +54,35 @@ public class TestExecutionClassObserverTest extends TestExecutionObserverBaseTes
 	public void shouldCallBeforeAll() throws IOException {
 		SUT.beforeAll(contextMock);
 		
-		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- CLASS STARTED."));
+		assertThat(FileTestUtils.getAllLinesInFile(FileTestUtils.getLogFilePath()), containsString("- CLASS STARTED."));
 	}
 	
 	@Test
 	public void shouldCallBeforeTestExecution() throws IOException {
 		SUT.beforeTestExecution(contextMock);
 		
-		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- STARTED."));
+		assertThat(FileTestUtils.getAllLinesInFile(FileTestUtils.getLogFilePath()), containsString("- STARTED."));
 	}
 	
 	@Test
 	public void shouldCallAfterTestExecution() throws IOException {
 		SUT.afterTestExecution(contextMock);
 		
-		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- FINISHED."));
+		assertThat(FileTestUtils.getAllLinesInFile(FileTestUtils.getLogFilePath()), containsString("- FINISHED."));
 	}
 	
 	@Test
 	public void shouldCallTestDisabled() throws IOException {
 		SUT.testDisabled(contextMock, Optional.of("Test_reason"));
 		
-		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- DISABLED."));
+		assertThat(FileTestUtils.getAllLinesInFile(FileTestUtils.getLogFilePath()), containsString("- DISABLED."));
 	}
 	
 	@Test
 	public void shouldCallTestAborted() throws IOException {
 		SUT.testAborted(contextMock, new RuntimeException("Test_Exception"));
 		
-		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- ABORTED."));
+		assertThat(FileTestUtils.getAllLinesInFile(FileTestUtils.getLogFilePath()), containsString("- ABORTED."));
 		verify(observerMock, times(0)).onTestFinish();
 	}
 	
@@ -90,7 +90,7 @@ public class TestExecutionClassObserverTest extends TestExecutionObserverBaseTes
 	public void shouldCallTestSuccessful() throws IOException {
 		SUT.testSuccessful(contextMock);
 		
-		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- PASSED."));
+		assertThat(FileTestUtils.getAllLinesInFile(FileTestUtils.getLogFilePath()), containsString("- PASSED."));
 		verify(observerMock, times(1)).onTestSuccess();
 		verify(observerMock, times(0)).onTestFinish();
 	}
@@ -99,7 +99,7 @@ public class TestExecutionClassObserverTest extends TestExecutionObserverBaseTes
 	public void shouldCallTestFailed() throws IOException {
 		SUT.testFailed(contextMock, new RuntimeException("Test_Exception"));
 		
-		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- FAILED."));
+		assertThat(FileTestUtils.getAllLinesInFile(FileTestUtils.getLogFilePath()), containsString("- FAILED."));
 		verify(observerMock, times(1)).onTestFailure();
 		verify(observerMock, times(0)).onTestFinish();
 	}
@@ -107,25 +107,25 @@ public class TestExecutionClassObserverTest extends TestExecutionObserverBaseTes
 	@Test
 	public void shouldCallHandleBeforeAllMethodExecutionException() throws Throwable {
 		assertThrows(RuntimeException.class, () -> SUT.handleBeforeAllMethodExecutionException(contextMock, new RuntimeException()));
-		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- EXCEPTION in @BeforeAll:"));
+		assertThat(FileTestUtils.getAllLinesInFile(FileTestUtils.getLogFilePath()), containsString("- EXCEPTION in @BeforeAll:"));
 	}
 	
 	@Test
 	public void shouldCallHandleBeforeEachMethodExecutionException() throws Throwable {
 		assertThrows(RuntimeException.class, () -> SUT.handleBeforeEachMethodExecutionException(contextMock, new RuntimeException()));
-		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- EXCEPTION in @BeforeEach:"));
+		assertThat(FileTestUtils.getAllLinesInFile(FileTestUtils.getLogFilePath()), containsString("- EXCEPTION in @BeforeEach:"));
 	}
 	
 	@Test
 	public void shouldCallHandleTestExecutionException() throws Throwable {
 		assertThrows(RuntimeException.class, () -> SUT.handleTestExecutionException(contextMock, new RuntimeException()));
-		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- EXCEPTION in @Test:"));
+		assertThat(FileTestUtils.getAllLinesInFile(FileTestUtils.getLogFilePath()), containsString("- EXCEPTION in @Test:"));
 	}
 	
 	@Test
 	public void shouldCallHandleAfterEachMethodExecutionException() throws Throwable {
 		assertThrows(RuntimeException.class, () -> SUT.handleAfterEachMethodExecutionException(contextMock, new RuntimeException()));
-		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- EXCEPTION in @AfterEach:"));
+		assertThat(FileTestUtils.getAllLinesInFile(FileTestUtils.getLogFilePath()), containsString("- EXCEPTION in @AfterEach:"));
 	}
 	
 	@Test
@@ -135,7 +135,7 @@ public class TestExecutionClassObserverTest extends TestExecutionObserverBaseTes
 		} else {
 			SUT.handleAfterAllMethodExecutionException(contextMock, new RuntimeException());
 		}
-		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("- EXCEPTION in @AfterAll:"));
+		assertThat(FileTestUtils.getAllLinesInFile(FileTestUtils.getLogFilePath()), containsString("- EXCEPTION in @AfterAll:"));
 	}
 	
 	@Test
