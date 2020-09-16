@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.capgemini.mrchecker.test.core.utils.FileUtils;
+import com.capgemini.mrchecker.test.core.utils.FileTestUtils;
 
 public class TestExecutionClassObserverAfterAllTest extends TestExecutionObserverBaseTest {
 	
@@ -31,7 +31,7 @@ public class TestExecutionClassObserverAfterAllTest extends TestExecutionObserve
 		SUT.afterAll(contextMock);
 		
 		verify(observerMock, times(1)).onTestClassFinish();
-		assertThat(FileUtils.getAllLinesInFile(FileUtils.getLogFilePath()), containsString("All observers cleared."));
+		assertThat(FileTestUtils.getAllLinesInFile(FileTestUtils.getLogFilePath()), containsString("All observers cleared."));
 		
 		SUT.testSuccessful(contextMock);
 		

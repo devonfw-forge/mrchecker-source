@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.capgemini.mrchecker.test.core.logger.BFLoggerInstance;
 import com.capgemini.mrchecker.test.core.tags.IntegrationTest;
-import com.capgemini.mrchecker.test.core.utils.FileUtils;
+import com.capgemini.mrchecker.test.core.utils.FileTestUtils;
 
 @IntegrationTest
 public class LoggingTest {
@@ -63,7 +63,7 @@ public class LoggingTest {
 		
 		BFLogger.logInfo(message);
 		
-		String lastLogLine = FileUtils.getLastLineInFile(FileUtils.getLogFilePath());
+		String lastLogLine = FileTestUtils.getLastLineInFile(FileTestUtils.getLogFilePath());
 		assertThat(lastLogLine, containsString(message));
 		assertThat(lastLogLine, containsString("logInfo"));
 	}
@@ -74,7 +74,7 @@ public class LoggingTest {
 		
 		BFLogger.logDebug(message);
 		
-		String lastLogLine = FileUtils.getLastLineInFile(FileUtils.getLogFilePath());
+		String lastLogLine = FileTestUtils.getLastLineInFile(FileTestUtils.getLogFilePath());
 		assertThat(lastLogLine, containsString(message));
 		assertThat(lastLogLine, containsString("logDebug"));
 	}
@@ -85,7 +85,7 @@ public class LoggingTest {
 		
 		BFLogger.logAnalytics(message);
 		
-		String lastLogLine = FileUtils.getLastLineInFile(FileUtils.getLogFilePath());
+		String lastLogLine = FileTestUtils.getLastLineInFile(FileTestUtils.getLogFilePath());
 		assertThat(lastLogLine, containsString(message));
 		assertThat(lastLogLine, containsString("logAnalytics"));
 	}
@@ -96,7 +96,7 @@ public class LoggingTest {
 		
 		BFLogger.logFunctionBegin(message);
 		
-		String lastLogLine = FileUtils.getLastLineInFile(FileUtils.getLogFilePath());
+		String lastLogLine = FileTestUtils.getLastLineInFile(FileTestUtils.getLogFilePath());
 		assertThat(lastLogLine, containsString(message));
 		assertThat(lastLogLine, containsString("logDebug"));
 		assertThat(lastLogLine, containsString("Function: "));
@@ -108,7 +108,7 @@ public class LoggingTest {
 		
 		BFLogger.logFunctionEnd();
 		
-		String lastLogLine = FileUtils.getLastLineInFile(FileUtils.getLogFilePath());
+		String lastLogLine = FileTestUtils.getLastLineInFile(FileTestUtils.getLogFilePath());
 		assertThat(lastLogLine, containsString("END"));
 		assertThat(lastLogLine, containsString("logDebug"));
 	}
@@ -119,7 +119,7 @@ public class LoggingTest {
 		
 		BFLogger.logError(message);
 		
-		String lastLogLine = FileUtils.getLastLineInFile(FileUtils.getLogFilePath());
+		String lastLogLine = FileTestUtils.getLastLineInFile(FileTestUtils.getLogFilePath());
 		assertThat(lastLogLine, containsString(message));
 		assertThat(lastLogLine, containsString("logError"));
 	}
@@ -130,7 +130,7 @@ public class LoggingTest {
 		
 		BFLogger.logError(FEND);
 		
-		String lastLogLine = FileUtils.getLastLineInFile(FileUtils.getLogFilePath());
+		String lastLogLine = FileTestUtils.getLastLineInFile(FileTestUtils.getLogFilePath());
 		assertThat(lastLogLine, containsString(FEND));
 		assertThat(lastLogLine, containsString("logError"));
 	}
@@ -141,11 +141,11 @@ public class LoggingTest {
 		
 		BFLogger.logEnv(message);
 		
-		String lastLogLine = FileUtils.getLastLineInFile(FileUtils.getEnvLogFilePath());
+		String lastLogLine = FileTestUtils.getLastLineInFile(FileTestUtils.getEnvLogFilePath());
 		assertThat(lastLogLine, containsString(message));
 		assertThat(lastLogLine, containsString("logEnv"));
 		
-		lastLogLine = FileUtils.getLastLineInFile(FileUtils.getLogFilePath());
+		lastLogLine = FileTestUtils.getLastLineInFile(FileTestUtils.getLogFilePath());
 		assertThat(lastLogLine, containsString(message));
 		assertThat(lastLogLine, containsString("logEnv"));
 	}
@@ -156,11 +156,11 @@ public class LoggingTest {
 		
 		BFLogger.logEnv(FEND);
 		
-		String lastLogLine = FileUtils.getLastLineInFile(FileUtils.getEnvLogFilePath());
+		String lastLogLine = FileTestUtils.getLastLineInFile(FileTestUtils.getEnvLogFilePath());
 		assertThat(lastLogLine, containsString(FEND));
 		assertThat(lastLogLine, containsString("logEnv"));
 		
-		lastLogLine = FileUtils.getLastLineInFile(FileUtils.getLogFilePath());
+		lastLogLine = FileTestUtils.getLastLineInFile(FileTestUtils.getLogFilePath());
 		assertThat(lastLogLine, containsString(FEND));
 		assertThat(lastLogLine, containsString("logEnv"));
 	}
@@ -172,7 +172,7 @@ public class LoggingTest {
 		
 		BFLogger.logTime(startTime, message);
 		
-		String lastLogLine = FileUtils.getLastLineInFile(FileUtils.getLogFilePath());
+		String lastLogLine = FileTestUtils.getLastLineInFile(FileTestUtils.getLogFilePath());
 		assertThat(lastLogLine, containsString("Waiting for [" + message + "] took"));
 		assertThat(lastLogLine, containsString("logDebug"));
 	}
@@ -184,7 +184,7 @@ public class LoggingTest {
 		
 		BFLogger.logTime(startTime, message, "Argument");
 		
-		String lastLogLine = FileUtils.getLastLineInFile(FileUtils.getLogFilePath());
+		String lastLogLine = FileTestUtils.getLastLineInFile(FileTestUtils.getLogFilePath());
 		assertThat(lastLogLine, containsString("Waiting for [" + message + ": Argument] took"));
 		assertThat(lastLogLine, containsString("logDebug"));
 	}
@@ -200,8 +200,8 @@ public class LoggingTest {
 		String[] logDump = BFLogger.RestrictedMethods.dumpSeparateLog()
 				.split(System.lineSeparator());
 		
-		assertThat(logDump[0], is(equalTo(FileUtils.getFirstLineInFile(FileUtils.getLogFilePath()))));
-		assertThat(logDump[logDump.length - 1], is(equalTo(FileUtils.getLastLineInFile(FileUtils.getLogFilePath()))));
+		assertThat(logDump[0], is(equalTo(FileTestUtils.getFirstLineInFile(FileTestUtils.getLogFilePath()))));
+		assertThat(logDump[logDump.length - 1], is(equalTo(FileTestUtils.getLastLineInFile(FileTestUtils.getLogFilePath()))));
 	}
 	
 	@Test
@@ -212,7 +212,7 @@ public class LoggingTest {
 		BFLogger.RestrictedMethods.startSeparateLog();
 		shouldLogDebug();
 		
-		assertThat(Files.lines(Paths.get(FileUtils.getLogFilePath()))
+		assertThat(Files.lines(Paths.get(FileTestUtils.getLogFilePath()))
 				.count(), is(equalTo(1L)));
 	}
 }

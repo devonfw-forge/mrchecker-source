@@ -3,17 +3,18 @@ package com.capgemini.mrchecker.selenium.core.utils;
 import static com.capgemini.mrchecker.selenium.core.newDrivers.DriverManager.getDriver;
 
 import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
+import com.capgemini.mrchecker.selenium.core.base.environment.GetEnvironmentParam;
 import com.capgemini.mrchecker.selenium.core.enums.PageSubURLsEnum;
 import com.capgemini.mrchecker.selenium.core.tests.webElements.QuickFixSeleniumPage;
 import com.capgemini.mrchecker.test.core.BaseTest;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
+import com.capgemini.mrchecker.test.core.utils.FileUtils;
 
 public class LocalFileDetectorTest extends BaseTest {
 	QuickFixSeleniumPage quickFixSeleniumPage = new QuickFixSeleniumPage();
@@ -24,26 +25,20 @@ public class LocalFileDetectorTest extends BaseTest {
 	@Override
 	public void setUp() {
 		try {
-			testFilePath = FileHelper.getAbsoluteFilePathFromResources(testFileName);
+			testFilePath = FileUtils.getAbsoluteFilePathFromResources(testFileName);
 		} catch (FileNotFoundException e) {
 			BFLogger.logDebug("Test file " + testFileName + "not found in resources.");
 		}
 		BasePage.getDriver()
-				.get(PageSubURLsEnum.TOOLS_QA.subURL() + PageSubURLsEnum.AUTOMATION_PRACTICE_FORM.subURL());
-	}
-	
-	@Override
-	public void tearDown() {
-		
+				.get(GetEnvironmentParam.WWW_FONT_URL.getValue() + PageSubURLsEnum.AUTOMATION_PRACTICE_FORM.subURL());
 	}
 	
 	@Test
 	// it is enough that no exception is thrown
-	public void testCurrentDriverCanAccessLocalFile() throws FileNotFoundException, InterruptedException, URISyntaxException {
-		WebElement we = getDriver().findElementDynamic(By.id("photo"));
+	public void testCurrentDriverCanAccessLocalFile() {
+		WebElement we = getDriver().findElementDynamic(By.id("firstName"));
+		
 		we.sendKeys(testFilePath);
-		getDriver().elementButton(By.id("submit"))
-				.click();
+		we.submit();
 	}
-	
 }

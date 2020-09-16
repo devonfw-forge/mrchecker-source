@@ -5,11 +5,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
-public final class FileUtils {
+public final class FileTestUtils {
 	
 	public static final String LOG_DIR = "./logs/";
 	
-	private FileUtils() {
+	private FileTestUtils() {
 	}
 	
 	public static String getLogFilePath() {
