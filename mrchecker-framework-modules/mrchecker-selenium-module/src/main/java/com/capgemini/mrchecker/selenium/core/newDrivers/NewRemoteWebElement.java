@@ -26,30 +26,25 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 public class NewRemoteWebElement extends RemoteWebElement {
 	
-	private static final int		CLICK_NUM			= 10;
-	private static final int		MICRO_SLEEP			= 200;
-	private static final Pattern	foundByPattern		= Pattern.compile("\\[\\[.* -> (.*): (.*)\\]");
-	private static boolean			clickTimerOn		= false;
+	private static final int		CLICK_NUM		= 10;
+	private static final int		MICRO_SLEEP		= 200;
+	private static final Pattern	foundByPattern	= Pattern.compile("\\[\\[.* -> (.*): (.*)\\]");
+	private static boolean			clickTimerOn	= false;
 	private static long				totalClickTime;
 	private static long				startClickTime;
-	private static FileDetector		defaultFileDetector	= new UselessFileDetector();
-	
-	static {
-		configureFileDetector();
-	}
 	
 	public NewRemoteWebElement(WebElement element) {
 		RemoteWebElement remoteWebElement = (RemoteWebElement) element;
 		id = remoteWebElement.getId();
 		setParent((RemoteWebDriver) remoteWebElement.getWrappedDriver());
-		fileDetector = defaultFileDetector;
+		fileDetector = configureFileDetector();
 		
 		// if possible take a locator and a term
 		Matcher remoteWebElementInfo = foundByPattern.matcher(remoteWebElement.toString());
 		if (remoteWebElementInfo.matches()) {
 			setFoundBy(element, remoteWebElementInfo.group(1), remoteWebElementInfo.group(2));
 		} else {
-			BFLogger.logError("Incorect FoundBy form WebElement " + remoteWebElement.toString());
+			BFLogger.logError("Incorrect FoundBy form WebElement " + remoteWebElement.toString());
 		}
 	}
 	
@@ -69,7 +64,9 @@ public class NewRemoteWebElement extends RemoteWebElement {
 	 * network
 	 * unnecessarily
 	 */
-	private static void configureFileDetector() {
+	private FileDetector configureFileDetector() {
+		FileDetector fileDetector = new UselessFileDetector();
+		
 		if (getDriver().getClass()
 				.getSimpleName()
 				.equals("NewRemoteWebDriver") &&
@@ -80,10 +77,12 @@ public class NewRemoteWebElement extends RemoteWebElement {
 				!RuntimeParametersSelenium.SELENIUM_GRID.getValue()
 						.trim()
 						.startsWith("http://localhost")) {
-			defaultFileDetector = new LocalFileDetector();
+			fileDetector = new LocalFileDetector();
 		}
-		BFLogger.logDebug("FileDetector for RemoteWebElement set to " + defaultFileDetector.getClass()
+		BFLogger.logDebug("FileDetector for RemoteWebElement set to " + fileDetector.getClass()
 				.getCanonicalName());
+		
+		return fileDetector;
 	}
 	
 	/**
