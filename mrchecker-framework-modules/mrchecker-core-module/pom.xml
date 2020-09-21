@@ -63,9 +63,9 @@
         <slf4j.version>1.7.21</slf4j.version>
 
         <!-- Cucumber version -->
-        <cucumber.version>4.2.0</cucumber.version>
-        <gherkin.cucumber.version>5.1.0</gherkin.cucumber.version>
-        <cucumber-reporting.version>3.7.0</cucumber-reporting.version>
+        <cucumber.version>6.7.0</cucumber.version>
+        <gherkin.cucumber.version>15.0.2</gherkin.cucumber.version>
+        <cucumber-reporting.version>5.3.1</cucumber-reporting.version>
 
     </properties>
 

@@ -19,7 +19,7 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.capgemini.mrchecker.test.core.tags.UnitTest;
 import com.capgemini.mrchecker.test.core.utils.datadriven.JsonDriven;
 
-import gherkin.deps.com.google.gson.GsonBuilder;
+import io.cucumber.messages.internal.com.google.gson.GsonBuilder;
 
 @UnitTest
 public class JsonDrivenTest {
