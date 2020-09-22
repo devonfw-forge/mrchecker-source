@@ -3,7 +3,7 @@ services:
   jenkins:
     image: mrchecker/mrchecker-jenkins:v1.1.2
     ports:
-      - "8080:8080"
+      - "8888:8080"
       - "50000:50000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
