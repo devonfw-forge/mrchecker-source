@@ -13,7 +13,7 @@ services:
       dockerfile: dockerfile
     deploy:
       restart_policy:
-        condition: on_failure
+        condition: on-failure
         delay: 1m
         max_attempts: 5
         window: 3m
@@ -24,7 +24,7 @@ services:
         - "4444:4444"
     deploy:
       restart_policy:
-        condition: on_failure
+        condition: on-failure
         delay: 1m
         max_attempts: 5
         window: 3m
@@ -39,7 +39,7 @@ services:
         - HUB_PORT=4444
     deploy:
       restart_policy:
-        condition: on_failure
+        condition: on-failure
         delay: 1m
         max_attempts: 5
         window: 3m
