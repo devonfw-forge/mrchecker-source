@@ -1,0 +1,22 @@
+pipeline{
+    agent {docker {image 'mrchecker/mrchecker:v1.1.3'}}
+    stages{
+        stage('Dummy'){
+            steps{
+                echo "dummy step"
+            }
+        }
+    }
+    post{
+      success{
+        def downstreamJob = "${JOB_NAME}".split('/')
+				downstreamJob[0] = 'deploy'
+				downstreamJob = downstreamJob.join('/')
+        try{
+          build job: downstreamJob, propagate: false, wait: false
+        }catch(Exception e){
+          println("ERROR! Cannot start the downstream job with name ${downstreamJob}. ${e}")
+        }
+      }
+    }
+}
