@@ -1,5 +1,4 @@
 version: "3.3"
-restart: unless-stopped
 services:
   jenkins:
     image: mrchecker/mrchecker-jenkins:v1.1.2
@@ -12,6 +11,7 @@ services:
     build:
       context: .
       dockerfile: dockerfile
+    restart: unless-stopped
     deploy:
       restart_policy:
         condition: unless-stopped
@@ -23,6 +23,7 @@ services:
     container_name: selenium-hub
     ports:
         - "4444:4444"
+    restart: unless-stopped
     deploy:
       restart_policy:
         condition: unless-stopped
@@ -38,6 +39,7 @@ services:
     environment:
         - HUB_HOST=selenium-hub
         - HUB_PORT=4444
+    restart: unless-stopped
     deploy:
       restart_policy:
         condition: unless-stopped
