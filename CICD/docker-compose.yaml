@@ -11,12 +11,23 @@ services:
     build:
       context: .
       dockerfile: dockerfile
-
+    deploy:
+      restart_policy:
+        condition: on_failure
+        delay: 1m
+        max_attempts: 5
+        window: 3m
   selenium-hub:
     image: selenium/hub:3.141.59
     container_name: selenium-hub
     ports:
         - "4444:4444"
+    deploy:
+      restart_policy:
+        condition: on_failure
+        delay: 1m
+        max_attempts: 5
+        window: 3m
   selenium-firefox:
     image: selenium/node-firefox:3.141.59
     volumes:
@@ -26,6 +37,12 @@ services:
     environment:
         - HUB_HOST=selenium-hub
         - HUB_PORT=4444
+    deploy:
+      restart_policy:
+        condition: on_failure
+        delay: 1m
+        max_attempts: 5
+        window: 3m
   selenium-opera:
     image: selenium/node-opera:3.141.59
     volumes:
