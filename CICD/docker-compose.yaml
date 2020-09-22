@@ -52,6 +52,8 @@ services:
     environment:
         - HUB_HOST=selenium-hub
         - HUB_PORT=4444
+    deploy:
+      replicas: 0
   selenium-chrome:
     image: selenium/node-chrome:3.141.59
     volumes:
@@ -61,6 +63,8 @@ services:
     environment:
         - HUB_HOST=selenium-hub
         - HUB_PORT=4444
+    deploy:
+      replicas: 0
   reverse-proxy:
     #build: 'reverse-proxy/'
     restart: always
@@ -70,6 +74,8 @@ services:
       - my-thai-star
     ports:
       - '8081:80'
+    deploy:
+      replicas: 0
   angular:
     #build: 'angular/'
     restart: always
@@ -77,6 +83,8 @@ services:
     image: docker.pkg.github.com/devonfw/my-thai-star/angular:latest #docker pull docker.pkg.github.com/devonfw/my-thai-star/angular:latest
     networks:
       - my-thai-star
+    deploy:
+      replicas: 0
   java:
     #build: 'java/'
     restart: always
@@ -84,6 +92,8 @@ services:
     image: docker.pkg.github.com/devonfw/my-thai-star/java:latest #docker pull docker.pkg.github.com/devonfw/my-thai-star/java:latest
     networks:
       - my-thai-star
+    deploy:
+      replicas: 0
 networks:
   my-thai-star:
     driver: bridge
