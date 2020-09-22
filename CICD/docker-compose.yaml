@@ -1,4 +1,5 @@
 version: "3.3"
+restart: unless-stopped
 services:
   jenkins:
     image: mrchecker/mrchecker-jenkins:v1.1.2
