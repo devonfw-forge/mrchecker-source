@@ -1,9 +1,9 @@
 package com.capgemini.mrchecker.test.core.unit.exceptions;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertThat;
 
 import org.junit.jupiter.api.Test;
 

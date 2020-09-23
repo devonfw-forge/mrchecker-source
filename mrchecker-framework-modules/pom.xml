@@ -96,8 +96,6 @@
         <joda-time.version>2.9.9</joda-time.version>
         <commons-csv.version>1.8</commons-csv.version>
         <commons-lang3.version>3.1</commons-lang3.version>
-        <JUnitParams.version>1.0.4</JUnitParams.version>
-
 
         <!-- Dependency Injection -->
         <guice.version>4.1.0</guice.version>
@@ -132,12 +130,6 @@
                 <groupId>org.junit.platform</groupId>
                 <artifactId>junit-platform-surefire-provider</artifactId>
                 <version>${surefire.provider.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>pl.pragmatists</groupId>
-                <artifactId>JUnitParams</artifactId>
-                <version>${JUnitParams.version}</version>
             </dependency>
 
             <dependency>
@@ -202,7 +194,6 @@
                 <artifactId>aspectjweaver</artifactId>
                 <version>${aspectj.version}</version>
             </dependency>
-
 
         </dependencies>
     </dependencyManagement>
