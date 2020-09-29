@@ -2,21 +2,25 @@ pipeline{
     agent {docker {image 'mrchecker/mrchecker:v1.1.3'}}
     stages{
         stage("see if there is jenkinsfile"){
-            try{
-                    checkout scm
-                    load 'CICD/Build_Jenkinsfile'
+            steps{
+                script{
+                    try{
+                            checkout scm
+                            load 'CICD/Build_Jenkinsfile'
 
-            } catch (Exception e){
-                    ansiColor{
-                        print (\'\'\'
-                        This is only default script. That means you're branch has no correct            
-                        jenkins file for this job. If any customization is needed fix this.             
-                        \'\'\')
+                    } catch (Exception e){
+                            ansiColor{
+                                print (\'\'\'
+                                This is only default script. That means you're branch has no correct            
+                                jenkins file for this job. If any customization is needed fix this.             
+                                \'\'\')
+                            }
+                    } finally {
+                            configFileProvider([configFile(fileId: 'buildDefault', variable: 'buildDefault')]) {
+                                load buildDefault
+                            }
                     }
-            } finally {
-                    configFileProvider([configFile(fileId: 'buildDefault', variable: 'buildDefault')]) {
-                        load buildDefault
-                    }
+                }
             }
         }
     }
