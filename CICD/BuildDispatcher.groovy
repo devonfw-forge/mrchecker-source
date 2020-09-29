@@ -1,7 +1,8 @@
 try{
+    node('master'){
         checkout scm
         load 'CICD/Build_Jenkinsfile'
-
+    }
 } catch (Exception e){
         ansiColor{
             print (\'\'\'
@@ -10,9 +11,11 @@ try{
             \'\'\')
         }
 } finally {
+    node('master'){
         configFileProvider([configFile(fileId: 'buildDefault', variable: 'buildDefault')]) {
             load buildDefault
         }
+    }
 }
 
 //https://github.com/jenkinsci/pipeline-multibranch-defaults-plugin/blob/master/README.md
