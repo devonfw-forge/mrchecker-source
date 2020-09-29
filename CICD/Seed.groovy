@@ -1,3 +1,4 @@
+
 class Config{
     def jenkinsFolder;
     def scriptPath;
@@ -5,17 +6,36 @@ class Config{
     def module;
     def defaultScriptId;
 }
+class ConfigFile{
+    def id;
+    def name;
+    def comment;
+    def location;
+}
 def repoUrl = 'https://github.com/devonfw-forge/mrchecker-source.git'
 def modules = ['mrchecker-core-module','mrchecker-database-module','mrchecker-example-module','mrchecker-mobile-module','mrchecker-security-module','mrchecker-selenium-module','mrchecker-webapi-module']
 def configs = []
 def folders = ['build','test','deploy']
+def branchesWithView = ['develop','feature/new_CICD_process']
 modules.each{
-    configs << new Config(jenkinsFolder:'build', scriptPath:'CICD/Build_Jenkinsfile', repoUrl: repoUrl, module:it,defaultScriptId:'DefaultBuildJenkinsFile')
-    configs << new Config(jenkinsFolder:'test' , scriptPath:"mrchecker-framework-modules/${it}/Jenkinsfile", repoUrl: repoUrl, module:it, defaultScriptId:'DefaultTestJenkinsFile')
-    configs << new Config(jenkinsFolder:'deploy', scriptPath:'CICD/Deploy_Jenkinsfile', repoUrl: repoUrl, module:it, defaultScriptId:'DefaultDeployJenkinsFile')
+    configs << new Config(jenkinsFolder:'build', scriptPath:'CICD/Build_Jenkinsfile', repoUrl: repoUrl, module:it,defaultScriptId:'buildDispatcher')
+    configs << new Config(jenkinsFolder:'test' , scriptPath:"mrchecker-framework-modules/${it}/Jenkinsfile", repoUrl: repoUrl, module:it, defaultScriptId:'testDispatcher')
+    configs << new Config(jenkinsFolder:'deploy', scriptPath:'CICD/Deploy_Jenkinsfile', repoUrl: repoUrl, module:it, defaultScriptId:'deployDispatcher')
 }
-def script = makeJobs(configs,folders)
 
+
+configFiles = []
+configFiles << new ConfigFile(id:'buildDispatcher',name:'buildDispatcher',comment:'script for providing default fallback if no pipelinescript found in repo',location:'CICD/BuildDispatcher.groovy')
+configFiles << new ConfigFile(id:'testDispatcher',name:'testDispatcher',comment:'script for providing default fallback if no pipelinescript found in repo',location:'CICD/TestDispatcher.groovy')
+configFiles << new ConfigFile(id:'deployDispatcher',name:'deployDispatcher',comment:'script for providing default fallback if no pipelinescript found in repo',location:'CICD/DeployDispatcher.groovy')
+
+configFiles << new ConfigFile(id:'buildDefault',name:'buildDefault',comment:'default script for BUILD stage',location:'CICD/Build_Jenkinsfile')
+configFiles << new ConfigFile(id:'testDefault',name:'testDefault',comment:'default script for BUILD stage',location:'CICD/Test_Jenkinsfile')
+configFiles << new ConfigFile(id:'deployDefault',name:'deployDefault',comment:'default script for BUILD stage',location:'CICD/Deploy_Jenkinsfile')
+
+def script = makeJobs(configs,folders)
+    //script += makeViews(modules,branchesWithView)
+    script += makeConfigFiles(configFiles)
 print '\n'*5+'-'*80+'\n\t\t\tSCRIPT\n'
 print script
 print '\n'*5+'-'*80+'\n\t\t\tEND\n'
@@ -23,7 +43,50 @@ node{
     jobDsl scriptText: script
 }
 
+def makeConfigFiles(cfgFiles){
+    def script = "configFiles{"
+    node('master'){
+        checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/feature/new_CICD_process']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/devonfw-forge/mrchecker-source.git']]]
+        cfgFiles.each{f->
+            def content = readFile(file:f.location,encoding:'UTF-8')
+            script+=$/groovyScript{
+                        id('${f.id}')
+                        name('${f.name}')
+                        comment('${f.comment}')
+                        content('''${content}''')
+                    }/$
+        }
+        script+="}"
+    }
+    return script
+}
 
+@NonCPS
+def makeViews(modules,branches){
+    //build/mrchecker-core-module/feature%2Fnew_CICD_process
+    def script = ""
+    modules.each{ m ->
+        script+="nestedView('${m}') { \n views {"
+        branches.each{ b ->
+            script+="""
+                listView('${b}'){
+                    jobs{
+                        regex('(?:build|deploy|test)/${m}/${b}')
+                    }
+                    columns {
+                        status()
+                        weather()
+                        name()
+                        lastSuccess()
+                        lastFailure()
+                    }
+                }
+            """
+        }
+        script+="}}"
+    }
+    return script
+}
 @NonCPS
 def makeJobs(configs,folders){
     def jobTemplateText = """
@@ -55,9 +118,6 @@ def makeJobs(configs,folders){
             }
         }
         factory{
-            workflowBranchProjectFactory {
-                scriptPath('\${it.scriptPath}')
-            }
             pipelineBranchDefaultsProjectFactory {
                 scriptId('\${it.defaultScriptId}')
                 useSandbox(false)

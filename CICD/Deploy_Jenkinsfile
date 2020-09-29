@@ -7,10 +7,10 @@ pipeline{
             steps{
               script{
                 print('dummy step')
-                // sh $/
+                // sh \"\"\"
                 // cd ${env.workspace}
                 // mvn formatter:validate --projects ${env.module}
-                // /$
+                // \"\"\"
               }
             }
         }
@@ -21,20 +21,20 @@ pipeline{
           steps{
             script{
               print('dummy step')
-              // sh $/
+              // sh\"\"\"
               // cd ${env.workspace}
               // git format-patch develop --stdout | git-apply --check
-              // $/
+              // \"\"\"
             }
           }
         }
         stage('Deploy code to local repo'){
           steps{
             script{
-              sh $/
+              sh\"\"\"
               cd ${env.workspace}
               mvn install -DskipTests=true --projects ${env.module} --also-make
-              /$
+              \"\"\"
             }
           }
         }
@@ -62,7 +62,7 @@ pipeline{
                     print "${env.module} ${version}"
                   }
                 configFileProvider([configFile(fileId: 'deploy-maven-settings', targetLocation: 'settings.xml', variable: 'SETTINGS_PATH')]) {
-                  sh $/
+                  sh\"\"\"
                   set env.MAVEN_USER=${MAVEN_USER}
                   set env.MAVEN_PASSWORD=${MAVEN_PASSWORD}
 
@@ -71,7 +71,7 @@ pipeline{
                   ls -Lla /tmp/shortgpg/.gnupg
                   cd ${env.workspace}
                   mvn -s ${SETTINGS_PATH} -P release deploy -DskipTests=true --projects ${env.module} -Dgpg.homedir=/tmp/shortgpg/.gnupg -Dgpg.passphrase=${GPG_PASSWORD}
-                  /$
+                  \"\"\"
                   //https://lists.gnupg.org/pipermail/gnupg-users/2017-January/057451.
                   //https://github.com/keybase/keybase-issues/issues/2798
                   //https://github.com/microsoft/vscode-remote-release/issues/3168
