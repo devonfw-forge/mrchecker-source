@@ -15,7 +15,9 @@ try{
         }
     }
 } finally {
-    configFileProvider([configFile(fileId: 'deployDefault', variable: 'deployDefault')]) {
-        load deployDefault
+    node('master'){
+        configFileProvider([configFile(fileId: 'deployDefault', variable: 'deployDefault')]) {
+            load deployDefault
+        }
     }
 }

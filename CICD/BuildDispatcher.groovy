@@ -15,8 +15,10 @@ try{
         }
     }
 } finally {
-    configFileProvider([configFile(fileId: 'buildDefault', variable: 'buildDefault')]) {
-        load buildDefault
+    node('master'){
+        configFileProvider([configFile(fileId: 'buildDefault', variable: 'buildDefault')]) {
+            load buildDefault
+        }
     }
 }
 

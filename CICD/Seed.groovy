@@ -33,7 +33,7 @@ configFiles << new ConfigFile(id:'buildDefault',name:'buildDefault',comment:'def
 configFiles << new ConfigFile(id:'testDefault',name:'testDefault',comment:'default script for BUILD stage',location:'CICD/Test_Jenkinsfile')
 configFiles << new ConfigFile(id:'deployDefault',name:'deployDefault',comment:'default script for BUILD stage',location:'CICD/Deploy_Jenkinsfile')
 
-def script = makeJobs(configs,folders)
+    def script = makeJobs(configs,folders)
     //script += makeViews(modules,branchesWithView)
     script += makeConfigFiles(configFiles)
 print '\n'*5+'-'*80+'\n\t\t\tSCRIPT\n'
@@ -44,19 +44,20 @@ node{
 }
 
 def makeConfigFiles(cfgFiles){
-    def script = "configFiles{"
+    def script = ""
     node('master'){
         checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/feature/new_CICD_process']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/devonfw-forge/mrchecker-source.git']]]
         cfgFiles.each{f->
             def content = readFile(file:f.location,encoding:'UTF-8')
-            script+=$/groovyScript{
+            script+=$/
+                    configFiles{groovyScript{
                         id('${f.id}')
                         name('${f.name}')
                         comment('${f.comment}')
                         content('''${content}''')
-                    }/$
+                    }}/$
         }
-        script+="}"
+
     }
     return script
 }
