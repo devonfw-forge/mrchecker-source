@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import com.capgemini.mrchecker.example.core.BasePage;
 
+import tags.UnitTest;
+
+@UnitTest
 public class BasePageTest {
 	
 	@Test
