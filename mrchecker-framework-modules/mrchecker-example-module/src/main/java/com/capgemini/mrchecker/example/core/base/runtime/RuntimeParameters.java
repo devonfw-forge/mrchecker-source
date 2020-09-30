@@ -1,6 +1,8 @@
 package com.capgemini.mrchecker.example.core.base.runtime;
 
-import com.capgemini.mrchecker.test.core.base.runtime.RuntimeParametersI;
+import org.apache.commons.lang.StringUtils;
+
+import com.capgemini.mrchecker.test.core.base.runtime.IRuntimeParameters;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 /**
@@ -9,37 +11,36 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
  * 
  * @author LUSTEFAN
  */
-public enum RuntimeParameters implements RuntimeParametersI {
+public enum RuntimeParameters implements IRuntimeParameters {
 	
 	// NAME(<maven-variable-name>, <default-value>)
 	PARAM_1("param_1", "Hello"), // -Dparam_1=Hello
 	PARAM_2("param_2", "world"), // -Dparam_2=world
 	PARAM_3("param_3", "1410"); // -Dparam_3=1410
 	
-	private String paramName;
-	private String paramValue;
-	private String defaultValue;
+	private final String	paramName;
+	private String			paramValue;
+	private final String	defaultValue;
 	
-	private RuntimeParameters(String paramName, String defaultValue) {
+	RuntimeParameters(String paramName, String defaultValue) {
 		this.paramName = paramName;
 		this.defaultValue = defaultValue;
 		setValue();
-		
 	}
 	
 	@Override
 	public String getValue() {
-		return this.paramValue;
+		return paramValue;
 	}
-
+	
 	@Override
 	public String getKey() {
-		return this.paramName;
+		return paramName;
 	}
-
+	
 	@Override
 	public String toString() {
-		return paramName + "=" + this.getValue();
+		return getKey() + "=" + getValue();
 	}
 	
 	@Override
@@ -49,23 +50,21 @@ public enum RuntimeParameters implements RuntimeParametersI {
 	
 	private void setValue() {
 		
-		String paramValue = System.getProperty(this.paramName);
-		paramValue = isSystemParameterEmpty(paramValue) ? this.defaultValue : paramValue.toLowerCase();
-		;
+		String paramValue = System.getProperty(paramName);
+		paramValue = isSystemParameterEmpty(paramValue) ? defaultValue : paramValue.toLowerCase();
 		
-		switch (this.name()) {
-		case "PARAM_1":
-			if (paramValue.equals("Bye")) {
-				paramValue = "Hi";
-			}
-			break;
-		case "PARAM_2":
-			break;
-		case "PARAM_3":
-			break;
-		default:
-			BFLogger.logError("Unknown RuntimeParameter = " + this.name());
-			break;
+		switch (name()) {
+			case "PARAM_1":
+				if (paramValue.equals("Bye")) {
+					paramValue = "Hi";
+				}
+				break;
+			case "PARAM_2":
+			case "PARAM_3":
+				break;
+			default:
+				BFLogger.logError("Unknown RuntimeParameter = " + name());
+				break;
 		}
 		
 		this.paramValue = paramValue;
@@ -73,7 +72,7 @@ public enum RuntimeParameters implements RuntimeParametersI {
 	}
 	
 	private boolean isSystemParameterEmpty(String systemParameterValue) {
-		return (null == systemParameterValue || "".equals(systemParameterValue) || "null".equals(systemParameterValue));
+		return StringUtils.isEmpty(systemParameterValue) || "null".equals(systemParameterValue);
 	}
 	
 }

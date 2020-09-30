@@ -1,46 +1,45 @@
 package com.capgemini.mrchecker.example.core;
 
+import java.util.Objects;
 
 import com.capgemini.mrchecker.example.core.base.driver.DriverManager;
 import com.capgemini.mrchecker.example.core.base.properties.PropertiesFileSettings;
 import com.capgemini.mrchecker.example.core.base.runtime.RuntimeParameters;
 import com.capgemini.mrchecker.test.core.BaseTest;
-import com.capgemini.mrchecker.test.core.BaseTestWatcher;
-import com.capgemini.mrchecker.test.core.ITestObserver;
 import com.capgemini.mrchecker.test.core.ModuleType;
+import com.capgemini.mrchecker.test.core.Page;
 import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
+import com.capgemini.mrchecker.test.core.utils.Attachments;
 import com.google.inject.Guice;
 
-import io.qameta.allure.Attachment;
-
-abstract public class BasePage implements ITestObserver {
+abstract public class BasePage extends Page {
 	
 	private static DriverManager driver = null;
 	
-	private final static PropertiesFileSettings propertiesFileSettings;
-	private static IEnvironmentService environmentService;
-	private final static IAnalytics analytics;
-	public final static String analitycsCategoryName = "NAME-OF-MODULE"; // Selenium-Module
+	private final static PropertiesFileSettings	PROPERTIES_EXAMPLE;
+	private static IEnvironmentService			environmentService;
+	private final static IAnalytics				ANALYTICS;
+	public final static String					analitycsCategoryName	= "NAME-OF-MODULE";	// Selenium-Module
 	
 	static {
 		// Get analytics instance created in BaseTets
-		analytics = BaseTest.getAnalytics();
+		ANALYTICS = BaseTest.getAnalytics();
 		
 		// Get and then set properties information from selenium.settings file
-		propertiesFileSettings = setPropertiesSettings();
+		PROPERTIES_EXAMPLE = setPropertiesSettings();
 		
 		// Read System or maven parameters
 		setRuntimeParametersSelenium();
 		
-		// Read Environment variables either from environmnets.csv or any other input data.
+		// Read Environment variables either from environments.csv or any other input data.
 		setEnvironmetInstance();
 	}
 	
 	public static IAnalytics getAnalytics() {
-		return BasePage.analytics;
+		return BasePage.ANALYTICS;
 	}
 	
 	public BasePage() {
@@ -48,20 +47,12 @@ abstract public class BasePage implements ITestObserver {
 	}
 	
 	public BasePage(DriverManager driver) {
-		// Add given module to Test core Observable list
-		this.addObserver();
-		
-	}
-	
-	@Override
-	public void addObserver() {
-		BaseTestWatcher.addObserver(this);
+		driver.start();
 	}
 	
 	@Override
 	public void onTestFailure() {
-		BFLogger.logDebug("BasePage.onTestFailure    " + this.getClass()
-				.getSimpleName());
+		super.onTestFailure();
 		makeScreenshotOnFailure();
 		makeSourcePageOnFailure();
 	}
@@ -74,18 +65,8 @@ abstract public class BasePage implements ITestObserver {
 	}
 	
 	@Override
-	public void onTestFinish() {
-		// All actions needed while test class is finishing
-		BFLogger.logDebug("BasePage.onTestFinish   " + this.getClass()
-				.getSimpleName());
-		BaseTestWatcher.removeObserver(this);
-	}
-	
-	@Override
 	public void onTestClassFinish() {
-		BFLogger.logDebug("BasePage.onTestClassFinish   " + this.getClass()
-				.getSimpleName());
-		BFLogger.logDebug("driver:" + getDriver().toString());
+		super.onTestClassFinish();
 		DriverManager.closeDriver();
 	}
 	
@@ -94,30 +75,26 @@ abstract public class BasePage implements ITestObserver {
 		return ModuleType.EXAMPLE;
 	}
 	
-	@Attachment("Screenshot on failure")
-	public String makeScreenshotOnFailure() {
-		return "";
+	public void makeScreenshotOnFailure() {
+		Attachments.attachToAllure("");
 	}
 	
-	@Attachment("Source Page on failure")
-	public String makeSourcePageOnFailure() {
-		return "";
+	public void makeSourcePageOnFailure() {
+		Attachments.attachToAllure("");
 	}
 	
 	public static DriverManager getDriver() {
-		if (BasePage.driver == null) {
+		if (Objects.isNull(driver)) {
 			// Create module driver
-			BasePage.driver = new DriverManager(propertiesFileSettings);
+			driver = new DriverManager(PROPERTIES_EXAMPLE);
 		}
-		return BasePage.driver;
-		
+		return driver;
 	}
 	
 	private static PropertiesFileSettings setPropertiesSettings() {
 		// Get and then set properties information from settings.properties file
-		PropertiesFileSettings propertiesFileSettings = Guice.createInjector(PropertiesSettingsModule.init())
+		return Guice.createInjector(PropertiesSettingsModule.init())
 				.getInstance(PropertiesFileSettings.class);
-		return propertiesFileSettings;
 	}
 	
 	private static void setRuntimeParametersSelenium() {
