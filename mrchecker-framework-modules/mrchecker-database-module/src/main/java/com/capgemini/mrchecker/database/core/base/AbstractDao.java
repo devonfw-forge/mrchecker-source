@@ -7,10 +7,11 @@ import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class AbstractDao<T, K extends Serializable> implements IDao<T, K> {
 
-	private EntityManager entityManager;
+	private final EntityManager entityManager;
 
 	public AbstractDao(EntityManager emf) {
 		this.entityManager = emf;
@@ -78,15 +79,10 @@ public abstract class AbstractDao<T, K extends Serializable> implements IDao<T, 
 
 	@SuppressWarnings("unchecked")
 	protected Class<T> getDomainClass() {
-		if (domainClass == null) {
-			ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
-			domainClass = (Class<T>) type.getActualTypeArguments()[0];
-		}
-		return domainClass;
+		return Objects.isNull(domainClass) ? (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0] : domainClass;
 	}
 
 	protected String getDomainClassName() {
 		return getDomainClass().getName();
 	}
-
 }
