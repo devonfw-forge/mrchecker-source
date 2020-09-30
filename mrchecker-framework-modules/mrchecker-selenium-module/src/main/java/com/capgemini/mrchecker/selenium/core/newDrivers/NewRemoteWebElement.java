@@ -1,5 +1,7 @@
 package com.capgemini.mrchecker.selenium.core.newDrivers;
 
+import static com.capgemini.mrchecker.selenium.core.newDrivers.DriverManager.getDriver;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -11,10 +13,12 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.FileDetector;
+import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.remote.UselessFileDetector;
 
+import com.capgemini.mrchecker.selenium.core.base.runtime.RuntimeParametersSelenium;
 import com.capgemini.mrchecker.selenium.core.exceptions.BFComponentStateException;
 import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundException;
 import com.capgemini.mrchecker.selenium.core.utils.TimeUtills;
@@ -22,57 +26,63 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 public class NewRemoteWebElement extends RemoteWebElement {
 	
-	private static final int CLICK_NUM = 10;
-	private static final int MICRO_SLEEP = 200;
-	private static boolean clickTimerOn = false;
-	private static long totalClickTime;
-	private static long startClickTime;
-	private static final Pattern foundByPattern = Pattern.compile("\\[\\[.* -> (.*): (.*)\\]");
-	private static final FileDetector defaultFileDetector = new UselessFileDetector();
-	
-	/**
-	 * The class is required for 3 reasons: 1. to keep a NewRemoteWebElement class immutable 2. to use a part of the
-	 * code in two places 3. to name two data, to keep a code more readily
-	 * 
-	 * @author
-	 */
-	private class SelectorComponents {
-		String locator = null;
-		String term = null;
-		
-		SelectorComponents(String elementInfo) {
-			Matcher thisWebElementInfo = foundByPattern.matcher(elementInfo);
-			
-			if (!thisWebElementInfo.matches()) {
-				BFLogger.logError(String.format("Selector not found from '%s', pattern error.", elementInfo));
-				return;
-			}
-			locator = thisWebElementInfo.group(1);
-			term = thisWebElementInfo.group(2);
-		}
-		
-		String getLocator() {
-			return locator;
-		}
-		
-		String getTerm() {
-			return term;
-		}
-	}
+	private static final int		CLICK_NUM		= 10;
+	private static final int		MICRO_SLEEP		= 200;
+	private static final Pattern	foundByPattern	= Pattern.compile("\\[\\[.* -> (.*): (.*)\\]");
+	private static boolean			clickTimerOn	= false;
+	private static long				totalClickTime;
+	private static long				startClickTime;
 	
 	public NewRemoteWebElement(WebElement element) {
 		RemoteWebElement remoteWebElement = (RemoteWebElement) element;
 		id = remoteWebElement.getId();
 		setParent((RemoteWebDriver) remoteWebElement.getWrappedDriver());
-		fileDetector = defaultFileDetector;
+		fileDetector = configureFileDetector();
 		
 		// if possible take a locator and a term
 		Matcher remoteWebElementInfo = foundByPattern.matcher(remoteWebElement.toString());
 		if (remoteWebElementInfo.matches()) {
 			setFoundBy(element, remoteWebElementInfo.group(1), remoteWebElementInfo.group(2));
 		} else {
-			BFLogger.logError("Incorect FoundBy form WebElement " + remoteWebElement.toString());
+			BFLogger.logError("Incorrect FoundBy form WebElement " + remoteWebElement.toString());
 		}
+	}
+	
+	public static void setClickTimer() {
+		clickTimerOn = true;
+		totalClickTime = 0;
+	}
+	
+	public static long dropClickTimer() {
+		clickTimerOn = false;
+		return totalClickTime;
+	}
+	
+	/**
+	 * We are setting LocalFileDetector for interactions with a non-local grid, that is a Grid that is physically
+	 * on another host. Skipping that for local grid has some tiny performance advantage: file will not be sent over
+	 * network
+	 * unnecessarily
+	 */
+	private FileDetector configureFileDetector() {
+		FileDetector fileDetector = new UselessFileDetector();
+		
+		if (getDriver().getClass()
+				.getSimpleName()
+				.equals("NewRemoteWebDriver") &&
+				!RuntimeParametersSelenium.SELENIUM_GRID.getValue()
+						.trim()
+						.startsWith("http://127.0.0.1")
+				&&
+				!RuntimeParametersSelenium.SELENIUM_GRID.getValue()
+						.trim()
+						.startsWith("http://localhost")) {
+			fileDetector = new LocalFileDetector();
+		}
+		BFLogger.logDebug("FileDetector for RemoteWebElement set to " + fileDetector.getClass()
+				.getCanonicalName());
+		
+		return fileDetector;
 	}
 	
 	/**
@@ -160,42 +170,62 @@ public class NewRemoteWebElement extends RemoteWebElement {
 		
 		String locator = selectorComponents.getLocator();
 		switch (locator) {
-		case "className selector":
-			selector = new By.ByClassName(term);
-			break;
-		case "css selector":
-			selector = new By.ByCssSelector(term);
-			break;
-		case "id selector":
-			selector = new By.ById(term);
-			break;
-		case "linkText selector":
-			selector = new By.ByLinkText(term);
-			break;
-		case "name selector":
-			selector = new By.ByName(term);
-			break;
-		case "partialLinkText selector":
-			selector = new By.ByPartialLinkText(term);
-			break;
-		case "tagName selector":
-			selector = new By.ByTagName(term);
-			break;
-		case "xpath selector":
-			selector = new By.ByXPath(term);
-			break;
+			case "className selector":
+				selector = new By.ByClassName(term);
+				break;
+			case "css selector":
+				selector = new By.ByCssSelector(term);
+				break;
+			case "id selector":
+				selector = new By.ById(term);
+				break;
+			case "linkText selector":
+				selector = new By.ByLinkText(term);
+				break;
+			case "name selector":
+				selector = new By.ByName(term);
+				break;
+			case "partialLinkText selector":
+				selector = new By.ByPartialLinkText(term);
+				break;
+			case "tagName selector":
+				selector = new By.ByTagName(term);
+				break;
+			case "xpath selector":
+				selector = new By.ByXPath(term);
+				break;
 		}
 		BFLogger.logError(String.format("Locator '%s' not found", locator));
 		return selector;
 	}
 	
-	public static void setClickTimer() {
-		clickTimerOn = true;
-		totalClickTime = 0;
-	}
-	
-	public static long dropClickTimer() {
-		clickTimerOn = false;
-		return totalClickTime;
+	/**
+	 * The class is required for 3 reasons: 1. to keep a NewRemoteWebElement class immutable 2. to use a part of the
+	 * code in two places 3. to name two data, to keep a code more readily
+	 *
+	 * @author
+	 */
+	private class SelectorComponents {
+		String	locator	= null;
+		String	term	= null;
+		
+		SelectorComponents(String elementInfo) {
+			Matcher thisWebElementInfo = foundByPattern.matcher(elementInfo);
+			
+			if (!thisWebElementInfo.matches()) {
+				BFLogger.logError(String.format("Selector not found from '%s', pattern error.", elementInfo));
+				return;
+			}
+			locator = thisWebElementInfo.group(1);
+			term = thisWebElementInfo.group(2);
+		}
+		
+		String getLocator() {
+			return locator;
+		}
+		
+		String getTerm() {
+			return term;
+		}
 	}
 }

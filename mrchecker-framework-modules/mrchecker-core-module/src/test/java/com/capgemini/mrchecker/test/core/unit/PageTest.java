@@ -11,20 +11,20 @@ import org.junit.jupiter.api.parallel.ResourceLock;
 import com.capgemini.mrchecker.test.core.ModuleType;
 import com.capgemini.mrchecker.test.core.Page;
 import com.capgemini.mrchecker.test.core.tags.UnitTest;
-import com.capgemini.mrchecker.test.core.utils.FileUtils;
+import com.capgemini.mrchecker.test.core.utils.FileTestUtils;
 
 @UnitTest
 @ResourceLock(value = "SingleThread")
 public class PageTest {
 	
 	private static final Page	SUT			= new TestPage();
-	private static final String	logFilePath	= FileUtils.getLogFilePath();
+	private static final String	logFilePath	= FileTestUtils.getLogFilePath();
 	
 	@Test
 	public void shouldCallOnTestSuccess() throws IOException {
 		SUT.onTestSuccess();
 		
-		assertThat(FileUtils.getLastLineInFile(logFilePath), containsString("Page.onTestSuccess    " + SUT.getClass()
+		assertThat(FileTestUtils.getLastLineInFile(logFilePath), containsString("Page.onTestSuccess    " + SUT.getClass()
 				.getSimpleName()));
 	}
 	
@@ -32,7 +32,7 @@ public class PageTest {
 	public void shouldCallOnTestFailure() throws IOException {
 		SUT.onTestFailure();
 		
-		assertThat(FileUtils.getLastLineInFile(logFilePath), containsString("Page.onTestFailure    " + SUT.getClass()
+		assertThat(FileTestUtils.getLastLineInFile(logFilePath), containsString("Page.onTestFailure    " + SUT.getClass()
 				.getSimpleName()));
 	}
 	
@@ -40,14 +40,14 @@ public class PageTest {
 	public void shouldCallOnTestFinish() throws IOException {
 		SUT.onTestFinish();
 		
-		assertThat(FileUtils.getLastLineInFile(logFilePath), containsString("To remove observer: " + SUT.toString()));
+		assertThat(FileTestUtils.getLastLineInFile(logFilePath), containsString("To remove observer: " + SUT.toString()));
 	}
 	
 	@Test
 	public void shouldCallOnTestClassFinish() throws IOException {
 		SUT.onTestClassFinish();
 		
-		assertThat(FileUtils.getLastLineInFile(logFilePath), containsString("Page.onTestClassFinish    " + SUT.getClass()
+		assertThat(FileTestUtils.getLastLineInFile(logFilePath), containsString("Page.onTestClassFinish    " + SUT.getClass()
 				.getSimpleName()));
 	}
 	
@@ -55,7 +55,7 @@ public class PageTest {
 	public void shouldRegister() throws IOException {
 		SUT.addToTestExecutionObserver();
 		
-		assertThat(FileUtils.getLastLineInFile(logFilePath), containsString("Added observer: " + SUT.toString()));
+		assertThat(FileTestUtils.getLastLineInFile(logFilePath), containsString("Added observer: " + SUT.toString()));
 	}
 	
 	public static class TestPage extends Page {
