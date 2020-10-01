@@ -7,9 +7,9 @@ import java.io.Reader;
 
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
-import gherkin.deps.com.google.gson.GsonBuilder;
-import gherkin.deps.com.google.gson.JsonArray;
-import gherkin.deps.com.google.gson.JsonParser;
+import io.cucumber.messages.internal.com.google.gson.GsonBuilder;
+import io.cucumber.messages.internal.com.google.gson.JsonArray;
+import io.cucumber.messages.internal.com.google.gson.JsonParser;
 
 /**
  * @author is an utility to handle JSON deserialization boilerplate for JParamRunner data driven cases. It has no state,

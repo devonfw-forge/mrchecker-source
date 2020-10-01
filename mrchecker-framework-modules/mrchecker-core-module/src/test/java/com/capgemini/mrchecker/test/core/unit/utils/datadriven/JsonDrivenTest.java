@@ -1,8 +1,8 @@
 package com.capgemini.mrchecker.test.core.unit.utils.datadriven;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,7 +19,7 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.capgemini.mrchecker.test.core.tags.UnitTest;
 import com.capgemini.mrchecker.test.core.utils.datadriven.JsonDriven;
 
-import gherkin.deps.com.google.gson.GsonBuilder;
+import io.cucumber.messages.internal.com.google.gson.GsonBuilder;
 
 @UnitTest
 public class JsonDrivenTest {

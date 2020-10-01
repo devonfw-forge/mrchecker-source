@@ -1,7 +1,7 @@
 package com.capgemini.mrchecker.mobile.unit.core.runtime;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.HashMap;
 import java.util.Map;

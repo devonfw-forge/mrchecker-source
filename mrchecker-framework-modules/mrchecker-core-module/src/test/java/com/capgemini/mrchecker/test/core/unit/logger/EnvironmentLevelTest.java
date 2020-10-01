@@ -1,9 +1,9 @@
 package com.capgemini.mrchecker.test.core.unit.logger;
 
 import static com.capgemini.mrchecker.test.core.logger.EnvironmentLevel.ENVIRONMENT_INT;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
 
 import org.apache.log4j.Level;
 import org.junit.jupiter.api.Test;
