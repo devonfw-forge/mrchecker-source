@@ -39,6 +39,7 @@ public class TestExecutionObserverTest {
 		when(contextMock.getTestClass()).thenReturn(Optional.of(TestExecutionObserverTest.class));
 		when(contextMock.getRequiredTestClass()).thenCallRealMethod();
 		when(contextMock.getDisplayName()).thenReturn("Test_name");
+		when(contextMock.getUniqueId()).thenReturn("[engine:junit-jupiter]/[class:com.capgemini.mrchecker.selenium.mts.MyThaiStarTest]/[method:Test_orderMenu()]");
 		
 		observerMock = mock(ITestObserver.class);
 		when(observerMock.getModuleType()).thenReturn(ModuleType.CORE);
