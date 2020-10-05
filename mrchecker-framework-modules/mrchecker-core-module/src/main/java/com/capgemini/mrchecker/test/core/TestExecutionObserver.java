@@ -144,7 +144,8 @@ public class TestExecutionObserver implements ITestExecutionObserver {
 	}
 	
 	private void printTimeExecutionLog() {
-		BFLogger.logInfo("\"" + testNames.get() + "\"" + getFormattedTestDuration());
+		BFLogger.logInfo("\"" + testNames.get()
+				.getJunitName() + "\"" + getFormattedTestDuration());
 	}
 	
 	private String getFormattedTestDuration() {

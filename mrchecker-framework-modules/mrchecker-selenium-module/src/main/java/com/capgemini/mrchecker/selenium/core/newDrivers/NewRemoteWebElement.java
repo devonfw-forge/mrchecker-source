@@ -4,6 +4,8 @@ import static com.capgemini.mrchecker.selenium.core.newDrivers.DriverManager.get
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.Semaphore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,18 +28,20 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 public class NewRemoteWebElement extends RemoteWebElement {
 	
-	private static final int		CLICK_NUM		= 10;
-	private static final int		MICRO_SLEEP		= 200;
-	private static final Pattern	foundByPattern	= Pattern.compile("\\[\\[.* -> (.*): (.*)\\]");
-	private static boolean			clickTimerOn	= false;
+	private static final int		CLICK_NUM						= 10;
+	private static final int		MICRO_SLEEP						= 200;
+	private static final Pattern	foundByPattern					= Pattern.compile("\\[\\[.* -> (.*): (.*)\\]");
+	private static boolean			clickTimerOn					= false;
 	private static long				totalClickTime;
 	private static long				startClickTime;
+	private static FileDetector		newRemoteElementFileDetector;
+	private static final Semaphore	configureFileDetectorSemaphore	= new Semaphore(1);
 	
 	public NewRemoteWebElement(WebElement element) {
 		RemoteWebElement remoteWebElement = (RemoteWebElement) element;
 		id = remoteWebElement.getId();
 		setParent((RemoteWebDriver) remoteWebElement.getWrappedDriver());
-		fileDetector = configureFileDetector();
+		configureFileDetector();
 		
 		// if possible take a locator and a term
 		Matcher remoteWebElementInfo = foundByPattern.matcher(remoteWebElement.toString());
@@ -61,28 +65,36 @@ public class NewRemoteWebElement extends RemoteWebElement {
 	/**
 	 * We are setting LocalFileDetector for interactions with a non-local grid, that is a Grid that is physically
 	 * on another host. Skipping that for local grid has some tiny performance advantage: file will not be sent over
-	 * network
-	 * unnecessarily
+	 * network unnecessarily
 	 */
-	private FileDetector configureFileDetector() {
-		FileDetector fileDetector = new UselessFileDetector();
+	private void configureFileDetector() {
+		try {
+			configureFileDetectorSemaphore.acquire();
+			
+			if (!Objects.isNull(newRemoteElementFileDetector)) {
+				fileDetector = newRemoteElementFileDetector;
+			} else {
+				fileDetector = isRemoteGrid() ? new LocalFileDetector() : new UselessFileDetector();
+				newRemoteElementFileDetector = fileDetector;
+				BFLogger.logDebug("FileDetector for all NewRemoteWebElements will be set to " + fileDetector.getClass()
+						.getCanonicalName());
+			}
+			
+			configureFileDetectorSemaphore.release();
+		} catch (InterruptedException e) {
+			BFLogger.logError("FileDetector could not be set. The default will be used");
+		}
+	}
+	
+	private static boolean isRemoteGrid() {
+		String gridHost = RuntimeParametersSelenium.SELENIUM_GRID.getValue()
+				.trim();
 		
-		if (getDriver().getClass()
+		return getDriver().getClass()
 				.getSimpleName()
 				.equals("NewRemoteWebDriver") &&
-				!RuntimeParametersSelenium.SELENIUM_GRID.getValue()
-						.trim()
-						.startsWith("http://127.0.0.1")
-				&&
-				!RuntimeParametersSelenium.SELENIUM_GRID.getValue()
-						.trim()
-						.startsWith("http://localhost")) {
-			fileDetector = new LocalFileDetector();
-		}
-		BFLogger.logDebug("FileDetector for RemoteWebElement set to " + fileDetector.getClass()
-				.getCanonicalName());
-		
-		return fileDetector;
+				!gridHost.startsWith("http://127.0.0.1") &&
+				!gridHost.startsWith("http://localhost");
 	}
 	
 	/**

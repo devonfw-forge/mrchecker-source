@@ -62,7 +62,7 @@ public abstract class BaseTest {
 	}
 	
 	private static void setEnvironmentInstance(boolean isEncryptionEnabled) {
-		// Environment variables either from n.csv or any other input data.
+		// Environment variables either from environments.csv or any other input data.
 		IEnvironmentService environmentInstance = Guice.createInjector(new EnvironmentModule())
 				.getInstance(IEnvironmentService.class);
 		environmentInstance.setEnvironment(RuntimeParametersCore.ENV.getValue());
