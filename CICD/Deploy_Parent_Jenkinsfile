@@ -1,0 +1,84 @@
+env.workspace = "mrchecker-framework-modules"
+pipeline{
+    agent {docker {image 'mrchecker/mrchecker:v1.1.3'}}
+    stages{
+        stage('Check code formatting'){
+            steps{
+              script{
+                print('dummy step')
+                // sh \"\"\"
+                // cd ${env.workspace}
+                // mvn formatter:validate --projects ${env.module}
+                // \"\"\"
+              }
+            }
+        }
+        stage('Check merge conflicts'){
+          // when{
+          //   !branch 'develop' and !branch 'master'
+          // }
+          steps{
+            script{
+              print('dummy step')
+              // sh\"\"\"
+              // cd ${env.workspace}
+              // git format-patch develop --stdout | git-apply --check
+              // \"\"\"
+            }
+          }
+        }
+        stage('Deploy code to local repo'){
+          steps{
+            script{
+              sh\"\"\"
+              cd ${env.workspace}
+              mvn install -DskipTests=true 
+              \"\"\"
+            }
+          }
+        }
+        stage('Deploy code to remote repo'){
+          // when{
+          //   branch 'develop' and branch 'master'
+          //   //some additional switch or user input
+          // }
+          steps{
+            script{
+                withCredentials([
+                  usernamePassword(credentialsId: 'ossrh', passwordVariable: 'MAVEN_PASSWORD', usernameVariable: 'MAVEN_USER'),
+                  string(credentialsId: 'GPG_PASSWORD', variable: 'GPG_PASSWORD'),zip(credentialsId: 'gpg_sign_mrchecker', variable: 'GPG_HOMEDIR')
+                ]){
+                  //what with version number
+                  def version = sh script: "cd ${env.workspace} &&  mvn help:evaluate -Dexpression=project.version -q -DforceStdout ", returnStdout: true
+                  if(!version.contains('SNAPSHOT')){
+                    snap = input message: 'Force snapshot release', parameters: [booleanParam(defaultValue: true, description: '', name: 'snapshot')]
+                    if (snap == true){
+                      version = "${version}-SNAPSHOT"
+                    }
+                    input "Proceed with deployment of ${env.module} with version: ${version}"
+                  }
+                  else{
+                    print "mrchecker-framework-modules ${version}"
+                  }
+                configFileProvider([configFile(fileId: 'deploy-maven-settings', targetLocation: 'settings.xml', variable: 'SETTINGS_PATH')]) {
+                  sh\"\"\"
+                  set env.MAVEN_USER=${MAVEN_USER}
+                  set env.MAVEN_PASSWORD=${MAVEN_PASSWORD}
+
+                  ln -s ${GPG_HOMEDIR} /tmp/shortgpg
+                  ls -Lla /tmp/shortgpg
+                  ls -Lla /tmp/shortgpg/.gnupg
+                  cd ${env.workspace}
+                  mvn -s ${SETTINGS_PATH} -P release deploy -DskipTests=true -Dgpg.homedir=/tmp/shortgpg/.gnupg -Dgpg.passphrase=${GPG_PASSWORD}
+                  \"\"\"
+                  //https://lists.gnupg.org/pipermail/gnupg-users/2017-January/057451.
+                  //https://github.com/keybase/keybase-issues/issues/2798
+                  //https://github.com/microsoft/vscode-remote-release/issues/3168
+                  //https://github.com/samuelmeuli/action-maven-publish/issues/3
+                }
+                }
+            }
+          }
+        }
+    }
+}
