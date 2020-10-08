@@ -10,18 +10,27 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
+import com.capgemini.mrchecker.test.core.logger.EmptyTestName;
+import com.capgemini.mrchecker.test.core.logger.ITestName;
+import com.capgemini.mrchecker.test.core.logger.ITestNameParser;
+import com.capgemini.mrchecker.test.core.logger.JunitOrCucumberRunnerTestNameParser;
 import com.capgemini.mrchecker.test.core.utils.Attachments;
+
+import io.qameta.allure.Allure;
 
 public class TestExecutionObserver implements ITestExecutionObserver {
 	
-	private static TestExecutionObserver instance = new TestExecutionObserver();
+	private static final TestExecutionObserver instance = new TestExecutionObserver();
 	
 	private final ThreadLocal<Long> stopwatch = ThreadLocal.withInitial(() -> 0L);
 	
 	private final ThreadLocal<List<ITestObserver>>	observers		= ThreadLocal.withInitial(ArrayList::new);
 	private final ThreadLocal<List<ITestObserver>>	classObservers	= ThreadLocal.withInitial(ArrayList::new);
+	private final ThreadLocal<ITestName>			testNames		= ThreadLocal.withInitial(EmptyTestName::new);
 	
 	public static final boolean DONT_CONSUME_EXCEPTION_IN_AFTERALL = false;
+	
+	private static final ITestNameParser testNameParser = new JunitOrCucumberRunnerTestNameParser();
 	
 	private TestExecutionObserver() {
 	}
@@ -40,9 +49,13 @@ public class TestExecutionObserver implements ITestExecutionObserver {
 	@Override
 	public void beforeTestExecution(ExtensionContext context) {
 		BFLogger.RestrictedMethods.startSeparateLog();
-		logTestInfo(context, "STARTED");
+		testNames.set(testNameParser.parseFromContext(context));
+		Allure.getLifecycle()
+				.updateTestCase(testResult -> testResult.setName(testNames.get()
+						.getAllureName()));
 		BaseTest.getAnalytics()
 				.sendClassName();
+		logTestInfo("STARTED");
 		stopwatch.set(System.currentTimeMillis());
 		validateTestClassAndCallHook(context, BaseTest::setUp);
 	}
@@ -50,8 +63,8 @@ public class TestExecutionObserver implements ITestExecutionObserver {
 	@Override
 	public void afterTestExecution(ExtensionContext context) {
 		stopwatch.set(System.currentTimeMillis() - stopwatch.get()); // end timing
-		String testName = logTestInfo(context, "FINISHED");
-		printTimeExecutionLog(testName);
+		logTestInfo("FINISHED");
+		printTimeExecutionLog();
 		validateTestClassAndCallHook(context, BaseTest::tearDown);
 	}
 	
@@ -61,19 +74,19 @@ public class TestExecutionObserver implements ITestExecutionObserver {
 	
 	@Override
 	public void testDisabled(ExtensionContext context, Optional<String> reason) {
-		logTestInfo(context, "DISABLED");
+		logTestInfo("DISABLED");
 		reason.ifPresent(s -> BFLogger.logInfo("Reason: " + s));
 	}
 	
 	@Override
 	public void testAborted(ExtensionContext context, Throwable cause) {
-		logTestInfo(context, "ABORTED");
+		logTestInfo("ABORTED");
 		afterEach();
 	}
 	
 	@Override
 	public void testSuccessful(ExtensionContext context) {
-		logTestInfo(context, "PASSED");
+		logTestInfo("PASSED");
 		observers.get()
 				.forEach(ITestObserver::onTestSuccess);
 		classObservers.get()
@@ -83,7 +96,7 @@ public class TestExecutionObserver implements ITestExecutionObserver {
 	
 	@Override
 	public void testFailed(ExtensionContext context, Throwable cause) {
-		logTestInfo(context, "FAILED");
+		logTestInfo("FAILED");
 		observers.get()
 				.forEach(ITestObserver::onTestFailure);
 		classObservers.get()
@@ -91,12 +104,9 @@ public class TestExecutionObserver implements ITestExecutionObserver {
 		afterEach();
 	}
 	
-	private static String logTestInfo(ExtensionContext context, String testStatus) {
-		String className = context.getRequiredTestClass()
-				.getName();
-		String testName = context.getDisplayName();
-		BFLogger.logInfo("\"" + className + "#" + testName + "\"" + " - " + testStatus + ".");
-		return testName;
+	private void logTestInfo(String testStatus) {
+		BFLogger.logInfo("\"" + testNames.get()
+				.getJunitName() + "\"" + " - " + testStatus + ".");
 	}
 	
 	private void afterEach() {
@@ -133,8 +143,9 @@ public class TestExecutionObserver implements ITestExecutionObserver {
 		BFLogger.logDebug("All observers cleared.");
 	}
 	
-	private void printTimeExecutionLog(String testName) {
-		BFLogger.logInfo("\"" + testName + "\"" + getFormattedTestDuration());
+	private void printTimeExecutionLog() {
+		BFLogger.logInfo("\"" + testNames.get()
+				.getJunitName() + "\"" + getFormattedTestDuration());
 	}
 	
 	private String getFormattedTestDuration() {
