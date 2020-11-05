@@ -8,8 +8,9 @@
         <groupId>com.capgemini.mrchecker</groupId>
         <version>3.0.1-SNAPSHOT</version>
     </parent>
+
     <artifactId>mrchecker-database-module</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>2.2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>MrChecker - Database - Module</name>
     <description>MrChecker Database Module:
@@ -41,6 +42,12 @@
         <developer>
             <name>Przemyslaw Wojtkow</name>
             <email>przemyslaw.wojtkow@capgemini.com</email>
+            <organization>Capgemini - Nearshore Test Center - Poland</organization>
+            <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
+        </developer>
+        <developer>
+            <name>Michal Babiarz</name>
+            <email>michal.babiarz@capgemini.com</email>
             <organization>Capgemini - Nearshore Test Center - Poland</organization>
             <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
         </developer>
@@ -125,6 +132,12 @@
             <artifactId>allure-java-commons</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>1.10.18</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 

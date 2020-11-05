@@ -1,4 +1,4 @@
-package com.capgemini.mrchecker.database.unit.base.database;
+package com.capgemini.mrchecker.database.database;
 
 import com.capgemini.mrchecker.database.core.BasePageDatabase;
 

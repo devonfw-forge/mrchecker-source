@@ -8,19 +8,16 @@ import java.util.Map;
 import java.util.Objects;
 
 public enum EnvironmentParam {
-
     DB_USERNAME,
     DB_PASSWORD,
     DB_CONNECTION_URL;
 
     public String getValue() {
-
         if (Objects.isNull(BaseTest.getEnvironmentService())) {
             throw new BFInputDataException("Environment Parameters class wasn't initialized properly");
         }
 
-        return BaseTest.getEnvironmentService()
-                .getValue(name());
+        return BaseTest.getEnvironmentService().getValue(name());
     }
 
     @Override

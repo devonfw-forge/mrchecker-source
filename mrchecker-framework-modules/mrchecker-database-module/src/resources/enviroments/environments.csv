@@ -1,4 +1,4 @@
 service variable,DEV,QA,PROD,DEV1,DEV2
-DB_USERNAME,root,,,,
-DB_PASSWORD,Pelaginaizm2020,,,,
-DB_CONNECTION_URL,jdbc:mysql://localhost:3306/,,,,
+DB_USERNAME,user,,,,
+DB_PASSWORD,pass,,,,
+DB_CONNECTION_URL,url,,,,

@@ -17,88 +17,77 @@ import com.google.inject.Guice;
 
 abstract public class BasePageDatabase extends Page implements IDatabasePrefixHolder {
 
-	protected EntityManager entityManager = null;
+    protected EntityManager entityManager = null;
 
-	private static IEnvironmentService			environmentService;
-	private final static IAnalytics				ANALYTICS;
-	public final static String ANALYTICS_CATEGORY_NAME = "Database-Module";
+    private static IEnvironmentService environmentService;
+    private final static IAnalytics ANALYTICS;
+    public final static String ANALYTICS_CATEGORY_NAME = "Database-Module";
 
-	private final static PropertiesDatabase PROPERTIES_DATABASE;
+    private final static PropertiesDatabase PROPERTIES_DATABASE;
 
-	static {
-		// Get analytics instance created in BaseTest
-		ANALYTICS = BaseTest.getAnalytics();
-		
-		// Get and then set properties information from selenium.settings file
-		PROPERTIES_DATABASE = setPropertiesSettings();
-		
-		// Read System or maven parameters
-		setRuntimeParametersDatabase();
-		
-		// Read Environment variables either from environments.csv or any other input data.
-		setEnvironmentInstance();
-	}
-	
-	public BasePageDatabase() {
-		assignEntityManager();
-	}
-	
-	public static IAnalytics getAnalytics() {
-		return ANALYTICS;
-	}
-	
-	@Override
-	public void onTestFailure() {
-		super.onTestFailure();
-		closeSession();
-	}
-	
-	@Override
-	public void onTestClassFinish() {
-		closeSession();
-		BFLogger.logDebug("Session for connection: [" + getDatabaseUnitName() + "] closed.");
-		super.onTestClassFinish();
-	}
-	
-	@Override
-	public ModuleType getModuleType() {
-		return ModuleType.DATABASE;
-	}
-	
-	private static PropertiesDatabase setPropertiesSettings() {
-		// Get and then set properties information from settings.properties file
-		return Guice.createInjector(PropertiesSettingsModule.init())
-				.getInstance(PropertiesDatabase.class);
-	}
-	
-	private static void setRuntimeParametersDatabase() {
-		// Read System or maven parameters
-		BFLogger.logDebug(java.util.Arrays.asList(RuntimeParametersDatabase.values())
-				.toString());
+    static {
+        // Get analytics instance created in BaseTest
+        ANALYTICS = BaseTest.getAnalytics();
 
-	}
-	
-	private void closeSession() {
-		if (!Objects.isNull(entityManager)) {
-			entityManager.close();
-		}
-	}
-	
-	private void assignEntityManager() {
-		if (Objects.isNull(entityManager)) {
-			entityManager = DriverManager.createEntityManager(getDatabaseUnitName());
-		}
-	}
+        // Get and then set properties information from selenium.settings file
+        PROPERTIES_DATABASE = setPropertiesSettings();
 
-	public EntityManager getEntityManager() {
-		return entityManager;
-	}
+        // Read System or maven parameters
+        setRuntimeParametersDatabase();
 
-	private static void setEnvironmentInstance() {
-		/*
-		 * Environment variables either from environments.csv or any other input data. For now there is no properties
-		 * settings file for Selenium module. In future, please have a look on Core Module IEnvironmentService
-		 * environmentInstance = Guice.createInjector(new EnvironmentModule()) .getInstance(IEnvironmentService.class);
-		 */
-	}
+        // Read Environment variables either from environments.csv or any other input data.
+        setEnvironmentInstance();
+    }
+
+    public BasePageDatabase() {
+        entityManager = DriverManager.createEntityManager(getDatabaseUnitName());
+    }
+
+    public static IAnalytics getAnalytics() {
+        return ANALYTICS;
+    }
+
+    @Override
+    public void onTestClassFinish() {
+        super.onTestClassFinish();
+        closeSession();
+        BFLogger.logDebug("Session for connection: [" + getDatabaseUnitName() + "] closed.");
+    }
+
+    private void closeSession() {
+        if (!Objects.isNull(entityManager)) {
+            entityManager.close();
+            entityManager = null;
+        }
+        DriverManager.closeDriver();
+    }
+
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+
+    @Override
+    public ModuleType getModuleType() {
+        return ModuleType.DATABASE;
+    }
+
+    private static PropertiesDatabase setPropertiesSettings() {
+        // Get and then set properties information from settings.properties file
+        return Guice.createInjector(PropertiesSettingsModule.init())
+                .getInstance(PropertiesDatabase.class);
+    }
+
+    private static void setRuntimeParametersDatabase() {
+        // Read System or maven parameters
+        BFLogger.logDebug(java.util.Arrays.asList(RuntimeParametersDatabase.values()).toString());
+    }
+
+    private static void setEnvironmentInstance() {
+        /*
+         * Environment variables either from environments.csv or any other input data. For now there is no properties
+         * settings file for Selenium module. In future, please have a look on Core Module IEnvironmentService
+         * environmentInstance = Guice.createInjector(new EnvironmentModule()) .getInstance(IEnvironmentService.class);
+         */
+    }
 }

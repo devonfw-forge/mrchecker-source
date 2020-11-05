@@ -10,7 +10,6 @@ public class PropertiesDatabase {
 	private String proxy      = "";
 
 	@Inject(optional = true)
-	@SuppressWarnings("unused")
 	private void setJdbcOracle(@Named("database.oracle") String path) {
 		jdbcOracle = path;
 	}
@@ -20,13 +19,11 @@ public class PropertiesDatabase {
 	}
 
 	@Inject(optional = true)
-	@SuppressWarnings("unused")
 	private void setProxy(@Named("database.proxy") String path) {
 		proxy = path;
 	}
-
+	
 	public String getProxy() {
 		return proxy;
 	}
-
 }

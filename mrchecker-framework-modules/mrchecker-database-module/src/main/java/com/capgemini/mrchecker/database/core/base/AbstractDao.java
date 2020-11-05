@@ -7,17 +7,14 @@ import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
-import java.util.Objects;
 
 public abstract class AbstractDao<T, K extends Serializable> implements IDao<T, K> {
 
 	private final EntityManager entityManager;
 
-	public AbstractDao(EntityManager emf) {
-		this.entityManager = emf;
+	public AbstractDao(EntityManager entityManager) {
+		this.entityManager = entityManager;
 	}
-
-	private Class<T> domainClass;
 
 	@Override
 	public T save(T entity) {
@@ -26,19 +23,16 @@ public abstract class AbstractDao<T, K extends Serializable> implements IDao<T, 
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public T getOne(K id) {
 		return entityManager.getReference(getDomainClass(), id);
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public T findOne(K id) {
 		return entityManager.find(getDomainClass(), id);
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<T> findAll() {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<T> criteriaQuery = builder.createQuery(getDomainClass());
@@ -79,7 +73,7 @@ public abstract class AbstractDao<T, K extends Serializable> implements IDao<T, 
 
 	@SuppressWarnings("unchecked")
 	protected Class<T> getDomainClass() {
-		return Objects.isNull(domainClass) ? (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0] : domainClass;
+		return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 
 	protected String getDomainClassName() {
