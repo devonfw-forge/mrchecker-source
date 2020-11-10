@@ -28,36 +28,43 @@ public class BasePageDatabaseTest {
 
     @Test
     public void shouldCreateInstance() {
-        sut = new TestBasePageDatabase();
+        sut = new UnitTestBasePageDatabase();
 
         assertTrue(true);
     }
 
     @Test
     public void shouldCreateInstanceTwice() {
-        sut = new TestBasePageDatabase();
-        new TestBasePageDatabase();
+        sut = new UnitTestBasePageDatabase();
+        new UnitTestBasePageDatabase();
 
         assertTrue(true);
     }
 
     @Test
     public void shouldReturnDatabaseModule() {
-        sut = new TestBasePageDatabase();
+        sut = new UnitTestBasePageDatabase();
 
         assertThat(sut.getModuleType(), is(equalTo(ModuleType.DATABASE)));
     }
 
     @Test
     public void shouldGetEntityManagerReturnReference() {
-        sut = new TestBasePageDatabase();
+        sut = new UnitTestBasePageDatabase();
 
         assertThat(sut.getEntityManager(), is(notNullValue()));
     }
 
     @Test
+    public void shouldCreateReturnReference() {
+        sut = new UnitTestBasePageDatabase();
+
+        assertThat(sut.createDao(Integer.class, Integer.class), is(notNullValue()));
+    }
+
+    @Test
     public void shouldCallOnTestClassFinish() {
-        sut = new TestBasePageDatabase();
+        sut = new UnitTestBasePageDatabase();
         sut.onTestClassFinish();
 
         assertTrue(true);
@@ -65,7 +72,7 @@ public class BasePageDatabaseTest {
 
     @Test
     public void shouldCallOnTestClassFinishTwice() {
-        sut = new TestBasePageDatabase();
+        sut = new UnitTestBasePageDatabase();
         sut.onTestClassFinish();
         sut.onTestClassFinish();
 
@@ -78,7 +85,7 @@ public class BasePageDatabaseTest {
     }
 
 
-    private static class TestBasePageDatabase extends BasePageDatabase {
+    private static class UnitTestBasePageDatabase extends BasePageDatabase {
         @Override
         public String getDatabaseUnitName() {
             return SUPPORTED_PERSISTENCE_UNIT_NAME_FOR_MOCK;

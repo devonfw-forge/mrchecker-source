@@ -29,7 +29,7 @@
 
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <class>com.capgemini.mrchecker.database.Emploee</class>
+        <class>com.capgemini.mrchecker.database.integration.entity.Employee</class>
 
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>

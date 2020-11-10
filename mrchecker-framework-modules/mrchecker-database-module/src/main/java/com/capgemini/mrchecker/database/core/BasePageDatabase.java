@@ -1,9 +1,12 @@
 package com.capgemini.mrchecker.database.core;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.EntityManager;
 
+import com.capgemini.mrchecker.database.core.base.AbstractDao;
+import com.capgemini.mrchecker.database.core.base.IDao;
 import com.capgemini.mrchecker.database.core.base.properties.PropertiesDatabase;
 import com.capgemini.mrchecker.database.core.base.runtime.RuntimeParametersDatabase;
 import com.capgemini.mrchecker.test.core.BaseTest;
@@ -66,6 +69,10 @@ abstract public class BasePageDatabase extends Page implements IDatabasePrefixHo
         return entityManager;
     }
 
+    public <T, K extends Serializable> IDao<T, K> createDao(Class<T> entityType, Class<K> idType) {
+        return new AbstractDao<T, K>(entityType, idType, entityManager) {
+        };
+    }
 
     @Override
     public ModuleType getModuleType() {

@@ -1,0 +1,1 @@
+docker stop $(docker ps -q --filter ancestor="mrchecker_exemplary_db_mysql:0.1")

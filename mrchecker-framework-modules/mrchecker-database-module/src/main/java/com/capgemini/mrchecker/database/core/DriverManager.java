@@ -6,9 +6,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import com.capgemini.mrchecker.database.core.base.environment.EnvironmentParam;
+
 public final class DriverManager {
 	
-	private static EntityManagerFactory emf;
+	public static final String PARAMETRIZED_PERSISTENCE_UNIT = "parametrizedConnection";
+	
+	private static final ThreadLocal<EntityManagerFactory> emfs = new ThreadLocal<>();
 	
 	private DriverManager() {
 	}
@@ -17,18 +21,20 @@ public final class DriverManager {
 		return getEntityManagerFactory(dbPrefix).createEntityManager();
 	}
 	
-	private synchronized static EntityManagerFactory getEntityManagerFactory(String dbPrefix) {
-		if (Objects.isNull(emf)) {
-			emf = Persistence.createEntityManagerFactory(dbPrefix);
+	private static EntityManagerFactory getEntityManagerFactory(String dbPrefix) {
+		if (Objects.isNull(emfs.get())) {
+			emfs.set(dbPrefix.equals(PARAMETRIZED_PERSISTENCE_UNIT) ? Persistence.createEntityManagerFactory(dbPrefix, EnvironmentParam.getHibernateConnectionParams())
+					: Persistence.createEntityManagerFactory(dbPrefix));
 		}
 		
-		return emf;
+		return emfs.get();
 	}
 	
-	public synchronized static void closeDriver() {
-		if (!Objects.isNull(emf)) {
-			emf.close();
-			emf = null;
+	public static void closeDriver() {
+		if (!Objects.isNull(emfs.get())) {
+			emfs.get()
+					.close();
+			emfs.set(null);
 		}
 	}
 }

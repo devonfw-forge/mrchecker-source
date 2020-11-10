@@ -15,17 +15,17 @@ public class EnvironmentParamTest {
 	
 	@Test
 	public void shouldDbUsernameHaveValue() {
-		assertThat(EnvironmentParam.DB_USERNAME.getValue(), is(equalTo("user")));
+		assertThat(EnvironmentParam.DB_USERNAME.getValue(), is(equalTo("tester")));
 	}
 	
 	@Test
 	public void shouldDbPasswordHaveValue() {
-		assertThat(EnvironmentParam.DB_PASSWORD.getValue(), is(equalTo("pass")));
+		assertThat(EnvironmentParam.DB_PASSWORD.getValue(), is(equalTo("Vx4hylOJhNzRc5kKm4gr")));
 	}
 	
 	@Test
 	public void shouldDbConnectionUrlHaveValue() {
-		assertThat(EnvironmentParam.DB_CONNECTION_URL.getValue(), is(equalTo("url")));
+		assertThat(EnvironmentParam.DB_CONNECTION_URL.getValue(), is(equalTo("localhost:3307/int_tests")));
 	}
 	
 	@Test

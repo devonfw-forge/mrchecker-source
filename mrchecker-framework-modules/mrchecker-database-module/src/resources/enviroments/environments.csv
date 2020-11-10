@@ -1,4 +1,4 @@
 service variable,DEV,QA,PROD,DEV1,DEV2
-DB_USERNAME,user,,,,
-DB_PASSWORD,pass,,,,
-DB_CONNECTION_URL,url,,,,
+DB_USERNAME,tester,,,,
+DB_PASSWORD,Vx4hylOJhNzRc5kKm4gr,,,,
+DB_CONNECTION_URL,localhost:3307/int_tests,,,,

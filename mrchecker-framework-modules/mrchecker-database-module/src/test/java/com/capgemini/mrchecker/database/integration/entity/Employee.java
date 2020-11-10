@@ -1,23 +1,22 @@
-package com.capgemini.mrchecker.database;
+package com.capgemini.mrchecker.database.integration.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 @Entity
 @Table
-public class Emploee {
+public class Employee {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int		id;
 	private String	name;
 	private String	surname;
 	private int		salary;
 	
-	public Emploee(int id, String name, String surname, int salary) {
+	public Employee(int id, String name, String surname, int salary) {
 		super();
 		this.setId(id);
 		this.setName(name);
@@ -25,13 +24,12 @@ public class Emploee {
 		this.setSalary(salary);
 	}
 	
-	public Emploee() {
-		super();
+	public Employee() {
 	}
 	
 	@Override
 	public String toString() {
-		return "Emploee [id=" + getId() + ", name=" + getName() + ", surname=" + getSurname() + ", salary=" + getSalary() + "]";
+		return "Employee [id=" + getId() + ", name=" + getName() + ", surname=" + getSurname() + ", salary=" + getSalary() + "]";
 	}
 	
 	public int getId() {
@@ -64,5 +62,26 @@ public class Emploee {
 	
 	public void setSalary(int salary) {
 		this.salary = salary;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other == null) {
+			return false;
+		}
+		if (other == this) {
+			return true;
+		}
+		if (other.getClass() != getClass()) {
+			return false;
+		}
+		
+		Employee castOther = (Employee) other;
+		return new EqualsBuilder()
+				.append(id, castOther.id)
+				.append(name, castOther.name)
+				.append(surname, castOther.surname)
+				.append(salary, castOther.salary)
+				.isEquals();
 	}
 }
