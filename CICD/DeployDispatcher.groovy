@@ -7,17 +7,14 @@ try{
     }
 } catch (Exception e){
     stage("Fall back to default"){
-        ansiColor{
-            print (\'\'\'
-            This is only default script. That means you're branch has no correct            
-            jenkins file for this job. If any customization is needed fix this.             
-            \'\'\')
-        }
-    }
-} finally {
-    node('master'){
-        configFileProvider([configFile(fileId: 'deployDefault', variable: 'deployDefault')]) {
-            load deployDefault
+        print (\'\'\'
+        This is only default script. That means you're branch has no correct            
+        jenkins file for this job. If any customization is needed fix this.             
+        \'\'\')
+        node('master'){
+            configFileProvider([configFile(fileId: 'deployDefault', variable: 'deployDefault')]) {
+                load deployDefault
+            }
         }
     }
 }
