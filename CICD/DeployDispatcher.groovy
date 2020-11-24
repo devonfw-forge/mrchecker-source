@@ -5,7 +5,7 @@ try{
         }
         load 'CICD/Deploy_Jenkinsfile'
     }
-} catch (Exception e){
+} catch (java.nio.file.NoSuchFileException e){
     stage("Fall back to default"){
         ansiColor{
             print (\'\'\'

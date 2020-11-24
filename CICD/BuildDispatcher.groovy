@@ -3,7 +3,7 @@ try{
         checkout scm
         load 'CICD/Build_Jenkinsfile'
     }
-} catch (Exception e){
+} catch (java.nio.file.NoSuchFileException e){
         ansiColor{
             print (\'\'\'
             This is only default script. That means you're branch has no correct            
