@@ -1,13 +1,11 @@
 try{
     node('master'){
         stage('See if there is Jenkinsfile'){
-            steps{
-                script{
-                    checkout scm
-                    def module = "${JOB_NAME}".split('/')[1]
-                }
-                load "mrchecker-framework-modules/${module}/Jenkinsfile" //what about that it
+            script{
+                checkout scm
+                def module = "${JOB_NAME}".split('/')[1]
             }
+            load "mrchecker-framework-modules/${module}/Jenkinsfile" //what about that it
         }
     }
 } catch (Exception e){
