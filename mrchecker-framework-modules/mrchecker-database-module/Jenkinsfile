@@ -9,15 +9,8 @@ pipeline{
                 withCredentials([string(credentialsId: 'JENKINS_HOSTNAME', variable: 'hostname'), usernamePassword(credentialsId: 'db_credentials', passwordVariable: 'pass', usernameVariable: 'user')]) {
                   sh """
                   cd ${env.workspace}
-                  ls .
-                  ls ./${env.module}/
-                  ls ./${env.module}/src/
-                  ls ./${env.module}/src/resources/
-                  ls ./${env.module}/src/resources/enviroments
-                  ls ./${env.module}/src/resources/enviroments/environments.csv
-
                   sed -i s/#qa_user#/${user}/\\;s/#qa_pass#/${pass}/\\;s/#qa_host#/${hostname}/ ./${env.module}/src/resources/enviroments/environments.csv
-                  mvn -q clean jacoco:prepare-agent verify -Dgroups=IntegrationTest --projects ${env.module} 
+                  mvn -q clean jacoco:prepare-agent verify -Denv=QA -Dgroups=IntegrationTest --projects ${env.module} 
                   """
                 }
             }
