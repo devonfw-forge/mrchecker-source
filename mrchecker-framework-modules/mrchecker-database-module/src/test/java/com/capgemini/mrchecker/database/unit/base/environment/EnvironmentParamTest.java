@@ -21,21 +21,21 @@ public class EnvironmentParamTest {
 	private static final Map<String, String> userEnvMapping = new HashMap<String, String>(){
 		{
 			put("DEV", "tester");
-			put("QA", "#qa_pass#");
+			put("QA", "user");
 		}
 	};
 
 	private static final Map<String, String> passwordEnvMapping = new HashMap<String, String>(){
 		{
 			put("DEV", "Vx4hylOJhNzRc5kKm4gr");
-			put("QA", "#qa_pass#");
+			put("QA", "pass");
 		}
 	};
 
 	private static final Map<String, String> connectionUrlEnvMapping = new HashMap<String, String>(){
 		{
 			put("DEV", "localhost:3307/int_tests");
-			put("QA", "#qa_host#:3306/int_tests");
+			put("QA", "de-muc-devonfw-allure01:3306/int_tests");
 		}
 	};
 
