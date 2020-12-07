@@ -8,7 +8,6 @@ import org.hamcrest.Matcher;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 public class IsCollectionDistinct<T> extends BaseMatcher<T> {
@@ -21,7 +20,6 @@ public class IsCollectionDistinct<T> extends BaseMatcher<T> {
           throw new IllegalArgumentException("Must be of Iterable type");
         }
 
-        Iterator<Object> iterator = ((Iterable<Object>) o).iterator();
         Set<Object> uniqueValues = new HashSet<>();
         ((Iterable<Object>) o).forEach(object -> {if(!uniqueValues.add(object))  duplicates.add(object);});
 

@@ -10,22 +10,48 @@ import org.junit.jupiter.api.Test;
 import com.capgemini.mrchecker.database.core.base.environment.EnvironmentParam;
 import com.capgemini.mrchecker.database.tags.UnitTest;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @UnitTest
 public class EnvironmentParamTest {
-	
+
+	private final String ENV = System.getProperty("env", "DEV");
+
+	private static final Map<String, String> userEnvMapping = new HashMap<String, String>(){
+		{
+			put("DEV", "tester");
+			put("QA", "#qa_pass#");
+		}
+	};
+
+	private static final Map<String, String> passwordEnvMapping = new HashMap<String, String>(){
+		{
+			put("DEV", "Vx4hylOJhNzRc5kKm4gr");
+			put("QA", "#qa_pass#");
+		}
+	};
+
+	private static final Map<String, String> connectionUrlEnvMapping = new HashMap<String, String>(){
+		{
+			put("DEV", "localhost:3307/int_tests");
+			put("QA", "#qa_host#:3306/int_tests");
+		}
+	};
+
 	@Test
 	public void shouldDbUsernameHaveValue() {
-		assertThat(EnvironmentParam.DB_USERNAME.getValue(), is(equalTo("tester")));
+		assertThat(EnvironmentParam.DB_USERNAME.getValue(), is(equalTo(userEnvMapping.get(ENV))));
 	}
 	
 	@Test
 	public void shouldDbPasswordHaveValue() {
-		assertThat(EnvironmentParam.DB_PASSWORD.getValue(), is(equalTo("Vx4hylOJhNzRc5kKm4gr")));
+		assertThat(EnvironmentParam.DB_PASSWORD.getValue(), is(equalTo(passwordEnvMapping.get(ENV))));
 	}
 	
 	@Test
 	public void shouldDbConnectionUrlHaveValue() {
-		assertThat(EnvironmentParam.DB_CONNECTION_URL.getValue(), is(equalTo("localhost:3307/int_tests")));
+		assertThat(EnvironmentParam.DB_CONNECTION_URL.getValue(), is(equalTo(connectionUrlEnvMapping.get(ENV))));
 	}
 	
 	@Test

@@ -71,10 +71,11 @@
 
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
         <mrchecker-core-module.version>5.7.0.1</mrchecker-core-module.version>
-        <jpa.version>2.2</jpa.version>
 
-        <!-- Lib/package version settings -->
-        <!-- <package.version>0.0.0</selenium.version> -->
+        <jpa.version>2.2</jpa.version>
+        <hibernate-core.version>5.4.0.Final</hibernate-core.version>
+        <mysql-connector-java.version>8.0.16</mysql-connector-java.version>
+        <byte-buddy.version>1.10.18</byte-buddy.version>
 
     </properties>
 
@@ -97,21 +98,13 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.4.0.Final</version>
+            <version>${hibernate-core.version}</version>
         </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.16</version>
-        </dependency>
-
-        <!-- Additional tools -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.16.16</version>
-            <scope>provided</scope>
+            <version>${mysql-connector-java.version}</version>
         </dependency>
 
         <!--This dependency is necessary for Allure generator plugin. -->
@@ -135,7 +128,7 @@
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
-            <version>1.10.18</version>
+            <version>${byte-buddy.version}</version>
             <scope>test</scope>
         </dependency>
 
