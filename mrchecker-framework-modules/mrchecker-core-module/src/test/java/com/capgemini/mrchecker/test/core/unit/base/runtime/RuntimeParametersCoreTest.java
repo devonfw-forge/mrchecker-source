@@ -24,7 +24,7 @@ public class RuntimeParametersCoreTest {
 	private static final String	ENV_NEW_VALUE			= "NEW_ENV";
 	private static final String	STRING_EMPTY			= "";
 	private static final String	STRING_NULL_STRING		= "null";
-	private static final String	TO_STRING_VALUE			= "env=DEV";
+	private static final String	TO_STRING_VALUE			= "env=" + System.getProperty("env", "DEV");
 	
 	private final static RuntimeParametersCore sut = RuntimeParametersCore.ENV;
 	

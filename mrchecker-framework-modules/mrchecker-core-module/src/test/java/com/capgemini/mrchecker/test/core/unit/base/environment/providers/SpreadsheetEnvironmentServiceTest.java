@@ -54,6 +54,7 @@ public class SpreadsheetEnvironmentServiceTest {
 	}
 	
 	public static final String	DEFAULT_ENV_WHEN_NO_ENVIRONMENT_SERVICE_SET	= "DEV";
+	public static final String	INITIAL_ENVIRONMENT_VALUE					= System.getProperty("env", DEFAULT_ENV_WHEN_NO_ENVIRONMENT_SERVICE_SET);
 	public static final String	DECRYPTED_VALUE_FROM_MOCK					= "DECRYPTED_VALUE";
 	public static final String	NO_SUCH_KEY									= "NO_SUCH_KEY";
 	
@@ -116,7 +117,7 @@ public class SpreadsheetEnvironmentServiceTest {
 		
 		SpreadsheetEnvironmentService.delInstance();
 		assertThat(getSut(), is(nullValue()));
-		assertThat(RuntimeParametersCore.ENV.getValue(), is(equalTo(DEFAULT_ENV_WHEN_NO_ENVIRONMENT_SERVICE_SET)));
+		assertThat(RuntimeParametersCore.ENV.getValue(), is(equalTo(INITIAL_ENVIRONMENT_VALUE)));
 	}
 	
 	@Test
