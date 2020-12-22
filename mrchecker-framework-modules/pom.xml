@@ -47,8 +47,8 @@
         <module>mrchecker-security-module</module>
         <module>mrchecker-webapi-module</module>
         <module>mrchecker-mobile-module</module>
-        <module>mrchecker-database-module</module>
-        <!-- <module>mrchecker-example-module</module> -->
+	<!--        <module>mrchecker-database-module</module>-->
+	<!-- <module>mrchecker-example-module</module> -->
     </modules>
 
     <repositories>

@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>mrchecker-core-module</artifactId>
-    <version>5.7.0.2</version>
+    <version>5.7.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>MrChecker - Test core - Module</name>
     <description>MrChecker Test Framework Core is responsible for:

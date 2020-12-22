@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>mrchecker-test-framework</artifactId>
+        <groupId>com.capgemini.mrchecker</groupId>
+        <version>3.0.1</version>
+    </parent>
+
+    <artifactId>mrchecker-cli-module</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>MrChecker - CLI - Module</name>
+    <description>MrChecker CLI Module:
+        TODO
+    </description>
+    <url>https://github.com/devonfw/devonfw-testing</url>
+
+    <organization>
+        <name>Capgemini - Nearshore Test Center - Poland</name>
+        <url>http://nsc.capgemini.com/nearshoretestcenter</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>Michal Babiarz</name>
+            <email>michal.babiarz@capgemini.com</email>
+            <organization>Capgemini - Nearshore Test Center - Poland</organization>
+            <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git://github.com/devonfw/devonfw-testing.git</connection>
+        <developerConnection>scm:git:ssh://github.com:devonfw/devonfw-testing.git</developerConnection>
+        <url>http://github.com/devonfw/devonfw-testing/tree/master</url>
+    </scm>
+
+    <properties>
+
+
+        <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
+        <mrchecker-core-module.version>5.7.0.2-SNAPSHOT</mrchecker-core-module.version>
+
+        <!--        <byte-buddy.version>1.10.18</byte-buddy.version>-->
+
+    </properties>
+
+    <dependencies>
+
+        <!-- Dependency to other MrChecker Test Framework modules -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mrchecker-core-module</artifactId>
+            <version>${mrchecker-core-module.version}</version>
+        </dependency>
+
+        <!--This dependency is necessary for Allure generator plugin. -->
+        <dependency>
+            <!-- Test listener. Binds Junit exec to Allure annotation -->
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit-platform</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-java-commons</artifactId>
+        </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>net.bytebuddy</groupId>-->
+        <!--            <artifactId>byte-buddy</artifactId>-->
+        <!--            <version>${byte-buddy.version}</version>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
+
+    </dependencies>
+
+
+    <!-- Build goals/actions -->
+    <build>
+        <plugins>
+            <!-- Plugins are taken from parent pom.xml -->
+        </plugins>
+    </build>
+
+
+</project>
