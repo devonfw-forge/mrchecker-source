@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>mrchecker-cli-module</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>MrChecker - CLI - Module</name>
     <description>MrChecker CLI Module:
@@ -46,13 +46,8 @@
     </scm>
 
     <properties>
-
-
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
         <mrchecker-core-module.version>5.7.0.2-SNAPSHOT</mrchecker-core-module.version>
-
-        <!--        <byte-buddy.version>1.10.18</byte-buddy.version>-->
-
     </properties>
 
     <dependencies>
@@ -81,13 +76,6 @@
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-java-commons</artifactId>
         </dependency>
-
-        <!--        <dependency>-->
-        <!--            <groupId>net.bytebuddy</groupId>-->
-        <!--            <artifactId>byte-buddy</artifactId>-->
-        <!--            <version>${byte-buddy.version}</version>-->
-        <!--            <scope>test</scope>-->
-        <!--        </dependency>-->
 
     </dependencies>
 
