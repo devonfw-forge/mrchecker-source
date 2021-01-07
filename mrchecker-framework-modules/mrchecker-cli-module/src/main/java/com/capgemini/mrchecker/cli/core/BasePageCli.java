@@ -225,14 +225,14 @@ abstract public class BasePageCli extends Page {
 
 		@Override
 		public void run() {
-			while(isAlive()) {
-			response.append(getLinesFromReader(responseReader));
 				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
+                    while(isAlive() || responseReader.ready()) {
+                        response.append(getLinesFromReader(responseReader));
+                        Thread.sleep(500);
+                    }
+				} catch (InterruptedException | IOException e) {
 					throw new BFCliException();
 				}
-			}
 		}
 	}
 }
