@@ -13,7 +13,7 @@ class ConfigFile{
     def location;
 }
 def repoUrl = 'https://github.com/devonfw-forge/mrchecker-source.git'
-def modules = ['mrchecker-core-module','mrchecker-database-module','mrchecker-example-module','mrchecker-mobile-module','mrchecker-security-module','mrchecker-selenium-module','mrchecker-webapi-module']
+def modules = ['mrchecker-core-module','mrchecker-database-module','mrchecker-example-module','mrchecker-mobile-module','mrchecker-security-module','mrchecker-selenium-module','mrchecker-webapi-module','mrchecker-cli-module']
 def configs = []
 def folders = ['build','test','deploy']
 def branchesWithView = ['develop','feature/new_CICD_process']
