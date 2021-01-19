@@ -20,8 +20,8 @@ import com.capgemini.mrchecker.test.core.Page;
 import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
-import com.capgemini.mrchecker.test.core.base.runtime.RuntimeParametersCore;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
+import com.capgemini.mrchecker.test.core.logger.BFLoggerInstance;
 import com.google.inject.Guice;
 
 abstract public class BasePageCli extends Page {
@@ -38,8 +38,10 @@ abstract public class BasePageCli extends Page {
     private BufferedReader errorReader;
     private final StringBuffer response = new StringBuffer();
 
+    private final BFLoggerInstance bfLogger = BFLogger.getLog();
+
     static {
-        // Get analytics instance created in BaseTets
+        // Get analytics instance created in BaseTest
         ANALYTICS = BaseTest.getAnalytics();
 
         // Get and then set properties information from selenium.settings file
@@ -185,7 +187,7 @@ abstract public class BasePageCli extends Page {
             while (hasStreamAvailableBytes(reader)) {
                 int read = reader.read(buffer);
                 sb.append(buffer, 0, read);
-                BFLogger.logDebug(new String(Arrays.copyOf(buffer, read)));
+                bfLogger.logDebug(new String(Arrays.copyOf(buffer, read)));
             }
             return sb.toString();
         } catch (IOException e) {
