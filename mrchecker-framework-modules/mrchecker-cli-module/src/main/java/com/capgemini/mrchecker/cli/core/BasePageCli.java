@@ -8,7 +8,9 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import com.capgemini.mrchecker.cli.core.base.properties.PropertiesCli;
@@ -95,9 +97,14 @@ abstract public class BasePageCli extends Page {
 	private void createProcess(List<String> command) throws IOException {
         if (Objects.isNull(process) || !process.isAlive()) {
             ProcessBuilder pb = new ProcessBuilder(command);
+            pb.environment().putAll(getEnvParams());
             process = pb.start();
             BFLogger.logDebug("Process: " + process.toString());
         }
+    }
+
+    protected Map<? extends String,? extends String> getEnvParams() {
+        return Collections.emptyMap();
     }
 
     private void openStreams() {
