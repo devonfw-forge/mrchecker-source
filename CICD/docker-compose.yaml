@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 services:
   jenkins:
     image: mrchecker/mrchecker-jenkins:v1.1.2
@@ -12,24 +12,20 @@ services:
       context: .
       dockerfile: dockerfile
     restart: unless-stopped
-    deploy:
-      restart_policy:
-        condition: unless-stopped
-        delay: 1m
-        max_attempts: 5
-        window: 3m
+  jenkins_agent1:
+    image: jenkins/jnlp-agent-maven:jdk11
+    command: -url http://jenkins:8080 ${agent1_secret} ${agent1_name}
+    restart: unless-stopped
+  jenkins_agent2:
+    image: jenkins/jnlp-agent-maven:jdk11
+    command: -url http://jenkins:8080 ${agent2_secret} ${agent2_name}
+    restart: unless-stopped
   selenium-hub:
     image: selenium/hub:3.141.59
     container_name: selenium-hub
     ports:
         - "4444:4444"
     restart: unless-stopped
-    deploy:
-      restart_policy:
-        condition: unless-stopped
-        delay: 1m
-        max_attempts: 5
-        window: 3m
   selenium-firefox:
     image: selenium/node-firefox:3.141.59
     volumes:
@@ -40,12 +36,6 @@ services:
         - HUB_HOST=selenium-hub
         - HUB_PORT=4444
     restart: unless-stopped
-    deploy:
-      restart_policy:
-        condition: unless-stopped
-        delay: 1m
-        max_attempts: 5
-        window: 3m
   selenium-opera:
     image: selenium/node-opera:3.141.59
     volumes:
