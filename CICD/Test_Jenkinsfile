@@ -1,5 +1,5 @@
 pipeline{
-    agent {docker {image 'mrchecker/mrchecker:v1.1.3'}}
+    agent {label 'agent'}
     stages{
         stage('Dummy'){
             steps{
