@@ -270,9 +270,6 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
                     <configuration>
-                        <parallel>classes</parallel>
-                        <perCoreThreadCount>false</perCoreThreadCount>
-                        <threadCount>${thread.count}</threadCount>
                         <includes>
                             <include>**/*.class</include>
                         </includes>
@@ -280,6 +277,16 @@
                             <exclude>**/RawTest.*</exclude>
                             <exclude>**/OutboxDocumentTest.*</exclude>
                         </excludes>
+                        <argLine>
+                            -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                            ${surefireArgLine}
+                        </argLine>
+                        <properties>
+                            <property>
+                                <name>listener</name>
+                                <value>io.qameta.allure.junit4.AllureJunit4</value>
+                            </property>
+                        </properties>
                         <testFailureIgnore>true</testFailureIgnore> <!-- we want our build proceed despite errors -->
                     </configuration>
                 </plugin>
