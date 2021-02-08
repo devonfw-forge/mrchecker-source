@@ -45,6 +45,8 @@
                 <module>mrchecker-security-module</module>
                 <module>mrchecker-webapi-module</module>
                 <module>mrchecker-database-module</module>
+                <module>mrchecker-mobile-module</module>
+                <!-- <module>mrchecker-example-module</module> -->
         <!-- <module>build-tools</module> -->
     </modules>
 
@@ -196,14 +198,123 @@
             <dependency>
                 <!-- Test listener. Binds Junit exec to Allure annotation -->
                 <groupId>io.qameta.allure</groupId>
-                <artifactId>allure-junit4</artifactId>
-                <version>${allure-junit4-listener.version}</version>
+                <artifactId>allure-junit5</artifactId>
+                <version>${allure-junit5.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <!-- Test listener. Binds Junit exec to Allure annotation -->
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-junit-platform</artifactId>
+                <version>${allure-junit-platform.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <!-- Test listener. Binds Junit exec to Allure annotation -->
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>${allure-maven.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-java-commons</artifactId>
+                <version>${allure-java-commons.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>${aspectj.version}</version>
             </dependency>
 
 
         </dependencies>
     </dependencyManagement>
 
+
+    <!-- The bellow dependencies will ba automatically included in modules -->
+    <dependencies>
+
+        <!--This dependency is necessary for Dependency Injection plugin. -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+
+        <!--This dependency is necessary for JUnit plugin. -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.jupiter.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.jupiter.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.params.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-runner</artifactId>
+            <version>${junit.platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit.vintage.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Test tools -->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>${hamcrest.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+        </dependency>
+
+        <!-- Various tools -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>${commons-csv.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+
+        <!-- For time and date dependency actions -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${joda-time.version}</version>
+        </dependency>
+
+    </dependencies>
 
     <!-- Build goals/actions -->
     <build>
@@ -228,7 +339,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.6.1</version>
+                    <version>3.8.1</version>
                     <configuration>
                         <source>${java.compiler.version}</source>
                         <target>${java.compiler.version}</target>
@@ -269,9 +380,6 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
                     <configuration>
-                        <parallel>classes</parallel>
-                        <perCoreThreadCount>false</perCoreThreadCount>
-                        <threadCount>${thread.count}</threadCount>
                         <includes>
                             <include>**/*.class</include>
                         </includes>
@@ -279,9 +387,31 @@
                             <exclude>**/RawTest.*</exclude>
                             <exclude>**/OutboxDocumentTest.*</exclude>
                         </excludes>
+                        <argLine>
+                            -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                            ${surefireArgLine}
+                        </argLine>
+                        <properties>
+                            <property>
+                                <name>listener</name>
+                                <value>io.qameta.allure.junit5.AllureJunit5</value>
+                            </property>
+                        </properties>
+                        <testFailureIgnore>true</testFailureIgnore> <!-- we want our build proceed despite errors -->
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.aspectj</groupId>
+                            <artifactId>aspectjweaver</artifactId>
+                            <version>${aspectj.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.maven.surefire</groupId>
+                            <artifactId>surefire-api</artifactId>
+                            <version>${maven-surefire-plugin.version}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
-
 
                 <!-- Generate report for maven site goal -->
                 <plugin>
@@ -296,7 +426,14 @@
                     <version>${maven-project-info-reports-plugin.version}</version>
                 </plugin>
 
-
+                <plugin>
+                    <groupId>io.qameta.allure</groupId>
+                    <artifactId>allure-maven</artifactId>
+                    <version>${allure-maven.version}</version>
+                    <configuration>
+                        <reportVersion>2.4.1</reportVersion>
+                    </configuration>
+                </plugin>
             </plugins>
 
         </pluginManagement>
@@ -309,12 +446,34 @@
                     <target>8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-tests</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco.exec</destFile>
+                            <propertyName>surefireArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>coverage-report</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-
     </build>
 
     <profiles>
-
         <profile>
             <!-- RELEASE -->
             <id>release</id>
@@ -405,7 +564,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
+                        <version>1.6</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -413,6 +572,14 @@
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
+                                <configuration>
+                                    <!-- Prevent `gpg` from using pinentry programs -->
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                        <arg>--batch</arg>
+                                    </gpgArguments>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -451,6 +618,7 @@
             </build>
 
             <reporting>
+                <excludeDefaults>true</excludeDefaults>
                 <plugins>
                     <!-- Report project information -->
                     <plugin>
@@ -520,6 +688,7 @@
     </profiles>
 
     <reporting>
+        <excludeDefaults>true</excludeDefaults>
         <plugins>
             <!-- Report project information -->
             <plugin>
