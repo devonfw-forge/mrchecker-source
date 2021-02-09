@@ -6,20 +6,20 @@ pipeline{
 		stage('Build'){
 			steps{
 				echo "Building module ${env.module} and it's dependency"
-				sh \"\"\"
+				sh """
 				cd ${env.workspace}
 				mvn clean compile package install -DskipTests=true --projects ${env.module} --also-make
-				\"\"\"
+				"""
 				//bulid this module and its dependencies deploy them to local repo
 			}
 		}
 		stage('Test'){
 			steps{
 				echo "Testing ${env.module}"
-				sh \"\"\"
+				sh """
 				cd ${env.workspace}
 				mvn test --projects {env.module} -DseleniumGrid=http://10.40.234.103:4444/wd/hub
-				\"\"\"
+				"""
 			}
 		}
 	}
