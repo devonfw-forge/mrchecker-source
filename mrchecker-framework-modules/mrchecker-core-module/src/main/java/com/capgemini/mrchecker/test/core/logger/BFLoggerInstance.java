@@ -71,10 +71,9 @@ public class BFLoggerInstance {
         log(Level.DEBUG,FEND);
     }
 
-    public void logEnv(String message){log(Level.forName("ENV",666),message);} //TODO: definitely not sure if this can be like that, but now level from logger is final so cannot be inherited from
-    //public void logEnv(String message){log(Level.DEBUG,message);} //TODO: definitely not sure if this can be like that, but now level from logger is final so cannot be inherited from
+    public void logEnv(String message){log(Level.forName("ENV",700),message);}
     public void logAnalytics(String message){
-        logError("[MRZ] Something is using logAnalytics");
+        log(Level.forName("ANALYTICS",800),message);
     }
     public void startSeparateLog(){
         //TODO: make it work
