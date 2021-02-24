@@ -18,9 +18,7 @@ public class BFLoggerLogLevelConversionChar extends LogEventPatternConverter {
     }
     @Override
     public void format(LogEvent logEvent, StringBuilder stringBuilder){
-        System.err.println("[MRZ] LEVEL DEBUG: " + logEvent.getLevel().name()+ " "+logEvent.getLevel().intLevel());
         String llevel = logEvent.getLevel().name().toLowerCase();
-        System.err.println("[MRZ] LEVEL DEBUG2: " +llevel);
         String formatedLogLevel = "log"+llevel.substring(0,1).toUpperCase() + llevel.substring(1);
         stringBuilder.append(formatedLogLevel);
     }
