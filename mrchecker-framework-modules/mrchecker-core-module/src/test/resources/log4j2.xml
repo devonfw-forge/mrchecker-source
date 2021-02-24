@@ -30,25 +30,33 @@
 
             </Routes>
         </Routing>
-        <Console name="Console" target="SYSTEM_OUT">
+        <Console name="MyConsole" target="SYSTEM_OUT" follow="true">
 <!--            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>-->
             <PatternLayout>
-                <Pattern>%d{yyyy-MM-dd 'at' HH:mm:ss z} %BFLL - %m</Pattern>
-                <!--                            <Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg</Pattern>-->
+                <Pattern>%d{yyyy-MM-dd 'at' HH:mm:ss z} [%t] %BFLL - %m%n</Pattern>
+<!--                &lt;!&ndash;                            <Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg</Pattern>&ndash;&gt;-->
             </PatternLayout>
         </Console>
-        <!--        <File name="LogFile" fileName="t.log">-->
-        <!--            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>-->
-        <!--        </File>-->
+        <Async name="MyAsync">
+            <AppenderRef ref="MyConsole"/>
+        </Async>
     </Appenders>
     <Loggers>
-        <Logger name="thread" additivity="false" level="ALL">
-<!--            <AppenderRef ref="Console"/>-->
-            <AppenderRef ref="RoutingApp"/>
+<!--        <Logger name="thread" additivity="false" level="ALL">-->
+<!--            -->
+<!--        </Logger>-->
+        <Root level="ALL"  additivity="false" >
+            <AppenderRef ref="MyAsync"/>
             <AppenderRef ref="RoutingAppENV"/>
-        </Logger>
-        <Root level="ALL">
-            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RoutingApp"/>
+
+
         </Root>
+<!--        <Logger name="thread" additivity="false" level="ALL">-->
+<!--&lt;!&ndash;            <AppenderRef ref="Console"/>&ndash;&gt;-->
+<!--            <AppenderRef ref="RoutingApp"/>-->
+<!--            <AppenderRef ref="RoutingAppENV"/>-->
+<!--        </Logger>-->
+
     </Loggers>
 </Configuration>
