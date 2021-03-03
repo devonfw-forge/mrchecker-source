@@ -27,7 +27,6 @@ public class BFLoggerConfiguration extends XmlConfiguration {
     public BFLoggerConfiguration(LoggerContext context, ConfigurationSource configSource)
     {
         super(context,configSource);
-        System.err.println("[MRZ] Creating bflogger configuration");
     }
 
     @Override
