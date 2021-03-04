@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Routing name="RoutingApp">
+            <Routes pattern="$${ctx:threadName}">
+                <Route>
+                    <File fileName="logs/${ctx:threadName}.log"
+                          name="${ctx:threadName}">
+                        <PatternLayout>
+                            <Pattern>%d{yyyy-MM-dd 'at' HH:mm:ss z} %BFLL - %m%n</Pattern>
+                        </PatternLayout>
+                    </File>
+                </Route>
+            </Routes>
+        </Routing>
+        <Routing name="RoutingAppENV">
+            <Routes pattern="$${ctx:threadName}">
+                <Route>
+                    <File fileName="logs/${ctx:threadName}_env.log"
+                          name="${ctx:threadName}_env">
+                        <ThresholdFilter level="DEBUG" onMatch="DENY" onMismatch="ACCEPT"/>
+                        <PatternLayout>
+                            <Pattern>%d{yyyy-MM-dd 'at' HH:mm:ss z} %BFLL - %m%n</Pattern>
+                        </PatternLayout>
+                    </File>
+                </Route>
+            </Routes>
+        </Routing>
+        <Console name="MyConsole" target="SYSTEM_OUT" follow="true">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd 'at' HH:mm:ss z} [%t] %BFLL - %m%n</Pattern>
+            </PatternLayout>
+        </Console>
+        <Async name="MyAsync">
+            <AppenderRef ref="MyConsole"/>
+        </Async>
+    </Appenders>
+    <Loggers>
+        <Root level="ALL" additivity="false">
+            <AppenderRef ref="MyAsync"/>
+            <AppenderRef ref="RoutingAppENV"/>
+            <AppenderRef ref="RoutingApp"/>
+        </Root>
+    </Loggers>
+</Configuration>
