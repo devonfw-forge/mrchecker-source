@@ -66,6 +66,7 @@ pipeline{
                   set env.MAVEN_USER=${MAVEN_USER}
                   set env.MAVEN_PASSWORD=${MAVEN_PASSWORD}
 
+                  unlink /tmp/shortgpg || echo 0 # unlink or if file not exists echo 0 to prevent error occurence
                   ln -s ${GPG_HOMEDIR} /tmp/shortgpg
                   ls -Lla /tmp/shortgpg
                   ls -Lla /tmp/shortgpg/.gnupg
