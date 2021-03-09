@@ -237,7 +237,7 @@ abstract public class BasePageCli extends Page {
 				try {
                     while(isAlive() || responseReader.ready()) {
                         response.append(getLinesFromReader(responseReader));
-                        Thread.sleep(500);
+                        Thread.sleep(100);
                     }
 				} catch (InterruptedException | IOException e) {
 					throw new BFCliException();
