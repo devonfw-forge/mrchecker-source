@@ -9,6 +9,7 @@ pipeline{
                 withCredentials([string(credentialsId: 'JENKINS_HOSTNAME', variable: 'hostname'), usernamePassword(credentialsId: 'db_credentials', passwordVariable: 'pass', usernameVariable: 'user')]) {
                   sh """
                   cd ${env.workspace}
+                  export qaHost=${hostname}
                   sed -i s/#qa_user#/${user}/\\;s/#qa_pass#/${pass}/\\;s/#qa_host#/${hostname}/ ./${env.module}/src/resources/enviroments/environments.csv
                   mvn -q clean jacoco:prepare-agent verify -Denv=QA -Dgroups=UnitTest,IntegrationTest --projects ${env.module}
                   """
