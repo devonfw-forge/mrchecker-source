@@ -1,4 +1,4 @@
-package com.capgemini.mrchecker.test.core.utils;
+package com.capgemini.mrchecker.database.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;

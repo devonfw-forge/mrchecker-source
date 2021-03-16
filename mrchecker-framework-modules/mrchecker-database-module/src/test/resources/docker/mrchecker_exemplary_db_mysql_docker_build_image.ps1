@@ -1,0 +1,1 @@
+docker build -t "mrchecker_exemplary_db_mysql:0.1" -f "mrchecker_exemplary_db_mysql" ./

@@ -1,0 +1,1 @@
+docker run --rm -p 3307:3306 -e "MYSQL_DATABASE=int_tests" -e "MYSQL_PASSWORD=Vx4hylOJhNzRc5kKm4gr" -e "MYSQL_ROOT_PASSWORD=Vx4hylOJhNzRc5kKm4gr" -e "MYSQL_USER=tester" -d mrchecker_exemplary_db_mysql:0.1

@@ -22,4 +22,31 @@
 
     </persistence-unit>
 
+    <persistence-unit name="parametrizedConnection" transaction-type="RESOURCE_LOCAL">
+        <description>
+            Definition of connection to MySql engine database.
+        </description>
+
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <class>com.capgemini.mrchecker.database.integration.entity.Employee</class>
+
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+            <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.max_fetch_depth" value="3"/>
+        </properties>
+    </persistence-unit>
+
+    <persistence-unit name="unitTesting" transaction-type="RESOURCE_LOCAL">
+
+        <description>
+            Definition of connection to MySql engine database.
+        </description>
+
+        <provider>com.capgemini.mrchecker.database.mocks.PersistenceProviderMock</provider>
+
+    </persistence-unit>
+
 </persistence>

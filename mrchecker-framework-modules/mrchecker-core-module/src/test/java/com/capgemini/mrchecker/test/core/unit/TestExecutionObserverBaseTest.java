@@ -26,6 +26,11 @@ public class TestExecutionObserverBaseTest {
 		when(contextMock.getRequiredTestClass()).thenCallRealMethod();
 		when(contextMock.getDisplayName()).thenReturn("Test_name");
 		when(contextMock.getUniqueId()).thenReturn("[engine:junit-jupiter]/[class:com.capgemini.mrchecker.selenium.mts.MyThaiStarTest]/[method:Test_orderMenu()]");
+		try {
+			when(contextMock.getRequiredTestMethod()).thenReturn(Object.class.getMethod("toString"));
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
 		
 		observerMock = mock(ITestObserver.class);
 		when(observerMock.getModuleType()).thenReturn(ModuleType.CORE);

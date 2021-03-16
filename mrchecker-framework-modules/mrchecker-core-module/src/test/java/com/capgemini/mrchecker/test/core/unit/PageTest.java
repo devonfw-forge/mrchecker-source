@@ -5,11 +5,13 @@ import static org.hamcrest.Matchers.containsString;
 
 import java.io.IOException;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 import com.capgemini.mrchecker.test.core.ModuleType;
 import com.capgemini.mrchecker.test.core.Page;
+import com.capgemini.mrchecker.test.core.TestExecutionObserver;
 import com.capgemini.mrchecker.test.core.tags.UnitTest;
 import com.capgemini.mrchecker.test.core.utils.FileTestUtils;
 
@@ -19,6 +21,12 @@ public class PageTest {
 	
 	private static final Page	SUT			= new TestPage();
 	private static final String	logFilePath	= FileTestUtils.getLogFilePath();
+	
+	@AfterAll
+	public static void cleanUpSuite() {
+		TestExecutionObserver.getInstance()
+				.afterAll(null);
+	}
 	
 	@Test
 	public void shouldCallOnTestSuccess() throws IOException {
