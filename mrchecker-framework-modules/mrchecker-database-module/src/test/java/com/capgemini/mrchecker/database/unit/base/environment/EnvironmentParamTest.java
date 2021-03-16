@@ -35,7 +35,7 @@ public class EnvironmentParamTest {
 	private static final Map<String, String> connectionUrlEnvMapping = new HashMap<String, String>(){
 		{
 			put("DEV", "localhost:3307/int_tests");
-			put("QA", "de-muc-devonfw-allure01:3306/int_tests");
+			put("QA", System.getProperty("qaHost") + ":3306/int_tests");
 		}
 	};
 
