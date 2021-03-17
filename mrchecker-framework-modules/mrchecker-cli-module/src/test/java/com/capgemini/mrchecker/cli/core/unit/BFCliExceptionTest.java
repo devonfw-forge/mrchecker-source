@@ -2,12 +2,14 @@ package com.capgemini.mrchecker.cli.core.unit;
 
 
 import com.capgemini.mrchecker.cli.core.exceptions.BFCliException;
+import com.capgemini.mrchecker.cli.core.tags.UnitTest;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 
+@UnitTest
 public class BFCliExceptionTest {
 
     @Test
