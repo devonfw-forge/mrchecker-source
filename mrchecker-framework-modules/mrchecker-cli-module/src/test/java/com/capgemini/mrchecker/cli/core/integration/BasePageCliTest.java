@@ -275,7 +275,7 @@ public class BasePageCliTest {
 
         @Override
         public void exitWithInputStream() {
-            writeCommand("quit");
+            writeCommand("exit");
         }
 
         public void defaultCommand() {
