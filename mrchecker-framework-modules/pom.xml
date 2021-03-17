@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.capgemini.mrchecker</groupId>
     <artifactId>mrchecker-test-framework</artifactId>
-    <version>3.1.0</version>
+    <version>3.2.0</version>
     <name>MrChecker</name>
     <description>MrChecker Test Framework is an automated testing framework for functional testing of web applications,
         native mobile apps, webservices and database.
@@ -47,8 +47,8 @@
         <module>mrchecker-security-module</module>
         <module>mrchecker-webapi-module</module>
         <module>mrchecker-mobile-module</module>
-	<!--        <module>mrchecker-database-module</module>-->
-	<!-- <module>mrchecker-example-module</module> -->
+        <!--        <module>mrchecker-database-module</module>-->
+        <!-- <module>mrchecker-example-module</module> -->
     </modules>
 
     <repositories>
