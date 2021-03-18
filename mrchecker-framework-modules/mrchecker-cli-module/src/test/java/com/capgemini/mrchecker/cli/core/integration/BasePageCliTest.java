@@ -261,7 +261,7 @@ public class BasePageCliTest {
         }
 
         public void dir() {
-            executeCommand("ls");
+            executeCommand("ls 2>&1");
         }
 
         public void errorCommand() {
