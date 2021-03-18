@@ -261,11 +261,11 @@ public class BasePageCliTest {
         }
 
         public void dir() {
-            executeCommand("ls","2>&1");
+            executeCommand("-c", "ls");
         }
 
         public void errorCommand() {
-            executeCommand("lss");
+            executeCommand("-c", "lss");
         }
 
         @Override
