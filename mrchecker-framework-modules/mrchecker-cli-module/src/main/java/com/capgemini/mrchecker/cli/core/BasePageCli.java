@@ -24,15 +24,15 @@ abstract public class BasePageCli extends Page {
 	
 	private static IEnvironmentService environmentService;
 	
-	private Process				process;
-	private PrintWriter			input;
-	private BufferedReader		responseReader;
-	private BufferedReader		errorReader;
-	private final StringBuffer	response	= new StringBuffer();
-	private final StringBuffer	error		= new StringBuffer();
-	private final boolean		isReadError;
-	private Thread				responseWatcher;
-	private Thread				errorWatcher;
+	private Process process;
+	private PrintWriter input;
+	private BufferedReader responseReader;
+	private BufferedReader errorReader;
+	private final StringBuffer response = new StringBuffer();
+	private final StringBuffer error = new StringBuffer();
+	private final boolean isReadError;
+	private Thread responseWatcher;
+	private Thread errorWatcher;
 	
 	private final BFLoggerInstance bfLogger = BFLogger.getLog();
 	
@@ -73,7 +73,7 @@ abstract public class BasePageCli extends Page {
 			if (Objects.isNull(process) || !process.isAlive()) {
 				createProcess(command);
 				openStreams();
-				startOutputWatcher();
+				startOutputWatchers();
 			}
 		} catch (IOException e) {
 			throw new BFCliException(e);
@@ -98,7 +98,7 @@ abstract public class BasePageCli extends Page {
 		input = new PrintWriter(process.getOutputStream());
 	}
 	
-	private void startOutputWatcher() {
+	private void startOutputWatchers() {
 		responseWatcher = new Thread(new StreamReadingRunnable(responseReader, response));
 		responseWatcher.start();
 		if (isReadError) {
@@ -112,12 +112,20 @@ abstract public class BasePageCli extends Page {
 		super.onTestClassFinish();
 		closeStreams();
 		closeProcess();
-		while((Objects.nonNull(responseWatcher) && responseWatcher.isAlive()) || (Objects.nonNull(errorWatcher) && errorWatcher.isAlive())) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				throw new BFCliException(e);
+		waitForWatchersToFinish();
+	}
+	
+	private void waitForWatchersToFinish() {
+		try {
+			if (Objects.nonNull(responseWatcher)) {
+				responseWatcher.join();
 			}
+			
+			if (Objects.nonNull(errorWatcher)) {
+				errorWatcher.join();
+			}
+		} catch (InterruptedException e) {
+			throw new BFCliException(e);
 		}
 	}
 	
@@ -169,9 +177,7 @@ abstract public class BasePageCli extends Page {
 	public void waitToFinish() {
 		try {
 			process.waitFor();
-			while (isAlive()) {
-				Thread.sleep(100);
-			}
+			waitForWatchersToFinish();
 		} catch (InterruptedException e) {
 			throw new BFCliException(e);
 		}
@@ -201,7 +207,7 @@ abstract public class BasePageCli extends Page {
 			while (hasStreamAvailableBytes(reader)) {
 				int read = reader.read(buffer);
 				sb.append(buffer, 0, read);
-				synchronized(this) {
+				synchronized (this) {
 					bfLogger.logDebug(new String(Arrays.copyOf(buffer, read)));
 				}
 			}
@@ -229,8 +235,8 @@ abstract public class BasePageCli extends Page {
 	
 	private class StreamReadingRunnable implements Runnable {
 		
-		private final BufferedReader	reader;
-		private final StringBuffer		output;
+		private final BufferedReader reader;
+		private final StringBuffer output;
 		
 		private StreamReadingRunnable(BufferedReader reader, StringBuffer output) {
 			this.reader = reader;
