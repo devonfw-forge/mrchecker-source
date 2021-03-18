@@ -7,11 +7,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>3.1.0</version>
+        <version>3.3.0</version>
     </parent>
 
     <artifactId>mrchecker-core-module</artifactId>
-    <version>5.7.0.2</version>
+    <version>5.7.0.3</version>
     <packaging>jar</packaging>
     <name>MrChecker - Test core - Module</name>
     <description>MrChecker Test Framework Core is responsible for:
@@ -29,8 +29,8 @@
     <url>https://github.com/devonfw/devonfw-testing</url>
 
     <organization>
-        <name>Capgemini - Nearshore Test Center - Poland</name>
-        <url>http://nsc.capgemini.com/nearshoretestcenter</url>
+        <name>Capgemini - Software Solution Center</name>
+        <url>https://capgeminisoftware.pl/</url>
     </organization>
 
     <developers>

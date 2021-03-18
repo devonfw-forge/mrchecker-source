@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>3.0.1</version>
+        <version>3.3.0</version>
     </parent>
 
-    <artifactId>mrchecker-security-module</artifactId>
-    <version>1.2.2</version>
+    <artifactId>mrchecker-cli-module</artifactId>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
-    <name>MrChecker - Security - Module</name>
-    <description>MrChecker Test Framework Security supports:
-        - Library reference to make REST/HTTP calls to the tested system
-        - Other common features needed for security testing
+    <name>MrChecker - CLI - Module</name>
+    <description>MrChecker CLI Module supports:
+        * Running CLI applications on either Windows or Linux
+        * Reading from the stdout and stderr streams
+        * Writing to the stdin stream
+        * Single run or interactive mode
+        * The stdout stream is watched by a reader thread
+        * The stderr may be optionally watched by a reader thread
+        * Setting up env params
     </description>
     <url>https://github.com/devonfw/devonfw-testing</url>
 
@@ -27,16 +31,10 @@
 
     <developers>
         <developer>
-            <name>Lukasz Stefaniszyn</name>
-            <email>lukasz.stefaniszyn@capgemini.com</email>
+            <name>Michal Babiarz</name>
+            <email>michal.babiarz@capgemini.com</email>
             <organization>Capgemini - Nearshore Test Center - Poland</organization>
             <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
-        </developer>
-        <developer>
-            <name>Marek Puchalski</name>
-            <email>marek.puchalski@capgemini.com</email>
-            <organization>Capgemini - Software Solutions Center - Poland</organization>
-            <organizationUrl>https://capgeminisoftware.pl</organizationUrl>
         </developer>
     </developers>
 
@@ -54,10 +52,8 @@
     </scm>
 
     <properties>
-
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
-        <mrchecker-core-module.version>5.7.0.1</mrchecker-core-module.version>
-
+        <mrchecker-core-module.version>5.7.0.3</mrchecker-core-module.version>
     </properties>
 
     <dependencies>
@@ -67,12 +63,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>mrchecker-core-module</artifactId>
             <version>${mrchecker-core-module.version}</version>
-        </dependency>
-
-        <!-- Needed to perform all API calls -->
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>rest-assured</artifactId>
         </dependency>
 
         <!--This dependency is necessary for Allure generator plugin. -->
@@ -92,7 +82,6 @@
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-java-commons</artifactId>
         </dependency>
-
 
     </dependencies>
 
