@@ -6,15 +6,21 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>3.0.1</version>
+        <version>3.3.0</version>
     </parent>
 
     <artifactId>mrchecker-cli-module</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
     <name>MrChecker - CLI - Module</name>
-    <description>MrChecker CLI Module:
-        TODO
+    <description>MrChecker CLI Module supports:
+        * Running CLI applications on either Windows or Linux
+        * Reading from the stdout and stderr streams
+        * Writing to the stdin stream
+        * Single run or interactive mode
+        * The stdout stream is watched by a reader thread
+        * The stderr may be optionally watched by a reader thread
+        * Setting up env params
     </description>
     <url>https://github.com/devonfw/devonfw-testing</url>
 
@@ -47,7 +53,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
-        <mrchecker-core-module.version>5.7.0.2-SNAPSHOT</mrchecker-core-module.version>
+        <mrchecker-core-module.version>5.7.0.3</mrchecker-core-module.version>
     </properties>
 
     <dependencies>
