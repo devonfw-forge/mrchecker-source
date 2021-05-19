@@ -65,10 +65,10 @@ public class BFLogger {
 	 * @author
 	 */
 	public static class RestrictedMethods {
-		
+
 		private RestrictedMethods() {
 		}
-		
+
 		/**
 		 * WARING: Do not use this method outside of BaseTestWatcher Begin writing all logs to a separate file in
 		 * addition to the main log file
@@ -76,11 +76,11 @@ public class BFLogger {
 		public static void startSeparateLog() {
 			getLog().startSeparateLog();
 		}
-		
+
 		/**
 		 * WARING: Do not use this method outside of BaseTestWatcher Stop writing to the separate log file, return its
 		 * current content and clear the file
-		 * 
+		 *
 		 * @return
 		 */
 		public static String dumpSeparateLog() {
