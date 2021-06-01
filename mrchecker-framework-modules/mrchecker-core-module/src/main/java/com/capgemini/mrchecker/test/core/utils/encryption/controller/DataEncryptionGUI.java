@@ -1,5 +1,6 @@
-package com.capgemini.mrchecker.test.core.utils.encryption.view;
+package com.capgemini.mrchecker.test.core.utils.encryption.controller;
 
+import java.io.File;
 import java.util.Objects;
 
 import javax.swing.*;
@@ -41,10 +42,25 @@ public class DataEncryptionGUI extends JFrame {
 		encryptionResultTextField.setEditable(false);
 		decryptionResultTextField.setEditable(false);
 		
+		chooseEncryptionKeyButton.addActionListener(e -> onChooseKey(encryptionKeyTextField));
+		chooseDecryptionKeyButton.addActionListener(e -> onChooseKey(decryptionKeyTextField));
+		
 		encryptButton.addActionListener(e -> onEncryption());
 		decryptButton.addActionListener(e -> onDecryption());
 		
 		setVisible(true);
+	}
+	
+	private void onChooseKey(JTextField keyTextField) {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+		int result = fileChooser.showOpenDialog(this);
+		if (result == JFileChooser.APPROVE_OPTION) {
+			File selectedFile = fileChooser.getSelectedFile();
+			keyTextField.setText(selectedFile.getAbsolutePath());
+		} else {
+			keyTextField.setText("You need to choose a file or provide the key");
+		}
 	}
 	
 	private void onEncryption() {

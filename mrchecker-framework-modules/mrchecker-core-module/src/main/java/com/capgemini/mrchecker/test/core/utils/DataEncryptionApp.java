@@ -3,9 +3,9 @@ package com.capgemini.mrchecker.test.core.utils;
 import javax.swing.*;
 
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
-import com.capgemini.mrchecker.test.core.utils.encryption.view.DataEncryptionGUI;
+import com.capgemini.mrchecker.test.core.utils.encryption.controller.DataEncryptionGUI;
 
-public class DataEncryptionServiceApp {
+public class DataEncryptionApp {
 	
 	public static void main(String[] args) {
 		try {
