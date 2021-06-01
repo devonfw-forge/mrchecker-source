@@ -3,7 +3,7 @@ package com.capgemini.mrchecker.test.core.utils;
 import javax.swing.*;
 
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
-import com.capgemini.mrchecker.test.core.utils.encryption.controller.DataEncryptionGUI;
+import com.capgemini.mrchecker.test.core.utils.encryption.view.DataEncryptionGUI;
 
 public class DataEncryptionApp {
 	
