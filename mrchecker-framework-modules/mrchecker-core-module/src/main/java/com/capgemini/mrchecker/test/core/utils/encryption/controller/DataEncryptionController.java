@@ -1,8 +1,7 @@
 package com.capgemini.mrchecker.test.core.utils.encryption.controller;
 
-import javax.swing.*;
-
 import com.capgemini.mrchecker.test.core.utils.encryption.CryptParams;
+import com.capgemini.mrchecker.test.core.utils.encryption.view.DataEncryptionView;
 
 public interface DataEncryptionController {
 	
@@ -10,5 +9,5 @@ public interface DataEncryptionController {
 	
 	void onDecrypt(CryptParams cryptParams);
 	
-	void onKey(JTextField keyTextField);
+	void setView(DataEncryptionView view);
 }
