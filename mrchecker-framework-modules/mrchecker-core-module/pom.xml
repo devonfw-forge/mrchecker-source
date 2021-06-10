@@ -178,37 +178,41 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-shade-plugin</artifactId>
+              <version>3.2.4</version>
+              <executions>
+                <execution>
+                  <phase>package</phase>
+                  <goals>
+                    <goal>shade</goal>
+                  </goals>
+                  <configuration>
+                    <artifactSet>
+                        <includes>
+                            <include>org.jasypt:jasypt:*</include>
+                            <include>com.intellij:forms_rt:*</include>
+                            <include>org.apache.logging.log4j:*</include>
+                            <include>org.slf4j:*</include>
+                            <include>log4j:*</include>
+                        </includes>
+<!--                       <excludes>
+                        <exclude>classworlds:classworlds</exclude>
+                        <exclude>junit:junit</exclude>
+                        <exclude>jmock:*</exclude>
+                        <exclude>*:xml-apis</exclude>
+                        <exclude>org.apache.maven:lib:tests</exclude>
+                        <exclude>log4j:log4j:jar:</exclude>
+                      </excludes>
+ -->                    </artifactSet>
+                        <transformers>
+                          <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                             <mainClass>com.capgemini.mrchecker.test.core.utils.DataEncryptionApp</mainClass>
-                            <classpathPrefix>dependency-jars/</classpathPrefix>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.2</version>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>
-                                ${project.build.directory}/dependency-jars/
-                            </outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
+                          </transformer>
+                        </transformers>
+                  </configuration>
+                </execution>
+              </executions>
             </plugin>
         </plugins>
     </build>
