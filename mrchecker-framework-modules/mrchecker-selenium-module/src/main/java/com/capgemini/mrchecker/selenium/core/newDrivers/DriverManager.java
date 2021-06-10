@@ -189,8 +189,10 @@ public class DriverManager {
 
 				System.setProperty("webdriver.chrome.driver", browserPath);
 				HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
+				chromePrefs.put("profile.default_content_settings.popups", 0);
 				chromePrefs.put("download.default_directory", DOWNLOAD_DIR);
-				chromePrefs.put("profile.content_settings.pattern_pairs.*.multiple-automatic-downloads", 1);
+				chromePrefs.put("profile.content_settings.exceptions.automatic_downloads.*.setting", 1 );
+				chromePrefs.put("download.prompt_for_download", false);
 				ChromeOptions options = new ChromeOptions();
 				options.setExperimentalOption("prefs", chromePrefs);
 				options.addArguments("--test-type");
@@ -304,8 +306,10 @@ public class DriverManager {
 				}
 				System.setProperty("webdriver.chrome.driver", browserPath);
 				HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
+				chromePrefs.put("profile.default_content_settings.popups", 0);
 				chromePrefs.put("download.default_directory", DOWNLOAD_DIR);
-				chromePrefs.put("profile.content_settings.pattern_pairs.*.multiple-automatic-downloads", 1);
+				chromePrefs.put("profile.content_settings.exceptions.automatic_downloads.*.setting", 1 );
+				chromePrefs.put("download.prompt_for_download", false);
 				ChromeOptions options = new ChromeOptions();
 				options.setExperimentalOption("prefs", chromePrefs);
 				options.addArguments("headless");
