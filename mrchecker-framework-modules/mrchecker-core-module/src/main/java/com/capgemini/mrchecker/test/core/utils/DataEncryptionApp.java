@@ -4,9 +4,9 @@ import javax.swing.*;
 
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.capgemini.mrchecker.test.core.utils.encryption.controller.DataEncryptionController;
-import com.capgemini.mrchecker.test.core.utils.encryption.controller.DataEncryptionControllerImp;
+import com.capgemini.mrchecker.test.core.utils.encryption.controller.IDataEncryptionController;
 import com.capgemini.mrchecker.test.core.utils.encryption.view.DataEncryptionGUI;
-import com.capgemini.mrchecker.test.core.utils.encryption.view.DataEncryptionView;
+import com.capgemini.mrchecker.test.core.utils.encryption.view.IDataEncryptionView;
 
 public class DataEncryptionApp {
 	
@@ -17,8 +17,8 @@ public class DataEncryptionApp {
 		} catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 			BFLogger.logError("Could not run app with system Look and Feel");
 		}
-		DataEncryptionController dataEncryptionController = new DataEncryptionControllerImp();
-		DataEncryptionView dataEncryptionView = new DataEncryptionGUI(dataEncryptionController);
-		dataEncryptionController.setView(dataEncryptionView);
+		IDataEncryptionController IDataEncryptionController = new DataEncryptionController();
+		IDataEncryptionView IDataEncryptionView = new DataEncryptionGUI(IDataEncryptionController);
+		IDataEncryptionController.setView(IDataEncryptionView);
 	}
 }

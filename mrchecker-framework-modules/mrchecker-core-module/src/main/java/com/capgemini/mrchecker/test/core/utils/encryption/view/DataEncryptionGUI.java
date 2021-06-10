@@ -11,12 +11,12 @@ import java.util.Objects;
 import javax.swing.*;
 
 import com.capgemini.mrchecker.test.core.utils.encryption.CryptParams;
-import com.capgemini.mrchecker.test.core.utils.encryption.controller.DataEncryptionController;
+import com.capgemini.mrchecker.test.core.utils.encryption.controller.IDataEncryptionController;
 import com.capgemini.mrchecker.test.core.utils.encryption.exceptions.EncryptionServiceException;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
-public class DataEncryptionGUI extends JFrame implements DataEncryptionView {
+public class DataEncryptionGUI extends JFrame implements IDataEncryptionView {
 	
 	private JPanel contentPane;
 	private JTabbedPane mainPane;
@@ -39,7 +39,7 @@ public class DataEncryptionGUI extends JFrame implements DataEncryptionView {
 	private JLabel decryptionLabel;
 	private JLabel decryptionResultLabel;
 	
-	public DataEncryptionGUI(DataEncryptionController dataEncryptionController) {
+	public DataEncryptionGUI(IDataEncryptionController IDataEncryptionController) {
 		setContentPane(contentPane);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(500, 300);
@@ -55,7 +55,7 @@ public class DataEncryptionGUI extends JFrame implements DataEncryptionView {
 		
 		encryptButton.addActionListener(e -> {
 			try {
-				dataEncryptionController.onEncrypt(new CryptParams(encryptionKeyTextField.getText(), encryptionTextField.getText()));
+				IDataEncryptionController.onEncrypt(new CryptParams(encryptionKeyTextField.getText(), encryptionTextField.getText()));
 			} catch (EncryptionServiceException ex) {
 				setEncryptionFieldValue("");
 				showMessageDialog(contentPane, "Could not encrypt because:\n" + ex.getMessage());
@@ -64,7 +64,7 @@ public class DataEncryptionGUI extends JFrame implements DataEncryptionView {
 		
 		decryptButton.addActionListener(e -> {
 			try {
-				dataEncryptionController.onDecrypt(new CryptParams(decryptionKeyTextField.getText(), decryptionTextField.getText()));
+				IDataEncryptionController.onDecrypt(new CryptParams(decryptionKeyTextField.getText(), decryptionTextField.getText()));
 			} catch (EncryptionServiceException ex) {
 				setDecryptionFieldValue("");
 				showMessageDialog(contentPane, "Could not decrypt because:\n" + ex.getMessage());
