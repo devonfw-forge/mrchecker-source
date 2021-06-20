@@ -126,6 +126,7 @@ public class DataEncryptionGUI extends JFrame implements IDataEncryptionView {
 				GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
 		encryptionPane = new JPanel();
 		encryptionPane.setLayout(new GridLayoutManager(4, 4, new Insets(0, 0, 0, 0), -1, -1));
+		encryptionPane.setName("encryptionPane");
 		mainPane.addTab("Encryption", encryptionPane);
 		encryptionKeyLabel = new JLabel();
 		encryptionKeyLabel.setText("Key:");
@@ -136,20 +137,24 @@ public class DataEncryptionGUI extends JFrame implements IDataEncryptionView {
 		encryptionPane.add(encryptionLabel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED,
 				null, null, null, 0, false));
 		encryptionTextField = new JTextField();
+		encryptionTextField.setName("encryptionTextField");
 		encryptionTextField.setText("");
 		encryptionTextField.setToolTipText("Provide text to encryption...");
 		encryptionPane.add(encryptionTextField, new GridConstraints(1, 1, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW,
 				GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
 		encryptionKeyTextField = new JTextField();
+		encryptionKeyTextField.setName("encryptionKeyTextField");
 		encryptionKeyTextField.setText("");
 		encryptionKeyTextField.setToolTipText("Provide text or choose key from file...");
 		encryptionPane.add(encryptionKeyTextField, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW,
 				GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
 		chooseEncryptionKeyButton = new JButton();
+		chooseEncryptionKeyButton.setName("chooseEncryptionKeyButton");
 		chooseEncryptionKeyButton.setText("Choose File");
 		encryptionPane.add(chooseEncryptionKeyButton, new GridConstraints(0, 2, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
 				GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		encryptionResultTextField = new JTextField();
+		encryptionResultTextField.setName("encryptionResultTextField");
 		encryptionResultTextField.setText("");
 		encryptionResultTextField.setToolTipText("Result of encryption...");
 		encryptionPane.add(encryptionResultTextField, new GridConstraints(3, 1, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW,
@@ -159,11 +164,13 @@ public class DataEncryptionGUI extends JFrame implements IDataEncryptionView {
 		encryptionPane.add(encryptionResultLabel, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED,
 				GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		encryptButton = new JButton();
+		encryptButton.setName("encryptButton");
 		encryptButton.setText("Encrypt");
 		encryptionPane.add(encryptButton, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
 				GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		decryptionPane = new JPanel();
 		decryptionPane.setLayout(new GridLayoutManager(4, 3, new Insets(0, 0, 0, 0), -1, -1));
+		decryptionPane.setName("decryptionPane");
 		mainPane.addTab("Decryption", decryptionPane);
 		decryptionKeyLabel = new JLabel();
 		decryptionKeyLabel.setText("Key:");
@@ -174,6 +181,7 @@ public class DataEncryptionGUI extends JFrame implements IDataEncryptionView {
 		decryptionPane.add(decryptionLabel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED,
 				null, null, null, 0, false));
 		decryptionTextField = new JTextField();
+		decryptionTextField.setName("decryptionTextField");
 		decryptionTextField.setToolTipText("Provide text to decryption...");
 		decryptionPane.add(decryptionTextField, new GridConstraints(1, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW,
 				GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
@@ -182,18 +190,22 @@ public class DataEncryptionGUI extends JFrame implements IDataEncryptionView {
 		decryptionPane.add(decryptionResultLabel, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED,
 				GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		decryptionResultTextField = new JTextField();
+		decryptionResultTextField.setName("decryptionResultTextField");
 		decryptionResultTextField.setToolTipText("Result of decryption...");
 		decryptionPane.add(decryptionResultTextField, new GridConstraints(3, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW,
 				GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
 		decryptButton = new JButton();
+		decryptButton.setName("decryptButton");
 		decryptButton.setText("Decrypt");
 		decryptionPane.add(decryptButton, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
 				GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		chooseDecryptionKeyButton = new JButton();
+		chooseDecryptionKeyButton.setName("chooseDecryptionKeyButton");
 		chooseDecryptionKeyButton.setText("Choose File");
 		decryptionPane.add(chooseDecryptionKeyButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
 				GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		decryptionKeyTextField = new JTextField();
+		decryptionKeyTextField.setName("decryptionKeyTextField");
 		decryptionKeyTextField.setToolTipText("Provide text or choose key from file...");
 		decryptionPane.add(decryptionKeyTextField, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW,
 				GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
@@ -205,4 +217,5 @@ public class DataEncryptionGUI extends JFrame implements IDataEncryptionView {
 	public JComponent $$$getRootComponent$$$() {
 		return contentPane;
 	}
+	
 }
