@@ -10,22 +10,10 @@
         <version>3.3.0</version>
     </parent>
 
-    <artifactId>mrchecker-core-module</artifactId>
-    <version>5.7.0.3</version>
+    <artifactId>mrchecker-data-encrytpion-gui</artifactId>
+    <groupId>com.capgemini.mrchecker</groupId>
+    <version>3.3.0</version>
     <packaging>jar</packaging>
-    <name>MrChecker - Test core - Module</name>
-    <description>MrChecker Test Framework Core is responsible for:
-        * Test report with logs and/or screenshots
-        * Test groups/tags
-        * Data Driven (inside test case, external file)
-        * Test case parallel execution
-        * BDD - Gherkin – Cucumber approach
-        * Run on independent OperatingSystem
-        * Externalize test environment (DEV, QA, PROD)
-        * Adding analytics source code
-        * Update Observers
-        Based on Junit5
-    </description>
     <url>https://github.com/devonfw/devonfw-testing</url>
 
     <organization>
@@ -58,6 +46,8 @@
     <properties>
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <!-- Logger -->
         <log4j.version>2.2</log4j.version>
         <slf4j.version>1.7.21</slf4j.version>
@@ -118,13 +108,23 @@
         </dependency>
 
         <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.jasypt</groupId>
             <artifactId>jasypt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>forms_rt</artifactId>
+            <version>7.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-swing-junit</artifactId>
+            <version>3.17.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
         </dependency>
 
         <!-- Dependencies for Cucumber -->
@@ -168,6 +168,47 @@
 
     <!-- Build goals/actions -->
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <includes>
+                        <!-- <include>com/capgemini/mrchecker/test/core/utils/DataEncryptionApp.java</include> -->
+                        <!-- <include>com/capgemini/mrchecker/test/core/**/*.java</include> -->
+                    </includes>
+                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <id>data-encryption-app</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>org.jasypt:jasypt:*</include>
+                                    <include>com.intellij:forms_rt:*</include>
+                                </includes>
+                            </artifactSet>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.capgemini.mrchecker.test.core.utils.DataEncryptionApp</mainClass>
+                                </transformer>
+                            </transformers>
+                            <finalName>DataEncryptionApp</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
 </project>
