@@ -1,15 +1,11 @@
 package com.capgemini.mrchecker.test.core.utils.encryption;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.StringStartsWith.startsWith;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import org.assertj.swing.core.EmergencyAbortListener;
 import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
@@ -21,22 +17,23 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
-import com.capgemini.mrchecker.test.core.tags.IntegrationTest;
+import com.capgemini.mrchecker.test.core.tags.UnitTest;
 import com.capgemini.mrchecker.test.core.utils.encryption.controller.DataEncryptionController;
 import com.capgemini.mrchecker.test.core.utils.encryption.controller.IDataEncryptionController;
+import com.capgemini.mrchecker.test.core.utils.encryption.exceptions.EncryptionServiceException;
 import com.capgemini.mrchecker.test.core.utils.encryption.view.DataEncryptionGUI;
 import com.capgemini.mrchecker.test.core.utils.encryption.view.IDataEncryptionView;
 
-@IntegrationTest
+@UnitTest
 @ResourceLock(value = "SingleThread")
 public class DataEncryptionGUITest {
-	private static final IDataEncryptionController dataEncryptionController = new DataEncryptionController();
+	private static final IDataEncryptionController dataEncryptionController = mock(DataEncryptionController.class);
+	private IDataEncryptionView dataEncryptionGUI;
 	private FrameFixture dataEncryptionGUIFixture;
 	private EmergencyAbortListener listener;
-	private static final String secret = "123456789";
+	private static final String secretNumber = "123456789";
 	private static final String value = "password";
 	private static final String cipher = "ENC(nC9VLcpRUZcMOQGqruRSs3D+cKlZ6Ohl)";
-	private static final String cipherForSecretDataFile = "ENC(baAZgn+nIcS0eXFLaRiVVGqxjbtt9tP7)";
 	
 	@BeforeAll
 	public static void setupBeforeAll() {
@@ -45,7 +42,7 @@ public class DataEncryptionGUITest {
 	
 	@BeforeEach
 	public void setupBeforeEveryTest() {
-		IDataEncryptionView dataEncryptionGUI = GuiActionRunner.execute(() -> new DataEncryptionGUI(dataEncryptionController));
+		dataEncryptionGUI = GuiActionRunner.execute(() -> new DataEncryptionGUI(dataEncryptionController));
 		dataEncryptionController.setView(dataEncryptionGUI);
 		listener = EmergencyAbortListener.registerInToolkit();
 		dataEncryptionGUIFixture = new FrameFixture((Frame) dataEncryptionGUI);
@@ -53,209 +50,232 @@ public class DataEncryptionGUITest {
 	
 	@Test
 	public void shouldEncryptDataWithGivenSecretAndValue() {
-		CryptParams cryptParams = new CryptParams(secret, value);
-		dataEncryptionGUIFixture.textBox("encryptionKeyTextField")
-				.enterText(cryptParams.getSecret());
-		dataEncryptionGUIFixture.textBox("encryptionTextField")
-				.enterText(cryptParams.getText());
-		dataEncryptionGUIFixture.button("encryptButton")
-				.click();
-		String result = dataEncryptionGUIFixture.textBox("encryptionResultTextField")
-				.text();
+		enterSecretAndTextForEncryption(secretNumber);
+		mockEncryption();
+		String result = clickEncryptAndGetResult();
 		
-		assertThat(result, startsWith("ENC("));
+		assertThat(result, is(equalTo(cipher)));
 	}
 	
 	@Test
-	public void shouldSetSecretFromFileAndEncrypt() throws IOException {
-		dataEncryptionGUIFixture.textBox("encryptionTextField")
-				.enterText(value);
-		dataEncryptionGUIFixture.button("chooseEncryptionKeyButton")
-				.click();
-		dataEncryptionGUIFixture.fileChooser()
-				.setCurrentDirectory(new File(System.getProperty("user.dir")))
-				.selectFile(new File(System.getProperty("user.dir") + "/src/resources/secretData"))
-				.approve();
-		dataEncryptionGUIFixture.button("encryptButton")
-				.click();
-		String keyValue = dataEncryptionGUIFixture.textBox("encryptionKeyTextField")
-				.text();
-		String result = dataEncryptionGUIFixture.textBox("encryptionResultTextField")
-				.text();
-		String key = new String(Files.readAllBytes(Paths.get(System.getProperty("user.dir") + "/src/resources/secretData"))).trim();
+	public void shouldSetSecretFromFileAndEncrypt() {
+		enterSecretAndTextForEncryption();
+		mockEncryptionFileChoose();
+		mockEncryption();
+		String result = clickEncryptAndGetResult();
 		
-		assertThat(keyValue, is(equalTo(key)));
-		assertThat(result, startsWith("ENC("));
+		assertThat(result, is(equalTo(cipher)));
 	}
 	
 	@Test
 	public void shouldShowMessageDialogWhenSecretIsEmptyForEncryption() {
-		CryptParams cryptParams = new CryptParams("", value);
-		dataEncryptionGUIFixture.textBox("encryptionKeyTextField")
-				.enterText(cryptParams.getSecret());
-		dataEncryptionGUIFixture.textBox("encryptionTextField")
-				.enterText(cryptParams.getText());
-		dataEncryptionGUIFixture.button("encryptButton")
-				.click();
-		dataEncryptionGUIFixture.dialog()
-				.button()
-				.click();
+		enterSecretAndTextForEncryption();
+		String result = clickEncryptAndGetPopup();
 		
-		String result = dataEncryptionGUIFixture.textBox("encryptionResultTextField")
-				.text();
-		
-		assertThat(result, is(equalTo("")));
+		assertThat(result, isEmptyString());
 	}
 	
 	@Test
 	public void shouldShowMessageDialogWhenSecretIsTooShortForEncryption() {
-		CryptParams cryptParams = new CryptParams("123", value);
-		dataEncryptionGUIFixture.textBox("encryptionKeyTextField")
-				.enterText(cryptParams.getSecret());
-		dataEncryptionGUIFixture.textBox("encryptionTextField")
-				.enterText(cryptParams.getText());
-		dataEncryptionGUIFixture.button("encryptButton")
-				.click();
-		dataEncryptionGUIFixture.dialog()
-				.button()
-				.click();
+		enterSecretAndTextForEncryption("123");
+		String result = clickEncryptAndGetPopup();
 		
-		String result = dataEncryptionGUIFixture.textBox("encryptionResultTextField")
-				.text();
-		
-		assertThat(result, is(equalTo("")));
+		assertThat(result, isEmptyString());
 	}
 	
 	@Test
 	public void shouldShowMessageDialogWhenCancelFileChooserForEncryption() {
-		dataEncryptionGUIFixture.textBox("encryptionTextField")
-				.enterText(value);
-		dataEncryptionGUIFixture.button("chooseEncryptionKeyButton")
-				.click();
-		dataEncryptionGUIFixture.fileChooser()
-				.cancel();
-		dataEncryptionGUIFixture.dialog()
-				.button()
-				.click();
+		enterSecretAndTextForEncryption();
+		cancelEncryptionFileChooserAndGetPopup();
 		String keyValue = dataEncryptionGUIFixture.textBox("encryptionKeyTextField")
 				.text();
 		String result = dataEncryptionGUIFixture.textBox("encryptionResultTextField")
 				.text();
 		
-		assertThat(keyValue, is(equalTo("")));
-		assertThat(result, is(equalTo("")));
+		assertThat(keyValue, isEmptyString());
+		assertThat(result, isEmptyString());
 	}
 	
 	@Test
 	public void shouldDecryptDataWithGivenSecretAndValue() {
-		dataEncryptionGUIFixture.tabbedPane()
-				.selectTab("Decryption");
-		CryptParams cryptParams = new CryptParams(secret, cipher);
-		dataEncryptionGUIFixture.textBox("decryptionKeyTextField")
-				.enterText(cryptParams.getSecret());
-		dataEncryptionGUIFixture.textBox("decryptionTextField")
-				.enterText(cryptParams.getText());
-		dataEncryptionGUIFixture.button("decryptButton")
-				.click();
-		String result = dataEncryptionGUIFixture.textBox("decryptionResultTextField")
-				.text();
+		enterSecretAndTextForDecryption(secretNumber, cipher);
+		mockDecryption();
+		String result = clickDecryptAndGetResult();
 		
 		assertThat(result, is(equalTo(value)));
 	}
 	
 	@Test
-	public void shouldSetSecretFromFileAndDecrypt() throws IOException {
-		dataEncryptionGUIFixture.tabbedPane()
-				.selectTab("Decryption");
-		dataEncryptionGUIFixture.textBox("decryptionTextField")
-				.enterText(cipherForSecretDataFile);
-		dataEncryptionGUIFixture.button("chooseDecryptionKeyButton")
-				.click();
-		dataEncryptionGUIFixture.fileChooser()
-				.setCurrentDirectory(new File(System.getProperty("user.dir")))
-				.selectFile(new File(System.getProperty("user.dir") + "/src/resources/secretData"))
-				.approve();
-		dataEncryptionGUIFixture.button("decryptButton")
-				.click();
-		String keyValue = dataEncryptionGUIFixture.textBox("decryptionKeyTextField")
-				.text();
-		String result = dataEncryptionGUIFixture.textBox("decryptionResultTextField")
-				.text();
-		String key = new String(Files.readAllBytes(Paths.get(System.getProperty("user.dir") + "/src/resources/secretData"))).trim();
+	public void shouldSetSecretFromFileAndDecrypt() {
+		enterSecretAndTextForDecryption();
+		mockDecryptionFileChoose();
+		mockDecryption();
+		String result = clickDecryptAndGetResult();
 		
-		assertThat(keyValue, is(equalTo(key)));
 		assertThat(result, is(equalTo(value)));
 	}
 	
 	@Test
 	public void shouldShowMessageDialogWhenSecretIsEmptyForDecryption() {
-		dataEncryptionGUIFixture.tabbedPane()
-				.selectTab("Decryption");
-		CryptParams cryptParams = new CryptParams("", cipher);
-		dataEncryptionGUIFixture.textBox("decryptionKeyTextField")
-				.enterText(cryptParams.getSecret());
-		dataEncryptionGUIFixture.textBox("decryptionTextField")
-				.enterText(cryptParams.getText());
-		dataEncryptionGUIFixture.button("decryptButton")
-				.click();
-		dataEncryptionGUIFixture.dialog()
-				.button()
-				.click();
+		enterSecretAndTextForDecryption();
+		String result = clickDecryptAndGetPopup();
 		
-		String result = dataEncryptionGUIFixture.textBox("decryptionResultTextField")
-				.text();
-		
-		assertThat(result, is(equalTo("")));
+		assertThat(result, isEmptyString());
 	}
 	
 	@Test
 	public void shouldShowMessageDialogWhenSecretIsTooShortForDecryption() {
-		dataEncryptionGUIFixture.tabbedPane()
-				.selectTab("Decryption");
-		CryptParams cryptParams = new CryptParams("123", cipher);
-		dataEncryptionGUIFixture.textBox("decryptionKeyTextField")
-				.enterText(cryptParams.getSecret());
-		dataEncryptionGUIFixture.textBox("decryptionTextField")
-				.enterText(cryptParams.getText());
-		dataEncryptionGUIFixture.button("decryptButton")
-				.click();
-		dataEncryptionGUIFixture.dialog()
-				.button()
-				.click();
+		enterSecretAndTextForDecryption("123", cipher);
+		String result = clickDecryptAndGetPopup();
 		
-		String result = dataEncryptionGUIFixture.textBox("decryptionResultTextField")
-				.text();
-		
-		assertThat(result, is(equalTo("")));
+		assertThat(result, isEmptyString());
 	}
 	
 	@Test
 	public void shouldShowMessageDialogWhenValueIsNotEncryptedForDecryption() {
+		enterSecretAndTextForDecryption(secretNumber, value);
+		String result = clickDecryptAndGetPopup();
+		
+		assertThat(result, isEmptyString());
+	}
+	
+	@Test
+	public void shouldShowMessageDialogWhenCancelFileChooserForDecryption() {
+		enterSecretAndTextForDecryption();
+		cancelDecryptionFileChooserAndGetPopup();
+		String keyValue = dataEncryptionGUIFixture.textBox("decryptionKeyTextField")
+				.text();
+		String result = dataEncryptionGUIFixture.textBox("decryptionResultTextField")
+				.text();
+		
+		assertThat(keyValue, isEmptyString());
+		assertThat(result, isEmptyString());
+	}
+	
+	@Test
+	public void shouldCorrectlyEncryptAndThenDecryptValue() {
+		enterSecretAndTextForEncryption();
+		mockEncryptionFileChoose();
+		mockEncryption();
+		String encryptionResult = clickEncryptAndGetResult();
+		enterSecretAndTextForDecryption(secretNumber, encryptionResult);
+		mockDecryptionFileChoose();
+		mockDecryption();
+		String decryptionResult = clickDecryptAndGetResult();
+		
+		assertThat(encryptionResult, is(equalTo(cipher)));
+		assertThat(decryptionResult, is(equalTo(value)));
+	}
+	
+	private void enterSecretAndTextForEncryption(String secret) {
+		dataEncryptionGUIFixture.textBox("encryptionKeyTextField")
+				.enterText(secret);
+		dataEncryptionGUIFixture.textBox("encryptionTextField")
+				.enterText(value);
+	}
+	
+	private void enterSecretAndTextForEncryption() {
+		enterSecretAndTextForEncryption("");
+	}
+	
+	private void mockEncryption() {
+		doAnswer(i -> {
+			dataEncryptionGUI.setEncryptionFieldValue(cipher);
+			return null;
+		}).when(dataEncryptionController)
+				.onEncrypt(any(CryptParams.class));
+	}
+	
+	private void mockEncryptionFileChoose() {
+		dataEncryptionGUI.setStringSupplier(secretNumber);
+		dataEncryptionGUIFixture.button("chooseEncryptionKeyButton")
+				.click();
+	}
+	
+	private void mockEncryptionThrowForTooShortOrEmptySecret() {
+		doThrow(EncryptionServiceException.class).when(dataEncryptionController)
+				.onEncrypt(any(CryptParams.class));
+	}
+	
+	private String clickEncryptAndGetResult() {
+		dataEncryptionGUIFixture.button("encryptButton")
+				.click();
+		return dataEncryptionGUIFixture.textBox("encryptionResultTextField")
+				.text();
+	}
+	
+	private String clickEncryptAndGetPopup() {
+		mockEncryptionThrowForTooShortOrEmptySecret();
+		dataEncryptionGUIFixture.button("encryptButton")
+				.click();
+		dataEncryptionGUIFixture.dialog()
+				.button()
+				.click();
+		return dataEncryptionGUIFixture.textBox("encryptionResultTextField")
+				.text();
+	}
+	
+	private void cancelEncryptionFileChooserAndGetPopup() {
+		dataEncryptionGUIFixture.button("chooseEncryptionKeyButton")
+				.click();
+		dataEncryptionGUIFixture.fileChooser()
+				.cancel();
+		dataEncryptionGUIFixture.dialog()
+				.button()
+				.click();
+	}
+	
+	private void enterSecretAndTextForDecryption(String secret, String text) {
 		dataEncryptionGUIFixture.tabbedPane()
 				.selectTab("Decryption");
-		CryptParams cryptParams = new CryptParams(secret, value);
 		dataEncryptionGUIFixture.textBox("decryptionKeyTextField")
-				.enterText(cryptParams.getSecret());
+				.enterText(secret);
 		dataEncryptionGUIFixture.textBox("decryptionTextField")
-				.enterText(cryptParams.getText());
+				.enterText(text);
+	}
+	
+	private void enterSecretAndTextForDecryption() {
+		enterSecretAndTextForDecryption("", cipher);
+	}
+	
+	private void mockDecryption() {
+		doAnswer(i -> {
+			dataEncryptionGUI.setDecryptionFieldValue(value);
+			return null;
+		}).when(dataEncryptionController)
+				.onDecrypt(any(CryptParams.class));
+	}
+	
+	private void mockDecryptionFileChoose() {
+		dataEncryptionGUI.setStringSupplier(secretNumber);
+		dataEncryptionGUIFixture.button("chooseDecryptionKeyButton")
+				.click();
+	}
+	
+	private void mockDecryptionThrowForTooShortOrEmptySecret() {
+		doThrow(EncryptionServiceException.class).when(dataEncryptionController)
+				.onDecrypt(any(CryptParams.class));
+	}
+	
+	private String clickDecryptAndGetResult() {
+		dataEncryptionGUIFixture.button("decryptButton")
+				.click();
+		return dataEncryptionGUIFixture.textBox("decryptionResultTextField")
+				.text();
+	}
+	
+	private String clickDecryptAndGetPopup() {
+		mockDecryptionThrowForTooShortOrEmptySecret();
 		dataEncryptionGUIFixture.button("decryptButton")
 				.click();
 		dataEncryptionGUIFixture.dialog()
 				.button()
 				.click();
-		
-		String result = dataEncryptionGUIFixture.textBox("decryptionResultTextField")
+		return dataEncryptionGUIFixture.textBox("decryptionResultTextField")
 				.text();
-		
-		assertThat(result, is(equalTo("")));
 	}
 	
-	@Test
-	public void shouldShowMessageDialogWhenCancelFileChooserForDecryption() {
-		dataEncryptionGUIFixture.tabbedPane()
-				.selectTab("Decryption");
-		dataEncryptionGUIFixture.textBox("decryptionTextField")
-				.enterText(value);
+	private void cancelDecryptionFileChooserAndGetPopup() {
 		dataEncryptionGUIFixture.button("chooseDecryptionKeyButton")
 				.click();
 		dataEncryptionGUIFixture.fileChooser()
@@ -263,57 +283,6 @@ public class DataEncryptionGUITest {
 		dataEncryptionGUIFixture.dialog()
 				.button()
 				.click();
-		String keyValue = dataEncryptionGUIFixture.textBox("decryptionKeyTextField")
-				.text();
-		String result = dataEncryptionGUIFixture.textBox("decryptionResultTextField")
-				.text();
-		
-		assertThat(keyValue, is(equalTo("")));
-		assertThat(result, is(equalTo("")));
-	}
-	
-	@Test
-	public void shouldCorrectlyEncryptAndThenDecryptValue() throws IOException {
-		dataEncryptionGUIFixture.textBox("encryptionTextField")
-				.enterText(value);
-		dataEncryptionGUIFixture.button("chooseEncryptionKeyButton")
-				.click();
-		dataEncryptionGUIFixture.fileChooser()
-				.setCurrentDirectory(new File(System.getProperty("user.dir")))
-				.selectFile(new File(System.getProperty("user.dir") + "/src/resources/secretData"))
-				.approve();
-		dataEncryptionGUIFixture.button("encryptButton")
-				.click();
-		String encryptionKeyValue = dataEncryptionGUIFixture.textBox("encryptionKeyTextField")
-				.text();
-		String encryptionResult = dataEncryptionGUIFixture.textBox("encryptionResultTextField")
-				.text();
-		String encryptionKey = new String(Files.readAllBytes(Paths.get(System.getProperty("user.dir") + "/src/resources/secretData"))).trim();
-		
-		dataEncryptionGUIFixture.tabbedPane()
-				.selectTab("Decryption");
-		dataEncryptionGUIFixture.textBox("decryptionTextField")
-				.enterText(encryptionResult);
-		dataEncryptionGUIFixture.button("chooseDecryptionKeyButton")
-				.click();
-		dataEncryptionGUIFixture.fileChooser()
-				.setCurrentDirectory(new File(System.getProperty("user.dir")))
-				.selectFile(new File(System.getProperty("user.dir") + "/src/resources/secretData"))
-				.approve();
-		dataEncryptionGUIFixture.button("decryptButton")
-				.click();
-		String decryptionKeyValue = dataEncryptionGUIFixture.textBox("decryptionKeyTextField")
-				.text();
-		String decryptionResult = dataEncryptionGUIFixture.textBox("decryptionResultTextField")
-				.text();
-		String decryptionKey = new String(Files.readAllBytes(Paths.get(System.getProperty("user.dir") + "/src/resources/secretData"))).trim();
-		
-		assertThat(encryptionKeyValue, is(equalTo(encryptionKey)));
-		assertThat(decryptionKeyValue, is(equalTo(decryptionKey)));
-		assertThat(encryptionKeyValue, is(equalTo(decryptionKeyValue)));
-		
-		assertThat(encryptionResult, startsWith("ENC("));
-		assertThat(decryptionResult, is(equalTo(value)));
 	}
 	
 	@AfterEach

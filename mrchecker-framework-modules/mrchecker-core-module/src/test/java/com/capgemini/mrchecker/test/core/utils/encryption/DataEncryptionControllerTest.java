@@ -6,6 +6,8 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.function.Supplier;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
@@ -73,6 +75,7 @@ public class DataEncryptionControllerTest {
 		
 		public String encryptionFieldValue;
 		public String decryptionFieldValue;
+		public Supplier<String> stringSupplier = () -> null;
 		
 		@Override
 		public void setEncryptionFieldValue(String text) {
@@ -82,6 +85,11 @@ public class DataEncryptionControllerTest {
 		@Override
 		public void setDecryptionFieldValue(String text) {
 			decryptionFieldValue = text;
+		}
+		
+		@Override
+		public void setStringSupplier(String stringSupplier) {
+			this.stringSupplier = () -> stringSupplier;
 		}
 	}
 	

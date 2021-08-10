@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import javax.swing.*;
 
@@ -39,7 +40,9 @@ public class DataEncryptionGUI extends JFrame implements IDataEncryptionView {
 	private JLabel decryptionLabel;
 	private JLabel decryptionResultLabel;
 	
-	public DataEncryptionGUI(IDataEncryptionController IDataEncryptionController) {
+	private Supplier<String> stringSupplier = () -> null;
+	
+	public DataEncryptionGUI(IDataEncryptionController dataEncryptionController) {
 		setContentPane(contentPane);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(500, 300);
@@ -55,7 +58,7 @@ public class DataEncryptionGUI extends JFrame implements IDataEncryptionView {
 		
 		encryptButton.addActionListener(e -> {
 			try {
-				IDataEncryptionController.onEncrypt(new CryptParams(encryptionKeyTextField.getText(), encryptionTextField.getText()));
+				dataEncryptionController.onEncrypt(new CryptParams(encryptionKeyTextField.getText(), encryptionTextField.getText()));
 			} catch (EncryptionServiceException ex) {
 				setEncryptionFieldValue("");
 				showMessageDialog(contentPane, "Could not encrypt because:\n" + ex.getMessage());
@@ -64,7 +67,7 @@ public class DataEncryptionGUI extends JFrame implements IDataEncryptionView {
 		
 		decryptButton.addActionListener(e -> {
 			try {
-				IDataEncryptionController.onDecrypt(new CryptParams(decryptionKeyTextField.getText(), decryptionTextField.getText()));
+				dataEncryptionController.onDecrypt(new CryptParams(decryptionKeyTextField.getText(), decryptionTextField.getText()));
 			} catch (EncryptionServiceException ex) {
 				setDecryptionFieldValue("");
 				showMessageDialog(contentPane, "Could not decrypt because:\n" + ex.getMessage());
@@ -75,24 +78,39 @@ public class DataEncryptionGUI extends JFrame implements IDataEncryptionView {
 	}
 	
 	public void setKeyFieldValue(JTextField keyTextField) {
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-		int result = fileChooser.showOpenDialog(null);
-		if (result == JFileChooser.APPROVE_OPTION) {
-			File selectedFile = fileChooser.getSelectedFile();
-			try {
-				keyTextField.setText(Files.readAllLines(selectedFile.toPath())
-						.stream()
-						.findFirst()
-						.orElseThrow(() -> new IOException("Empty file")));
-			} catch (IOException e) {
-				keyTextField.setText("");
-				showMessageDialog(contentPane, "Could not read key from given file\nError: " + e.getMessage());
-			}
-		} else {
-			keyTextField.setText("");
-			showMessageDialog(contentPane, "You need to choose a file or provide the key");
+		if (Objects.isNull(stringSupplier.get())) {
+			setStringSupplierValue();
 		}
+		keyTextField.setText(stringSupplier.get());
+		stringSupplier = () -> null;
+	}
+	
+	private void setStringSupplierValue() {
+		stringSupplier = () -> {
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+			int result = fileChooser.showOpenDialog(null);
+			if (result == JFileChooser.APPROVE_OPTION) {
+				File selectedFile = fileChooser.getSelectedFile();
+				try {
+					return Files.readAllLines(selectedFile.toPath())
+							.stream()
+							.findFirst()
+							.orElseThrow(() -> new IOException("Empty file"));
+				} catch (IOException e) {
+					showMessageDialog(contentPane, "Could not read key from given file\nError: " + e.getMessage());
+					return "";
+				}
+			} else {
+				showMessageDialog(contentPane, "You need to choose a file or provide the key");
+				return "";
+			}
+		};
+	}
+	
+	@Override
+	public void setStringSupplier(String stringSupplier) {
+		this.stringSupplier = () -> stringSupplier;
 	}
 	
 	@Override

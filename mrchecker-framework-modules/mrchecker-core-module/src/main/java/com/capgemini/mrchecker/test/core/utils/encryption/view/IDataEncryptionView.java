@@ -5,4 +5,5 @@ public interface IDataEncryptionView {
 	
 	void setDecryptionFieldValue(String text);
 	
+	void setStringSupplier(String stringSupplier);
 }
