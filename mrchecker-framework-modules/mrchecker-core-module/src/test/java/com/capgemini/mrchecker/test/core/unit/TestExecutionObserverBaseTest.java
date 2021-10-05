@@ -3,6 +3,7 @@ package com.capgemini.mrchecker.test.core.unit;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -21,9 +22,17 @@ public class TestExecutionObserverBaseTest {
 	protected static final ITestObserver			observerMock;
 	
 	static {
+		Method mockMethod;
+		try {
+			mockMethod = Object.class.getMethod("toString");
+		} catch (NoSuchMethodException e) {
+			throw new RuntimeException(e);
+		}
+		
 		contextMock = mock(ExtensionContext.class);
 		when(contextMock.getTestClass()).thenReturn(Optional.of(TestExecutionObserverBaseTest.class));
 		when(contextMock.getRequiredTestClass()).thenCallRealMethod();
+		when(contextMock.getRequiredTestMethod()).thenReturn(mockMethod);
 		when(contextMock.getDisplayName()).thenReturn("Test_name");
 		when(contextMock.getUniqueId()).thenReturn("[engine:junit-jupiter]/[class:com.capgemini.mrchecker.selenium.mts.MyThaiStarTest]/[method:Test_orderMenu()]");
 		try {
