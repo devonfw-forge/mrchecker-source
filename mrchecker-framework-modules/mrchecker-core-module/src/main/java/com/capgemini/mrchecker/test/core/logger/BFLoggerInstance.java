@@ -4,207 +4,91 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
+import java.util.Objects;
 
-import org.apache.log4j.Appender;
-import org.apache.log4j.AsyncAppender;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
 public class BFLoggerInstance {
+	private Logger logger;
 	
-	private static final String	FBEGIN	= "Function: ";
-	private static final String	FEND	= "END";
+	private static final String FBEGIN = "Function: ";
+	private static final String FEND = "END";
 	
-	static {
-		Logger.getRootLogger()
-				.removeAppender("console");
-	}
-	
-	private static final String	logPattern	= "%d{yyyy-MM-dd 'at' HH:mm:ss z} %M - %m%x%n";
-	private static final Level	loggerLevel	= Level.DEBUG;
-	
-	private File	logFile;
-	private String	appenderName;
-	private Logger	logger;
-	
-	protected BFLoggerInstance() {
-	}
-	
-	/**
-	 * Adds the selected appender to a new instance of AsyncAppender
-	 * 
-	 * @param appender
-	 *            appender
-	 * @return created AsyncAppender with appender attached
-	 */
-	private AsyncAppender wrapAsync(Appender appender) {
-		AsyncAppender wrapper = new AsyncAppender();
-		wrapper.addAppender(appender);
-		return wrapper;
+	public BFLoggerInstance() {
+		
+		ThreadContext.put("threadName", Thread.currentThread()
+				.getName());
+		getLogger();
 	}
 	
 	private Logger getLogger() {
-		if (logger == null) {
-			logger = Logger.getLogger(getAppenderName());
-			logger.removeAllAppenders();
-			logger.setLevel(loggerLevel);
-			logger.addAppender(createEnvFileAppender());
-			logger.addAppender(createFileAppender());
-			logger.addAppender(wrapAsync(createConsoleAppender()));
+		if (Objects.isNull(null)) {
+			logger = LogManager.getRootLogger();
 		}
 		return logger;
 	}
 	
-	private FileAppender createEnvFileAppender() {
-		PatternLayout patternLayout = new PatternLayout(logPattern);
-		FileAppender appender;
-		try {
-			String envLogName = getLogFile().getPath()
-					.replace(".log", "_env.log");
-			appender = new FileAppender(patternLayout, envLogName, true);
-			appender.setName("EnvRollingFile");
-			appender.setThreshold(EnvironmentLevel.ENVIRONMENT);
-			appender.activateOptions();
-		} catch (Exception e) {
-			System.out.println("Unable to create appender: " + e);
-			return null;
-		}
-		return appender;
+	public void log(Level level, String message) {
+		logger.log(level, message);
 	}
 	
-	private FileAppender createFileAppender() {
-		PatternLayout patternLayout = new PatternLayout(logPattern);
-		FileAppender appender;
-		try {
-			appender = new FileAppender(patternLayout, getLogFile().getPath(), true);
-			appender.setName(getAppenderName());
-			appender.setThreshold(Level.DEBUG);
-			appender.activateOptions();
-		} catch (Exception e) {
-			System.out.println("Unable to create appender: " + e);
-			return null;
-		}
-		return appender;
-	}
-	
-	private ConsoleAppender createConsoleAppender() {
-		PatternLayout patternLayout = new PatternLayout(logPattern);
-		ConsoleAppender appender;
-		try {
-			appender = new ConsoleAppender(patternLayout);
-			appender.setTarget(ConsoleAppender.SYSTEM_OUT);
-			appender.setName("Console");
-			appender.setThreshold(Level.DEBUG);
-			appender.activateOptions();
-		} catch (Exception e) {
-			System.out.println("Unable to create appender: " + e);
-			return null;
-		}
-		return appender;
-	}
-	
-	private File getLogFile() {
-		if (logFile == null) {
-			logFile = new File(getDirectory().getPath(), getAppenderName() + ".log");
-			logFile.deleteOnExit();
-		}
-		return logFile;
-	}
-	
-	private File getDirectory() {
-		File directory = new File("./logs");
-		if (!directory.exists()) {
-			directory.mkdir();
-		}
-		return directory;
-	}
-	
-	private String getAppenderName() {
-		if (appenderName == null) {
-			appenderName = Thread.currentThread()
-					.getName();
-		}
-		return appenderName;
-	}
-	
-	private int logLevel = 0;
-	
-	// logger - log INFO message
-	public void logInfo(String message) {
-		getLogger().info(formatMessage(message));
-	}
-	
-	// logger - log ENV message
-	public void logEnv(String message) {
-		getLogger().log(EnvironmentLevel.ENVIRONMENT, message);
-		if (message.equals(FEND))
-			--logLevel;
-	}
-	
-	// logger - log DEBUG message
 	public void logDebug(String message) {
-		char[] indent = new char[logLevel];
-		Arrays.fill(indent, ' ');
-		
-		getLogger().debug(formatMessage(new String(indent) + message));
+		log(Level.DEBUG, message);
 	}
 	
-	// logger - log ANALYTICS message
-	public void logAnalytics(String message) {
-		char[] indent = new char[logLevel];
-		Arrays.fill(indent, ' ');
-		getLogger().debug(formatMessage(new String(indent) + message));
+	public void logInfo(String message) {
+		log(Level.INFO, message);
+	}
+	
+	public void logError(String message) {
+		log(Level.ERROR, message);
 	}
 	
 	public void logFunctionBegin(String functionName) {
-		logDebug(FBEGIN + functionName);
-		++logLevel;
+		log(Level.DEBUG, FBEGIN + functionName);
 	}
 	
 	public void logFunctionEnd() {
-		--logLevel;
-		logDebug(FEND);
+		log(Level.DEBUG, FEND);
 	}
 	
-	// logger - log ERROR message
-	public void logError(String message) {
-		getLogger().error(formatMessage(message));
-		if (message.equals(FEND))
-			--logLevel;
+	public void logEnv(String message) {
+		log(Level.forName("ENV", 700), message);
 	}
 	
-	private String formatMessage(String message) {
-		return "[" + getAppenderName() + "] " + message;
+	public void logAnalytics(String message) {
+		log(Level.forName("ANALYTICS", 800), message);
 	}
 	
-	/**
-	 * WARING: Do not use this method outside of BaseTestWatcher Begin writing all logs to a separate file in addition
-	 * to the main log file
-	 */
-	protected void startSeparateLog() {
+	private String getAppenderName() {
+		return ThreadContext.get("threadName");
+	}
+	
+	protected File getDirectory() {
+		File directory = new File("./logs");
+		return directory;
+	}
+	
+	private File getLogFile() {
+		return new File(getDirectory().getPath(), getAppenderName() + ".log");
+	}
+	
+	public void startSeparateLog() {
 		try {
 			PrintWriter pw = new PrintWriter(getLogFile());
 			pw.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	/**
-	 * WARING: Do not use this method outside of BaseTestWatcher Stop writing to the separate log file, return its
-	 * current content and clear the file
-	 * 
-	 * @return
-	 */
-	protected String dumpSeparateLog() {
+	public String dumpSeparateLog() {
 		try {
 			return Files.toString(getLogFile(), Charsets.UTF_8);
 		} catch (IOException e) {
@@ -212,5 +96,4 @@ public class BFLoggerInstance {
 			return "";
 		}
 	}
-	
 }

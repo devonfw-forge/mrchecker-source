@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>mrchecker-core-module</artifactId>
-    <version>5.7.0.3</version>
+    <version>5.7.0.4-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>MrChecker - Test core - Module</name>
     <description>MrChecker Test Framework Core is responsible for:
@@ -37,8 +37,8 @@
         <developer>
             <name>Lukasz Stefaniszyn</name>
             <email>lukasz.stefaniszyn@capgemini.com</email>
-            <organization>Capgemini - Nearshore Test Center - Poland</organization>
-            <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
+            <organization>Capgemini - Software Solution Center</organization>
+            <organizationUrl>https://capgeminisoftware.pl</organizationUrl>
         </developer>
     </developers>
 
@@ -59,8 +59,8 @@
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
         <!-- Logger -->
-        <log4j.version>2.2</log4j.version>
-        <slf4j.version>1.7.21</slf4j.version>
+        <log4j.version>2.14.0</log4j.version>
+        <slf4j.version>1.7.30</slf4j.version>
 
         <!-- Cucumber version -->
         <cucumber.version>6.7.0</cucumber.version>
@@ -74,24 +74,20 @@
         <!--This dependency is necessary for Logger. -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
+            <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
+            <artifactId>log4j-slf4j-impl</artifactId>
             <version>${log4j.version}</version>
+            <scope>test</scope>
         </dependency>
-
-        <!-- SLF4J is a simple facade for logging systems allowing the
-            end-user
-            to plug-in the desired logging system at deployment time -->
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
+            <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-
         <!--This dependency is necessary for Allure generator plugin. -->
         <dependency>
             <!-- Test listener. Binds Junit exec to Allure annotation -->
@@ -206,6 +202,37 @@
                                 </transformer>
                             </transformers>
                             <finalName>DataEncryptionApp</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <!-- here the phase you need -->
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.outputDirectory}
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${project.basedir}/src/test/resources
+                                    </directory>
+                                    <includes>
+                                        <include>log4j2.xml</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>
