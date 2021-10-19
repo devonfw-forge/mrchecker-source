@@ -26,6 +26,7 @@ import com.capgemini.mrchecker.test.core.utils.encryption.view.IDataEncryptionVi
 
 @UnitTest
 @ResourceLock(value = "SingleThread")
+@Disabled("Due to missing GUI on Jenkins")
 public class DataEncryptionGUITest {
 	private static final IDataEncryptionController dataEncryptionController = mock(DataEncryptionController.class);
 	private IDataEncryptionView dataEncryptionGUI;
