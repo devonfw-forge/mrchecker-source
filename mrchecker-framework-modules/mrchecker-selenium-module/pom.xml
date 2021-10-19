@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>mrchecker-selenium-module</artifactId>
-    <version>3.141.59.3</version>
+    <version>3.141.59.4-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>MrChecker - Selenium - Module</name>
     <description>MrChecker Test Framework Selenium supports:
@@ -74,7 +74,7 @@
         <selenium.version>3.141.59</selenium.version>
 
         <!-- Test tools -->
-        <jsoup.version>1.11.2</jsoup.version>
+        <jsoup.version>1.14.2</jsoup.version>
 
         <!-- Guava is a set of core libraries -->
         <google.guava.version>23.0</google.guava.version>
