@@ -85,7 +85,6 @@
 
         <!-- Tests executors -->
         <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
-<!--        <surefire.provider.version>1.3.2</surefire.provider.version>-->
         <surefire.provider.version>3.0.0-M3</surefire.provider.version>
 
         <!-- Test tools -->
