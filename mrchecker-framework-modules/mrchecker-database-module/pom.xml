@@ -6,11 +6,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>3.1.0</version>
+        <version>3.3.1</version>
     </parent>
 
     <artifactId>mrchecker-database-module</artifactId>
-    <version>2.2.1</version>
+    <version>2.2.2</version>
     <packaging>jar</packaging>
     <name>MrChecker - Database - Module</name>
     <description>MrChecker Database Module:
@@ -70,7 +70,7 @@
 
 
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
-        <mrchecker-core-module.version>5.7.0.1</mrchecker-core-module.version>
+        <mrchecker-core-module.version>5.7.0.4</mrchecker-core-module.version>
 
         <jpa.version>2.2</jpa.version>
         <hibernate-core.version>5.4.0.Final</hibernate-core.version>
