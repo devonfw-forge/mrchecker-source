@@ -7,11 +7,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>3.3.2</version>
+        <version>3.3.3</version>
     </parent>
 
     <artifactId>mrchecker-mobile-module</artifactId>
-    <version>7.2.0.5</version>
+    <version>7.2.0.6</version>
     <packaging>jar</packaging>
     <name>MrChecker - Mobile - Module</name>
     <description>MrChecker Test Framework name supports:
@@ -53,7 +53,7 @@
 
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
-        <mrchecker-core-module.version>5.7.0.5</mrchecker-core-module.version>
+        <mrchecker-core-module.version>5.7.0.6</mrchecker-core-module.version>
 
         <!-- Lib/package version settings -->
         <io.appium.java.client.version>7.2.0</io.appium.java.client.version>

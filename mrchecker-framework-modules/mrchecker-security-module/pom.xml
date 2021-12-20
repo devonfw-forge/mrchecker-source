@@ -7,11 +7,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>3.0.1</version>
+        <version>3.3.3</version>
     </parent>
 
     <artifactId>mrchecker-security-module</artifactId>
-    <version>1.2.2</version>
+    <version>1.2.3</version>
     <packaging>jar</packaging>
     <name>MrChecker - Security - Module</name>
     <description>MrChecker Test Framework Security supports:
@@ -56,7 +56,7 @@
     <properties>
 
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
-        <mrchecker-core-module.version>5.7.0.1</mrchecker-core-module.version>
+        <mrchecker-core-module.version>5.7.0.6</mrchecker-core-module.version>
 
     </properties>
 
