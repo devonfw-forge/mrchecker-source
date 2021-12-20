@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.capgemini.mrchecker</groupId>
     <artifactId>mrchecker-test-framework</artifactId>
-    <version>2.4.3-SNAPSHOT</version>
+    <version>2.4.4-SNAPSHOT</version>
     <name>MrChecker</name>
     <description>MrChecker Test Framework is an automated testing framework for functional testing of web applications, native mobile apps, webservices and database.</description>
     <url>https://github.com/devonfw/devonfw-testing</url>
