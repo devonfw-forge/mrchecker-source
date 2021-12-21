@@ -10,7 +10,7 @@
         <version>2.4.4-SNAPSHOT</version>
     </parent>
     <artifactId>mrchecker-selenium-module</artifactId>
-    <version>3.141.59.1.2</version>
+    <version>3.141.59.1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>MrChecker - Selenium - Module</name>
     <description>MrChecker Test Framework Selenium supports:
