@@ -7,7 +7,7 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>3.3.2</version>
+        <version>3.3.3</version>
     </parent>
 
     <artifactId>mrchecker-webapi-module</artifactId>
@@ -68,7 +68,7 @@
     <properties>
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
-        <mrchecker-core-module.version>5.7.0.5</mrchecker-core-module.version>
+        <mrchecker-core-module.version>5.7.0.6</mrchecker-core-module.version>
 
         <!-- Lib/package version settings -->
         <wiremock.version>2.21.0</wiremock.version>
