@@ -7,11 +7,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>3.3.3</version>
+        <version>3.3.4</version>
     </parent>
 
     <artifactId>mrchecker-selenium-module</artifactId>
-    <version>3.141.59.6</version>
+    <version>3.141.59.7</version>
     <packaging>jar</packaging>
     <name>MrChecker - Selenium - Module</name>
     <description>MrChecker Test Framework Selenium supports:
@@ -68,7 +68,7 @@
 
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
-        <mrchecker-core-module.version>5.7.0.6</mrchecker-core-module.version>
+        <mrchecker-core-module.version>5.7.0.7</mrchecker-core-module.version>
 
         <!-- Selenium settings -->
         <selenium.version>3.141.59</selenium.version>

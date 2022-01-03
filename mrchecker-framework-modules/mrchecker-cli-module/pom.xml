@@ -6,11 +6,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>3.3.3</version>
+        <version>3.3.4</version>
     </parent>
 
     <artifactId>mrchecker-cli-module</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <packaging>jar</packaging>
     <name>MrChecker - CLI - Module</name>
     <description>MrChecker CLI Module supports:
@@ -52,8 +52,8 @@
     </scm>
 
     <properties>
-        <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
-        <mrchecker-core-module.version>5.7.0.6</mrchecker-core-module.version>
+        <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>1
+        <mrchecker-core-module.version>5.7.0.7</mrchecker-core-module.version>
     </properties>
 
     <dependencies>
