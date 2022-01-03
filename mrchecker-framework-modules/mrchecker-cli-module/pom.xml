@@ -52,7 +52,7 @@
     </scm>
 
     <properties>
-        <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>1
+        <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
         <mrchecker-core-module.version>5.7.0.7</mrchecker-core-module.version>
     </properties>
 
