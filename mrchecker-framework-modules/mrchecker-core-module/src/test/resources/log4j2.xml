@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN">
+<Configuration status="WARN" monitorInterval="0">
     <Appenders>
         <Routing name="RoutingApp">
             <Routes pattern="$${ctx:threadName}">
