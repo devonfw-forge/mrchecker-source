@@ -8,11 +8,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>2.4.5-SNAPSHOT</version>
+        <version>2.4.5</version>
     </parent>
 
     <artifactId>mrchecker-core-module</artifactId>
-    <version>4.12.1.7-SNAPSHOT</version>
+    <version>4.12.1.7</version>
     <packaging>jar</packaging>
     <name>MrChecker - Test core - Module</name>
     <description>MrChecker Test Framework Core is responsible for:
@@ -139,31 +139,31 @@
 
 
         <!--This dependency is necessary for Logger. -->
-     <!--    <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
+        <!--    <dependency>
+               <groupId>org.apache.logging.log4j</groupId>
+               <artifactId>log4j-api</artifactId>
+               <version>${log4j.version}</version>
+           </dependency>
+           <dependency>
+               <groupId>org.apache.logging.log4j</groupId>
+               <artifactId>log4j-core</artifactId>
+               <version>${log4j.version}</version>
+           </dependency>
 
-        <!- SLF4J is a simple facade for logging systems allowing the
-            end-user
-            to plug-in the desired logging system at deployment time -->
+           <!- SLF4J is a simple facade for logging systems allowing the
+               end-user
+               to plug-in the desired logging system at deployment time -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>${log4j.version}</version>
         </dependency>
-         <dependency>
-             <groupId>org.slf4j</groupId>
-             <!-- <artifactId>slf4j-log4j12</artifactId> -->
-             <artifactId>slf4j-api</artifactId>
-             <version>${slf4j.version}</version>
-         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <!-- <artifactId>slf4j-log4j12</artifactId> -->
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
 
         <!--This dependency is necessary for Allure generator plugin. -->
         <dependency>

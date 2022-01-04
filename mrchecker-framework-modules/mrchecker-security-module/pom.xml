@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>2.4.5-SNAPSHOT</version>
+        <version>2.4.5</version>
     </parent>
     <artifactId>mrchecker-security-module</artifactId>
-    <version>1.2.2-SNAPSHOT</version>
+    <version>1.2.2</version>
     <packaging>jar</packaging>
     <name>MrChecker - Security - Module</name>
     <description>MrChecker Test Framework Security supports:
         - Library reference to make REST/HTTP calls to the tested system
-        - Other common features needed for security testing</description>
+        - Other common features needed for security testing
+    </description>
     <url>https://github.com/devonfw/devonfw-testing</url>
 
     <organization>
-        <name>Capgemini  - Nearshore Test Center - Poland</name>
+        <name>Capgemini - Nearshore Test Center - Poland</name>
         <url>http://nsc.capgemini.com/nearshoretestcenter</url>
     </organization>
 
@@ -27,7 +28,7 @@
         <developer>
             <name>Lukasz Stefaniszyn</name>
             <email>lukasz.stefaniszyn@capgemini.com</email>
-            <organization>Capgemini  - Nearshore Test Center - Poland</organization>
+            <organization>Capgemini - Nearshore Test Center - Poland</organization>
             <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
         </developer>
         <developer>
@@ -54,7 +55,7 @@
     <properties>
 
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
-        <mrchecker-core-module.version>4.12.1.4-SNAPSHOT</mrchecker-core-module.version>
+        <mrchecker-core-module.version>4.12.1.4</mrchecker-core-module.version>
 
     </properties>
 
