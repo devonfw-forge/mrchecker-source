@@ -8,6 +8,7 @@ import org.apache.logging.log4j.core.config.xml.XmlConfiguration;
 public class BFLoggerConfiguration extends XmlConfiguration {
 	public BFLoggerConfiguration(LoggerContext context, ConfigurationSource configSource) {
 		super(context, configSource);
-		ThreadContext.put("threadName", "main");
+		ThreadContext.put("threadName", Thread.currentThread()
+				.getName());
 	}
 }
