@@ -7,7 +7,9 @@
     <artifactId>mrchecker-test-framework</artifactId>
     <version>2.4.5-SNAPSHOT</version>
     <name>MrChecker</name>
-    <description>MrChecker Test Framework is an automated testing framework for functional testing of web applications, native mobile apps, webservices and database.</description>
+    <description>MrChecker Test Framework is an automated testing framework for functional testing of web applications,
+        native mobile apps, webservices and database.
+    </description>
     <url>https://github.com/devonfw/devonfw-testing</url>
     <packaging>pom</packaging>
 
@@ -40,11 +42,11 @@
 
 
     <modules>
-                <module>mrchecker-core-module</module>
-                <module>mrchecker-selenium-module</module>
-<!--                <module>mrchecker-security-module</module>-->
-                <module>mrchecker-webapi-module</module>
-                <module>mrchecker-database-module</module>
+        <module>mrchecker-core-module</module>
+        <module>mrchecker-selenium-module</module>
+        <!--                <module>mrchecker-security-module</module>-->
+        <module>mrchecker-webapi-module</module>
+        <module>mrchecker-database-module</module>
         <!-- <module>build-tools</module> -->
     </modules>
 
@@ -109,7 +111,8 @@
         <rest-assured.version>3.0.6</rest-assured.version>
 
         <!-- Allure Annotations -->
-        <allure-junit4-listener.version>2.6.0</allure-junit4-listener.version> <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-junit4 -->
+        <allure-junit4-listener.version>2.6.0
+        </allure-junit4-listener.version> <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-junit4 -->
         <aspectj.version>1.9.5</aspectj.version>
     </properties>
 
@@ -208,7 +211,7 @@
     <!-- Build goals/actions -->
     <build>
         <pluginManagement>
-        <plugins>
+            <plugins>
 
                 <!-- CLEAN -->
                 <plugin>
@@ -287,8 +290,8 @@
                                 <name>listener</name>
                                 <value>io.qameta.allure.junit4.AllureJunit4</value>
                             </property>
-                         </properties>
-                         <systemProperties>
+                        </properties>
+                        <systemProperties>
                             <property>
                                 <name>allure.results.directory</name>
                                 <value>target/allure-results</value>
@@ -326,7 +329,7 @@
                             </goals>
                         </execution>
                     </executions>
-                  </plugin>
+                </plugin>
 
                 <!-- Generate report for maven site goal -->
                 <plugin>
