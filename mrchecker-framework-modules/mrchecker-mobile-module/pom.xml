@@ -7,11 +7,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>3.3.4</version>
+        <version>2022.12.14</version>
     </parent>
 
     <artifactId>mrchecker-mobile-module</artifactId>
-    <version>7.2.0.7</version>
+    <version>2022.12.14</version>
     <packaging>jar</packaging>
     <name>MrChecker - Mobile - Module</name>
     <description>MrChecker Test Framework name supports:
@@ -40,131 +40,33 @@
         </license>
     </licenses>
 
-    <repositories>
-        <!--https://github.com/appium/java-client-->
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
-
     <properties>
-
-
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
-        <mrchecker-core-module.version>5.7.0.7</mrchecker-core-module.version>
-
         <!-- Lib/package version settings -->
-        <io.appium.java.client.version>7.2.0</io.appium.java.client.version>
-        <selenium.version>3.141.59</selenium.version>
-
+        <io.appium.java.client.version>7.6.0</io.appium.java.client.version>
     </properties>
 
     <dependencies>
-
         <!-- Dependency to other MrChecker Test Framework modules -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mrchecker-core-module</artifactId>
-            <version>${mrchecker-core-module.version}</version>
-        </dependency>
-
-
-        <!-- Hashes sensitive data -->
-        <dependency>
-            <groupId>org.jasypt</groupId>
-            <artifactId>jasypt</artifactId>
-        </dependency>
-
-        <!--This dependency is necessary for Allure generator plugin. -->
-        <dependency>
-            <!-- Test listener. Binds Junit exec to Allure annotation -->
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-junit5</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-junit-platform</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-java-commons</artifactId>
-        </dependency>
-
-
-        <!--This dependency is necessary for Appium to connect through  Selenium plugin. -->
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <version>${selenium.version}</version>
-            <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>*</artifactId>
-                    <groupId>com.google.code.gson</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>htmlunit-driver</artifactId>
-                    <groupId>*</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>*</artifactId>
-                    <groupId>net.sourceforge.htmlunit</groupId>
-                </exclusion>
-            </exclusions>
+            <version>2022.12.14</version>
         </dependency>
         <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-support</artifactId>
-            <version>${selenium.version}</version>
-            <scope>compile</scope>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mrchecker-selenium-module</artifactId>
+            <version>2022.12.14</version>
         </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-api</artifactId>
-            <version>${selenium.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
 
         <!--This dependency is necessary for Appium plugin. -->
         <!--https://github.com/appium/java-client/blob/master/docs/Installing-the-project.md-->
-
         <dependency>
             <groupId>io.appium</groupId>
             <artifactId>java-client</artifactId>
             <version>${io.appium.java.client.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-core</artifactId>
-                </exclusion>
-                <!-- <exclusion>
-                    <groupId>org.seleniumhq.selenium</groupId>
-                    <artifactId>selenium-remote-driver</artifactId>
-                </exclusion> -->
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
-
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>23.0</version>
-        </dependency>
-
     </dependencies>
 
     <scm>
@@ -173,13 +75,10 @@
         <url>http://github.com/devonfw/devonfw-testing/tree/master</url>
     </scm>
 
-
     <!-- Build goals/actions -->
     <build>
         <plugins>
             <!-- Plugins are taken from parent pom.xml -->
         </plugins>
     </build>
-
-
 </project>

@@ -7,11 +7,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>3.3.4</version>
+        <version>2022.12.14</version>
     </parent>
 
     <artifactId>mrchecker-webapi-module</artifactId>
-    <version>1.2.8</version>
+    <version>2022.12.14</version>
     <packaging>jar</packaging>
     <name>MrChecker - WebApi - Module</name>
     <description>
@@ -68,12 +68,10 @@
     <properties>
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
-        <mrchecker-core-module.version>5.7.0.7</mrchecker-core-module.version>
-
         <!-- Lib/package version settings -->
-        <wiremock.version>2.21.0</wiremock.version>
+        <wiremock.version>2.27.2</wiremock.version>
         <wiremock-body-transformer.version>1.1.6</wiremock-body-transformer.version>
-        <java-xmlbuilder.version>1.2</java-xmlbuilder.version>
+        <java-xmlbuilder.version>1.3</java-xmlbuilder.version>
 
     </properties>
 
@@ -82,7 +80,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mrchecker-core-module</artifactId>
-            <version>${mrchecker-core-module.version}</version>
+            <version>2022.12.14</version>
         </dependency>
 
         <!-- Dependency to REST and SOAP lib -->
@@ -113,32 +111,6 @@
             <artifactId>java-xmlbuilder</artifactId>
             <version>${java-xmlbuilder.version}</version>
         </dependency>
-
-
-        <!-- Hashes sensitive data -->
-        <dependency>
-            <groupId>org.jasypt</groupId>
-            <artifactId>jasypt</artifactId>
-        </dependency>
-
-        <!--This dependency is necessary for Allure generator plugin. -->
-        <dependency>
-            <!-- Test listener. Binds Junit exec to Allure annotation -->
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-junit5</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-junit-platform</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-java-commons</artifactId>
-        </dependency>
-
     </dependencies>
 
     <!-- Build goals/actions -->
@@ -146,5 +118,4 @@
         <plugins>
         </plugins>
     </build>
-
 </project>
