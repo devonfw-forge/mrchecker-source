@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.capgemini.mrchecker</groupId>
     <artifactId>mrchecker-test-framework</artifactId>
-    <version>3.3.4</version>
+    <version>2022.12.14</version>
     <name>MrChecker</name>
     <description>MrChecker Test Framework is an automated testing framework for functional testing of web applications,
         native mobile apps, webservices and database.
@@ -22,6 +22,18 @@
         <developer>
             <name>Lukasz Stefaniszyn</name>
             <email>lukasz.stefaniszyn@capgemini.com</email>
+            <organization>Capgemini - Nearshore Test Center - Poland</organization>
+            <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
+        </developer>
+        <developer>
+            <name>Mariusz Kowalski</name>
+            <email>mariusz.kowalski@capgemini.com</email>
+            <organization>Capgemini - Nearshore Test Center - Poland</organization>
+            <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
+        </developer>
+        <developer>
+            <name>Michal Babiarz</name>
+            <email>michal.babiarz@capgemini.com</email>
             <organization>Capgemini - Nearshore Test Center - Poland</organization>
             <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
         </developer>
@@ -49,7 +61,6 @@
         <module>mrchecker-mobile-module</module>
         <module>mrchecker-database-module</module>
         <module>mrchecker-cli-module</module>
-        <!-- <module>mrchecker-example-module</module> -->
     </modules>
 
     <repositories>
@@ -66,11 +77,12 @@
             <id>Local_repository</id>
             <url>file://${env.BASE_PATH}/usr/share/maven2</url>
         </repository>
-
     </distributionManagement>
 
 
     <properties>
+        <!-- MR CHECKER VERSION -->
+        <revision>2022.12.14</revision>
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
         <!-- Report maven generator -->
@@ -89,17 +101,18 @@
 
         <!-- Test tools -->
         <hamcrest.version>1.3</hamcrest.version>
-        <junit.jupiter.version>5.7.0</junit.jupiter.version>
-        <junit.platform.version>1.7.0</junit.platform.version>
-        <junit.vintage.version>5.7.0</junit.vintage.version>
-        <junit.params.version>5.7.0</junit.params.version>
-        <mockito.version>2.27.0</mockito.version>
-        <joda-time.version>2.9.9</joda-time.version>
-        <commons-csv.version>1.8</commons-csv.version>
-        <commons-lang3.version>3.1</commons-lang3.version>
+        <junit.jupiter.version>5.9.0</junit.jupiter.version>
+        <junit.platform.version>1.9.0</junit.platform.version>
+        <junit.vintage.version>5.9.0</junit.vintage.version>
+        <junit.params.version>5.9.0</junit.params.version>
+        <mockito.version>4.8.0</mockito.version>
+        <joda-time.version>2.12.2</joda-time.version>
+        <commons-csv.version>1.9.0</commons-csv.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
+        <commons-collections4.version>4.4</commons-collections4.version>
 
         <!-- Dependency Injection -->
-        <guice.version>4.1.0</guice.version>
+        <guice.version>5.1.0</guice.version>
 
         <!-- JSON support java 1.8 -->
         <org.json.version>20160810</org.json.version>
@@ -117,11 +130,11 @@
         <rest-assured.version>3.0.6</rest-assured.version>
 
         <!-- Allure Annotations -->
-        <aspectj.version>1.9.5</aspectj.version>
-        <allure-junit5.version>2.13.3</allure-junit5.version>
-        <allure-java-commons.version>2.13.3</allure-java-commons.version>
-        <allure-junit-platform.version>2.13.3</allure-junit-platform.version>
-        <allure-maven.version>2.10.0</allure-maven.version>
+        <aspectj.version>1.9.9.1</aspectj.version>
+        <allure-junit5.version>2.20.1</allure-junit5.version>
+        <allure-java-commons.version>2.20.1</allure-java-commons.version>
+        <allure-junit-platform.version>2.20.1</allure-junit-platform.version>
+        <allure-maven.version>2.12.0</allure-maven.version>
     </properties>
 
     <dependencyManagement>
@@ -191,6 +204,12 @@
             </dependency>
 
             <dependency>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-attachments</artifactId>
+                <version>${allure-java-commons.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjweaver</artifactId>
                 <version>${aspectj.version}</version>
@@ -244,6 +263,33 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-commons</artifactId>
+            <version>${junit.platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-engine</artifactId>
+            <version>${junit.platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${junit.platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-console-standalone</artifactId>
+            <version>${junit.platform.version}</version>
+        </dependency>
+
         <!-- Test tools -->
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -269,6 +315,13 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>${commons-collections4.version}</version>
         </dependency>
 
         <!-- For time and date dependency actions -->

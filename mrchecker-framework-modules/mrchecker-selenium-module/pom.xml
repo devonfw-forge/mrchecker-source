@@ -7,11 +7,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>3.3.4</version>
+        <version>2022.12.14</version>
     </parent>
 
     <artifactId>mrchecker-selenium-module</artifactId>
-    <version>3.141.59.7</version>
+    <version>2022.12.14</version>
     <packaging>jar</packaging>
     <name>MrChecker - Selenium - Module</name>
     <description>MrChecker Test Framework Selenium supports:
@@ -32,8 +32,6 @@
         * Page Object Model architecture
         * Selenium WebDriver with Java
         * Update Observers
-
-        Based on Selenium 3.141.59
     </description>
     <url>https://github.com/devonfw/devonfw-testing</url>
 
@@ -65,24 +63,16 @@
     </scm>
 
     <properties>
-
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
-
-        <mrchecker-core-module.version>5.7.0.7</mrchecker-core-module.version>
 
         <!-- Selenium settings -->
         <selenium.version>3.141.59</selenium.version>
 
-        <!-- Test tools -->
-        <jsoup.version>1.14.2</jsoup.version>
-
         <!-- Guava is a set of core libraries -->
-        <google.guava.version>23.0</google.guava.version>
-
+        <google.guava.version>31.1-jre</google.guava.version>
     </properties>
 
     <dependencies>
-
         <!-- Guava is a set of core libraries -->
         <!-- NOTE: given Guava lib is not backward compatible, therefore 
             must be used as first dependency import to overwrite any other imports -->
@@ -92,12 +82,11 @@
             <version>${google.guava.version}</version>
         </dependency>
 
-
         <!-- Dependency to other MrChecker Test Framework modules -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mrchecker-core-module</artifactId>
-            <version>${mrchecker-core-module.version}</version>
+            <version>2022.12.14</version>
         </dependency>
 
         <!--This dependency is necessary for Selenium plugin. -->
@@ -106,76 +95,20 @@
             <artifactId>selenium-java</artifactId>
             <version>${selenium.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-support</artifactId>
-            <version>${selenium.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-api</artifactId>
-            <version>${selenium.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
 
         <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
-            <version>1.22.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava-jdk5</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!--This dependency is necessary for Allure generator plugin. -->
-        <dependency>
-            <!-- Test listener. Binds Junit exec to Allure annotation -->
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-junit5</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-junit-platform</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-java-commons</artifactId>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>${jsoup.version}</version>
+            <version>2.1.1</version>
         </dependency>
 
         <!-- For auto-download the newest version of web drivers -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
-            <version>2.0.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>5.3.1</version>
         </dependency>
-
     </dependencies>
-
 
     <!-- Build goals/actions -->
     <build>
@@ -183,6 +116,4 @@
             <!-- Plugins are taken from parent pom.xml -->
         </plugins>
     </build>
-
-
 </project>
