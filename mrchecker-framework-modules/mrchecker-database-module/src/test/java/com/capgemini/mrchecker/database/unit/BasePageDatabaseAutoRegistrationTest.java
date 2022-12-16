@@ -10,15 +10,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @UnitTest
 public class BasePageDatabaseAutoRegistrationTest {
 
-	@Test
-	public void shouldCreateInstance() {
-		new BasePageDatabaseAutoRegistration(){
-			@Override
-			public String getDatabaseUnitName() {
-				return SUPPORTED_PERSISTENCE_UNIT_NAME_FOR_MOCK;
-			}
-		};
+    @Test
+    public void shouldCreateInstance() {
+        new BasePageDatabaseAutoRegistration() {
+            @Override
+            public String getDatabaseUnitName() {
+                return SUPPORTED_PERSISTENCE_UNIT_NAME_FOR_MOCK;
+            }
+        };
 
-		assertTrue(true);
-	}
+        assertTrue(true);
+    }
 }

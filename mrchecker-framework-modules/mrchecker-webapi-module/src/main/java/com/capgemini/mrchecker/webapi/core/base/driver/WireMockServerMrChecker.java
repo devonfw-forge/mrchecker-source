@@ -6,13 +6,13 @@ import com.github.tomakehurst.wiremock.core.Container;
 import com.github.tomakehurst.wiremock.core.Options;
 
 public class WireMockServerMrChecker extends WireMockServer implements Container {
-	
-	public WireMockServerMrChecker(Options options) {
-		super(options);
-	}
-	
-	public WireMock getClient() {
-		return super.client;
-	}
-	
+
+    public WireMockServerMrChecker(Options options) {
+        super(options);
+    }
+
+    public WireMock getClient() {
+        return super.client;
+    }
+
 }

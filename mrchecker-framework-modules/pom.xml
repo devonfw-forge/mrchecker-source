@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.capgemini.mrchecker</groupId>
     <artifactId>mrchecker-test-framework</artifactId>
-    <version>2022.12.14</version>
+    <version>2022.12.16</version>
     <name>MrChecker</name>
     <description>MrChecker Test Framework is an automated testing framework for functional testing of web applications,
         native mobile apps, webservices and database.
@@ -580,7 +580,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
+                        <version>3.0.1</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>

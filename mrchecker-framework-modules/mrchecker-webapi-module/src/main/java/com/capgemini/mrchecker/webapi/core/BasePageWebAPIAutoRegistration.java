@@ -7,8 +7,8 @@ package com.capgemini.mrchecker.webapi.core;
  */
 @Deprecated
 public abstract class BasePageWebAPIAutoRegistration extends BasePageWebAPI {
-	
-	public BasePageWebAPIAutoRegistration() {
-		addToTestExecutionObserver();
-	}
+
+    public BasePageWebAPIAutoRegistration() {
+        addToTestExecutionObserver();
+    }
 }

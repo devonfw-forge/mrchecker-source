@@ -6,11 +6,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>2022.12.14</version>
+        <version>2022.12.16</version>
     </parent>
 
     <artifactId>mrchecker-cli-module</artifactId>
-    <version>2022.12.14</version>
+    <version>2022.12.16</version>
     <packaging>jar</packaging>
     <name>MrChecker - CLI - Module</name>
     <description>MrChecker CLI Module supports:
@@ -60,7 +60,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mrchecker-core-module</artifactId>
-            <version>2022.12.14</version>
+            <version>2022.12.16</version>
         </dependency>
     </dependencies>
 

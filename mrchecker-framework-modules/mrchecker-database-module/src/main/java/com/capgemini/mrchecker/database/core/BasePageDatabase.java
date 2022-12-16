@@ -1,10 +1,5 @@
 package com.capgemini.mrchecker.database.core;
 
-import java.io.Serializable;
-import java.util.Objects;
-
-import javax.persistence.EntityManager;
-
 import com.capgemini.mrchecker.database.core.base.AbstractDao;
 import com.capgemini.mrchecker.database.core.base.IDao;
 import com.capgemini.mrchecker.database.core.base.properties.PropertiesDatabase;
@@ -17,6 +12,10 @@ import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.google.inject.Guice;
+
+import javax.persistence.EntityManager;
+import java.io.Serializable;
+import java.util.Objects;
 
 abstract public class BasePageDatabase extends Page implements IDatabasePrefixHolder {
 

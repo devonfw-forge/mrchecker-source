@@ -7,7 +7,7 @@ package com.capgemini.mrchecker.security.core;
  */
 @Deprecated
 abstract public class BasePageAutoRegistration extends BasePage {
-	public BasePageAutoRegistration() {
-		addToTestExecutionObserver();
-	}
+    public BasePageAutoRegistration() {
+        addToTestExecutionObserver();
+    }
 }

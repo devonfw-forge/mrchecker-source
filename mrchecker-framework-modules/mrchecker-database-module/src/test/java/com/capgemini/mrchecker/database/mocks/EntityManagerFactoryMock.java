@@ -1,12 +1,6 @@
 package com.capgemini.mrchecker.database.mocks;
 
-import javax.persistence.Cache;
-import javax.persistence.EntityGraph;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnitUtil;
-import javax.persistence.Query;
-import javax.persistence.SynchronizationType;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.metamodel.Metamodel;
 import java.util.Map;

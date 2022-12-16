@@ -7,11 +7,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>2022.12.14</version>
+        <version>2022.12.16</version>
     </parent>
 
     <artifactId>mrchecker-security-module</artifactId>
-    <version>2022.12.14</version>
+    <version>2022.12.16</version>
     <packaging>jar</packaging>
     <name>MrChecker - Security - Module</name>
     <description>MrChecker Test Framework Security supports:
@@ -63,7 +63,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mrchecker-core-module</artifactId>
-            <version>2022.12.14</version>
+            <version>2022.12.16</version>
         </dependency>
 
         <!-- Needed to perform all API calls -->
