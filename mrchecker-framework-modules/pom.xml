@@ -81,8 +81,6 @@
 
 
     <properties>
-        <!-- MR CHECKER VERSION -->
-        <revision>2022.12.14</revision>
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
         <!-- Report maven generator -->
