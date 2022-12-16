@@ -21,42 +21,26 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 public class DriverManager {
     private static final ThreadLocal<INewWebDriver> DRIVERS = new ThreadLocal<>();
-    //private static final Browser BROWSER = getBrowser();
     private static final ResolutionEnum DEFAULT_RESOLUTION = ResolutionEnum.w1920;
-    private static final int IMPLICITLY_WAIT = 2;
+    private static final Duration IMPLICITLY_WAIT = Duration.ofSeconds(2);
     private static final String DOWNLOAD_DIR = System.getProperty("java.io.tmpdir");
     private static boolean driverDownloadedChrome = false;
     private static boolean driverDownloadedFirefox = false;
     private static boolean driverDownloadedMicrosoftEdge = false;
     private static boolean driverDownloadedInternetExplorer = false;
     private static PropertiesSelenium propertiesSelenium;
-
-//    private static Browser getBrowser() {
-//        List<Browser> supportedBrowsers = new ArrayList<>();
-//        supportedBrowsers.add(Browser.CHROME);
-//        supportedBrowsers.add(Browser.EDGE);
-//        supportedBrowsers.add(Browser.FIREFOX);
-//        supportedBrowsers.add(Browser.IE);
-//        String browserParam = RuntimeParametersSelenium.BROWSER.getValue();
-//        for (Browser browser : supportedBrowsers) {
-//            if (browser.is(browserParam)) {
-//                return browser;
-//            }
-//        }
-//        throw new RuntimeException("Unable to setup [" + browserParam + "]. Browser not recognized.");
-//    }
 
     @Inject
     public DriverManager(@Named("properties") PropertiesSelenium propertiesSelenium) {
@@ -132,7 +116,7 @@ public class DriverManager {
         INewWebDriver driver;
         String seleniumGridParameter = RuntimeParametersSelenium.SELENIUM_GRID.getValue();
         driver = isEmpty(seleniumGridParameter) ? setupBrowser() : setupGrid();
-        driver.manage().timeouts().implicitlyWait(IMPLICITLY_WAIT, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(IMPLICITLY_WAIT);
         ResolutionUtils.setResolution(driver, DriverManager.DEFAULT_RESOLUTION);
         NewRemoteWebElement.setClickTimer();
         return driver;
@@ -158,21 +142,19 @@ public class DriverManager {
      */
     private static INewWebDriver setupBrowser() {
         String browser = RuntimeParametersSelenium.BROWSER.getValue();
-        switch (browser) {
-            case BrowserType.CHROME:
-                return Driver.CHROME.getDriver();
-            case BrowserType.EDGE:
-            case "edge":
-            case "msedge":
-                return Driver.EDGE.getDriver();
-            case BrowserType.FIREFOX:
-                return Driver.FIREFOX.getDriver();
-            case BrowserType.IE:
-            case "ie":
-                return Driver.IE.getDriver();
-            default:
-                throw new IllegalStateException("Unsupported browser: " + browser);
+        if (Browser.CHROME.is(browser)) {
+            return Driver.CHROME.getDriver();
         }
+        if (Browser.EDGE.is(browser)) {
+            return Driver.EDGE.getDriver();
+        }
+        if (Browser.FIREFOX.is(browser)) {
+            return Driver.FIREFOX.getDriver();
+        }
+        if (Browser.IE.is(browser)) {
+            return Driver.IE.getDriver();
+        }
+        throw new IllegalStateException("Unsupported browser: " + browser);
     }
 
     private enum Driver {
@@ -204,18 +186,16 @@ public class DriverManager {
             @Override
             public INewWebDriver getDriver() {
                 String browser = RuntimeParametersSelenium.BROWSER.getValue();
-                switch (browser) {
-                    case BrowserType.CHROME:
-                        return setupGrid(getChromeOptions());
-                    case BrowserType.EDGE:
-                    case "edge":
-                    case "msedge":
-                        return setupGrid(getEdgeOptions());
-                    case BrowserType.FIREFOX:
-                        return setupGrid(getFirefoxOptions());
-                    default:
-                        throw new IllegalStateException("Unsupported browser: " + browser);
+                if (Browser.CHROME.is(browser)) {
+                    return setupGrid(getChromeOptions());
                 }
+                if (Browser.EDGE.is(browser)) {
+                    return setupGrid(getEdgeOptions());
+                }
+                if (Browser.FIREFOX.is(browser)) {
+                    return setupGrid(getFirefoxOptions());
+                }
+                throw new IllegalStateException("Unsupported browser: " + browser);
             }
         };
 
@@ -314,24 +294,23 @@ public class DriverManager {
         });
 
         EdgeOptions options = new EdgeOptions();
-        //options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
-        //options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
-        options.setPageLoadStrategy(PageLoadStrategy.NORMAL.toString());
-        //options.setExperimentalOption("prefs", edgePrefs);
-        //options.setAcceptInsecureCerts(true);
+        options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
+        options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+        options.setExperimentalOption("prefs", edgePrefs);
+        options.setAcceptInsecureCerts(true);
         options.setCapability("acceptSslCerts", true);
-        //options.addArguments("--test-type");
-        //options.addArguments("window-size=1920x1080");
-        //options.addArguments("--ignore-certificate-errors");
-        //options.addArguments("--allow-insecure-localhost");
-        //options.addArguments("--allow-running-insecure-content");
-        //options.addArguments("--disable-popup-blocking");
-        //options.setHeadless(Boolean.parseBoolean(System.getProperty("headless", "false")));
+        options.addArguments("--test-type");
+        options.addArguments("window-size=1920x1080");
+        options.addArguments("--ignore-certificate-errors");
+        options.addArguments("--allow-insecure-localhost");
+        options.addArguments("--allow-running-insecure-content");
+        options.addArguments("--disable-popup-blocking");
+        options.setHeadless(Boolean.parseBoolean(System.getProperty("headless", "false")));
 
         RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
             BFLogger.logInfo("Add to Edge options: " + key + " = " + value.toString());
             String item = (value.toString().isEmpty()) ? key : key + "=" + value;
-            //options.addArguments(item);
+            options.addArguments(item);
             options.setCapability(key, value.toString());
         });
 
@@ -443,12 +422,11 @@ public class DriverManager {
         InternetExplorerOptions options = new InternetExplorerOptions();
         options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
         options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
-        //options.setAcceptInsecureCerts(true);
+        options.setAcceptInsecureCerts(true);
         options.setCapability("acceptSslCerts", true);
 
         RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
             BFLogger.logInfo("Add to Internet Explorer options: " + key + " = " + value.toString());
-            String item = (value.toString().isEmpty()) ? key : key + "=" + value;
             options.setCapability(key, value.toString());
         });
 
@@ -486,8 +464,8 @@ public class DriverManager {
         final String SELENIUM_GRID_URL = RuntimeParametersSelenium.SELENIUM_GRID.getValue();
         BFLogger.logDebug("Connecting to the selenium grid: " + SELENIUM_GRID_URL);
         DesiredCapabilities capabilities = new DesiredCapabilities();
-        String operatingSystem = RuntimeParametersSelenium.OS.getValue();
 
+        String operatingSystem = RuntimeParametersSelenium.OS.getValue();
         switch (operatingSystem) {
             case "windows":
                 capabilities.setPlatform(Platform.WINDOWS);
@@ -503,23 +481,23 @@ public class DriverManager {
         }
 
         String browser = RuntimeParametersSelenium.BROWSER.getValue();
-        capabilities.setVersion(RuntimeParametersSelenium.BROWSER_VERSION.getValue());
-        switch (browser) {
-            case BrowserType.CHROME:
-                capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-                break;
-            case BrowserType.EDGE:
-            case "edge":
-            case "msedge":
-                //capabilities.setCapability(EdgeOptions.CAPABILITY, options);
-                break;
-            case BrowserType.FIREFOX:
-                capabilities.setCapability(FirefoxOptions.FIREFOX_OPTIONS, options);
-                break;
-            default:
-                throw new IllegalStateException("Unsupported browser: " + browser);
+        if (Browser.CHROME.is(browser)) {
+            capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+        } else if (Browser.EDGE.is(browser)) {
+            capabilities.setCapability(EdgeOptions.CAPABILITY, options);
+        } else if (Browser.FIREFOX.is(browser)) {
+            capabilities.setCapability(FirefoxOptions.FIREFOX_OPTIONS, options);
+        } else {
+            throw new IllegalStateException("Unsupported browser: " + browser);
         }
+
         capabilities.setBrowserName(browser);
+        //Backward compatibility with Selenium 3 grids
+        if (Boolean.parseBoolean(System.getProperty("selenium3grid", "false"))) {
+            capabilities.setCapability("version", RuntimeParametersSelenium.BROWSER_VERSION.getValue());
+        } else {
+            capabilities.setVersion(RuntimeParametersSelenium.BROWSER_VERSION.getValue());
+        }
 
         RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
             BFLogger.logInfo("Browser option: " + key + " " + value.toString());

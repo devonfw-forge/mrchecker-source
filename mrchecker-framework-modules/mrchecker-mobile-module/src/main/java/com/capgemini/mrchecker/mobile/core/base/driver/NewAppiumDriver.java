@@ -1,15 +1,14 @@
 package com.capgemini.mrchecker.mobile.core.base.driver;
 
-import java.net.URL;
-
+import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import io.appium.java_client.AppiumDriver;
+import java.net.URL;
 
 public final class NewAppiumDriver extends AppiumDriver implements INewMobileDriver {
-	
-	public NewAppiumDriver(URL url, DesiredCapabilities capabilities) {
-		super(url, capabilities);
-	}
-	
+
+    public NewAppiumDriver(URL url, DesiredCapabilities capabilities) {
+        super(url, capabilities);
+    }
+
 }

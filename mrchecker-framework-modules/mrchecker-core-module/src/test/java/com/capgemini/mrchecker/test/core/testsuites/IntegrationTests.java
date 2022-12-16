@@ -6,7 +6,7 @@ import org.junit.platform.suite.api.SelectPackages;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
-@IncludeTags({ "IntegrationTest" })
+@IncludeTags({"IntegrationTest"})
 @SelectPackages("com.capgemini.mrchecker.test.core")
 public class IntegrationTests {
 }

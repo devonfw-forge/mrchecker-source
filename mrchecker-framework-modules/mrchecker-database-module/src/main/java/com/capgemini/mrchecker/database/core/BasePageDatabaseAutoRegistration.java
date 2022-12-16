@@ -7,7 +7,7 @@ package com.capgemini.mrchecker.database.core;
  */
 @Deprecated
 abstract public class BasePageDatabaseAutoRegistration extends BasePageDatabase {
-	public BasePageDatabaseAutoRegistration() {
-		addToTestExecutionObserver();
-	}
+    public BasePageDatabaseAutoRegistration() {
+        addToTestExecutionObserver();
+    }
 }

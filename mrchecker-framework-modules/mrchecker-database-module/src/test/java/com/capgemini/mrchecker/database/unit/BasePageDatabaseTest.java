@@ -1,9 +1,5 @@
 package com.capgemini.mrchecker.database.unit;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
-
 import com.capgemini.mrchecker.database.core.BasePageDatabase;
 import com.capgemini.mrchecker.database.tags.UnitTest;
 import com.capgemini.mrchecker.test.core.ModuleType;
@@ -13,6 +9,9 @@ import org.junit.jupiter.api.Test;
 import java.util.Objects;
 
 import static com.capgemini.mrchecker.database.mocks.PersistenceProviderMock.SUPPORTED_PERSISTENCE_UNIT_NAME_FOR_MOCK;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertTrue;
 
@@ -23,7 +22,7 @@ public class BasePageDatabaseTest {
 
     @AfterEach
     public void cleanup() {
-        if(!Objects.isNull(sut)) sut.onTestClassFinish();
+        if (!Objects.isNull(sut)) sut.onTestClassFinish();
     }
 
     @Test

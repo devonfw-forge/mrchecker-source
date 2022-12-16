@@ -7,13 +7,13 @@ package com.capgemini.mrchecker.selenium.core;
  */
 @Deprecated
 abstract public class BasePageAutoRegistration extends BasePage {
-	
-	public BasePageAutoRegistration() {
-		addToTestExecutionObserver();
-	}
-	
-	public BasePageAutoRegistration(BasePageAutoRegistration parent) {
-		super(parent);
-		addToTestExecutionObserver();
-	}
+
+    public BasePageAutoRegistration() {
+        addToTestExecutionObserver();
+    }
+
+    public BasePageAutoRegistration(BasePageAutoRegistration parent) {
+        super(parent);
+        addToTestExecutionObserver();
+    }
 }

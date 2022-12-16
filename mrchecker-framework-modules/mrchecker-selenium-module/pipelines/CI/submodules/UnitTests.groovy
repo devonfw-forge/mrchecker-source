@@ -1,7 +1,7 @@
-def call(){
-		
+def call() {
+
 //# Unit test run
-    stage('Unit test'){
+    stage('Unit test') {
         def failStage = false
         try {
             sh """
@@ -10,31 +10,32 @@ def call(){
                 env.BROWSER_OPTIONS
             } -Dbrowser=${env.SELENIUM_BROWSER} ${env.MVN_PARAMETERS}
             """
-        } catch (Exception e){
+        } catch (Exception e) {
             failStage = true
         }
 
-        try{
+        try {
             junit "**/${env.APP_WORKSPACE}target/surefire-reports/TEST-*.xml"
-            sh"""
+            sh """
                     cd ${env.APP_WORKSPACE}
                     mvn -q site:site ${env.MVN_PARAMETERS}
                 """
             if (fileExists("${env.APP_WORKSPACE}target/site/allure-report/index.html")) {
                 echo("Before publish allure");
-                publishHTML (target: [allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: "${env.APP_WORKSPACE}target/site/allure-report", reportFiles: 'index.html', reportName: "allure"]);
+                publishHTML(target: [allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: "${env.APP_WORKSPACE}target/site/allure-report", reportFiles: 'index.html', reportName: "allure"]);
                 echo("After publish allure");
             } else {
                 echo("Any HTML report found!");
             }
-        } catch (Exception error){
+        } catch (Exception error) {
             echo("No report generated. Reason: \n" + error);
         }
 
-        if(failStage){
+        if (failStage) {
             error("Some test cases are failing")
         }
     }
 
 }
+
 return this
