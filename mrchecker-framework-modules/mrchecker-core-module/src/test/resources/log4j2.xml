@@ -41,5 +41,9 @@
             <AppenderRef ref="RoutingAppENV"/>
             <AppenderRef ref="RoutingApp"/>
         </Root>
+        <!-- Disable netty debug spam -->
+        <Logger name="io.netty" level="info" additivity="true">
+            <appender-ref ref="MyConsole"/>
+        </Logger>
     </Loggers>
 </Configuration>

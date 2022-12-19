@@ -7,11 +7,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>2022.12.16</version>
+        <version>2022.12.19</version>
     </parent>
 
     <artifactId>mrchecker-selenium-module</artifactId>
-    <version>2022.12.16</version>
+    <version>2022.12.19</version>
     <packaging>jar</packaging>
     <name>MrChecker - Selenium - Module</name>
     <description>MrChecker Test Framework Selenium supports:
@@ -44,6 +44,18 @@
         <developer>
             <name>Lukasz Stefaniszyn</name>
             <email>lukasz.stefaniszyn@capgemini.com</email>
+            <organization>Capgemini - Nearshore Test Center - Poland</organization>
+            <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
+        </developer>
+        <developer>
+            <name>Mariusz Kowalski</name>
+            <email>mariusz.kowalski@capgemini.com</email>
+            <organization>Capgemini - Nearshore Test Center - Poland</organization>
+            <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
+        </developer>
+        <developer>
+            <name>Michal Babiarz</name>
+            <email>michal.babiarz@capgemini.com</email>
             <organization>Capgemini - Nearshore Test Center - Poland</organization>
             <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
         </developer>
@@ -86,7 +98,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mrchecker-core-module</artifactId>
-            <version>2022.12.16</version>
+            <version>2022.12.19</version>
         </dependency>
 
         <!--This dependency is necessary for Selenium plugin. -->

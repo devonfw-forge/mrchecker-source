@@ -7,11 +7,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>2022.12.16</version>
+        <version>2022.12.19</version>
     </parent>
 
     <artifactId>mrchecker-core-module</artifactId>
-    <version>2022.12.16</version>
+    <version>2022.12.19</version>
     <packaging>jar</packaging>
     <name>MrChecker - Test core - Module</name>
     <description>MrChecker Test Framework Core is responsible for:
@@ -60,7 +60,7 @@
 
         <!-- Logger -->
         <log4j.version>2.19.0</log4j.version>
-        <slf4j.version>2.0.5</slf4j.version>
+        <slf4j.version>2.0.6</slf4j.version>
 
         <!-- Cucumber version -->
         <cucumber.version>7.8.1</cucumber.version>
@@ -74,7 +74,6 @@
     </properties>
 
     <dependencies>
-
         <!--This dependency is necessary for Logger. -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -165,11 +164,7 @@
             <version>${gherkin.cucumber.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.intellij</groupId>
-            <artifactId>forms_rt</artifactId>
-            <version>7.0.3</version>
-        </dependency>
+
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-swing-junit</artifactId>
@@ -187,6 +182,12 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>forms_rt</artifactId>
+            <version>7.0.3</version>
         </dependency>
     </dependencies>
 

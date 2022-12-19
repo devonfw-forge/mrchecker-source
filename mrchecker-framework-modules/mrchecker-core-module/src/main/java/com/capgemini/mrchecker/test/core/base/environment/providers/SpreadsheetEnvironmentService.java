@@ -85,6 +85,7 @@ public class SpreadsheetEnvironmentService implements IEnvironmentService {
         return value;
     }
 
+    @SuppressWarnings({"resource", "deprecation"})
     private void fetchEnvData(String csvData) throws BFInputDataException {
         try {
             CSVParser parser = CSVParser.parse(csvData, CSVFormat.RFC4180.withIgnoreSurroundingSpaces());

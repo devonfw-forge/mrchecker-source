@@ -70,8 +70,7 @@ public class BFLoggerInstance {
     }
 
     protected File getDirectory() {
-        File directory = new File("./logs");
-        return directory;
+        return new File("./logs");
     }
 
     private File getLogFile() {
@@ -87,6 +86,7 @@ public class BFLoggerInstance {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public String dumpSeparateLog() {
         try {
             return Files.toString(getLogFile(), Charsets.UTF_8);
