@@ -55,6 +55,7 @@ public final class JsonDriven {
      * @param reader reader
      * @return json from reader
      */
+    @SuppressWarnings("deprecation")
     private static JsonArray readerToJson(Reader reader) {
         return new JsonParser().parse(reader)
                 .getAsJsonArray();

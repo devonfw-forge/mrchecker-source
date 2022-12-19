@@ -125,6 +125,7 @@ public class TimeUtills {
      * @return boolean
      * @author
      */
+    @SuppressWarnings("deprecation")
     public static boolean isNowTradingHoursinNY(INewWebDriver iNewWebDriver) {
         String orginalUrl = iNewWebDriver.getCurrentUrl();
         iNewWebDriver.get(urlService);
