@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @UnitTest
 public class BasePageDatabaseAutoRegistrationTest {
 
+    @SuppressWarnings("deprecation")
     @Test
     public void shouldCreateInstance() {
         new BasePageDatabaseAutoRegistration() {
