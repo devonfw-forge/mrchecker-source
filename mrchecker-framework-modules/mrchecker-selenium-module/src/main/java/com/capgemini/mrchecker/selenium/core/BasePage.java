@@ -28,15 +28,12 @@ abstract public class BasePage extends Page implements IBasePage {
     public static final Duration PROGRESS_BAR_WAIT_TIMER = Duration.ofSeconds(60);
     public static final Duration EXPLICIT_WAIT_TIMER = Duration.ofSeconds(20);
     public static final int MAX_COMPONENT_RELOAD_COUNT = 3;
-
-    private static DriverManager driver = null;
-    private static WebDriverWait webDriverWait;
+    private static final ThreadLocal<WebDriverWait> DRIVER_WAIT = new ThreadLocal<>();
+    private static DriverManager driverManager = null;
     private BasePage parent;
-
     private static IEnvironmentService environmentService;
     private final static IAnalytics ANALYTICS;
     public final static String ANALYTICS_CATEGORY_NAME = "Selenium-NewDrivers";
-
     private final static PropertiesSelenium PROPERTIES_SELENIUM;
 
     static {
@@ -62,7 +59,7 @@ abstract public class BasePage extends Page implements IBasePage {
     }
 
     public BasePage(BasePage parent) {
-        webDriverWait = new WebDriverWait(getDriver(), BasePage.EXPLICIT_WAIT_TIMER);
+        DRIVER_WAIT.set(new WebDriverWait(getDriver(), BasePage.EXPLICIT_WAIT_TIMER));
         setParent(parent);
 
         // If the page is not yet loaded, then load it
@@ -119,10 +116,10 @@ abstract public class BasePage extends Page implements IBasePage {
     }
 
     public static INewWebDriver getDriver() {
-        if (Objects.isNull(driver)) {
-            driver = new DriverManager(PROPERTIES_SELENIUM);
+        if (Objects.isNull(driverManager)) {
+            driverManager = new DriverManager(PROPERTIES_SELENIUM);
         }
-        return driver.getDriver();
+        return driverManager.getDriver();
     }
 
     /**
@@ -277,10 +274,12 @@ abstract public class BasePage extends Page implements IBasePage {
     }
 
     public static WebDriverWait getWebDriverWait() {
+        WebDriverWait webDriverWait = DRIVER_WAIT.get();
         if (Objects.isNull(webDriverWait)) {
-            BasePage.webDriverWait = new WebDriverWait(getDriver(), BasePage.EXPLICIT_WAIT_TIMER);
+            webDriverWait = new WebDriverWait(getDriver(), BasePage.EXPLICIT_WAIT_TIMER);
+            DRIVER_WAIT.set(webDriverWait);
         }
-        return BasePage.webDriverWait;
+        return webDriverWait;
     }
 
     private static boolean isTitleElementDisplayed(By selector, String title) {
