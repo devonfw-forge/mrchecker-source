@@ -3,6 +3,7 @@ package com.capgemini.mrchecker.selenium.core.utils;
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.selenium.core.exceptions.BFComponentStateException;
 import com.capgemini.mrchecker.selenium.core.exceptions.BFRobotInitilizationException;
+import com.capgemini.mrchecker.selenium.core.newDrivers.DriverManager;
 import com.capgemini.mrchecker.test.core.exceptions.BFWaitingTimeoutException;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import org.openqa.selenium.*;
@@ -89,8 +90,7 @@ public class WebElementUtils {
                 .moveToElement(elementToHoverOn)
                 .build()
                 .perform();
-
-        WebDriverWait wait = new WebDriverWait(BasePage.getDriver(), BasePage.EXPLICIT_WAIT_TIMER);
+        WebDriverWait wait = BasePage.getWebDriverWait();
         WebElement element = wait.until((Function<? super WebDriver, WebElement>) ExpectedConditions.visibilityOfElementLocated(waitForSelector));
         BFLogger.logTime(startTime, "hoverOnElement", waitForSelector.toString());
         return element;
@@ -110,8 +110,8 @@ public class WebElementUtils {
                 .build()
                 .perform();
 
-        WebDriverWait wait = new WebDriverWait(BasePage.getDriver(), BasePage.EXPLICIT_WAIT_TIMER);
-        WebElement element = wait.until((Function<? super WebDriver, WebElement>) ExpectedConditions.visibilityOf(waitForElement));
+        WebDriverWait wait = BasePage.getWebDriverWait();
+        WebElement element = wait.until(ExpectedConditions.visibilityOf(waitForElement));
         BFLogger.logTime(startTime, "hoverOnElement", waitForElement.toString());
         return element;
     }
@@ -120,10 +120,10 @@ public class WebElementUtils {
      * Wait until element localized by passed as a parameter selector is visible
      *
      * @param elementToWaitFor - selector for an element to wait for
-     * @throws TimeoutException after {@link BasePage.EXPLICIT_WAIT_TIMER}
+     * @throws TimeoutException after {@link DriverManager.EXPLICIT_WAIT}
      */
     public static void waitForElementVisible(By elementToWaitFor) {
-        waitForElementVisible(elementToWaitFor, BasePage.EXPLICIT_WAIT_TIMER);
+        waitForElementVisible(elementToWaitFor, DriverManager.EXPLICIT_WAIT);
     }
 
     /**
@@ -148,7 +148,7 @@ public class WebElementUtils {
      */
     public static WebElement waitForElementVisible(WebElement elementToWaitFor) {
         long startTime = System.currentTimeMillis();
-        WebDriverWait wait = new WebDriverWait(BasePage.getDriver(), BasePage.EXPLICIT_WAIT_TIMER);
+        WebDriverWait wait = BasePage.getWebDriverWait();
         WebElement element = wait.until((Function<? super WebDriver, WebElement>) ExpectedConditions.visibilityOf(elementToWaitFor));
         BFLogger.logTime(startTime, "waitForElementVisible", elementToWaitFor.toString());
         return element;
@@ -163,7 +163,7 @@ public class WebElementUtils {
      */
     public static boolean waitForElementNotVisible(By elementToWaitFor) {
         long startTime = System.currentTimeMillis();
-        WebDriverWait wait = new WebDriverWait(BasePage.getDriver(), BasePage.EXPLICIT_WAIT_TIMER);
+        WebDriverWait wait = BasePage.getWebDriverWait();
         Boolean elementInvisibility = wait.until((Function<? super WebDriver, Boolean>) ExpectedConditions.invisibilityOfElementLocated(elementToWaitFor));
         BFLogger.logTime(startTime, "waitForElementNotVisible", elementToWaitFor.toString());
         return elementInvisibility;
@@ -177,7 +177,7 @@ public class WebElementUtils {
      */
     public static boolean waitForElementNotVisible(WebElement elementToWaitFor) {
         long startTime = System.currentTimeMillis();
-        WebDriverWait wait = new WebDriverWait(BasePage.getDriver(), BasePage.EXPLICIT_WAIT_TIMER);
+        WebDriverWait wait = BasePage.getWebDriverWait();
         Boolean elementInvisibility = wait
                 .until((Function<? super WebDriver, Boolean>) ExpectedConditions.not(ExpectedConditions.visibilityOf(elementToWaitFor)));
         BFLogger.logTime(startTime, "waitForElementNotVisible", elementToWaitFor.toString());
@@ -302,8 +302,8 @@ public class WebElementUtils {
                 .findElement(selector);
         String leftOffset = "";
         while (!leftOffset.equals(sliderElement.getAttribute("style"))) {
-            if (System.currentTimeMillis() - startTime > BasePage.EXPLICIT_WAIT_TIMER.toMillis()) {
-                throw new BFWaitingTimeoutException("Animation is to long", BasePage.EXPLICIT_WAIT_TIMER);
+            if (System.currentTimeMillis() - startTime > DriverManager.EXPLICIT_WAIT.toMillis()) {
+                throw new BFWaitingTimeoutException("Animation is to long", DriverManager.EXPLICIT_WAIT);
             }
             leftOffset = sliderElement.getAttribute("style");
             TimeUtills.waitMiliseconds(100);

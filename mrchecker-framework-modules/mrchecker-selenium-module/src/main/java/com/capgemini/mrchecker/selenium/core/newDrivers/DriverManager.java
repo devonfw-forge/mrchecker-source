@@ -23,6 +23,7 @@ import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -32,8 +33,10 @@ import java.util.Objects;
 
 public class DriverManager {
     private static final ThreadLocal<INewWebDriver> DRIVERS = new ThreadLocal<>();
+    private static final ThreadLocal<WebDriverWait> DRIVERS_WAIT = new ThreadLocal<>();
     private static final ResolutionEnum DEFAULT_RESOLUTION = ResolutionEnum.w1920;
     private static final Duration IMPLICITLY_WAIT = Duration.ofSeconds(2);
+    public static final Duration EXPLICIT_WAIT = Duration.ofSeconds(20);
     private static final String DOWNLOAD_DIR = System.getProperty("java.io.tmpdir");
     private static boolean driverDownloadedChrome = false;
     private static boolean driverDownloadedFirefox = false;
@@ -84,6 +87,15 @@ public class DriverManager {
         return driver;
     }
 
+    public static WebDriverWait getDriverWait() {
+        WebDriverWait webDriverWait = DRIVERS_WAIT.get();
+        if (Objects.isNull(webDriverWait)) {
+            webDriverWait = new WebDriverWait(getDriver(), EXPLICIT_WAIT);
+            DRIVERS_WAIT.set(webDriverWait);
+        }
+        return webDriverWait;
+    }
+
     //If driver object is not null but there is no session or window it means that driver crashed
     public static boolean hasDriverCrushed() {
         if (wasDriverCreated()) {
@@ -114,6 +126,7 @@ public class DriverManager {
                 e.printStackTrace();
             } finally {
                 DRIVERS.remove();
+                DRIVERS_WAIT.remove();
             }
         }
     }

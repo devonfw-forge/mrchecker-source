@@ -65,7 +65,7 @@ public class DriverExtension {
     }
 
     private WebElement findElementDynamicBasic(By by, long startTime) throws BFElementNotFoundException {
-        return this.findElementDynamicBasic(by, startTime, BasePage.EXPLICIT_WAIT_TIMER);
+        return this.findElementDynamicBasic(by, startTime, DriverManager.EXPLICIT_WAIT);
     }
 
     private WebElement findElementDynamicBasic(By by, long startTime, Duration timeOut) throws BFElementNotFoundException {
@@ -100,7 +100,7 @@ public class DriverExtension {
     }
 
     public List<WebElement> findElementsDynamic(By by) throws BFElementNotFoundException {
-        return findElementsDynamic(by, BasePage.EXPLICIT_WAIT_TIMER);
+        return findElementsDynamic(by, DriverManager.EXPLICIT_WAIT);
     }
 
     public WebElement waitForElement(final By by) throws BFElementNotFoundException {
@@ -116,7 +116,7 @@ public class DriverExtension {
             element = webDriverWait().until(driver -> driver.findElement(by));
         } catch (TimeoutException | NoSuchElementException e) {
             boolean isTimeout = true;
-            throw new BFElementNotFoundException(by, isTimeout, BasePage.EXPLICIT_WAIT_TIMER);
+            throw new BFElementNotFoundException(by, isTimeout, DriverManager.EXPLICIT_WAIT);
         }
         BFLogger.logTime(startTime, "waitForElement()", by.toString());
         return element;
@@ -131,7 +131,7 @@ public class DriverExtension {
             element = webDriverWait().until(ExpectedConditions.elementToBeClickable(by));
         } catch (TimeoutException | NoSuchElementException e) {
             boolean isTimeout = true;
-            throw new BFElementNotFoundException(by, isTimeout, BasePage.EXPLICIT_WAIT_TIMER);
+            throw new BFElementNotFoundException(by, isTimeout, DriverManager.EXPLICIT_WAIT);
         }
         BFLogger.logTime(startTime, "waitUntilElementIsClickable()", by.toString());
         return element;
@@ -147,7 +147,7 @@ public class DriverExtension {
             element = webDriverWait().until(ExpectedConditions.visibilityOfElementLocated(by));
         } catch (TimeoutException | NoSuchElementException e) {
             boolean isTimeout = true;
-            throw new BFElementNotFoundException(by, isTimeout, BasePage.EXPLICIT_WAIT_TIMER);
+            throw new BFElementNotFoundException(by, isTimeout, DriverManager.EXPLICIT_WAIT);
         }
         BFLogger.logTime(startTime, "waitForElementVisible()", by.toString());
         return element;
@@ -174,7 +174,7 @@ public class DriverExtension {
     }
 
     private WebDriverWait webDriverWait() {
-        return webDriverWait(BasePage.EXPLICIT_WAIT_TIMER);
+        return webDriverWait(DriverManager.EXPLICIT_WAIT);
     }
 
     private WebDriverWait webDriverWait(Duration timeOut) {

@@ -26,9 +26,7 @@ import java.util.Objects;
 abstract public class BasePage extends Page implements IBasePage {
     public static final Duration EXPLICIT_SHORT_WAIT_TIME = Duration.ofSeconds(1);
     public static final Duration PROGRESS_BAR_WAIT_TIMER = Duration.ofSeconds(60);
-    public static final Duration EXPLICIT_WAIT_TIMER = Duration.ofSeconds(20);
     public static final int MAX_COMPONENT_RELOAD_COUNT = 3;
-    private static final ThreadLocal<WebDriverWait> DRIVER_WAIT = new ThreadLocal<>();
     private static DriverManager driverManager = null;
     private BasePage parent;
     private static IEnvironmentService environmentService;
@@ -59,7 +57,6 @@ abstract public class BasePage extends Page implements IBasePage {
     }
 
     public BasePage(BasePage parent) {
-        DRIVER_WAIT.set(new WebDriverWait(getDriver(), BasePage.EXPLICIT_WAIT_TIMER));
         setParent(parent);
 
         // If the page is not yet loaded, then load it
@@ -274,12 +271,10 @@ abstract public class BasePage extends Page implements IBasePage {
     }
 
     public static WebDriverWait getWebDriverWait() {
-        WebDriverWait webDriverWait = DRIVER_WAIT.get();
-        if (Objects.isNull(webDriverWait)) {
-            webDriverWait = new WebDriverWait(getDriver(), BasePage.EXPLICIT_WAIT_TIMER);
-            DRIVER_WAIT.set(webDriverWait);
+        if (Objects.isNull(driverManager)) {
+            driverManager = new DriverManager(PROPERTIES_SELENIUM);
         }
-        return webDriverWait;
+        return driverManager.getDriverWait();
     }
 
     private static boolean isTitleElementDisplayed(By selector, String title) {
