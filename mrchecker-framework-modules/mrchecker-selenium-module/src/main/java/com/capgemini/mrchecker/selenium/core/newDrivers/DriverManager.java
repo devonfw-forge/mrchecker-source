@@ -3,7 +3,6 @@ package com.capgemini.mrchecker.selenium.core.newDrivers;
 import com.capgemini.mrchecker.selenium.core.base.properties.PropertiesSelenium;
 import com.capgemini.mrchecker.selenium.core.base.runtime.RuntimeParametersSelenium;
 import com.capgemini.mrchecker.selenium.core.enums.ResolutionEnum;
-import com.capgemini.mrchecker.selenium.core.exceptions.BFSeleniumGridNotConnectedException;
 import com.capgemini.mrchecker.selenium.core.utils.OperationsOnFiles;
 import com.capgemini.mrchecker.selenium.core.utils.ResolutionUtils;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
@@ -67,9 +66,20 @@ public class DriverManager {
     public static INewWebDriver getDriver() {
         INewWebDriver driver = DRIVERS.get();
         if (Objects.isNull(driver)) {
-            driver = createDriver();
-            DRIVERS.set(driver);
-            BFLogger.logDebug("Driver:" + driver);
+            String browser = RuntimeParametersSelenium.BROWSER.getValue();
+            if (Browser.CHROME.is(browser)) {
+                return Driver.CHROME.getDriver();
+            }
+            if (Browser.EDGE.is(browser)) {
+                return Driver.EDGE.getDriver();
+            }
+            if (Browser.FIREFOX.is(browser)) {
+                return Driver.FIREFOX.getDriver();
+            }
+            if (Browser.IE.is(browser)) {
+                return Driver.IE.getDriver();
+            }
+            throw new IllegalStateException("Unsupported browser: " + browser);
         }
         return driver;
     }
@@ -108,53 +118,8 @@ public class DriverManager {
         }
     }
 
-    /**
-     * Method sets desired 'driver' depends on chosen parameters
-     */
-    private static INewWebDriver createDriver() {
-        BFLogger.logDebug("Creating new " + RuntimeParametersSelenium.BROWSER.getValue() + " WebDriver.");
-        INewWebDriver driver;
-        String seleniumGridParameter = RuntimeParametersSelenium.SELENIUM_GRID.getValue();
-        driver = isEmpty(seleniumGridParameter) ? setupBrowser() : setupGrid();
-        driver.manage().timeouts().implicitlyWait(IMPLICITLY_WAIT);
-        ResolutionUtils.setResolution(driver, DriverManager.DEFAULT_RESOLUTION);
-        NewRemoteWebElement.setClickTimer();
-        return driver;
-    }
-
     private static boolean isEmpty(String seleniumGridParameter) {
         return seleniumGridParameter == null || seleniumGridParameter.trim().isEmpty();
-    }
-
-    /**
-     * Method sets Selenium Grid
-     */
-    private static INewWebDriver setupGrid() {
-        try {
-            return Driver.SELENIUMGRID.getDriver();
-        } catch (WebDriverException e) {
-            throw new BFSeleniumGridNotConnectedException(e);
-        }
-    }
-
-    /**
-     * Method sets desired 'driver' depends on chosen parameters
-     */
-    private static INewWebDriver setupBrowser() {
-        String browser = RuntimeParametersSelenium.BROWSER.getValue();
-        if (Browser.CHROME.is(browser)) {
-            return Driver.CHROME.getDriver();
-        }
-        if (Browser.EDGE.is(browser)) {
-            return Driver.EDGE.getDriver();
-        }
-        if (Browser.FIREFOX.is(browser)) {
-            return Driver.FIREFOX.getDriver();
-        }
-        if (Browser.IE.is(browser)) {
-            return Driver.IE.getDriver();
-        }
-        throw new IllegalStateException("Unsupported browser: " + browser);
     }
 
     private enum Driver {
@@ -181,22 +146,6 @@ public class DriverManager {
             public INewWebDriver getDriver() {
                 return DriverManager.getDriver(getInternetExplorerOptions());
             }
-        },
-        SELENIUMGRID {
-            @Override
-            public INewWebDriver getDriver() {
-                String browser = RuntimeParametersSelenium.BROWSER.getValue();
-                if (Browser.CHROME.is(browser)) {
-                    return setupGrid(getChromeOptions());
-                }
-                if (Browser.EDGE.is(browser)) {
-                    return setupGrid(getEdgeOptions());
-                }
-                if (Browser.FIREFOX.is(browser)) {
-                    return setupGrid(getFirefoxOptions());
-                }
-                throw new IllegalStateException("Unsupported browser: " + browser);
-            }
         };
 
         protected abstract INewWebDriver getDriver();
@@ -222,7 +171,7 @@ public class DriverManager {
         }
     }
 
-    private static ChromeOptions getChromeOptions() {
+    public static ChromeOptions getChromeOptions() {
         HashMap<String, Object> chromePrefs = new HashMap<>();
         chromePrefs.put("download.default_directory", DOWNLOAD_DIR);
         chromePrefs.put("profile.content_settings.pattern_pairs.*.multiple-automatic-downloads", 1);
@@ -257,32 +206,7 @@ public class DriverManager {
         return options;
     }
 
-    public static INewWebDriver getDriver(ChromeOptions chromeOptions) {
-        INewWebDriver driver = DRIVERS.get();
-        if (Objects.isNull(driver)) {
-            String seleniumGridParameter = RuntimeParametersSelenium.SELENIUM_GRID.getValue();
-            if (!isEmpty(seleniumGridParameter)) {
-                return setupGrid(chromeOptions);
-            }
-            String browserPath = DriverManager.propertiesSelenium.getSeleniumChrome();
-            boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
-            synchronized (DOWNLOAD_DIR) {
-                if (isDriverAutoUpdateActivated && !driverDownloadedChrome) {
-                    if (!DriverManager.propertiesSelenium.getChromeDriverVersion().isEmpty()) {
-                        System.setProperty("wdm.chromeDriverVersion", DriverManager.propertiesSelenium.getChromeDriverVersion());
-                    }
-                    downloadNewestOrGivenVersionOfWebDriver(ChromeDriver.class);
-                    OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(ChromeDriver.class).getDownloadedDriverPath(), browserPath);
-                }
-                driverDownloadedChrome = true;
-            }
-            System.setProperty("webdriver.chrome.driver", browserPath);
-            return new NewChromeDriver(chromeOptions);
-        }
-        return driver;
-    }
-
-    private static EdgeOptions getEdgeOptions() {
+    public static EdgeOptions getEdgeOptions() {
         HashMap<String, Object> edgePrefs = new HashMap<>();
         edgePrefs.put("download.default_directory", DOWNLOAD_DIR);
         edgePrefs.put("profile.content_settings.pattern_pairs.*.multiple-automatic-downloads", 1);
@@ -317,32 +241,7 @@ public class DriverManager {
         return options;
     }
 
-    public static INewWebDriver getDriver(EdgeOptions edgeOptions) {
-        INewWebDriver driver = DRIVERS.get();
-        if (Objects.isNull(driver)) {
-            String seleniumGridParameter = RuntimeParametersSelenium.SELENIUM_GRID.getValue();
-            if (!isEmpty(seleniumGridParameter)) {
-                return setupGrid(edgeOptions);
-            }
-            String browserPath = DriverManager.propertiesSelenium.getSeleniumEdge();
-            boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
-            synchronized (DOWNLOAD_DIR) {
-                if (isDriverAutoUpdateActivated && !driverDownloadedMicrosoftEdge) {
-                    if (!DriverManager.propertiesSelenium.getEdgeDriverVersion().isEmpty()) {
-                        System.setProperty("wdm.edgeVersion", DriverManager.propertiesSelenium.getEdgeDriverVersion());
-                    }
-                    downloadNewestOrGivenVersionOfWebDriver(EdgeDriver.class);
-                    OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(EdgeDriver.class).getDownloadedDriverPath(), browserPath);
-                }
-                driverDownloadedMicrosoftEdge = true;
-            }
-            System.setProperty("webdriver.edge.driver", browserPath);
-            return new NewEdgeDriver(edgeOptions);
-        }
-        return driver;
-    }
-
-    private static FirefoxOptions getFirefoxOptions() {
+    public static FirefoxOptions getFirefoxOptions() {
         FirefoxProfile profile = new FirefoxProfile();
         profile.setAcceptUntrustedCertificates(true);
         profile.setAssumeUntrustedCertificateIssuer(false);
@@ -392,13 +291,96 @@ public class DriverManager {
         return options;
     }
 
-    public static INewWebDriver getDriver(FirefoxOptions firefoxOptions) {
+    public static InternetExplorerOptions getInternetExplorerOptions() {
+        InternetExplorerOptions options = new InternetExplorerOptions();
+        options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
+        options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+        options.setAcceptInsecureCerts(true);
+        options.setCapability("acceptSslCerts", true);
+
+        RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
+            BFLogger.logInfo("Add to Internet Explorer options: " + key + " = " + value.toString());
+            options.setCapability(key, value.toString());
+        });
+
+        return options;
+    }
+
+    public static INewWebDriver getDriver(MutableCapabilities options) {
         INewWebDriver driver = DRIVERS.get();
         if (Objects.isNull(driver)) {
+            BFLogger.logDebug("Creating new " + RuntimeParametersSelenium.BROWSER.getValue() + " WebDriver.");
             String seleniumGridParameter = RuntimeParametersSelenium.SELENIUM_GRID.getValue();
             if (!isEmpty(seleniumGridParameter)) {
-                return setupGrid(firefoxOptions);
+                driver = getRemoteDriver(options);
+            } else {
+                String browser = RuntimeParametersSelenium.BROWSER.getValue();
+                if (Browser.CHROME.is(browser)) {
+                    driver = getChromeDriver((ChromeOptions) options);
+                } else if (Browser.EDGE.is(browser)) {
+                    driver = getEdgeDriver((EdgeOptions) options);
+                } else if (Browser.FIREFOX.is(browser)) {
+                    driver = getFirefoxDriver((FirefoxOptions) options);
+                } else if (Browser.IE.is(browser)) {
+                    driver = getInternetExplorerDriver((InternetExplorerOptions) options);
+                } else {
+                    throw new IllegalStateException("Unsupported browser: " + browser);
+                }
             }
+            DRIVERS.set(driver);
+            BFLogger.logDebug("Driver:" + driver);
+            driver.manage().timeouts().implicitlyWait(IMPLICITLY_WAIT);
+            ResolutionUtils.setResolution(driver, DriverManager.DEFAULT_RESOLUTION);
+            NewRemoteWebElement.setClickTimer();
+        }
+        return driver;
+    }
+
+    private static INewWebDriver getChromeDriver(ChromeOptions chromeOptions) {
+        INewWebDriver driver = DRIVERS.get();
+        if (Objects.isNull(driver)) {
+            String browserPath = DriverManager.propertiesSelenium.getSeleniumChrome();
+            boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
+            synchronized (DOWNLOAD_DIR) {
+                if (isDriverAutoUpdateActivated && !driverDownloadedChrome) {
+                    if (!DriverManager.propertiesSelenium.getChromeDriverVersion().isEmpty()) {
+                        System.setProperty("wdm.chromeDriverVersion", DriverManager.propertiesSelenium.getChromeDriverVersion());
+                    }
+                    downloadNewestOrGivenVersionOfWebDriver(ChromeDriver.class);
+                    OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(ChromeDriver.class).getDownloadedDriverPath(), browserPath);
+                }
+                driverDownloadedChrome = true;
+            }
+            System.setProperty("webdriver.chrome.driver", browserPath);
+            return new NewChromeDriver(chromeOptions);
+        }
+        return driver;
+    }
+
+    private static INewWebDriver getEdgeDriver(EdgeOptions edgeOptions) {
+        INewWebDriver driver = DRIVERS.get();
+        if (Objects.isNull(driver)) {
+            String browserPath = DriverManager.propertiesSelenium.getSeleniumEdge();
+            boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
+            synchronized (DOWNLOAD_DIR) {
+                if (isDriverAutoUpdateActivated && !driverDownloadedMicrosoftEdge) {
+                    if (!DriverManager.propertiesSelenium.getEdgeDriverVersion().isEmpty()) {
+                        System.setProperty("wdm.edgeVersion", DriverManager.propertiesSelenium.getEdgeDriverVersion());
+                    }
+                    downloadNewestOrGivenVersionOfWebDriver(EdgeDriver.class);
+                    OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(EdgeDriver.class).getDownloadedDriverPath(), browserPath);
+                }
+                driverDownloadedMicrosoftEdge = true;
+            }
+            System.setProperty("webdriver.edge.driver", browserPath);
+            return new NewEdgeDriver(edgeOptions);
+        }
+        return driver;
+    }
+
+    private static INewWebDriver getFirefoxDriver(FirefoxOptions firefoxOptions) {
+        INewWebDriver driver = DRIVERS.get();
+        if (Objects.isNull(driver)) {
             String browserPath = DriverManager.propertiesSelenium.getSeleniumFirefox();
             boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
             synchronized (DOWNLOAD_DIR) {
@@ -418,28 +400,9 @@ public class DriverManager {
         return driver;
     }
 
-    private static InternetExplorerOptions getInternetExplorerOptions() {
-        InternetExplorerOptions options = new InternetExplorerOptions();
-        options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
-        options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
-        options.setAcceptInsecureCerts(true);
-        options.setCapability("acceptSslCerts", true);
-
-        RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
-            BFLogger.logInfo("Add to Internet Explorer options: " + key + " = " + value.toString());
-            options.setCapability(key, value.toString());
-        });
-
-        return options;
-    }
-
-    public static INewWebDriver getDriver(InternetExplorerOptions internetExplorerOptions) {
+    private static INewWebDriver getInternetExplorerDriver(InternetExplorerOptions internetExplorerOptions) {
         INewWebDriver driver = DRIVERS.get();
         if (Objects.isNull(driver)) {
-            String seleniumGridParameter = RuntimeParametersSelenium.SELENIUM_GRID.getValue();
-            if (!isEmpty(seleniumGridParameter)) {
-                return setupGrid(internetExplorerOptions);
-            }
             String browserPath = DriverManager.propertiesSelenium.getSeleniumIE();
             boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
             synchronized (DOWNLOAD_DIR) {
@@ -460,7 +423,7 @@ public class DriverManager {
         return driver;
     }
 
-    private static INewWebDriver setupGrid(MutableCapabilities options) {
+    private static INewWebDriver getRemoteDriver(MutableCapabilities options) {
         final String SELENIUM_GRID_URL = RuntimeParametersSelenium.SELENIUM_GRID.getValue();
         BFLogger.logDebug("Connecting to the selenium grid: " + SELENIUM_GRID_URL);
         DesiredCapabilities capabilities = new DesiredCapabilities();

@@ -7,11 +7,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>2022.12.22</version>
+        <version>2022.12.23</version>
     </parent>
 
     <artifactId>mrchecker-core-module</artifactId>
-    <version>2022.12.22</version>
+    <version>2022.12.23</version>
     <packaging>jar</packaging>
     <name>MrChecker - Test core - Module</name>
     <description>MrChecker Test Framework Core is responsible for:
