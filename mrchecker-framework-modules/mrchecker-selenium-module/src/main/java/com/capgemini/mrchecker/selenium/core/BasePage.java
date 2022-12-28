@@ -119,6 +119,13 @@ abstract public class BasePage extends Page implements IBasePage {
         return driverManager.getDriver();
     }
 
+    public static INewWebDriver getDriver(MutableCapabilities options) {
+        if (Objects.isNull(driverManager)) {
+            driverManager = new DriverManager(PROPERTIES_SELENIUM);
+        }
+        return driverManager.getDriver(options);
+    }
+
     /**
      * Navigates to previous site (works like pressing browsers 'Back' button)
      */
