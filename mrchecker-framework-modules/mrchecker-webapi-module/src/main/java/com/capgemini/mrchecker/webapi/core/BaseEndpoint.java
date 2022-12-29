@@ -10,13 +10,13 @@ import com.capgemini.mrchecker.webapi.core.base.driver.DriverManager;
 import com.capgemini.mrchecker.webapi.core.base.properties.PropertiesFileSettings;
 import com.capgemini.mrchecker.webapi.core.base.runtime.RuntimeParameters;
 import com.google.inject.Guice;
+import io.restassured.config.RestAssuredConfig;
+import io.restassured.specification.RequestSpecification;
 
 import java.util.Objects;
 
-public abstract class BasePageWebAPI extends Page implements IWebAPI {
-
+public abstract class BaseEndpoint extends Page implements IWebAPI {
     private static DriverManager driver = null;
-
     private final static PropertiesFileSettings propertiesFileSettings;
     private final static IAnalytics ANALYTICS;
     public final static String ANALYTICS_CATEGORY_NAME = "WebAPI-Module";
@@ -39,21 +39,25 @@ public abstract class BasePageWebAPI extends Page implements IWebAPI {
         return ANALYTICS;
     }
 
-    public BasePageWebAPI() {
-        getDriver();
-    }
-
     @Override
     public ModuleType getModuleType() {
         return ModuleType.WEBAPI;
     }
 
-    public static DriverManager getDriver() {
-        if (Objects.isNull(BasePageWebAPI.driver)) {
+    public static RequestSpecification getDriver() {
+        if (Objects.isNull(driver)) {
             // Create module driver
-            BasePageWebAPI.driver = new DriverManager(propertiesFileSettings);
+            driver = new DriverManager(propertiesFileSettings);
         }
-        return BasePageWebAPI.driver;
+        return driver.getDriverWebAPI();
+    }
+
+    public static RequestSpecification getDriver(RestAssuredConfig config) {
+        if (Objects.isNull(driver)) {
+            // Create module driver
+            driver = new DriverManager(propertiesFileSettings);
+        }
+        return driver.getDriverWebAPI(config);
     }
 
     private static PropertiesFileSettings setPropertiesSettings() {
@@ -66,7 +70,6 @@ public abstract class BasePageWebAPI extends Page implements IWebAPI {
         // Read System or maven parameters
         BFLogger.logDebug(java.util.Arrays.asList(RuntimeParameters.values())
                 .toString());
-
     }
 
     private static void setEnvironmentInstance() {
@@ -75,6 +78,5 @@ public abstract class BasePageWebAPI extends Page implements IWebAPI {
          * settings file for Selenium module. In future, please have a look on Core Module IEnvironmentService
          * environmetInstance = Guice.createInjector(new EnvironmentModule()) .getInstance(IEnvironmentService.class);
          */
-
     }
 }

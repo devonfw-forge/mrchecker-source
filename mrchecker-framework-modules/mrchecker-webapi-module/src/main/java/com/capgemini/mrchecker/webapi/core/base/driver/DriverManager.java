@@ -23,9 +23,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 import static io.restassured.RestAssured.given;
 
 public class DriverManager {
-
-    private static ThreadLocal<VirtualizedService> driverVirtualizedService = new ThreadLocal<VirtualizedService>();
-
+    private static final ThreadLocal<VirtualizedService> driverVirtualizedService = new ThreadLocal<>();
     private static PropertiesFileSettings propertiesFileSettings;
 
     @Inject
@@ -33,8 +31,6 @@ public class DriverManager {
         if (Objects.isNull(DriverManager.propertiesFileSettings)) {
             DriverManager.propertiesFileSettings = propertiesFileSettings;
         }
-
-        start();
     }
 
     public void start() {
@@ -62,8 +58,7 @@ public class DriverManager {
     }
 
     public static void clearAllDrivers() {
-        driverVirtualizedService = new ThreadLocal<>();
-        // driverVirtualizedService.remove();
+        driverVirtualizedService.remove();
     }
 
     public static WireMock getDriverVirtualService() {
@@ -104,12 +99,6 @@ public class DriverManager {
         return virtualizedService;
     }
 
-    public static RequestSpecification getDriverWebAPI() {
-        RequestSpecification driver = createDriverWebAPI();
-        BFLogger.logDebug("driver:" + driver.toString());
-        return driver;
-    }
-
     public static void closeDriverVirtualServer() {
         VirtualizedService virtualizedService = driverVirtualizedService.get();
 
@@ -136,15 +125,6 @@ public class DriverManager {
         }
     }
 
-    /**
-     * Method sets desired 'driver' depends on chosen parameters
-     */
-    private static RequestSpecification createDriverWebAPI() {
-        BFLogger.logDebug("Creating new driver.");
-        RestAssured.config = new RestAssuredConfig().encoderConfig(new EncoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false));
-        return given();
-    }
-
     static VirtualizedService createDriverVirtualServer() {
         BFLogger.logDebug("Creating new Mock Server");
 
@@ -155,11 +135,10 @@ public class DriverManager {
     }
 
     private enum Driver {
-
         WIREMOCK {
             public VirtualizedService getDriver() throws FatalStartupException {
 
-                WireMock driver = null;
+                WireMock driver;
                 WireMockServerMrChecker driverServer = null;
 
                 int httpPort = getPort();
@@ -233,11 +212,30 @@ public class DriverManager {
                 }
                 return number;
             }
-
         };
 
         public VirtualizedService getDriver() {
             return null;
         }
+    }
+
+    public static RequestSpecification getDriverWebAPI() {
+        RestAssuredConfig config = new RestAssuredConfig().encoderConfig(new EncoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false));
+        return getDriverWebAPI(config);
+    }
+
+    public static RequestSpecification getDriverWebAPI(RestAssuredConfig config) {
+        RequestSpecification driver = createDriverWebAPI(config);
+        BFLogger.logDebug("driver:" + driver.toString());
+        return driver;
+    }
+
+    /**
+     * Method sets desired 'driver' depends on chosen parameters
+     */
+    private static RequestSpecification createDriverWebAPI(RestAssuredConfig config) {
+        BFLogger.logDebug("Creating new driver.");
+        RestAssured.config = config;
+        return given();
     }
 }

@@ -27,7 +27,7 @@ public class DriverManagerTest {
                 .getInstance(PropertiesSelenium.class);
 
         driverManager = new DriverManager(propertiesSelenium);
-
+        driverManager.start();
     }
 
     @AfterEach

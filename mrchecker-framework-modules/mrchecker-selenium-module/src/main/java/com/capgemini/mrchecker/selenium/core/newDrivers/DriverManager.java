@@ -49,7 +49,6 @@ public class DriverManager {
         if (Objects.isNull(DriverManager.propertiesSelenium)) {
             DriverManager.propertiesSelenium = propertiesSelenium;
         }
-        this.start();
     }
 
     public void start() {

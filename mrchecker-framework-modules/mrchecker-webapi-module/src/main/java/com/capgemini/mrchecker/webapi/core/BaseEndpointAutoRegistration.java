@@ -6,9 +6,8 @@ package com.capgemini.mrchecker.webapi.core;
  * Although this operation is unsafe, it's been added to support migration from MrChecker Junit4 to Junit5.
  */
 @Deprecated
-public abstract class BasePageWebAPIAutoRegistration extends BasePageWebAPI {
-
-    public BasePageWebAPIAutoRegistration() {
+public abstract class BaseEndpointAutoRegistration extends BaseEndpoint {
+    public BaseEndpointAutoRegistration() {
         addToTestExecutionObserver();
     }
 }
