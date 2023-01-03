@@ -85,10 +85,9 @@ public class SpreadsheetEnvironmentService implements IEnvironmentService {
         return value;
     }
 
-    @SuppressWarnings({"resource", "deprecation"})
     private void fetchEnvData(String csvData) throws BFInputDataException {
-        try {
-            CSVParser parser = CSVParser.parse(csvData, CSVFormat.RFC4180.withIgnoreSurroundingSpaces());
+        CSVFormat csvFormat = CSVFormat.RFC4180.builder().setIgnoreSurroundingSpaces(true).setIgnoreEmptyLines(true).build();
+        try (CSVParser parser = CSVParser.parse(csvData, csvFormat)) {
             records = parser.getRecords();
         } catch (IOException e) {
             throw new BFInputDataException("Unable to parse CSV data: " + csvData);
@@ -99,12 +98,17 @@ public class SpreadsheetEnvironmentService implements IEnvironmentService {
         services.clear();
 
         Iterator<CSVRecord> it = records.iterator();
-        it.next(); // first row contains table headers, so skip it
+        CSVRecord headers = it.next();
+        int columns = headers.size();
         while (it.hasNext()) {
             CSVRecord record = it.next();
             String key = record.get(0);
-            String value = record.get(envColumnNumber)
-                    .trim();
+            String value = "";
+            if (record.size() != columns) {
+                BFLogger.logError("Invalid number of columns [" + record.size() + ", expected " + columns + "] in the environment file row.\n" + record);
+            } else {
+                value = record.get(envColumnNumber).trim();
+            }
             value = optionalDecrypt(value);
             services.put(key, value);
         }

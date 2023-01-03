@@ -121,7 +121,7 @@ public class DriverManager {
                 BFLogger.logDebug("Closing WebDriver for this thread. " + RuntimeParametersSelenium.BROWSER.getValue());
                 driver.quit();
             } catch (WebDriverException e) {
-                BFLogger.logDebug("Ooops! Something went wrong while closing the driver: ");
+                BFLogger.logError("Ooops! Something went wrong while closing the driver: ");
                 e.printStackTrace();
             } finally {
                 DRIVERS.remove();
@@ -176,7 +176,7 @@ public class DriverManager {
             BFLogger.logDebug("Downloaded version of driver=" + WebDriverManager.getInstance(webDriverType).getDownloadedDriverVersion());
 
         } catch (WebDriverManagerException e) {
-            BFLogger.logInfo("Unable to download driver automatically. "
+            BFLogger.logError("Unable to download driver automatically. "
                     + "Please try to set up the proxy in properties file. "
                     + "If you want to download them manually, go to the "
                     + "http://www.seleniumhq.org/projects/webdriver/ site.");
@@ -190,7 +190,7 @@ public class DriverManager {
         chromePrefs.put("profile.default_content_setting_values.notifications", 2);
 
         RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
-            BFLogger.logInfo("Add to Chrome prefs: " + key + " = " + value.toString());
+            BFLogger.logDebug("Add to Chrome prefs: " + key + " = " + value.toString());
             chromePrefs.put(key, value.toString());
         });
 
@@ -209,7 +209,7 @@ public class DriverManager {
         options.setHeadless(Boolean.parseBoolean(System.getProperty("headless", "false")));
 
         RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
-            BFLogger.logInfo("Add to Chrome options: " + key + " = " + value.toString());
+            BFLogger.logDebug("Add to Chrome options: " + key + " = " + value.toString());
             String item = (value.toString().isEmpty()) ? key : key + "=" + value;
             options.addArguments(item);
             options.setCapability(key, value.toString());
@@ -225,7 +225,7 @@ public class DriverManager {
         edgePrefs.put("profile.default_content_setting_values.notifications", 2);
 
         RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
-            BFLogger.logInfo("Add to Edge prefs: " + key + " = " + value.toString());
+            BFLogger.logDebug("Add to Edge prefs: " + key + " = " + value.toString());
             edgePrefs.put(key, value.toString());
         });
 
@@ -244,7 +244,7 @@ public class DriverManager {
         options.setHeadless(Boolean.parseBoolean(System.getProperty("headless", "false")));
 
         RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
-            BFLogger.logInfo("Add to Edge options: " + key + " = " + value.toString());
+            BFLogger.logDebug("Add to Edge options: " + key + " = " + value.toString());
             String item = (value.toString().isEmpty()) ? key : key + "=" + value;
             options.addArguments(item);
             options.setCapability(key, value.toString());
@@ -277,7 +277,7 @@ public class DriverManager {
         profile.setPreference("network.http.use-cache", false);
 
         RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
-            BFLogger.logInfo("Add to Firefox profile: " + key + " = " + value.toString());
+            BFLogger.logDebug("Add to Firefox profile: " + key + " = " + value.toString());
             profile.setPreference(key, value.toString());
         });
 
@@ -294,7 +294,7 @@ public class DriverManager {
         options.setHeadless(Boolean.parseBoolean(System.getProperty("headless", "false")));
 
         RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
-            BFLogger.logInfo("Add to Firefox options: " + key + " = " + value.toString());
+            BFLogger.logDebug("Add to Firefox options: " + key + " = " + value.toString());
             String item = (value.toString().isEmpty()) ? key : key + "=" + value;
             options.addArguments(item);
             options.setCapability(key, value.toString());
@@ -311,7 +311,7 @@ public class DriverManager {
         options.setCapability("acceptSslCerts", true);
 
         RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
-            BFLogger.logInfo("Add to Internet Explorer options: " + key + " = " + value.toString());
+            BFLogger.logDebug("Add to Internet Explorer options: " + key + " = " + value.toString());
             options.setCapability(key, value.toString());
         });
 
@@ -475,7 +475,7 @@ public class DriverManager {
         }
 
         RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
-            BFLogger.logInfo("Browser option: " + key + " " + value.toString());
+            BFLogger.logDebug("Browser option: " + key + " " + value.toString());
             capabilities.setCapability(key, value.toString());
         });
 

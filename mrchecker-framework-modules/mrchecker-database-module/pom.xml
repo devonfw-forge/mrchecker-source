@@ -6,11 +6,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>2022.12.29</version>
+        <version>2023.01.03</version>
     </parent>
 
     <artifactId>mrchecker-database-module</artifactId>
-    <version>2022.12.29</version>
+    <version>2023.01.03</version>
     <packaging>jar</packaging>
     <name>MrChecker - Database - Module</name>
     <description>MrChecker Database Module:
@@ -80,7 +80,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mrchecker-core-module</artifactId>
-            <version>2022.12.29</version>
+            <version>2023.01.03</version>
         </dependency>
 
         <!-- JPA dependencies -->
