@@ -10,29 +10,11 @@
         <version>2023.01.12</version>
     </parent>
 
-    <artifactId>mrchecker-selenium-module</artifactId>
+    <artifactId>mrchecker-playwright-module</artifactId>
     <version>2023.01.12</version>
     <packaging>jar</packaging>
-    <name>MrChecker - Selenium - Module</name>
-    <description>MrChecker Test Framework Selenium supports:
-        * Malleable resolution
-        * Remote Web Design
-        * Mobile browsers
-        * Support for many browsers
-        * Internet Explorer, Edge
-        * Chrome, Firefox
-        * ChromeHeadless
-        * Safari
-        * User friendly actions
-        * elementCheckBox
-        * elementDropdown, etc.
-        * Ubiquise test execution
-        * locally
-        * against Selenium Grid through Jenkins
-        * Page Object Model architecture
-        * Selenium WebDriver with Java
-        * Update Observers
-    </description>
+    <name>MrChecker - Playwright - Module</name>
+    <description>MrChecker Test Framework Playwright</description>
     <url>https://github.com/devonfw/devonfw-testing</url>
 
     <organization>
@@ -42,20 +24,8 @@
 
     <developers>
         <developer>
-            <name>Lukasz Stefaniszyn</name>
-            <email>lukasz.stefaniszyn@capgemini.com</email>
-            <organization>Capgemini - Nearshore Test Center - Poland</organization>
-            <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
-        </developer>
-        <developer>
             <name>Mariusz Kowalski</name>
             <email>mariusz.kowalski@capgemini.com</email>
-            <organization>Capgemini - Nearshore Test Center - Poland</organization>
-            <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
-        </developer>
-        <developer>
-            <name>Michal Babiarz</name>
-            <email>michal.babiarz@capgemini.com</email>
             <organization>Capgemini - Nearshore Test Center - Poland</organization>
             <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
         </developer>
@@ -77,8 +47,8 @@
     <properties>
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
-        <!-- Selenium settings -->
-        <selenium.version>4.7.2</selenium.version>
+        <!-- PLAYWRIGHT -->
+        <playwright.verion>1.28.1</playwright.verion>
 
         <!-- Guava is a set of core libraries -->
         <google.guava.version>31.1-jre</google.guava.version>
@@ -101,24 +71,11 @@
             <version>2023.01.12</version>
         </dependency>
 
-        <!--This dependency is necessary for Selenium plugin. -->
+        <!--This dependency is necessary for Playwright plugin. -->
         <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <version>${selenium.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.api-client</groupId>
-            <artifactId>google-api-client</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-
-        <!-- For auto-download the newest version of web drivers -->
-        <dependency>
-            <groupId>io.github.bonigarcia</groupId>
-            <artifactId>webdrivermanager</artifactId>
-            <version>5.3.1</version>
+            <groupId>com.microsoft.playwright</groupId>
+            <artifactId>playwright</artifactId>
+            <version>${playwright.verion}</version>
         </dependency>
     </dependencies>
 
