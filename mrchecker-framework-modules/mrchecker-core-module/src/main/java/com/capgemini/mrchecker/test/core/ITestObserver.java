@@ -7,6 +7,10 @@ public interface ITestObserver {
 
     void onTestFinish();
 
+    void onSetupFailure();
+
+    void onTeardownFailure();
+
     void onTestClassFinish();
 
     void addToTestExecutionObserver();

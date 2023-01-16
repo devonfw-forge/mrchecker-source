@@ -22,6 +22,18 @@ public abstract class Page implements ITestObserver {
     }
 
     @Override
+    public void onSetupFailure() {
+        BFLogger.logDebug("Page.onSetupFailure    " + getClass()
+                .getSimpleName());
+    }
+
+    @Override
+    public void onTeardownFailure() {
+        BFLogger.logDebug("Page.onTeardownFailure    " + getClass()
+                .getSimpleName());
+    }
+
+    @Override
     public void onTestFinish() {
         BFLogger.logDebug("Page.onTestFinish    " + getClass()
                 .getSimpleName());

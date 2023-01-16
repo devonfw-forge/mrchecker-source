@@ -51,7 +51,15 @@ public class TestExecutionObserver implements ITestExecutionObserver {
                 .sendClassName();
         logTestInfo("STARTED");
         stopwatch.set(System.currentTimeMillis());
-        validateTestClassAndCallHook(context, BaseTest::setUp);
+        try {
+            validateTestClassAndCallHook(context, BaseTest::setUp);
+        } catch (Throwable throwable) {
+            observers.get()
+                    .forEach(ITestObserver::onSetupFailure);
+            classObservers.get()
+                    .forEach(ITestObserver::onSetupFailure);
+            throw throwable;
+        }
     }
 
     @Override
@@ -59,7 +67,15 @@ public class TestExecutionObserver implements ITestExecutionObserver {
         stopwatch.set(System.currentTimeMillis() - stopwatch.get()); // end timing
         logTestInfo("FINISHED");
         printTimeExecutionLog();
-        validateTestClassAndCallHook(context, BaseTest::tearDown);
+        try {
+            validateTestClassAndCallHook(context, BaseTest::tearDown);
+        } catch (Throwable throwable) {
+            observers.get()
+                    .forEach(ITestObserver::onTeardownFailure);
+            classObservers.get()
+                    .forEach(ITestObserver::onTeardownFailure);
+            throw throwable;
+        }
     }
 
     private static void makeLogForTest() {
@@ -91,10 +107,6 @@ public class TestExecutionObserver implements ITestExecutionObserver {
     @Override
     public void testFailed(ExtensionContext context, Throwable cause) {
         logTestInfo("FAILED");
-        observers.get()
-                .forEach(ITestObserver::onTestFailure);
-        classObservers.get()
-                .forEach(ITestObserver::onTestFailure);
         afterEach();
     }
 
@@ -148,27 +160,47 @@ public class TestExecutionObserver implements ITestExecutionObserver {
 
     @Override
     public void handleBeforeAllMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+        observers.get()
+                .forEach(ITestObserver::onSetupFailure);
+        classObservers.get()
+                .forEach(ITestObserver::onSetupFailure);
         logExceptionInfo(context, throwable, "@BeforeAll");
     }
 
     @Override
     public void handleBeforeEachMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+        observers.get()
+                .forEach(ITestObserver::onSetupFailure);
+        classObservers.get()
+                .forEach(ITestObserver::onSetupFailure);
         logExceptionInfo(context, throwable, "@BeforeEach");
     }
 
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+        observers.get()
+                .forEach(ITestObserver::onTestFailure);
+        classObservers.get()
+                .forEach(ITestObserver::onTestFailure);
         logExceptionInfo(context, throwable, "@Test");
     }
 
     @Override
     public void handleAfterEachMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+        observers.get()
+                .forEach(ITestObserver::onTeardownFailure);
+        classObservers.get()
+                .forEach(ITestObserver::onTeardownFailure);
         logExceptionInfo(context, throwable, "@AfterEach");
     }
 
     @Override
     public void handleAfterAllMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
         try {
+            observers.get()
+                    .forEach(ITestObserver::onTeardownFailure);
+            classObservers.get()
+                    .forEach(ITestObserver::onTeardownFailure);
             logExceptionInfo(context, throwable, "@AfterAll");
         } catch (Throwable e) {
             if (DONT_CONSUME_EXCEPTION_IN_AFTERALL)
