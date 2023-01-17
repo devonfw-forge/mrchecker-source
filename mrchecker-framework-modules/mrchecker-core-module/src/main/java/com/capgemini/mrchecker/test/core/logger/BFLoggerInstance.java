@@ -45,6 +45,10 @@ public class BFLoggerInstance {
         log(Level.INFO, message);
     }
 
+    public void logWarning(String message) {
+        log(Level.WARN, message);
+    }
+
     public void logError(String message) {
         log(Level.ERROR, message);
     }

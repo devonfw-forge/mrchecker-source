@@ -43,6 +43,10 @@ public class BFLogger {
         getLog().logFunctionEnd();
     }
 
+    public static void logWarning(String message) {
+        getLog().logWarning(message);
+    }
+
     // logger - log ERROR message
     public static void logError(String message) {
         getLog().logError(message);
