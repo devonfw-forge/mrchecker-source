@@ -100,8 +100,17 @@ public class DriverManager {
         if (wasDriverCreated()) {
             INewWebDriver driver = DRIVERS.get();
             try {
-                return driver.toString().contains("(null)") || driver.getWindowHandles().isEmpty();
+                if (driver.toString().contains("(null)")) {
+                    BFLogger.logError("Driver session is null");
+                    return true;
+                }
+                if (driver.getWindowHandles().isEmpty()) {
+                    BFLogger.logError("Driver window handles is empty");
+                    return true;
+                }
             } catch (Exception e) {
+                BFLogger.logError("Driver state check exception: " + e.getMessage());
+                e.printStackTrace();
                 return true;
             }
         }

@@ -73,13 +73,31 @@ abstract public class BasePage extends Page implements IBasePage {
         }
     }
 
-    @Override
-    public void onTestFailure() {
-        super.onTestFailure();
+    private void handleBeforeTestFails() {
+        if (!DriverManager.hasDriverCrushed()) {
+            makeScreenshotOnSetupFail();
+            makeSourcePageOnSetupFail();
+        }
+    }
+
+    private void handleAfterTestFails() {
+        if (!DriverManager.hasDriverCrushed()) {
+            makeScreenshotOnTeardownFail();
+            makeSourcePageOnTeardownFail();
+        }
+    }
+
+    private void handleTestFails() {
         if (!DriverManager.hasDriverCrushed()) {
             makeScreenshotOnTestFail();
             makeSourcePageOnTestFail();
         }
+    }
+
+    @Override
+    public void onTestExecutionException() {
+        super.onTestExecutionException();
+        handleTestFails();
     }
 
     @Override
@@ -91,19 +109,13 @@ abstract public class BasePage extends Page implements IBasePage {
     @Override
     public void onSetupFailure() {
         super.onSetupFailure();
-        if (!DriverManager.hasDriverCrushed()) {
-            makeScreenshotOnSetupFail();
-            makeSourcePageOnSetupFail();
-        }
+        handleBeforeTestFails();
     }
 
     @Override
     public void onTeardownFailure() {
         super.onTeardownFailure();
-        if (!DriverManager.hasDriverCrushed()) {
-            makeScreenshotOnTeardownFail();
-            makeSourcePageOnTeardownFail();
-        }
+        handleAfterTestFails();
     }
 
     @Override

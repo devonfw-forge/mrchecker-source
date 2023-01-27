@@ -51,8 +51,22 @@ abstract public class BasePage extends Page {
     }
 
     @Override
-    public void onTestFailure() {
-        super.onTestFailure();
+    public void onTestExecutionException() {
+        super.onTestExecutionException();
+        makeScreenshotOnFailure();
+        makeSourcePageOnFailure();
+    }
+
+    @Override
+    public void onSetupFailure() {
+        super.onSetupFailure();
+        makeScreenshotOnFailure();
+        makeSourcePageOnFailure();
+    }
+
+    @Override
+    public void onTeardownFailure() {
+        super.onTeardownFailure();
         makeScreenshotOnFailure();
         makeSourcePageOnFailure();
     }

@@ -37,7 +37,7 @@ public class PageTest {
 
     @Test
     public void shouldCallOnTestFailure() throws IOException {
-        SUT.onTestFailure();
+        SUT.onTestFailed();
 
         assertThat(FileTestUtils.getLastLineInFile(logFilePath), containsString("Page.onTestFailure    " + SUT.getClass()
                 .getSimpleName()));
