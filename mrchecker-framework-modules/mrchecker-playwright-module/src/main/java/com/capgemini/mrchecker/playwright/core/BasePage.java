@@ -150,7 +150,9 @@ abstract public class BasePage extends Page implements IBasePage {
     }
 
     public void setPage(com.microsoft.playwright.Page page) {
-        getDriver().setCurrentPage(page);
+        if (Objects.nonNull(page)) {
+            getDriver().setCurrentPage(page);
+        }
     }
 
     public com.microsoft.playwright.Page getPage() {
