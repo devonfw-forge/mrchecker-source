@@ -5,6 +5,7 @@ import com.capgemini.mrchecker.selenium.core.base.runtime.RuntimeParametersSelen
 import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundException;
 import com.capgemini.mrchecker.selenium.core.newDrivers.DriverManager;
 import com.capgemini.mrchecker.selenium.core.newDrivers.INewWebDriver;
+import com.capgemini.mrchecker.selenium.core.utils.StepLogger;
 import com.capgemini.mrchecker.selenium.core.utils.WindowUtils;
 import com.capgemini.mrchecker.test.core.BaseTest;
 import com.capgemini.mrchecker.test.core.ModuleType;
@@ -19,6 +20,12 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
@@ -66,11 +73,31 @@ abstract public class BasePage extends Page implements IBasePage {
         }
     }
 
+    private void handleBeforeTestFails() {
+        if (!DriverManager.hasDriverCrushed()) {
+            makeScreenshotOnSetupFail();
+            makeSourcePageOnSetupFail();
+        }
+    }
+
+    private void handleAfterTestFails() {
+        if (!DriverManager.hasDriverCrushed()) {
+            makeScreenshotOnTeardownFail();
+            makeSourcePageOnTeardownFail();
+        }
+    }
+
+    private void handleTestFails() {
+        if (!DriverManager.hasDriverCrushed()) {
+            makeScreenshotOnTestFail();
+            makeSourcePageOnTestFail();
+        }
+    }
+
     @Override
-    public void onTestFailure() {
-        super.onTestFailure();
-        makeScreenshotOnFailure();
-        makeSourcePageOnFailure();
+    public void onTestExecutionException() {
+        super.onTestExecutionException();
+        handleTestFails();
     }
 
     @Override
@@ -80,27 +107,20 @@ abstract public class BasePage extends Page implements IBasePage {
     }
 
     @Override
+    public void onSetupFailure() {
+        super.onSetupFailure();
+        handleBeforeTestFails();
+    }
+
+    @Override
+    public void onTeardownFailure() {
+        super.onTeardownFailure();
+        handleAfterTestFails();
+    }
+
+    @Override
     public ModuleType getModuleType() {
         return ModuleType.SELENIUM;
-    }
-
-    @Attachment("Screenshot on failure")
-    @SuppressWarnings("UnusedReturnValue")
-    public byte[] makeScreenshotOnFailure() {
-        byte[] screenshot = null;
-        try {
-            screenshot = ((TakesScreenshot) DriverManager.getDriver()).getScreenshotAs(OutputType.BYTES);
-        } catch (UnhandledAlertException e) {
-            BFLogger.logDebug("[makeScreenshotOnFailure] Unable to take screenshot.");
-        }
-        return screenshot;
-    }
-
-    @Attachment("Source Page on failure")
-    @SuppressWarnings("UnusedReturnValue")
-    public String makeSourcePageOnFailure() {
-        return DriverManager.getDriver()
-                .getPageSource();
     }
 
     public String getActualPageTitle() {
@@ -327,5 +347,124 @@ abstract public class BasePage extends Page implements IBasePage {
          * settings file for Selenium module. In future, please have a look on Core Module IEnvironmentService
          * environmetInstance = Guice.createInjector(new EnvironmentModule()) .getInstance(IEnvironmentService.class);
          */
+    }
+
+    public static void makeScreenShot(String attachmentName) {
+        makeScreenShot(attachmentName, (WebElement) null);
+    }
+
+    public static void makeScreenShot(String attachmentName, By selector) {
+        List<WebElement> elements = getDriver().findElementDynamics(selector);
+        if (elements.size() == 1) {
+            makeScreenShot(attachmentName, elements.get(0));
+        } else {
+            for (int i = 0; i < elements.size(); i++) {
+                makeScreenShot(MessageFormat.format("{0} [{1}]", attachmentName, i), elements.get(i));
+            }
+        }
+    }
+
+    @Attachment(value = "{attachmentName}", type = "image/png")
+    public static byte[] makeScreenShot(String attachmentName, WebElement element) {
+        BFLogger.logDebug("BasePage.makeScreenShot attachmentName=" + attachmentName);
+        byte[] screenshot = new byte[0];
+        if (DriverManager.hasDriverCrushed() || !DriverManager.wasDriverCreated()) {
+            StepLogger.error("Unable to take element screenshot - No active driver", false);
+            return screenshot;
+        }
+        try {
+            INewWebDriver driver = getDriver();
+            screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+            if (null == element) {
+                return screenshot;
+            }
+            BufferedImage fullImg = ImageIO.read(new ByteArrayInputStream(screenshot));
+            int maxX = fullImg.getWidth() - 1;
+            int maxY = fullImg.getHeight() - 1;
+
+            Point elementPoint = element.getLocation();
+            int elementBeginX = elementPoint.getX();
+            int elementBeginY = elementPoint.getY();
+
+            //Element start point outside screen (not visible at all)
+            if (elementBeginX >= maxX || elementBeginY >= maxY) {
+                return screenshot;
+            }
+
+            //Element start point outside screen (partially visible)
+            if (elementBeginY < 1) {
+                elementBeginY = 1;
+            }
+            if (elementBeginX < 1) {
+                elementBeginX = 1;
+            }
+
+            Dimension elementSize = element.getSize();
+            int elementEndX = elementPoint.getX() + elementSize.getWidth();
+            int elementEndY = elementPoint.getY() + elementSize.getHeight();
+
+            if (maxX < elementEndX) {
+                elementEndX = maxX;
+            }
+            if (maxY < elementEndY) {
+                elementEndY = maxY;
+            }
+
+            int elementWidth = elementEndX - elementBeginX;
+            int elementHeight = elementEndY - elementBeginY;
+
+            //Too small object
+            if (elementWidth < 1 || elementHeight < 1) {
+                return screenshot;
+            }
+
+            RenderedImage elementScreenshot = fullImg.getSubimage(elementBeginX, elementBeginY, elementWidth,
+                    elementHeight);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            ImageIO.write(elementScreenshot, "png", stream);
+            screenshot = stream.toByteArray();
+            stream.close();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return screenshot;
+    }
+
+    private static void makeScreenshotOnTestFail() {
+        makeScreenShot("Screenshot on test fail", (WebElement) null);
+    }
+
+    private static void makeScreenshotOnSetupFail() {
+        makeScreenShot("Screenshot on setup fail", (WebElement) null);
+    }
+
+    private static void makeScreenshotOnTeardownFail() {
+        makeScreenShot("Screenshot on teardown fail", (WebElement) null);
+    }
+
+    @Attachment("{attachmentName}")
+    public static String makeSourcePage(String attachmentName) {
+        BFLogger.logDebug("BasePage.makeSourcePage attachmentName=" + attachmentName);
+        if (DriverManager.hasDriverCrushed() || !DriverManager.wasDriverCreated()) {
+            StepLogger.error("Unable to take page source - No active driver", false);
+            return "";
+        }
+        try {
+            return getDriver().getPageSource();
+        } catch (Throwable ex) {
+            return ex.getMessage();
+        }
+    }
+
+    private static void makeSourcePageOnTestFail() {
+        makeSourcePage("Source Page on test fail");
+    }
+
+    private static void makeSourcePageOnSetupFail() {
+        makeSourcePage("Source Page on setup fail");
+    }
+
+    private static void makeSourcePageOnTeardownFail() {
+        makeSourcePage("Source Page on teardown fail");
     }
 }

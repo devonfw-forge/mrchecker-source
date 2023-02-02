@@ -127,7 +127,7 @@ public class TestExecutionObserverTest {
         SUT.testFailed(contextMock, new RuntimeException("Test_Exception"));
 
         assertThat(FileTestUtils.getAllLinesInFile(FileTestUtils.getLogFilePath()), containsString("- FAILED."));
-        verify(observerMock, times(1)).onTestFailure();
+        verify(observerMock, times(1)).onTestFailed();
         verify(observerMock, times(1)).onTestFinish();
     }
 

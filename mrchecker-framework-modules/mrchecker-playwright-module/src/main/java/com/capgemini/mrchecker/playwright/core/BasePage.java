@@ -14,6 +14,7 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.google.inject.Guice;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.options.LoadState;
 import io.qameta.allure.Attachment;
 
@@ -26,7 +27,6 @@ abstract public class BasePage extends Page implements IBasePage {
     public static final int MAX_COMPONENT_RELOAD_COUNT = 3;
     private static DriverManager driverManager = null;
     private BasePage parent;
-    private com.microsoft.playwright.Page page;
     private static IEnvironmentService environmentService;
     private final static IAnalytics ANALYTICS;
     public final static String ANALYTICS_CATEGORY_NAME = "Playwright-NewDrivers";
@@ -73,11 +73,25 @@ abstract public class BasePage extends Page implements IBasePage {
         }
     }
 
+    private void handleBeforeTestFails() {
+        makeScreenshotOnSetupFail();
+        makeSourcePageOnSetupFail();
+    }
+
+    private void handleAfterTestFails() {
+        makeScreenshotOnTeardownFail();
+        makeSourcePageOnTeardownFail();
+    }
+
+    private void handleTestFails() {
+        makeScreenshotOnTestFail();
+        makeSourcePageOnTestFail();
+    }
+
     @Override
-    public void onTestFailure() {
-        super.onTestFailure();
-        makeScreenshotOnFailure();
-        makeSourcePageOnFailure();
+    public void onTestExecutionException() {
+        super.onTestExecutionException();
+        handleTestFails();
     }
 
     @Override
@@ -87,27 +101,22 @@ abstract public class BasePage extends Page implements IBasePage {
     }
 
     @Override
+    public void onSetupFailure() {
+        super.onSetupFailure();
+        handleBeforeTestFails();
+    }
+
+    @Override
+    public void onTeardownFailure() {
+        super.onTeardownFailure();
+        handleAfterTestFails();
+    }
+
+    @Override
     public ModuleType getModuleType() {
         return ModuleType.PLAYWRIGHT;
     }
 
-    @Attachment("Screenshot on failure")
-    @SuppressWarnings("UnusedReturnValue")
-    public byte[] makeScreenshotOnFailure() {
-        byte[] screenshot = null;
-        try {
-            screenshot = getPage().screenshot();
-        } catch (Exception e) {
-            BFLogger.logDebug("[makeScreenshotOnFailure] Unable to take screenshot.");
-        }
-        return screenshot;
-    }
-
-    @Attachment("Source Page on failure")
-    @SuppressWarnings("UnusedReturnValue")
-    public String makeSourcePageOnFailure() {
-        return getPage().content();
-    }
 
     public String getActualPageTitle() {
         return getPage().title();
@@ -141,14 +150,11 @@ abstract public class BasePage extends Page implements IBasePage {
     }
 
     public void setPage(com.microsoft.playwright.Page page) {
-        this.page = page;
+        getDriver().setCurrentPage(page);
     }
 
     public com.microsoft.playwright.Page getPage() {
-        if (Objects.isNull(page)) {
-            page = getDriver().currentPage();
-        }
-        return page;
+        return getDriver().currentPage();
     }
 
     public abstract String pageTitle();
@@ -190,5 +196,59 @@ abstract public class BasePage extends Page implements IBasePage {
          * settings file for Selenium module. In future, please have a look on Core Module IEnvironmentService
          * environmetInstance = Guice.createInjector(new EnvironmentModule()) .getInstance(IEnvironmentService.class);
          */
+    }
+
+    public static void makeScreenShot(String attachmentName) {
+        makeScreenShot(attachmentName, null);
+    }
+
+    @Attachment(value = "{attachmentName}", type = "image/png")
+    public static byte[] makeScreenShot(String attachmentName, Locator locator) {
+        BFLogger.logDebug("BasePage.makeScreenShot attachmentName=" + attachmentName);
+        byte[] screenshot = new byte[0];
+        try {
+            if (Objects.isNull(locator)) {
+                screenshot = getDriver().currentPage().screenshot();
+            } else {
+                screenshot = locator.screenshot();
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return screenshot;
+    }
+
+    private static void makeScreenshotOnTestFail() {
+        makeScreenShot("Screenshot on test fail", null);
+    }
+
+    private static void makeScreenshotOnSetupFail() {
+        makeScreenShot("Screenshot on setup fail", null);
+    }
+
+    private static void makeScreenshotOnTeardownFail() {
+        makeScreenShot("Screenshot on teardown fail", null);
+    }
+
+    @Attachment("{attachmentName}")
+    public static String makeSourcePage(String attachmentName) {
+        BFLogger.logDebug("BasePage.makeSourcePage attachmentName=" + attachmentName);
+        try {
+            return getDriver().currentPage().content();
+        } catch (Throwable ex) {
+            return ex.getMessage();
+        }
+    }
+
+    private static void makeSourcePageOnTestFail() {
+        makeSourcePage("Source Page on test fail");
+    }
+
+    private static void makeSourcePageOnSetupFail() {
+        makeSourcePage("Source Page on setup fail");
+    }
+
+    private static void makeSourcePageOnTeardownFail() {
+        makeSourcePage("Source Page on teardown fail");
     }
 }

@@ -60,7 +60,7 @@ public class RunningTestsTest {
     @CsvFileSource(resources = "/datadriven/integration/running_tests.csv", numLinesToSkip = 1)
     public void shouldRunTestBundle(String className,
                                     int expectedOnTestSuccessCount,
-                                    int expectedOnTestFailureCount,
+                                    int expectedonTestFailedCount,
                                     int expectedOnTestFinishCount,
                                     int expectedOnTestClassFinishCount,
                                     boolean expectedAreHooksCalled) throws ClassNotFoundException {
@@ -70,7 +70,7 @@ public class RunningTestsTest {
         TestLauncher.launch(CLASS_PREFIX + className);
 
         verify(testObserver, times(expectedOnTestSuccessCount)).onTestSuccess();
-        verify(testObserver, times(expectedOnTestFailureCount)).onTestFailure();
+        verify(testObserver, times(expectedonTestFailedCount)).onTestFailed();
         verify(testObserver, times(expectedOnTestFinishCount)).onTestFinish();
         verify(testObserver, times(expectedOnTestClassFinishCount)).onTestClassFinish();
 
@@ -108,12 +108,12 @@ public class RunningTestsTest {
         TestLauncher.launch(PassingTestWithTwoObserversAddedInTestMethod.class);
 
         verify(testObserver, times(1)).onTestSuccess();
-        verify(testObserver, times(0)).onTestFailure();
+        verify(testObserver, times(0)).onTestFailed();
         verify(testObserver, times(1)).onTestFinish();
         verify(testObserver, times(1)).onTestClassFinish();
 
         verify(testObserverSecond, times(0)).onTestSuccess();
-        verify(testObserverSecond, times(0)).onTestFailure();
+        verify(testObserverSecond, times(0)).onTestFailed();
         verify(testObserverSecond, times(0)).onTestFinish();
         verify(testObserverSecond, times(0)).onTestClassFinish();
 
@@ -157,12 +157,12 @@ public class RunningTestsTest {
         TestLauncher.launch(testClasses);
 
         verify(testObserver, times(1)).onTestSuccess();
-        verify(testObserver, times(0)).onTestFailure();
+        verify(testObserver, times(0)).onTestFailed();
         verify(testObserver, times(0)).onTestFinish();
         verify(testObserver, times(1)).onTestClassFinish();
 
         verify(testObserverSecond, times(1)).onTestSuccess();
-        verify(testObserverSecond, times(0)).onTestFailure();
+        verify(testObserverSecond, times(0)).onTestFailed();
         verify(testObserverSecond, times(0)).onTestFinish();
         verify(testObserverSecond, times(1)).onTestClassFinish();
 
