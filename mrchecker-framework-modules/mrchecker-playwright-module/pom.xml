@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>mrchecker-test-framework</artifactId>
+        <groupId>com.capgemini.mrchecker</groupId>
+        <version>2023.01.27</version>
+    </parent>
+
+    <artifactId>mrchecker-playwright-module</artifactId>
+    <version>2023.01.27</version>
+    <packaging>jar</packaging>
+    <name>MrChecker - Playwright - Module</name>
+    <description>MrChecker Test Framework Playwright</description>
+    <url>https://github.com/devonfw/devonfw-testing</url>
+
+    <organization>
+        <name>Capgemini - Software Solution Center</name>
+        <url>https://capgeminisoftware.pl/</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>Mariusz Kowalski</name>
+            <email>mariusz.kowalski@capgemini.com</email>
+            <organization>Capgemini - Nearshore Test Center - Poland</organization>
+            <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git://github.com/devonfw/devonfw-testing.git</connection>
+        <developerConnection>scm:git:ssh://github.com:devonfw/devonfw-testing.git</developerConnection>
+        <url>http://github.com/devonfw/devonfw-testing/tree/master</url>
+    </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
+
+        <!-- PLAYWRIGHT -->
+        <playwright.verion>1.28.1</playwright.verion>
+
+        <!-- Guava is a set of core libraries -->
+        <google.guava.version>31.1-jre</google.guava.version>
+    </properties>
+
+    <dependencies>
+        <!-- Guava is a set of core libraries -->
+        <!-- NOTE: given Guava lib is not backward compatible, therefore 
+            must be used as first dependency import to overwrite any other imports -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${google.guava.version}</version>
+        </dependency>
+
+        <!-- Dependency to other MrChecker Test Framework modules -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mrchecker-core-module</artifactId>
+            <version>2023.01.27</version>
+        </dependency>
+
+        <!--This dependency is necessary for Playwright plugin. -->
+        <dependency>
+            <groupId>com.microsoft.playwright</groupId>
+            <artifactId>playwright</artifactId>
+            <version>${playwright.verion}</version>
+        </dependency>
+    </dependencies>
+
+    <!-- Build goals/actions -->
+    <build>
+        <plugins>
+            <!-- Plugins are taken from parent pom.xml -->
+        </plugins>
+    </build>
+</project>
