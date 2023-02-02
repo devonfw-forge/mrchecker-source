@@ -95,6 +95,10 @@ public class DriverManager {
         }
     }
 
+    public static boolean wasDriverCreated() {
+        return Objects.nonNull(BROWSER_CONTEXT_THREAD_LOCAL.get());
+    }
+
     private static Playwright.CreateOptions getCreateOptions() {
         Playwright.CreateOptions options = new Playwright.CreateOptions();
         Map<String, String> env = new HashMap<>();
