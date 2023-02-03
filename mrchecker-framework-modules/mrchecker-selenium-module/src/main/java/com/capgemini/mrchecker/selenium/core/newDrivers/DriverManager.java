@@ -139,8 +139,8 @@ public class DriverManager {
         }
     }
 
-    private static boolean isEmpty(String seleniumGridParameter) {
-        return seleniumGridParameter == null || seleniumGridParameter.trim().isEmpty();
+    private static boolean isEmpty(String value) {
+        return value == null || value.trim().isEmpty();
     }
 
     private enum Driver {
@@ -450,18 +450,9 @@ public class DriverManager {
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
         String operatingSystem = RuntimeParametersSelenium.OS.getValue();
-        switch (operatingSystem) {
-            case "windows":
-                capabilities.setPlatform(Platform.WINDOWS);
-                break;
-            case "vista":
-                capabilities.setPlatform(Platform.VISTA);
-                break;
-            case "mac":
-                capabilities.setPlatform(Platform.MAC);
-                break;
-            default:
-                capabilities.setPlatform(Platform.LINUX);
+        if (!isEmpty(operatingSystem)) {
+            Platform platform = Platform.fromString(operatingSystem);
+            capabilities.setPlatform(platform);
         }
 
         String browser = RuntimeParametersSelenium.BROWSER.getValue();
@@ -474,13 +465,16 @@ public class DriverManager {
         } else {
             throw new IllegalStateException("Unsupported browser: " + browser);
         }
-
         capabilities.setBrowserName(browser);
-        //Backward compatibility with Selenium 3 grids
-        if (Boolean.parseBoolean(System.getProperty("selenium3grid", "false"))) {
-            capabilities.setCapability("version", RuntimeParametersSelenium.BROWSER_VERSION.getValue());
-        } else {
-            capabilities.setVersion(RuntimeParametersSelenium.BROWSER_VERSION.getValue());
+
+        String browserVersion = RuntimeParametersSelenium.BROWSER_VERSION.getValue();
+        if (!isEmpty(browserVersion)) {
+            //Backward compatibility with Selenium 3 grids
+            if (Boolean.parseBoolean(System.getProperty("selenium3grid", "false"))) {
+                capabilities.setCapability("version", browserVersion);
+            } else {
+                capabilities.setVersion(browserVersion);
+            }
         }
 
         RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
