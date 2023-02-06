@@ -7,11 +7,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>2023.02.03</version>
+        <version>2023.02.06</version>
     </parent>
 
     <artifactId>mrchecker-selenium-module</artifactId>
-    <version>2023.02.03</version>
+    <version>2023.02.06</version>
     <packaging>jar</packaging>
     <name>MrChecker - Selenium - Module</name>
     <description>MrChecker Test Framework Selenium supports:
@@ -78,7 +78,7 @@
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
         <!-- Selenium settings -->
-        <selenium.version>4.7.2</selenium.version>
+        <selenium.version>4.8.0</selenium.version>
 
         <!-- Guava is a set of core libraries -->
         <google.guava.version>31.1-jre</google.guava.version>
@@ -98,7 +98,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mrchecker-core-module</artifactId>
-            <version>2023.02.03</version>
+            <version>2023.02.06</version>
         </dependency>
 
         <!--This dependency is necessary for Selenium plugin. -->
@@ -111,14 +111,14 @@
         <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
-            <version>2.1.1</version>
+            <version>2.2.0</version>
         </dependency>
 
         <!-- For auto-download the newest version of web drivers -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
-            <version>5.3.1</version>
+            <version>5.3.2</version>
         </dependency>
     </dependencies>
 

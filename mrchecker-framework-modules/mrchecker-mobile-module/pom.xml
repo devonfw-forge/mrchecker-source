@@ -7,11 +7,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>2023.02.03</version>
+        <version>2023.02.06</version>
     </parent>
 
     <artifactId>mrchecker-mobile-module</artifactId>
-    <version>2023.02.03</version>
+    <version>2023.02.06</version>
     <packaging>jar</packaging>
     <name>MrChecker - Mobile - Module</name>
     <description>MrChecker Test Framework name supports:
@@ -52,12 +52,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mrchecker-core-module</artifactId>
-            <version>2023.02.03</version>
+            <version>2023.02.06</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mrchecker-selenium-module</artifactId>
-            <version>2023.02.03</version>
+            <version>2023.02.06</version>
         </dependency>
 
         <!--This dependency is necessary for Appium plugin. -->

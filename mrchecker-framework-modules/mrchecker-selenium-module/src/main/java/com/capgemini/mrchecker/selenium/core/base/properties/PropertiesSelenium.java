@@ -4,36 +4,22 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class PropertiesSelenium {
-
-    private String webDrivers = "./lib/webdrivers";                                    // default
-    // value
-    private String seleniumChrome = webDrivers + "/chrome/chromedriver.exe";                // default
-    // value
-    private String seleniumOpera = webDrivers + "/opera/operadriver.exe";                // default
-    // value
-    private String seleniumEdge = webDrivers + "/edge/msedgedriver.exe";                // default
-    // value
-    private String seleniumFirefox = webDrivers + "/firefox/geckodriver.exe";                // default
-    // value
-    private String seleniumIE = webDrivers + "/internetexplorer/IEDriverServer.exe";    // default
-    // value
-    private String proxy = "";                                                    // default
-    // value
-    private boolean driverAutoUpdateFlag = true;                                                    // default
-    // value
-    private String chromeDriverVersion = "";
-    // private String chromeHeadlessDriverVersion = "";
-    private String internetExplorerDriverVersion = "";
-    private String geckoDriverVersion = "";
-    private String edgeDriverVersion = "";
-    private boolean edgeDriverFeatureOnDemandFlag = true;
-    private String operaDriverVersion = "";
+    private String webDrivers = "./lib/webdrivers";
+    private String seleniumChrome = webDrivers + "/chrome/chromedriver.exe";
+    private String driverVersionChrome = "";
+    private String seleniumEdge = webDrivers + "/edge/msedgedriver.exe";
+    private String driverVersionEdge = "";
+    private String seleniumFirefox = webDrivers + "/firefox/geckodriver.exe";
+    private String driverVersionFirefox = "";
+    private String seleniumIE = webDrivers + "/internetexplorer/IEDriverServer.exe";
+    private String driverVersionIE = "";
+    private String proxy = "";
+    private boolean driverAutoUpdateFlag = true;
 
     @Inject(optional = true)
     @SuppressWarnings("unused")
     private void setSeleniumChrome(@Named("selenium.chrome") String path) {
         seleniumChrome = path;
-
     }
 
     public String getSeleniumChrome() {
@@ -42,20 +28,8 @@ public class PropertiesSelenium {
 
     @Inject(optional = true)
     @SuppressWarnings("unused")
-    private void setSeleniumOpera(@Named("selenium.opera") String path) {
-        seleniumOpera = path;
-
-    }
-
-    public String getSeleniumOpera() {
-        return seleniumOpera;
-    }
-
-    @Inject(optional = true)
-    @SuppressWarnings("unused")
     private void setSeleniumEdge(@Named("selenium.edge") String path) {
         seleniumEdge = path;
-
     }
 
     public String getSeleniumEdge() {
@@ -66,7 +40,6 @@ public class PropertiesSelenium {
     @SuppressWarnings("unused")
     private void setSeleniumFirefox(@Named("selenium.firefox") String path) {
         seleniumFirefox = path;
-
     }
 
     public String getSeleniumFirefox() {
@@ -77,7 +50,6 @@ public class PropertiesSelenium {
     @SuppressWarnings("unused")
     private void setSeleniumIE(@Named("selenium.ie") String path) {
         seleniumIE = path;
-
     }
 
     public String getSeleniumIE() {
@@ -88,7 +60,6 @@ public class PropertiesSelenium {
     @SuppressWarnings("unused")
     private void setWebDrivers(@Named("selenium.webdrivers") String path) {
         webDrivers = path;
-
     }
 
     public String getWebDrivers() {
@@ -99,7 +70,6 @@ public class PropertiesSelenium {
     @SuppressWarnings("unused")
     private void setProxy(@Named("selenium.proxy") String path) {
         proxy = path;
-
     }
 
     public String getProxy() {
@@ -119,60 +89,40 @@ public class PropertiesSelenium {
     @Inject(optional = true)
     @SuppressWarnings("unused")
     private void setChromeDriverVersion(@Named("wdm.chromeDriverVersion") String version) {
-        chromeDriverVersion = version;
+        driverVersionChrome = version;
     }
 
     public String getChromeDriverVersion() {
-        return chromeDriverVersion;
+        return driverVersionChrome;
     }
 
     @Inject(optional = true)
     @SuppressWarnings("unused")
     private void setInternetExplorerDriverVersion(@Named("wdm.internetExplorerDriverVersion") String version) {
-        internetExplorerDriverVersion = version;
+        driverVersionIE = version;
     }
 
     public String getInternetExplorerDriverVersion() {
-        return internetExplorerDriverVersion;
+        return driverVersionIE;
     }
 
     @Inject(optional = true)
     @SuppressWarnings("unused")
     private void setGeckoDriverVersion(@Named("wdm.geckoDriverVersion") String version) {
-        geckoDriverVersion = version;
+        driverVersionFirefox = version;
     }
 
     public String getGeckoDriverVersion() {
-        return geckoDriverVersion;
+        return driverVersionFirefox;
     }
 
     @Inject(optional = true)
     @SuppressWarnings("unused")
     private void setEdgeDriverVersion(@Named("wdm.edgeVersion") String version) {
-        edgeDriverVersion = version;
+        driverVersionEdge = version;
     }
 
     public String getEdgeDriverVersion() {
-        return edgeDriverVersion;
-    }
-
-    @Inject(optional = true)
-    @SuppressWarnings("unused")
-    private void setEdgeDriverFeatureOnDemandFlag(@Named("wdm.edgeFeatureOnDemand") boolean flag) {
-        edgeDriverFeatureOnDemandFlag = flag;
-    }
-
-    public boolean getEdgeDriverFeatureOnDemandFlag() {
-        return edgeDriverFeatureOnDemandFlag;
-    }
-
-    @Inject(optional = true)
-    @SuppressWarnings("unused")
-    private void setOperaDriverVersion(@Named("wdm.operaDriverVersion") String version) {
-        operaDriverVersion = version;
-    }
-
-    public String getOperaDriverVersion() {
-        return operaDriverVersion;
+        return driverVersionEdge;
     }
 }

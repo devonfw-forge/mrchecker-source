@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
  * @author MBABIARZ
  */
 public enum RuntimeParametersSelenium implements IRuntimeParameters {
-
     BROWSER("browser", "chrome") {
         protected void setValue() {
             super.setValue();

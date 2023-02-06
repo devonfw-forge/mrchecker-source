@@ -69,11 +69,6 @@ public class PropertiesManagerTest {
         assertEquals("", "edgedriver.exe", propertiesSelenium.getSeleniumEdge());
     }
 
-    @Test
-    public void testParamterGetOpera() {
-        assertEquals("", "operadriver.exe", propertiesSelenium.getSeleniumOpera());
-    }
-
     // @Ignore
     @Test
     public void testDefaultParamters() {

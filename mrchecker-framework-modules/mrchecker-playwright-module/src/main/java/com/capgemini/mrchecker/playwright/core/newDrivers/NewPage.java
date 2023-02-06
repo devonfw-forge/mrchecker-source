@@ -531,6 +531,11 @@ public class NewPage implements Page {
     }
 
     @Override
+    public Locator getByTestId(Pattern pattern) {
+        return page.getByTestId(pattern);
+    }
+
+    @Override
     public Locator getByText(String text) {
         return page.getByText(text);
     }

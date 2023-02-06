@@ -13,6 +13,7 @@ import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.chromium.ChromiumOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -20,9 +21,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
-import org.openqa.selenium.remote.Browser;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
@@ -159,7 +158,7 @@ public class DriverManager {
         FIREFOX {
             @Override
             public INewWebDriver getDriver() {
-                return DriverManager.getDriver(getFirefoxOptions());
+                return DriverManager.getDriver(getFirefoxOptions(getFirefoxProfile()));
             }
         },
         IE {
@@ -193,76 +192,18 @@ public class DriverManager {
     }
 
     public static ChromeOptions getChromeOptions() {
-        HashMap<String, Object> chromePrefs = new HashMap<>();
-        chromePrefs.put("download.default_directory", DOWNLOAD_DIR);
-        chromePrefs.put("profile.content_settings.pattern_pairs.*.multiple-automatic-downloads", 1);
-        chromePrefs.put("profile.default_content_setting_values.notifications", 2);
-
-        RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
-            BFLogger.logDebug("Add to Chrome prefs: " + key + " = " + value.toString());
-            chromePrefs.put(key, value.toString());
-        });
-
         ChromeOptions options = new ChromeOptions();
-        options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
-        options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
-        options.setExperimentalOption("prefs", chromePrefs);
-        options.setAcceptInsecureCerts(true);
-        options.setCapability("acceptSslCerts", true);
-        options.addArguments("--test-type");
-        options.addArguments("window-size=1920x1080");
-        options.addArguments("--ignore-certificate-errors");
-        options.addArguments("--allow-insecure-localhost");
-        options.addArguments("--allow-running-insecure-content");
-        options.addArguments("--disable-popup-blocking");
-        options.setHeadless(Boolean.parseBoolean(System.getProperty("headless", "false")));
-
-        RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
-            BFLogger.logDebug("Add to Chrome options: " + key + " = " + value.toString());
-            String item = (value.toString().isEmpty()) ? key : key + "=" + value;
-            options.addArguments(item);
-            options.setCapability(key, value.toString());
-        });
-
+        setCommonChromiumOptions(options);
         return options;
     }
 
     public static EdgeOptions getEdgeOptions() {
-        HashMap<String, Object> edgePrefs = new HashMap<>();
-        edgePrefs.put("download.default_directory", DOWNLOAD_DIR);
-        edgePrefs.put("profile.content_settings.pattern_pairs.*.multiple-automatic-downloads", 1);
-        edgePrefs.put("profile.default_content_setting_values.notifications", 2);
-
-        RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
-            BFLogger.logDebug("Add to Edge prefs: " + key + " = " + value.toString());
-            edgePrefs.put(key, value.toString());
-        });
-
         EdgeOptions options = new EdgeOptions();
-        options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
-        options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
-        options.setExperimentalOption("prefs", edgePrefs);
-        options.setAcceptInsecureCerts(true);
-        options.setCapability("acceptSslCerts", true);
-        options.addArguments("--test-type");
-        options.addArguments("window-size=1920x1080");
-        options.addArguments("--ignore-certificate-errors");
-        options.addArguments("--allow-insecure-localhost");
-        options.addArguments("--allow-running-insecure-content");
-        options.addArguments("--disable-popup-blocking");
-        options.setHeadless(Boolean.parseBoolean(System.getProperty("headless", "false")));
-
-        RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
-            BFLogger.logDebug("Add to Edge options: " + key + " = " + value.toString());
-            String item = (value.toString().isEmpty()) ? key : key + "=" + value;
-            options.addArguments(item);
-            options.setCapability(key, value.toString());
-        });
-
+        setCommonChromiumOptions(options);
         return options;
     }
 
-    public static FirefoxOptions getFirefoxOptions() {
+    public static FirefoxProfile getFirefoxProfile() {
         FirefoxProfile profile = new FirefoxProfile();
         profile.setAcceptUntrustedCertificates(true);
         profile.setAssumeUntrustedCertificateIssuer(false);
@@ -286,44 +227,29 @@ public class DriverManager {
         profile.setPreference("network.http.use-cache", false);
 
         RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
-            BFLogger.logDebug("Add to Firefox profile: " + key + " = " + value.toString());
-            profile.setPreference(key, value.toString());
+            BFLogger.logDebug("Add to Firefox profile: " + key + "=" + value);
+            profile.setPreference(key, value);
         });
 
-        FirefoxOptions options = new FirefoxOptions().setProfile(profile);
+        return profile;
+    }
+
+    public static FirefoxOptions getFirefoxOptions(FirefoxProfile profile) {
+        FirefoxOptions options = new FirefoxOptions();
+        setCommonBrowserOptions(options);
+        options.setHeadless(Boolean.parseBoolean(System.getProperty("headless", "false")));
+        options.setProfile(profile);
         options.setCapability("security.ssl.enable_ocsp_stapling", false);
-        options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
-        options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
-        options.setAcceptInsecureCerts(true);
-        options.setCapability("acceptSslCerts", true);
         options.setCapability("handleAlerts", true);
         options.setCapability("network.http.use-cache", false);
         options.setCapability("security.cert_pinning.enforcement_level", 0);
         options.setCapability("security.enterprise_roots.enabled", true);
-        options.setHeadless(Boolean.parseBoolean(System.getProperty("headless", "false")));
-
-        RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
-            BFLogger.logDebug("Add to Firefox options: " + key + " = " + value.toString());
-            String item = (value.toString().isEmpty()) ? key : key + "=" + value;
-            options.addArguments(item);
-            options.setCapability(key, value.toString());
-        });
-
         return options;
     }
 
     public static InternetExplorerOptions getInternetExplorerOptions() {
         InternetExplorerOptions options = new InternetExplorerOptions();
-        options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
-        options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
-        options.setAcceptInsecureCerts(true);
-        options.setCapability("acceptSslCerts", true);
-
-        RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
-            BFLogger.logDebug("Add to Internet Explorer options: " + key + " = " + value.toString());
-            options.setCapability(key, value.toString());
-        });
-
+        setCommonBrowserOptions(options);
         return options;
     }
 
@@ -449,38 +375,14 @@ public class DriverManager {
         BFLogger.logDebug("Connecting to the selenium grid: " + SELENIUM_GRID_URL);
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        String operatingSystem = RuntimeParametersSelenium.OS.getValue();
-        if (!isEmpty(operatingSystem)) {
-            Platform platform = Platform.fromString(operatingSystem);
-            capabilities.setPlatform(platform);
-        }
+        //browserName
+        setBrowserName(capabilities, options);
 
-        String browser = RuntimeParametersSelenium.BROWSER.getValue();
-        if (Browser.CHROME.is(browser)) {
-            capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-        } else if (Browser.EDGE.is(browser)) {
-            capabilities.setCapability(EdgeOptions.CAPABILITY, options);
-        } else if (Browser.FIREFOX.is(browser)) {
-            capabilities.setCapability(FirefoxOptions.FIREFOX_OPTIONS, options);
-        } else {
-            throw new IllegalStateException("Unsupported browser: " + browser);
-        }
-        capabilities.setBrowserName(browser);
+        //browserVersion
+        setBrowserVersion(capabilities);
 
-        String browserVersion = RuntimeParametersSelenium.BROWSER_VERSION.getValue();
-        if (!isEmpty(browserVersion)) {
-            //Backward compatibility with Selenium 3 grids
-            if (Boolean.parseBoolean(System.getProperty("selenium3grid", "false"))) {
-                capabilities.setCapability("version", browserVersion);
-            } else {
-                capabilities.setVersion(browserVersion);
-            }
-        }
-
-        RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
-            BFLogger.logDebug("Browser option: " + key + " " + value.toString());
-            capabilities.setCapability(key, value.toString());
-        });
+        //platformName
+        setPlatformName(capabilities);
 
         NewRemoteWebDriver newRemoteWebDriver = null;
         try {
@@ -492,9 +394,100 @@ public class DriverManager {
         return newRemoteWebDriver;
     }
 
+    private static void setBrowserName(DesiredCapabilities capabilities, MutableCapabilities options) {
+        String browser = RuntimeParametersSelenium.BROWSER.getValue();
+        if (Browser.CHROME.is(browser)) {
+            capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+        } else if (Browser.EDGE.is(browser)) {
+            capabilities.setCapability(EdgeOptions.CAPABILITY, options);
+        } else if (Browser.FIREFOX.is(browser)) {
+            capabilities.setCapability(FirefoxOptions.FIREFOX_OPTIONS, options);
+        } else {
+            throw new IllegalStateException("Unsupported browser: " + browser);
+        }
+        capabilities.setBrowserName(browser);
+    }
+
+    @SuppressWarnings("deprecation")
+    private static void setBrowserVersion(DesiredCapabilities capabilities) {
+        String browserVersion = RuntimeParametersSelenium.BROWSER_VERSION.getValue();
+        if (!isEmpty(browserVersion)) {
+            //Backward compatibility with Selenium 3 grids
+            if (Boolean.parseBoolean(System.getProperty("selenium3grid", "false"))) {
+                capabilities.setCapability(CapabilityType.VERSION, browserVersion);
+            } else {
+                capabilities.setVersion(browserVersion);
+            }
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    private static void setPlatformName(DesiredCapabilities capabilities) {
+        String operatingSystem = RuntimeParametersSelenium.OS.getValue();
+        if (!isEmpty(operatingSystem)) {
+            Platform platform = Platform.fromString(operatingSystem);
+            //Backward compatibility with Selenium 3 grids
+            if (Boolean.parseBoolean(System.getProperty("selenium3grid", "false"))) {
+                capabilities.setCapability(CapabilityType.PLATFORM, platform);
+            } else {
+                capabilities.setPlatform(platform);
+            }
+        }
+    }
+
+    private static void setCommonBrowserOptions(AbstractDriverOptions options) {
+        options.setImplicitWaitTimeout(IMPLICITLY_WAIT);
+        //options.setPageLoadTimeout();
+        //options.setScriptTimeout();
+        //options.setProxy();
+        options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+        options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
+        options.setAcceptInsecureCerts(true);
+        if (Boolean.parseBoolean(System.getProperty("selenium3grid", "false"))) {
+            options.setCapability("acceptSslCerts", true);
+        }
+
+        RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
+            if ((new AcceptedW3CCapabilityKeys()).test(key)) {
+                BFLogger.logDebug("Add to browser capabilities: " + key + "=" + value);
+                options.setCapability(key, value);
+            }
+        });
+    }
+
+    private static void setCommonChromiumOptions(ChromiumOptions options) {
+        setCommonBrowserOptions(options);
+        options.setHeadless(Boolean.parseBoolean(System.getProperty("headless", "false")));
+        HashMap<String, Object> chromePrefs = new HashMap<>();
+        chromePrefs.put("download.default_directory", DOWNLOAD_DIR);
+        chromePrefs.put("profile.content_settings.pattern_pairs.*.multiple-automatic-downloads", 1);
+        chromePrefs.put("profile.default_content_setting_values.notifications", 2);
+
+        RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
+            if (!value.toString().isEmpty()) {
+                BFLogger.logDebug("Add to Chromium prefs: " + key + "=" + value);
+                chromePrefs.put(key, value);
+            }
+        });
+
+        options.setExperimentalOption("prefs", chromePrefs);
+        options.addArguments("--test-type");
+        options.addArguments("window-size=1920x1080");
+        options.addArguments("--ignore-certificate-errors");
+        options.addArguments("--allow-insecure-localhost");
+        options.addArguments("--allow-running-insecure-content");
+        options.addArguments("--disable-popup-blocking");
+
+        RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
+            String item = (value.toString().isEmpty()) ? key : key + "=" + value;
+            BFLogger.logDebug("Add to Chromium arguments: " + item);
+            options.addArguments(item);
+        });
+    }
+
     @SuppressWarnings("removal")
     @Override
-    // TODO: handle that finalize should never been called - it's unreliable. Intoduce Autoclose()
+    // TODO: handle that finalize should never been called - it's unreliable. Introduce Autoclose()
     protected void finalize() throws Throwable {
         super.finalize();
         try {
