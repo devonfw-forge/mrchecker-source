@@ -39,7 +39,8 @@ public enum RuntimeParametersSelenium implements IRuntimeParameters {
                     .map(i -> new String[]{i[0], (i.length == 1) ? "" : i[1]}) // if value is empty, set empty text
                     .collect(Collectors.toMap(i -> i[0], i -> convertToCorrectType(i[1].trim()))); // create
         }
-    };
+    },
+    HEADLESS("headless", "false");
 
     public static final String VALID_IE_NAME = "internet explorer";
     public static final String INVALID_IE_NAME = "ie";

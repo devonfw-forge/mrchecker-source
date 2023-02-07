@@ -124,7 +124,7 @@ public class DriverManager {
 
     public static BrowserType.LaunchOptions getLaunchOptions() {
         BrowserType.LaunchOptions options = new BrowserType.LaunchOptions();
-        options.setHeadless(propertiesPlaywright.getHeadless());
+        setHeadless(options);
         Proxy proxy = propertiesPlaywright.getProxy();
         if (Objects.nonNull(proxy)) {
             options.setProxy(proxy);
@@ -143,6 +143,20 @@ public class DriverManager {
         }
         options.setDownloadsPath(Paths.get(DOWNLOAD_DIR));
         return options;
+    }
+
+    private static void setHeadless(BrowserType.LaunchOptions options) {
+        String headless = RuntimeParametersPlaywright.HEADLESS.getValue();
+        switch (headless.toLowerCase().trim()) {
+            case "false":
+                options.setHeadless(false);
+                break;
+            case "true":
+                options.setHeadless(true);
+                break;
+            default:
+                throw new IllegalStateException("Unsupported headless state: " + headless);
+        }
     }
 
     public static Browser.NewContextOptions getContextOptions() {

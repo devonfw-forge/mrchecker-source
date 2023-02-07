@@ -237,7 +237,7 @@ public class DriverManager {
     public static FirefoxOptions getFirefoxOptions(FirefoxProfile profile) {
         FirefoxOptions options = new FirefoxOptions();
         setCommonBrowserOptions(options);
-        options.setHeadless(Boolean.parseBoolean(System.getProperty("headless", "false")));
+        setFirefoxHeadless(options);
         options.setProfile(profile);
         options.setCapability("security.ssl.enable_ocsp_stapling", false);
         options.setCapability("handleAlerts", true);
@@ -457,7 +457,7 @@ public class DriverManager {
 
     private static void setCommonChromiumOptions(ChromiumOptions options) {
         setCommonBrowserOptions(options);
-        options.setHeadless(Boolean.parseBoolean(System.getProperty("headless", "false")));
+        setChromiumHeadless(options);
         HashMap<String, Object> chromePrefs = new HashMap<>();
         chromePrefs.put("download.default_directory", DOWNLOAD_DIR);
         chromePrefs.put("profile.content_settings.pattern_pairs.*.multiple-automatic-downloads", 1);
@@ -483,6 +483,38 @@ public class DriverManager {
             BFLogger.logDebug("Add to Chromium arguments: " + item);
             options.addArguments(item);
         });
+    }
+
+    private static void setChromiumHeadless(ChromiumOptions options) {
+        String headless = RuntimeParametersSelenium.HEADLESS.getValue();
+        switch (headless.toLowerCase().trim()) {
+            case "false":
+                break;
+            case "true":
+                options.addArguments("--headless");
+                break;
+            case "chrome":
+                options.addArguments("--headless=chrome");
+                break;
+            case "new":
+                options.addArguments("--headless=new");
+                break;
+            default:
+                throw new IllegalStateException("Unsupported Firefox headless state: " + headless);
+        }
+    }
+
+    private static void setFirefoxHeadless(FirefoxOptions options) {
+        String headless = RuntimeParametersSelenium.HEADLESS.getValue();
+        switch (headless.toLowerCase().trim()) {
+            case "false":
+                break;
+            case "true":
+                options.addArguments("-headless");
+                break;
+            default:
+                throw new IllegalStateException("Unsupported Firefox headless state: " + headless);
+        }
     }
 
     @SuppressWarnings("removal")

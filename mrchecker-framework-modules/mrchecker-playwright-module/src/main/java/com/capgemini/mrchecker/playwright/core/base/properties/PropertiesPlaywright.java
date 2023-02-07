@@ -6,7 +6,6 @@ import com.microsoft.playwright.options.Proxy;
 
 public class PropertiesPlaywright {
     private Proxy proxy;
-    private boolean headless = Boolean.parseBoolean(System.getProperty("headless", "true"));
     private String channel;
     private String browsersPath = "./lib/playwright";
     private int skipBrowserDownload = 0;
@@ -19,16 +18,6 @@ public class PropertiesPlaywright {
 
     public Proxy getProxy() {
         return proxy;
-    }
-
-    @Inject(optional = true)
-    @SuppressWarnings("unused")
-    private void setProxy(@Named("playwright.browser.headless") boolean headless) {
-        this.headless = headless;
-    }
-
-    public boolean getHeadless() {
-        return headless;
     }
 
     @Inject(optional = true)
