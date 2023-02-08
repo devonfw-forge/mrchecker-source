@@ -31,7 +31,7 @@ public abstract class BaseEndpoint extends Page implements IWebAPI {
         // Read System or maven parameters
         setRuntimeParametersWebApi();
 
-        // Read Environment variables either from environmnets.csv or any other input data.
+        // Read Environment variables either from environments.csv or any other input data.
         setEnvironmentInstance();
     }
 
@@ -74,7 +74,7 @@ public abstract class BaseEndpoint extends Page implements IWebAPI {
 
     private static void setEnvironmentInstance() {
         /*
-         * Environment variables either from environmnets.csv or any other input data. For now there is no properties
+         * Environment variables either from environments.csv or any other input data. For now there is no properties
          * settings file for Selenium module. In future, please have a look on Core Module IEnvironmentService
          * environmetInstance = Guice.createInjector(new EnvironmentModule()) .getInstance(IEnvironmentService.class);
          */

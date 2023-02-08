@@ -218,7 +218,7 @@ abstract public class BasePageCli extends Page {
 
     private static void setEnvironmentInstance() {
         /*
-         * Environment variables either from environmnets.csv or any other input data. For now there is no properties
+         * Environment variables either from environments.csv or any other input data. For now there is no properties
          * settings file for Selenium module. In future, please have a look on Core Module IEnvironmentService
          * environmetInstance = Guice.createInjector(new EnvironmentModule()) .getInstance(IEnvironmentService.class);
          */

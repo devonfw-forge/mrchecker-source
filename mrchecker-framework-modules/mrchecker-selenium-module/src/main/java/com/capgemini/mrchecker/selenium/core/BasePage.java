@@ -42,7 +42,7 @@ abstract public class BasePage extends Page implements IBasePage {
     private final static PropertiesSelenium PROPERTIES_SELENIUM;
 
     static {
-        // Get analytics instance created in BaseTets
+        // Get analytics instance created in BaseTest
         ANALYTICS = BaseTest.getAnalytics();
 
         // Get and then set properties information from selenium.settings file
@@ -51,7 +51,7 @@ abstract public class BasePage extends Page implements IBasePage {
         // Read System or maven parameters
         setRuntimeParametersSelenium();
 
-        // Read Environment variables either from environmnets.csv or any other input data.
+        // Read Environment variables either from environments.csv or any other input data.
         setEnvironmentInstance();
     }
 
@@ -343,7 +343,7 @@ abstract public class BasePage extends Page implements IBasePage {
 
     private static void setEnvironmentInstance() {
         /*
-         * Environment variables either from environmnets.csv or any other input data. For now there is no properties
+         * Environment variables either from environments.csv or any other input data. For now there is no properties
          * settings file for Selenium module. In future, please have a look on Core Module IEnvironmentService
          * environmetInstance = Guice.createInjector(new EnvironmentModule()) .getInstance(IEnvironmentService.class);
          */

@@ -18,7 +18,7 @@ abstract public class BasePage extends Page {
         // Get analytics instance created in BaseTets
         ANALYTICS = BaseTest.getAnalytics();
 
-        // Read Environment variables either from environmnets.csv or any other input data.
+        // Read Environment variables either from environments.csv or any other input data.
         setEnvironmentInstance();
     }
 

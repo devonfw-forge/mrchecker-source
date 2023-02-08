@@ -15,6 +15,7 @@ import com.google.inject.Guice;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page.WaitForLoadStateOptions;
 import com.microsoft.playwright.options.LoadState;
 import io.qameta.allure.Attachment;
 
@@ -31,18 +32,19 @@ abstract public class BasePage extends Page implements IBasePage {
     private final static IAnalytics ANALYTICS;
     public final static String ANALYTICS_CATEGORY_NAME = "Playwright-NewDrivers";
     private final static PropertiesPlaywright PROPERTIES_PLAYWRIGHT;
+    private final static LoadState DEFAULT_LOAD_STATE = LoadState.LOAD;
 
     static {
-        // Get analytics instance created in BaseTets
+        // Get analytics instance created in BaseTest
         ANALYTICS = BaseTest.getAnalytics();
 
-        // Get and then set properties information from selenium.settings file
+        // Get and then set properties information from playwright.settings file
         PROPERTIES_PLAYWRIGHT = setPropertiesSettings();
 
         // Read System or maven parameters
         setRuntimeParametersPlaywright();
 
-        // Read Environment variables either from environmnets.csv or any other input data.
+        // Read Environment variables either from environments.csv or any other input data.
         setEnvironmentInstance();
     }
 
@@ -122,11 +124,6 @@ abstract public class BasePage extends Page implements IBasePage {
         return getPage().title();
     }
 
-    public void refreshPage() {
-        getPage().reload();
-        getPage().waitForLoadState(LoadState.NETWORKIDLE);
-    }
-
     public static INewBrowserContext getDriver() {
         if (Objects.isNull(driverManager)) {
             driverManager = new DriverManager(PROPERTIES_PLAYWRIGHT);
@@ -162,13 +159,46 @@ abstract public class BasePage extends Page implements IBasePage {
     public abstract String pageTitle();
 
     public void loadPage(String url) {
+        loadPage(url, DEFAULT_LOAD_STATE);
+    }
+
+    public void loadPage(String url, LoadState state) {
+        loadPage(url, state, null);
+    }
+
+    public void loadPage(String url, LoadState state, WaitForLoadStateOptions options) {
         BFLogger.logDebug(getClass().getName() + ": Opening  page: " + url);
         getPage().navigate(url);
-        getPage().waitForLoadState(LoadState.NETWORKIDLE);
+        waitForLoadState(state, options);
+    }
+
+    public void refreshPage() {
+        waitForLoadState(DEFAULT_LOAD_STATE);
+    }
+
+    public void refreshPage(LoadState state) {
+        waitForLoadState(state, null);
+    }
+
+    public void refreshPage(LoadState state, WaitForLoadStateOptions options) {
+        getPage().reload();
+        waitForLoadState(state, options);
+    }
+
+    public void waitForLoadState() {
+        waitForLoadState(DEFAULT_LOAD_STATE);
+    }
+
+    public void waitForLoadState(LoadState state) {
+        waitForLoadState(state, null);
+    }
+
+    public void waitForLoadState(LoadState state, WaitForLoadStateOptions options) {
+        getPage().waitForLoadState(state, options);
     }
 
     public boolean isUrlAndPageTitleAsCurrentPage(String url) {
-        getPage().waitForLoadState(LoadState.NETWORKIDLE);
+        waitForLoadState();
         String pageTitle = pageTitle();
         String currentUrl = getPage().url();
         String currentPageTitle = getActualPageTitle();
@@ -181,7 +211,7 @@ abstract public class BasePage extends Page implements IBasePage {
     }
 
     private static PropertiesPlaywright setPropertiesSettings() {
-        // Get and then set properties information from selenium.settings file
+        // Get and then set properties information from playwright.settings file
         return Guice.createInjector(PropertiesSettingsModule.init())
                 .getInstance(PropertiesPlaywright.class);
     }
@@ -194,8 +224,8 @@ abstract public class BasePage extends Page implements IBasePage {
 
     private static void setEnvironmentInstance() {
         /*
-         * Environment variables either from environmnets.csv or any other input data. For now there is no properties
-         * settings file for Selenium module. In future, please have a look on Core Module IEnvironmentService
+         * Environment variables either from environments.csv or any other input data. For now there is no properties
+         * settings file for Playwright module. In future, please have a look on Core Module IEnvironmentService
          * environmetInstance = Guice.createInjector(new EnvironmentModule()) .getInstance(IEnvironmentService.class);
          */
     }

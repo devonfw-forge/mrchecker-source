@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 
 public class EnvironmentModule extends AbstractModule {
 
-    private static final String DEFAULT_ENV_PARAMS_FILE = "/src/resources/enviroments/environments.csv";
+    private static final String DEFAULT_ENV_PARAMS_FILE = "/src/resources/environments/environments.csv";
     private final String envParamsFilePath;
 
     public EnvironmentModule(String envParamsFilePath) {

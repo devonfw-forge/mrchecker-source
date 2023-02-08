@@ -118,8 +118,8 @@ public class DriverManager {
         return options;
     }
 
-    private static boolean isEmpty(String seleniumGridParameter) {
-        return seleniumGridParameter == null || seleniumGridParameter.trim().isEmpty();
+    private static boolean isEmpty(String value) {
+        return value == null || value.trim().isEmpty();
     }
 
     public static BrowserType.LaunchOptions getLaunchOptions() {
