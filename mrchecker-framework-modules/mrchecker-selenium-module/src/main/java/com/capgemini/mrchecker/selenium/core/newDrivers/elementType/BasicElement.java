@@ -2,57 +2,85 @@ package com.capgemini.mrchecker.selenium.core.newDrivers.elementType;
 
 import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundException;
+import com.capgemini.mrchecker.selenium.core.utils.ScrollUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 
+import java.util.List;
+import java.util.Objects;
+
 public abstract class BasicElement implements IBasicElement {
-
     private final ElementType type;
-    private By cssSelector;
+    private final By selector;
+    private WebElement webElement;
 
-    public BasicElement(ElementType type, By cssSelector) {
+    public BasicElement(ElementType type, By selector) {
         this.type = type;
-        this.setCssSelector(cssSelector);
-
-        load();
+        this.selector = selector;
     }
 
     @Override
-    public WebElement load() {
-        return getElement();
+    public final By getSelector() {
+        return this.selector;
     }
 
     @Override
-    public String getElementTypeName() {
-        return type.toString();
+    public final ElementType getElementType() {
+        return this.type;
     }
 
-    public WebElement getElement() throws BFElementNotFoundException {
-        return BasePage.getDriver()
-                .findElementDynamic(getCssSelector());
+    @Override
+    public final String getElementTypeName() {
+        return getElementType().toString();
     }
 
-    public String getClassName() {
-        return getElement().getAttribute("class");
+    private boolean checkWebElement() {
+        if (Objects.isNull(webElement)) {
+            return false;
+        }
+        try {
+            // Calling any method forces a staleness check
+            webElement.isEnabled();
+            return true;
+        } catch (StaleElementReferenceException expected) {
+            return false;
+        }
     }
 
-    public String getValue() {
-        return getElement().getAttribute("value");
+    @Override
+    public final WebElement getWebElement() throws BFElementNotFoundException {
+        if (!checkWebElement()) {
+            List<WebElement> elements = BasePage.getDriver().findElementDynamics(getSelector());
+            if (elements.isEmpty()) {
+                throw new BFElementNotFoundException(getSelector());
+            }
+            webElement = elements.get(0);
+        }
+        return webElement;
     }
 
-    public String getText() {
-        return getElement().getText();
+    public final String getClassName() {
+        return getWebElement().getAttribute("class");
     }
 
-    public Boolean isDisplayed() {
-        return BasePage.isElementDisplayed(getCssSelector());
+    public final String getValue() {
+        return getWebElement().getAttribute("value");
     }
 
-    private By getCssSelector() {
-        return cssSelector;
+    public final String getText() {
+        return getWebElement().getText();
     }
 
-    private void setCssSelector(By cssSelector) {
-        this.cssSelector = cssSelector;
+    public final Boolean isDisplayed() {
+        return getWebElement().isDisplayed();
+    }
+
+    public final Boolean isEnabled() {
+        return getWebElement().isEnabled();
+    }
+
+    public final void scrollElementIntoView() {
+        ScrollUtils.scrollElementIntoView(getWebElement());
     }
 }

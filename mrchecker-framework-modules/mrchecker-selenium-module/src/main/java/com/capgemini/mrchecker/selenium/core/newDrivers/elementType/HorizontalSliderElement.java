@@ -54,7 +54,7 @@ public class HorizontalSliderElement extends BasicElement {
      */
 
     public BigDecimal getCurrentSliderValue() throws NumberFormatException {
-        WebElement currentValueElement = this.getElement()
+        WebElement currentValueElement = this.getWebElement()
                 .findElement(this.valueSelector);
         String value = currentValueElement.getText();
         if (value == null || value.isEmpty()) {
@@ -134,7 +134,7 @@ public class HorizontalSliderElement extends BasicElement {
      * @see Dimension
      */
     public Dimension getDimensions() {
-        return this.getElement()
+        return this.getWebElement()
                 .findElement(sliderSelector)
                 .getSize();
     }
@@ -184,7 +184,7 @@ public class HorizontalSliderElement extends BasicElement {
         String message = "Chosen method doesn't exist.";
         int counter = 0;
         BasePage.getDriver()
-                .mouseLeftClick(getElement().findElement(sliderSelector));
+                .mouseLeftClick(getWebElement().findElement(sliderSelector));
         position = verifyAndCorrectPositionValue(position);
         while (position.compareTo(getCurrentSliderValue()) != 0 || counter > getMaxNumberOfSteps()) {
             if (position.compareTo(getCurrentSliderValue()) > 0) {

@@ -1,12 +1,7 @@
-package com.capgemini.mrchecker.selenium.core.newDrivers.elementType;
+package com.capgemini.mrchecker.playwright.core.newDrivers.elementType;
 
-import org.openqa.selenium.By;
-
-/**
- * Created by LKURZAJ on 08.03.2017.
- */
 public class TooltipElement extends BasicElement {
-    public TooltipElement(By selector) {
+    public TooltipElement(String selector) {
         super(ElementType.TOOLTIP, selector);
     }
 

@@ -1,7 +1,6 @@
 package com.capgemini.mrchecker.playwright.core.newDrivers.elementType;
 
 public class InputTextElement extends BasicElement implements IBasicElement {
-
     public InputTextElement(String selector) {
         super(ElementType.INPUT_TEXT, selector);
     }
@@ -16,5 +15,9 @@ public class InputTextElement extends BasicElement implements IBasicElement {
 
     public void clearInputText() {
         getLocator().clear();
+    }
+
+    public void click() {
+        getLocator().click();
     }
 }

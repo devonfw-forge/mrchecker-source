@@ -3,56 +3,59 @@ package com.capgemini.mrchecker.playwright.core.newDrivers.elementType;
 import com.capgemini.mrchecker.playwright.core.BasePage;
 import com.microsoft.playwright.Locator;
 
-public abstract class BasicElement implements IBasicElement {
+import java.util.Objects;
 
+public abstract class BasicElement implements IBasicElement {
     private final ElementType type;
-    private String selector;
+    private final String selector;
+    private Locator locator;
 
     public BasicElement(ElementType type, String selector) {
         this.type = type;
-        this.setSelector(selector);
-        load();
+        this.selector = selector;
     }
 
     @Override
-    public Locator load() {
-        return getLocator();
+    public final String getSelector() {
+        return this.selector;
     }
 
     @Override
-    public String getElementTypeName() {
-        return type.toString();
+    public final ElementType getElementType() {
+        return this.type;
     }
 
-    public Locator getLocator() {
-        return BasePage.getDriver().currentPage().locator(getSelector());
+    @Override
+    public final String getElementTypeName() {
+        return getElementType().toString();
     }
 
-    public String getClassName() {
+
+    @Override
+    public final Locator getLocator() {
+        if (Objects.isNull(locator)) {
+            locator = BasePage.getDriver().currentPage().locator(getSelector());
+        }
+        return locator;
+    }
+
+    public final String getClassName() {
         return getLocator().getAttribute("class");
     }
 
-    public String getValue() {
+    public final String getValue() {
         return getLocator().getAttribute("value");
     }
 
-    public String getText() {
+    public final String getText() {
         return getLocator().textContent();
     }
 
-    public Boolean isVisible() {
+    public final Boolean isVisible() {
         return getLocator().isVisible();
     }
 
-    public Boolean isEnabled() {
+    public final Boolean isEnabled() {
         return getLocator().isEnabled();
-    }
-
-    private String getSelector() {
-        return selector;
-    }
-
-    private void setSelector(String selector) {
-        this.selector = selector;
     }
 }

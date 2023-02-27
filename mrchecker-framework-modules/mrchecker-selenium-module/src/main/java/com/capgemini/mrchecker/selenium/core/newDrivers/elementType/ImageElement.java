@@ -6,8 +6,7 @@ import org.openqa.selenium.By;
  * Created by TTRZCINSKI on 19.10.2018.
  */
 public class ImageElement extends BasicElement {
-
-    public ImageElement(By cssSelector) {
-        super(ElementType.IMAGE, cssSelector);
+    public ImageElement(By selector) {
+        super(ElementType.IMAGE, selector);
     }
 }

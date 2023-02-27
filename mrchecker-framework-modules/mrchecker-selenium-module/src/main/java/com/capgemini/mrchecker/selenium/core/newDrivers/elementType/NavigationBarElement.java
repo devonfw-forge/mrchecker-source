@@ -13,28 +13,28 @@ import java.util.List;
  */
 public class NavigationBarElement extends BasicElement {
 
-    private final By inputChildsSelector;
+    private final By inputChildrenSelector;
 
     /**
-     * @param cssSelector - selector of Navigation Bar element's set
+     * @param selector - selector of Navigation Bar element's set
      **/
-    public NavigationBarElement(By cssSelector) {
-        this(cssSelector, By.cssSelector("li"));
+    public NavigationBarElement(By selector) {
+        this(selector, By.cssSelector("li"));
     }
 
     /**
-     * @param cssSelector - selector of Navigation Bar element's set
+     * @param selector - selector of Navigation Bar element's set
      **/
-    public NavigationBarElement(By cssSelector, By inputChildsSelector) {
-        super(ElementType.NAVIGATION_BAR, cssSelector);
-        this.inputChildsSelector = inputChildsSelector;
+    public NavigationBarElement(By selector, By inputChildrenSelector) {
+        super(ElementType.NAVIGATION_BAR, selector);
+        this.inputChildrenSelector = inputChildrenSelector;
     }
 
     public List<String> getItemsTextList() {
-        List<WebElement> listElems = getItems();
+        List<WebElement> listElements = getItems();
         List<String> out = new ArrayList<>();
 
-        for (WebElement listElem : listElems) {
+        for (WebElement listElem : listElements) {
             out.add(listElem
                     .getText());
         }
@@ -56,8 +56,7 @@ public class NavigationBarElement extends BasicElement {
                         .getText();
             }
         }
-        throw new BFElementNotFoundException("Any active item was found in " + getElement()
-                .toString());
+        throw new BFElementNotFoundException("Any active item was found in " + getWebElement());
     }
 
     public void clickFirstItem() {
@@ -106,7 +105,7 @@ public class NavigationBarElement extends BasicElement {
     }
 
     private List<WebElement> getItems() {
-        return getElement()
-                .findElements(inputChildsSelector);
+        return getWebElement()
+                .findElements(inputChildrenSelector);
     }
 }

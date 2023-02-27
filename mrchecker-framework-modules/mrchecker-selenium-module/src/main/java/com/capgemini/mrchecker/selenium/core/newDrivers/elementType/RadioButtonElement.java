@@ -9,44 +9,43 @@ import java.util.Collections;
 import java.util.List;
 
 public class RadioButtonElement extends BasicElement implements IBasicElement {
-
-    private By inputChildsSelector;
+    private By inputSelector;
     private List<WebElement> listElements;
     private List<String> listSelectedAttributes;
 
     /**
-     * @param cssSelector - selector of Radio Button element's set
+     * @param selector - selector of Radio Button element's set
      **/
-    public RadioButtonElement(By cssSelector) {
-        this(cssSelector, By.cssSelector("input"), Collections.singletonList("selected"));
+    public RadioButtonElement(By selector) {
+        this(selector, By.cssSelector("input"), Collections.singletonList("selected"));
     }
 
     /**
-     * @param cssSelector         - selector of Radio Button element's set
-     * @param inputChildsSelector - selector of relative path from Radio Button element's set to basic input element
+     * @param selector      - selector of Radio Button element's set
+     * @param inputSelector - selector of relative path from Radio Button element's set to basic input element
      **/
-    public RadioButtonElement(By cssSelector, By inputChildsSelector) {
-        this(ElementType.INPUT_TEXT, cssSelector, inputChildsSelector, Collections.singletonList("selected"));
+    public RadioButtonElement(By selector, By inputSelector) {
+        this(ElementType.INPUT_TEXT, selector, inputSelector, Collections.singletonList("selected"));
     }
 
     /**
-     * @param cssSelector            - selector of Radio Button element's set
-     * @param inputChildsSelector    - selector of relative path from Radio Button element's set to basic input element
+     * @param selector               - selector of Radio Button element's set
+     * @param inputSelector          - selector of relative path from Radio Button element's set to basic input element
      * @param listSelectedAttributes - list of class name describing selected item
      **/
-    public RadioButtonElement(By cssSelector, By inputChildsSelector, List<String> listSelectedAttributes) {
-        this(ElementType.INPUT_TEXT, cssSelector, inputChildsSelector, listSelectedAttributes);
+    public RadioButtonElement(By selector, By inputSelector, List<String> listSelectedAttributes) {
+        this(ElementType.INPUT_TEXT, selector, inputSelector, listSelectedAttributes);
     }
 
     /**
-     * @param cssSelector            - selector of Radio Button element's set
-     * @param inputChildsSelector    - selector of relative path from Radio Button element's set to basic input element
+     * @param selector               - selector of Radio Button element's set
+     * @param inputSelector          - selector of relative path from Radio Button element's set to basic input element
      * @param listSelectedAttributes - list of class name describing selected item
      **/
-    protected RadioButtonElement(ElementType elemType, By cssSelector, By inputChildsSelector,
+    protected RadioButtonElement(ElementType elemType, By selector, By inputSelector,
                                  List<String> listSelectedAttributes) {
-        super(elemType, cssSelector);
-        setInputChildsSelector(inputChildsSelector);
+        super(elemType, selector);
+        setInputSelector(inputSelector);
         setSelectedAttributes(listSelectedAttributes);
     }
 
@@ -106,19 +105,19 @@ public class RadioButtonElement extends BasicElement implements IBasicElement {
 
     private void checkIsItemClicked(WebElement element) {
         if (isItemSelected(element)) {
-            System.out.println(getElementTypeName() + ": " + toString() + " isn't clicked.");
+            System.out.println(getElementTypeName() + ": " + getSelector() + " isn't clicked.");
         }
     }
 
     private String[] getTextArray() {
-        return getElement()
+        return getWebElement()
                 .getText()
                 .trim()
                 .split("\n");
     }
 
-    private void setInputChildsSelector(By selector) {
-        inputChildsSelector = selector;
+    private void setInputSelector(By inputSelector) {
+        this.inputSelector = inputSelector;
     }
 
     private void setSelectedAttributes(List<String> listSelectedAttributes) {
@@ -134,8 +133,8 @@ public class RadioButtonElement extends BasicElement implements IBasicElement {
     }
 
     private void setItems() {
-        setListItems(getElement()
-                .findElements(inputChildsSelector));
+        setListItems(getWebElement()
+                .findElements(inputSelector));
     }
 
     private WebElement getItemByIndex(int index) {

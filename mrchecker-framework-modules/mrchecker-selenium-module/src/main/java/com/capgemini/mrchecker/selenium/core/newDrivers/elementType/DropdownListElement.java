@@ -9,22 +9,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DropdownListElement extends BasicElement implements IBasicElement {
-
-    public DropdownListElement(By cssSelector) {
-        super(ElementType.DROPDOWN, cssSelector);
+    public DropdownListElement(By selector) {
+        super(ElementType.DROPDOWN, selector);
     }
 
     public void selectDropdownByIndex(int index) {
-        getObject()
+        getSelect()
                 .selectByIndex(index);
-        List<WebElement> list = getObject()
+        List<WebElement> list = getSelect()
                 .getOptions();
 
         if (!list.get(index)
                 .isSelected()) {
-            throw new BFComponentStateException(ElementType.DROPDOWN.toString(), "select", "Option with index: "
-                    + index + " should be set from in " + getObject()
-                    .toString());
+            throw new BFComponentStateException(ElementType.DROPDOWN, "select", "Option with index: "
+                    + index + " should be set from in " + getSelect());
         }
     }
 
@@ -36,20 +34,17 @@ public class DropdownListElement extends BasicElement implements IBasicElement {
 
     public void selectDropdownByValue(String value) {
         value = value.trim();
-        getObject()
-                .selectByValue(value);
+        getSelect().selectByValue(value);
         if (!isDropdownElementSelectedByValue(value)) {
-            throw new BFComponentStateException(ElementType.DROPDOWN.toString(), "select", "Option with value: "
-                    + value + " should be set from in " + getObject()
-                    .toString());
+            throw new BFComponentStateException(ElementType.DROPDOWN, "select", "Option with value: "
+                    + value + " should be set from in " + getSelect());
         }
     }
 
     public void selectDropdownByVisibleText(String value) {
         boolean flag = false;
 
-        getObject()
-                .selectByVisibleText(value);
+        getSelect().selectByVisibleText(value);
 
         List<String> list = getAllSelectedOptionsText();
         for (String s : list) {
@@ -61,26 +56,25 @@ public class DropdownListElement extends BasicElement implements IBasicElement {
 
         if (!flag) {
             throw new RuntimeException(
-                    "Option with text: " + value + " wasn't selected in " + getObject()
-                            .toString());
+                    "Option with text: " + value + " wasn't selected in " + getSelect());
         }
     }
 
     public List<String> getAllSelectedOptionsText() {
-        List<WebElement> list = getObject()
+        List<WebElement> list = getSelect()
                 .getAllSelectedOptions();
         return getValuesFromWebElements(list);
     }
 
     public String getFirstSelectedOptionText() {
-        return getObject()
+        return getSelect()
                 .getFirstSelectedOption()
                 .getText()
                 .trim();
     }
 
     public int getAmountOfPossibleValues() {
-        List<WebElement> list = getObject()
+        List<WebElement> list = getSelect()
                 .getOptions();
         return list.size();
     }
@@ -93,12 +87,12 @@ public class DropdownListElement extends BasicElement implements IBasicElement {
     }
 
     private List<WebElement> getPossibleOptions() {
-        return getObject()
+        return getSelect()
                 .getOptions();
     }
 
     private List<String> getPossibleValuesText() {
-        List<WebElement> list = getObject()
+        List<WebElement> list = getSelect()
                 .getOptions();
         return getValuesFromWebElements(list);
     }
@@ -108,8 +102,8 @@ public class DropdownListElement extends BasicElement implements IBasicElement {
                 .indexOf(value);
     }
 
-    private Select getObject() {
-        return new Select(getElement());
+    private Select getSelect() {
+        return new Select(getWebElement());
     }
 
     private List<String> getValuesFromWebElements(List<WebElement> list) {

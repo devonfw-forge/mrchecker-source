@@ -1,7 +1,6 @@
 package com.capgemini.mrchecker.playwright.core.newDrivers.elementType;
 
-enum ElementType {
-
+public enum ElementType {
     BUTTON("Button"),
     LIST("List"),
     INPUT_TEXT("Input text element"),
@@ -26,5 +25,4 @@ enum ElementType {
     public String toString() {
         return value;
     }
-
 }

@@ -8,24 +8,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ListElements extends BasicElement implements IBasicElement {
-
-    private final By cssSelector;
-
-    public ListElements(By cssSelector) {
-        super(ElementType.LIST, cssSelector);
-        this.cssSelector = cssSelector;
+    public ListElements(By selector) {
+        super(ElementType.LIST, selector);
     }
 
     public Integer getSize() {
         return BasePage.getDriver()
-                .findElementDynamics(cssSelector)
+                .findElementDynamics(getSelector())
                 .size();
-
     }
 
     public List<WebElement> getList() {
         return BasePage.getDriver()
-                .findElementDynamics(cssSelector);
+                .findElementDynamics(getSelector());
     }
 
     public List<String> getTextList() {

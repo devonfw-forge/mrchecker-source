@@ -9,23 +9,22 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CheckBox extends BasicElement {
-
-    private By inputChildsSelector;
+    private By inputSelector;
 
     /**
-     * @param cssSelector - selector of CheckBox element's set
+     * @param selector - selector of CheckBox element's set
      **/
-    public CheckBox(By cssSelector) {
-        this(cssSelector, By.cssSelector("input"));
+    public CheckBox(By selector) {
+        this(selector, By.cssSelector("input"));
     }
 
     /**
-     * @param cssSelector         - selector of CheckBox element's set
-     * @param inputChildsSelector - selector of relative path from CheckBox element's set to basic input element
+     * @param selector      - selector of CheckBox element's set
+     * @param inputSelector - selector of relative path from CheckBox element's set to basic input element
      **/
-    public CheckBox(By cssSelector, By inputChildsSelector) {
-        super(ElementType.CHECKBOX, cssSelector);
-        setInputChildsSelector(inputChildsSelector);
+    public CheckBox(By selector, By inputSelector) {
+        super(ElementType.CHECKBOX, selector);
+        setInputSelector(inputSelector);
     }
 
     public void setCheckBoxByIndex(int index) {
@@ -87,8 +86,7 @@ public class CheckBox extends BasicElement {
     }
 
     private List<WebElement> getCheckBoxesList() {
-        return getElement()
-                .findElements(inputChildsSelector);
+        return getWebElement().findElements(getInputSelector());
     }
 
     private void setCheckBoxByIndexTo(int index, boolean destination) {
@@ -104,7 +102,7 @@ public class CheckBox extends BasicElement {
                 .get(index)
                 .isSelected();
         if (currentState != destination) {
-            throw new BFComponentStateException(ElementType.CHECKBOX.toString(), "set/unset",
+            throw new BFComponentStateException(ElementType.CHECKBOX, "set/unset",
                     String.valueOf(currentState));
         }
     }
@@ -163,7 +161,7 @@ public class CheckBox extends BasicElement {
         }
 
         if (!isAllCheckBoxesSetTo(destination)) {
-            throw new BFComponentStateException(ElementType.CHECKBOX.toString(), "set/unset",
+            throw new BFComponentStateException(ElementType.CHECKBOX, "set/unset",
                     "setting to " + destination);
         }
     }
@@ -179,7 +177,11 @@ public class CheckBox extends BasicElement {
         return true;
     }
 
-    private void setInputChildsSelector(By selector) {
-        inputChildsSelector = selector;
+    private void setInputSelector(By inputSelector) {
+        this.inputSelector = inputSelector;
+    }
+
+    public By getInputSelector() {
+        return this.inputSelector;
     }
 }

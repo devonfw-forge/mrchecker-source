@@ -13,28 +13,27 @@ import java.util.List;
  * Created by LKURZAJ on 08.03.2017.
  */
 public class MenuElement extends BasicElement {
-
-    private final By childsSelector;
+    private final By childrenSelector;
     private final By subMenuSelector;
-    private final By childsSubMenuSelector;
+    private final By childrenSubMenuSelector;
 
-    public MenuElement(By cssSelector) {
-        this(cssSelector, By.cssSelector("li"));
+    public MenuElement(By selector) {
+        this(selector, By.cssSelector("li"));
     }
 
-    public MenuElement(By cssSelector, By childsSelector) {
-        this(cssSelector, childsSelector, cssSelector, childsSelector);
+    public MenuElement(By selector, By childrenSelector) {
+        this(selector, childrenSelector, selector, childrenSelector);
     }
 
-    public MenuElement(By cssSelector, By childsSelector, By subMenuSelector) {
-        this(cssSelector, childsSelector, subMenuSelector, By.cssSelector("li"));
+    public MenuElement(By selector, By childrenSelector, By subMenuSelector) {
+        this(selector, childrenSelector, subMenuSelector, By.cssSelector("li"));
     }
 
-    public MenuElement(By cssSelector, By childsSelector, By subMenuSelector, By childsSubMenuSelector) {
-        super(ElementType.MENU, cssSelector);
-        this.childsSelector = childsSelector;
+    public MenuElement(By selector, By childrenSelector, By subMenuSelector, By childrenSubMenuSelector) {
+        super(ElementType.MENU, selector);
+        this.childrenSelector = childrenSelector;
         this.subMenuSelector = subMenuSelector;
-        this.childsSubMenuSelector = childsSubMenuSelector;
+        this.childrenSubMenuSelector = childrenSubMenuSelector;
     }
 
     public void selectItemByIndex(int index) {
@@ -110,7 +109,7 @@ public class MenuElement extends BasicElement {
     }
 
     private List<WebElement> getItemSubItems(WebElement webElement) {
-        return webElement.findElements(childsSubMenuSelector);
+        return webElement.findElements(childrenSubMenuSelector);
     }
 
     private List<WebElement> getItemSubItemsByText(WebElement webElement) {
@@ -127,8 +126,8 @@ public class MenuElement extends BasicElement {
     }
 
     private List<WebElement> getItems() {
-        return getElement()
-                .findElements(childsSelector);
+        return getWebElement()
+                .findElements(childrenSelector);
     }
 
     private WebElement getElementByIndex(List<WebElement> listElements, int index) {
@@ -146,6 +145,6 @@ public class MenuElement extends BasicElement {
                 return listElement;
             }
         }
-        throw new BFElementNotFoundException("Item with text: " + text + " not found in " + listElements.toString());
+        throw new BFElementNotFoundException("Item with text: " + text + " not found in " + listElements);
     }
 }

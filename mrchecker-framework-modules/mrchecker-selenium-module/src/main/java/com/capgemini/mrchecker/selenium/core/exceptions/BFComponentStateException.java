@@ -1,9 +1,9 @@
 package com.capgemini.mrchecker.selenium.core.exceptions;
 
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.ElementType;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 public class BFComponentStateException extends AssertionError {
-
     private static final long serialVersionUID = 2453124693849726543L;
     private static String exceptionMessage;
 
@@ -20,6 +20,10 @@ public class BFComponentStateException extends AssertionError {
     public BFComponentStateException(String componentName, String action, String actualState) {
         super(generateExceptionMessage(componentName, action, actualState));
         BFLogger.logError(exceptionMessage);
+    }
+
+    public BFComponentStateException(ElementType elementType, String action, String actualState) {
+        this(elementType.toString(), action, actualState);
     }
 
     private static String generateExceptionMessage(String componentName, String action, String actualState) {

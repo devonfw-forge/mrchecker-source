@@ -5,17 +5,19 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import org.openqa.selenium.By;
 
 public class IFrame extends BasicElement implements IBasicElement {
+    public IFrame(By selector) {
+        super(ElementType.IFRAME, selector);
+    }
 
-    public IFrame(By cssSelector) {
-        super(ElementType.IFRAME, cssSelector);
-
+    public void switchTo() {
+        BFLogger.logInfo("Switching to iFrame");
         BasePage.getDriver()
                 .switchTo()
-                .frame(getElement());
-        BFLogger.logInfo("Switching to iFrame");
+                .frame(getWebElement());
     }
 
     public void switchToDefaultContent() {
+        BFLogger.logInfo("Switching to default content");
         BasePage.getDriver()
                 .switchTo()
                 .defaultContent();
