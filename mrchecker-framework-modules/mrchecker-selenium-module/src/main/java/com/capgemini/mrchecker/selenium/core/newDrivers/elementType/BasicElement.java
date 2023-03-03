@@ -21,17 +21,17 @@ public abstract class BasicElement implements IBasicElement {
     }
 
     @Override
-    public final By getSelector() {
+    public By getSelector() {
         return this.selector;
     }
 
     @Override
-    public final IElementType getElementType() {
+    public IElementType getElementType() {
         return this.type;
     }
 
     @Override
-    public final String getElementTypeName() {
+    public String getElementTypeName() {
         if (Objects.isNull(getElementType())) {
             return null;
         }
@@ -52,7 +52,7 @@ public abstract class BasicElement implements IBasicElement {
     }
 
     @Override
-    public final WebElement getWebElement() throws BFElementNotFoundException {
+    public WebElement getWebElement() throws BFElementNotFoundException {
         if (!checkWebElement()) {
             List<WebElement> elements = BasePage.getDriver().findElementDynamics(getSelector());
             if (elements.isEmpty()) {
@@ -63,27 +63,27 @@ public abstract class BasicElement implements IBasicElement {
         return webElement;
     }
 
-    public final String getClassName() {
+    public String getClassName() {
         return getWebElement().getAttribute("class");
     }
 
-    public final String getValue() {
+    public String getValue() {
         return getWebElement().getAttribute("value");
     }
 
-    public final String getText() {
+    public String getText() {
         return getWebElement().getText();
     }
 
-    public final Boolean isDisplayed() {
+    public Boolean isDisplayed() {
         return getWebElement().isDisplayed();
     }
 
-    public final Boolean isEnabled() {
+    public Boolean isEnabled() {
         return getWebElement().isEnabled();
     }
 
-    public final void scrollElementIntoView() {
+    public void scrollElementIntoView() {
         ScrollUtils.scrollElementIntoView(getWebElement());
     }
 }

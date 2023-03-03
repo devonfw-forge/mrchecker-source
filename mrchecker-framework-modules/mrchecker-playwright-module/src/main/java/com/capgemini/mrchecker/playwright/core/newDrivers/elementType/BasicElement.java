@@ -16,17 +16,17 @@ public abstract class BasicElement implements IBasicElement {
     }
 
     @Override
-    public final String getSelector() {
+    public String getSelector() {
         return this.selector;
     }
 
     @Override
-    public final IElementType getElementType() {
+    public IElementType getElementType() {
         return this.type;
     }
 
     @Override
-    public final String getElementTypeName() {
+    public String getElementTypeName() {
         if (Objects.isNull(getElementType())) {
             return null;
         }
@@ -34,30 +34,30 @@ public abstract class BasicElement implements IBasicElement {
     }
 
     @Override
-    public final Locator getLocator() {
+    public Locator getLocator() {
         if (Objects.isNull(locator)) {
             locator = BasePage.getDriver().currentPage().locator(getSelector());
         }
         return locator;
     }
 
-    public final String getClassName() {
+    public String getClassName() {
         return getLocator().getAttribute("class");
     }
 
-    public final String getValue() {
+    public String getValue() {
         return getLocator().getAttribute("value");
     }
 
-    public final String getText() {
+    public String getText() {
         return getLocator().textContent();
     }
 
-    public final Boolean isVisible() {
+    public Boolean isVisible() {
         return getLocator().isVisible();
     }
 
-    public final Boolean isEnabled() {
+    public Boolean isEnabled() {
         return getLocator().isEnabled();
     }
 }
