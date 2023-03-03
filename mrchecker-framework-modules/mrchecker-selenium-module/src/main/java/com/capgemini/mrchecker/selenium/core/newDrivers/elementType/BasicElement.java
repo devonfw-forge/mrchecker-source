@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class BasicElement implements IBasicElement {
-    private final ElementType type;
+    private final IElementType type;
     private final By selector;
     private WebElement webElement;
 
-    public BasicElement(ElementType type, By selector) {
+    public BasicElement(IElementType type, By selector) {
         this.type = type;
         this.selector = selector;
     }
@@ -26,13 +26,16 @@ public abstract class BasicElement implements IBasicElement {
     }
 
     @Override
-    public final ElementType getElementType() {
+    public final IElementType getElementType() {
         return this.type;
     }
 
     @Override
     public final String getElementTypeName() {
-        return getElementType().toString();
+        if (Objects.isNull(getElementType())) {
+            return null;
+        }
+        return getElementType().getName();
     }
 
     private boolean checkWebElement() {

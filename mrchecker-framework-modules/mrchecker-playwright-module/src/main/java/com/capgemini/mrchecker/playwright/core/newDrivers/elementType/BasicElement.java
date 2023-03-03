@@ -6,11 +6,11 @@ import com.microsoft.playwright.Locator;
 import java.util.Objects;
 
 public abstract class BasicElement implements IBasicElement {
-    private final ElementType type;
+    private final IElementType type;
     private final String selector;
     private Locator locator;
 
-    public BasicElement(ElementType type, String selector) {
+    public BasicElement(IElementType type, String selector) {
         this.type = type;
         this.selector = selector;
     }
@@ -21,15 +21,17 @@ public abstract class BasicElement implements IBasicElement {
     }
 
     @Override
-    public final ElementType getElementType() {
+    public final IElementType getElementType() {
         return this.type;
     }
 
     @Override
     public final String getElementTypeName() {
-        return getElementType().toString();
+        if (Objects.isNull(getElementType())) {
+            return null;
+        }
+        return getElementType().getName();
     }
-
 
     @Override
     public final Locator getLocator() {

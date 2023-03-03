@@ -5,7 +5,7 @@ import com.microsoft.playwright.Locator;
 public interface IBasicElement {
     String getSelector();
 
-    ElementType getElementType();
+    IElementType getElementType();
 
     String getElementTypeName();
 

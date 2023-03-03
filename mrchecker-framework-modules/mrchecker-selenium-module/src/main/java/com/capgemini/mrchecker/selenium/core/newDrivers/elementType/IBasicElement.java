@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 public interface IBasicElement {
     By getSelector();
 
-    ElementType getElementType();
+    IElementType getElementType();
 
     String getElementTypeName();
 

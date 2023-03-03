@@ -42,7 +42,7 @@ public class RadioButtonElement extends BasicElement implements IBasicElement {
      * @param inputSelector          - selector of relative path from Radio Button element's set to basic input element
      * @param listSelectedAttributes - list of class name describing selected item
      **/
-    protected RadioButtonElement(ElementType elemType, By selector, By inputSelector,
+    protected RadioButtonElement(IElementType elemType, By selector, By inputSelector,
                                  List<String> listSelectedAttributes) {
         super(elemType, selector);
         setInputSelector(inputSelector);

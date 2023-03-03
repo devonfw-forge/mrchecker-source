@@ -1,6 +1,6 @@
 package com.capgemini.mrchecker.playwright.core.newDrivers.elementType;
 
-public enum ElementType {
+public enum ElementType implements IElementType {
     BUTTON("Button"),
     LIST("List"),
     INPUT_TEXT("Input text element"),
@@ -22,7 +22,13 @@ public enum ElementType {
         this.value = value;
     }
 
+    @Override
+    public String getName() {
+        return this.value;
+    }
+
+    @Override
     public String toString() {
-        return value;
+        return getName();
     }
 }

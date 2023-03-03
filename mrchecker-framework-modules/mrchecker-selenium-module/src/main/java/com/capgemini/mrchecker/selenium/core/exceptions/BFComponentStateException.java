@@ -1,11 +1,12 @@
 package com.capgemini.mrchecker.selenium.core.exceptions;
 
-import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.ElementType;
+import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.IElementType;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 public class BFComponentStateException extends AssertionError {
     private static final long serialVersionUID = 2453124693849726543L;
     private static String exceptionMessage;
+
 
     /**
      * This exception should be thrown when component state is not as expected, which prevents performing certain
@@ -22,8 +23,8 @@ public class BFComponentStateException extends AssertionError {
         BFLogger.logError(exceptionMessage);
     }
 
-    public BFComponentStateException(ElementType elementType, String action, String actualState) {
-        this(elementType.toString(), action, actualState);
+    public BFComponentStateException(IElementType elementType, String action, String actualState) {
+        this(elementType.getName(), action, actualState);
     }
 
     private static String generateExceptionMessage(String componentName, String action, String actualState) {
