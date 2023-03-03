@@ -148,7 +148,7 @@ public class ElementPositionUtils {
      * @return true if element is in Right-Top quarter of the screen
      */
     public static boolean isOnRightTopCorner(WebElement element) {
-        ScrollUtils.scrollToTop();
+        ScrollUtils.scrollPageToTop();
         int elementPositonX = element.getLocation()
                 .getX();
         int screenWidthMiddle = WindowUtils.getScreenWidth(DriverManager.getDriver()) / 2;
