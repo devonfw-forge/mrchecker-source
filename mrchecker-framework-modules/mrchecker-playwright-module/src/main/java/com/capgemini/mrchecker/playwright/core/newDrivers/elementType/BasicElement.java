@@ -33,9 +33,22 @@ public abstract class BasicElement implements IBasicElement {
         return getElementType().getName();
     }
 
+    private boolean checkLocator() {
+        if (Objects.isNull(locator)) {
+            return false;
+        }
+        try {
+            // Calling any method forces a locator check
+            locator.isEnabled();
+            return true;
+        } catch (Throwable throwable) {
+            return false;
+        }
+    }
+
     @Override
     public Locator getLocator() {
-        if (Objects.isNull(locator)) {
+        if (!checkLocator()) {
             locator = BasePage.getDriver().currentPage().locator(getSelector());
         }
         return locator;

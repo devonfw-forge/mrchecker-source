@@ -4,7 +4,6 @@ import com.capgemini.mrchecker.selenium.core.BasePage;
 import com.capgemini.mrchecker.selenium.core.exceptions.BFElementNotFoundException;
 import com.capgemini.mrchecker.selenium.core.utils.ScrollUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
@@ -43,10 +42,10 @@ public abstract class BasicElement implements IBasicElement {
             return false;
         }
         try {
-            // Calling any method forces a staleness check
+            // Calling any method forces a WebElement check
             webElement.isEnabled();
             return true;
-        } catch (StaleElementReferenceException expected) {
+        } catch (Throwable throwable) {
             return false;
         }
     }
