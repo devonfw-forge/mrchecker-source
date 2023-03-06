@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.capgemini.mrchecker</groupId>
     <artifactId>mrchecker-test-framework</artifactId>
-    <version>2023.03.07</version>
+    <version>2023.03.08</version>
     <name>MrChecker</name>
     <description>MrChecker Test Framework is an automated testing framework for functional testing of web applications,
         native mobile apps, webservices and database.
@@ -96,10 +96,10 @@
 
         <!-- Tests executors -->
         <maven-surefire-plugin.version>3.0.0-M9</maven-surefire-plugin.version>
-        <surefire.provider.version>3.0.0-M9</surefire.provider.version>
+        <surefire.provider.version>1.3.2</surefire.provider.version>
 
         <!-- Test tools -->
-        <mockito.version>4.8.0</mockito.version>
+        <mockito.version>4.11.0</mockito.version>
         <hamcrest.version>2.2</hamcrest.version>
         <junit.jupiter.version>5.9.2</junit.jupiter.version>
         <junit.platform.version>1.9.2</junit.platform.version>
@@ -114,10 +114,10 @@
         <guice.version>5.1.0</guice.version>
 
         <!-- JSON support java 1.8 -->
-        <org.json.version>20220924</org.json.version>
+        <org.json.version>20230227</org.json.version>
 
         <!-- Hashes sensitive data -->
-        <org.jasypt.version>1.9.2</org.jasypt.version>
+        <org.jasypt.version>1.9.3</org.jasypt.version>
 
         <jackson-databind.version>2.14.2</jackson-databind.version>
 
@@ -130,9 +130,9 @@
 
         <!-- Allure Annotations -->
         <aspectj.version>1.9.19</aspectj.version>
-        <allure-junit5.version>2.20.1</allure-junit5.version>
-        <allure-java-commons.version>2.20.1</allure-java-commons.version>
-        <allure-junit-platform.version>2.20.1</allure-junit-platform.version>
+        <allure-junit5.version>2.21.0</allure-junit5.version>
+        <allure-java-commons.version>2.21.0</allure-java-commons.version>
+        <allure-junit-platform.version>2.21.0</allure-junit-platform.version>
         <allure-maven.version>2.12.0</allure-maven.version>
     </properties>
 

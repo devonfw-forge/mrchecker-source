@@ -7,11 +7,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>2023.03.07</version>
+        <version>2023.03.08</version>
     </parent>
 
     <artifactId>mrchecker-core-module</artifactId>
-    <version>2023.03.07</version>
+    <version>2023.03.08</version>
     <packaging>jar</packaging>
     <name>MrChecker - Test core - Module</name>
     <description>MrChecker Test Framework Core is responsible for:
@@ -59,16 +59,16 @@
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
         <!-- Logger -->
-        <log4j.version>2.19.0</log4j.version>
+        <log4j.version>2.20.0</log4j.version>
         <slf4j.version>2.0.6</slf4j.version>
 
         <!-- Cucumber version -->
-        <cucumber.version>7.8.1</cucumber.version>
-        <gherkin.cucumber.version>25.0.2</gherkin.cucumber.version>
-        <cucumber-reporting.version>5.7.4</cucumber-reporting.version>
+        <cucumber.version>7.11.1</cucumber.version>
+        <gherkin.cucumber.version>26.0.3</gherkin.cucumber.version>
+        <cucumber-reporting.version>5.7.5</cucumber-reporting.version>
 
         <!--GSON-->
-        <gson.version>2.10</gson.version>
+        <gson.version>2.10.1</gson.version>
         <!--ASSERTJ-->
         <assertj.core.version>3.24.2</assertj.core.version>
     </properties>
