@@ -171,18 +171,13 @@ public class DriverManager {
         protected abstract INewWebDriver getDriver();
     }
 
-    private static <T extends RemoteWebDriver> void downloadNewestOrGivenVersionOfWebDriver(Class<T> webDriverType) {
-        String proxy = DriverManager.propertiesSelenium.getProxy();
-        String webDriversPath = DriverManager.propertiesSelenium.getWebDrivers();
+    private static <T extends RemoteWebDriver> void downloadNewestOrGivenVersionOfWebDriver(Class<T> webDriverType, String browserPath) {
         try {
-            System.setProperty("wdm.targetPath", webDriversPath);
-            System.setProperty("wdm.useBetaVersions", "false");
-
-            WebDriverManager.getInstance(webDriverType)
-                    .proxy(proxy)
-                    .setup();
-            BFLogger.logDebug("Downloaded version of driver=" + WebDriverManager.getInstance(webDriverType).getDownloadedDriverVersion());
-
+            WebDriverManager wdm = WebDriverManager.getInstance(webDriverType);
+            wdm.config().setUseBetaVersions(false).setClearDriverCache(true).setCachePath(DOWNLOAD_DIR);
+            wdm.setup();
+            BFLogger.logDebug("Downloaded version of driver=" + wdm.getDownloadedDriverVersion());
+            OperationsOnFiles.moveWithPruneEmptydirectories(wdm.getDownloadedDriverPath(), browserPath);
         } catch (WebDriverManagerException e) {
             BFLogger.logError("Unable to download driver automatically. "
                     + "Please try to set up the proxy in properties file. "
@@ -293,8 +288,7 @@ public class DriverManager {
                     if (!DriverManager.propertiesSelenium.getChromeDriverVersion().isEmpty()) {
                         System.setProperty("wdm.chromeDriverVersion", DriverManager.propertiesSelenium.getChromeDriverVersion());
                     }
-                    downloadNewestOrGivenVersionOfWebDriver(ChromeDriver.class);
-                    OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(ChromeDriver.class).getDownloadedDriverPath(), browserPath);
+                    downloadNewestOrGivenVersionOfWebDriver(ChromeDriver.class, browserPath);
                 }
                 driverDownloadedChrome = true;
             }
@@ -314,8 +308,7 @@ public class DriverManager {
                     if (!DriverManager.propertiesSelenium.getEdgeDriverVersion().isEmpty()) {
                         System.setProperty("wdm.edgeVersion", DriverManager.propertiesSelenium.getEdgeDriverVersion());
                     }
-                    downloadNewestOrGivenVersionOfWebDriver(EdgeDriver.class);
-                    OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(EdgeDriver.class).getDownloadedDriverPath(), browserPath);
+                    downloadNewestOrGivenVersionOfWebDriver(EdgeDriver.class, browserPath);
                 }
                 driverDownloadedMicrosoftEdge = true;
             }
@@ -335,8 +328,7 @@ public class DriverManager {
                     if (!DriverManager.propertiesSelenium.getGeckoDriverVersion().isEmpty()) {
                         System.setProperty("wdm.geckoDriverVersion", DriverManager.propertiesSelenium.getGeckoDriverVersion());
                     }
-                    downloadNewestOrGivenVersionOfWebDriver(FirefoxDriver.class);
-                    OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(FirefoxDriver.class).getDownloadedDriverPath(), browserPath);
+                    downloadNewestOrGivenVersionOfWebDriver(FirefoxDriver.class, browserPath);
                 }
                 driverDownloadedFirefox = true;
             }
@@ -358,9 +350,7 @@ public class DriverManager {
                             .equals("")) {
                         System.setProperty("wdm.internetExplorerDriverVersion", DriverManager.propertiesSelenium.getInternetExplorerDriverVersion());
                     }
-                    downloadNewestOrGivenVersionOfWebDriver(InternetExplorerDriver.class);
-                    OperationsOnFiles.moveWithPruneEmptydirectories(WebDriverManager.getInstance(InternetExplorerDriver.class).getDownloadedDriverPath()
-                            , browserPath);
+                    downloadNewestOrGivenVersionOfWebDriver(InternetExplorerDriver.class, browserPath);
                 }
                 driverDownloadedInternetExplorer = true;
             }

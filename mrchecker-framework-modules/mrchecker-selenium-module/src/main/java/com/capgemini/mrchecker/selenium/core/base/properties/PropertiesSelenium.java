@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class PropertiesSelenium {
-    private String webDrivers = "./lib/webdrivers";
+    private final String webDrivers = "./lib/webdrivers";
     private String seleniumChrome = webDrivers + "/chrome/chromedriver.exe";
     private String driverVersionChrome = "";
     private String seleniumEdge = webDrivers + "/edge/msedgedriver.exe";
@@ -13,7 +13,6 @@ public class PropertiesSelenium {
     private String driverVersionFirefox = "";
     private String seleniumIE = webDrivers + "/internetexplorer/IEDriverServer.exe";
     private String driverVersionIE = "";
-    private String proxy = "";
     private boolean driverAutoUpdateFlag = true;
 
     @Inject(optional = true)
@@ -54,26 +53,6 @@ public class PropertiesSelenium {
 
     public String getSeleniumIE() {
         return seleniumIE;
-    }
-
-    @Inject(optional = true)
-    @SuppressWarnings("unused")
-    private void setWebDrivers(@Named("selenium.webdrivers") String path) {
-        webDrivers = path;
-    }
-
-    public String getWebDrivers() {
-        return webDrivers;
-    }
-
-    @Inject(optional = true)
-    @SuppressWarnings("unused")
-    private void setProxy(@Named("selenium.proxy") String path) {
-        proxy = path;
-    }
-
-    public String getProxy() {
-        return proxy;
     }
 
     @Inject(optional = true)
