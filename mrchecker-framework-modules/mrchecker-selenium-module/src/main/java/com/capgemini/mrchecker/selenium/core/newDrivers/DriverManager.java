@@ -26,6 +26,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Objects;
@@ -37,10 +39,7 @@ public class DriverManager {
     private static final Duration IMPLICITLY_WAIT = Duration.ofSeconds(2);
     public static final Duration EXPLICIT_WAIT = Duration.ofSeconds(20);
     private static final String DOWNLOAD_DIR = System.getProperty("java.io.tmpdir");
-    private static boolean driverDownloadedChrome = false;
-    private static boolean driverDownloadedFirefox = false;
-    private static boolean driverDownloadedMicrosoftEdge = false;
-    private static boolean driverDownloadedInternetExplorer = false;
+    private static boolean driverDownloaded = false;
     private static PropertiesSelenium propertiesSelenium;
 
     @Inject
@@ -67,20 +66,19 @@ public class DriverManager {
     public static INewWebDriver getDriver() {
         INewWebDriver driver = DRIVERS.get();
         if (Objects.isNull(driver)) {
-            String browser = RuntimeParametersSelenium.BROWSER.getValue();
-            if (Browser.CHROME.is(browser)) {
-                return Driver.CHROME.getDriver();
+            BrowserType browserType = BrowserType.get();
+            switch (browserType) {
+                case CHROME:
+                    return Driver.CHROME.getDriver();
+                case EDGE:
+                    return Driver.EDGE.getDriver();
+                case FIREFOX:
+                    return Driver.FIREFOX.getDriver();
+                case IE:
+                    return Driver.IE.getDriver();
+                default:
+                    throw new IllegalStateException("Unsupported browser: " + browserType);
             }
-            if (Browser.EDGE.is(browser)) {
-                return Driver.EDGE.getDriver();
-            }
-            if (Browser.FIREFOX.is(browser)) {
-                return Driver.FIREFOX.getDriver();
-            }
-            if (Browser.IE.is(browser)) {
-                return Driver.IE.getDriver();
-            }
-            throw new IllegalStateException("Unsupported browser: " + browser);
         }
         return driver;
     }
@@ -171,21 +169,6 @@ public class DriverManager {
         protected abstract INewWebDriver getDriver();
     }
 
-    private static <T extends RemoteWebDriver> void downloadNewestOrGivenVersionOfWebDriver(Class<T> webDriverType, String browserPath) {
-        try {
-            WebDriverManager wdm = WebDriverManager.getInstance(webDriverType);
-            wdm.config().setUseBetaVersions(false).setClearDriverCache(true).setCachePath(DOWNLOAD_DIR);
-            wdm.setup();
-            BFLogger.logDebug("Downloaded version of driver=" + wdm.getDownloadedDriverVersion());
-            OperationsOnFiles.moveWithPruneEmptydirectories(wdm.getDownloadedDriverPath(), browserPath);
-        } catch (WebDriverManagerException e) {
-            BFLogger.logError("Unable to download driver automatically. "
-                    + "Please try to set up the proxy in properties file. "
-                    + "If you want to download them manually, go to the "
-                    + "http://www.seleniumhq.org/projects/webdriver/ site.");
-        }
-    }
-
     public static ChromeOptions getChromeOptions() {
         ChromeOptions options = new ChromeOptions();
         setCommonChromiumOptions(options);
@@ -251,22 +234,27 @@ public class DriverManager {
     public static INewWebDriver getDriver(MutableCapabilities options) {
         INewWebDriver driver = DRIVERS.get();
         if (Objects.isNull(driver)) {
-            BFLogger.logDebug("Creating new " + RuntimeParametersSelenium.BROWSER.getValue() + " WebDriver.");
+            BrowserType browserType = BrowserType.get();
+            BFLogger.logDebug("Creating new " + browserType + " WebDriver.");
             String seleniumGridParameter = RuntimeParametersSelenium.SELENIUM_GRID.getValue();
             if (!isEmpty(seleniumGridParameter)) {
                 driver = getRemoteDriver(options);
             } else {
-                String browser = RuntimeParametersSelenium.BROWSER.getValue();
-                if (Browser.CHROME.is(browser)) {
-                    driver = getChromeDriver((ChromeOptions) options);
-                } else if (Browser.EDGE.is(browser)) {
-                    driver = getEdgeDriver((EdgeOptions) options);
-                } else if (Browser.FIREFOX.is(browser)) {
-                    driver = getFirefoxDriver((FirefoxOptions) options);
-                } else if (Browser.IE.is(browser)) {
-                    driver = getInternetExplorerDriver((InternetExplorerOptions) options);
-                } else {
-                    throw new IllegalStateException("Unsupported browser: " + browser);
+                switch (browserType) {
+                    case CHROME:
+                        driver = getChromeDriver((ChromeOptions) options);
+                        break;
+                    case EDGE:
+                        driver = getEdgeDriver((EdgeOptions) options);
+                        break;
+                    case FIREFOX:
+                        driver = getFirefoxDriver((FirefoxOptions) options);
+                        break;
+                    case IE:
+                        driver = getInternetExplorerDriver((InternetExplorerOptions) options);
+                        break;
+                    default:
+                        throw new IllegalStateException("Unsupported browser: " + browserType);
                 }
             }
             DRIVERS.set(driver);
@@ -281,18 +269,7 @@ public class DriverManager {
     private static INewWebDriver getChromeDriver(ChromeOptions chromeOptions) {
         INewWebDriver driver = DRIVERS.get();
         if (Objects.isNull(driver)) {
-            String browserPath = DriverManager.propertiesSelenium.getSeleniumChrome();
-            boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
-            synchronized (DOWNLOAD_DIR) {
-                if (isDriverAutoUpdateActivated && !driverDownloadedChrome) {
-                    if (!DriverManager.propertiesSelenium.getChromeDriverVersion().isEmpty()) {
-                        System.setProperty("wdm.chromeDriverVersion", DriverManager.propertiesSelenium.getChromeDriverVersion());
-                    }
-                    downloadNewestOrGivenVersionOfWebDriver(ChromeDriver.class, browserPath);
-                }
-                driverDownloadedChrome = true;
-            }
-            System.setProperty("webdriver.chrome.driver", browserPath);
+            download(BrowserType.CHROME);
             return new NewChromeDriver(chromeOptions);
         }
         return driver;
@@ -301,18 +278,7 @@ public class DriverManager {
     private static INewWebDriver getEdgeDriver(EdgeOptions edgeOptions) {
         INewWebDriver driver = DRIVERS.get();
         if (Objects.isNull(driver)) {
-            String browserPath = DriverManager.propertiesSelenium.getSeleniumEdge();
-            boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
-            synchronized (DOWNLOAD_DIR) {
-                if (isDriverAutoUpdateActivated && !driverDownloadedMicrosoftEdge) {
-                    if (!DriverManager.propertiesSelenium.getEdgeDriverVersion().isEmpty()) {
-                        System.setProperty("wdm.edgeVersion", DriverManager.propertiesSelenium.getEdgeDriverVersion());
-                    }
-                    downloadNewestOrGivenVersionOfWebDriver(EdgeDriver.class, browserPath);
-                }
-                driverDownloadedMicrosoftEdge = true;
-            }
-            System.setProperty("webdriver.edge.driver", browserPath);
+            download(BrowserType.EDGE);
             return new NewEdgeDriver(edgeOptions);
         }
         return driver;
@@ -321,19 +287,7 @@ public class DriverManager {
     private static INewWebDriver getFirefoxDriver(FirefoxOptions firefoxOptions) {
         INewWebDriver driver = DRIVERS.get();
         if (Objects.isNull(driver)) {
-            String browserPath = DriverManager.propertiesSelenium.getSeleniumFirefox();
-            boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
-            synchronized (DOWNLOAD_DIR) {
-                if (isDriverAutoUpdateActivated && !driverDownloadedFirefox) {
-                    if (!DriverManager.propertiesSelenium.getGeckoDriverVersion().isEmpty()) {
-                        System.setProperty("wdm.geckoDriverVersion", DriverManager.propertiesSelenium.getGeckoDriverVersion());
-                    }
-                    downloadNewestOrGivenVersionOfWebDriver(FirefoxDriver.class, browserPath);
-                }
-                driverDownloadedFirefox = true;
-            }
-            System.setProperty("webdriver.gecko.driver", browserPath);
-            System.setProperty("webdriver.firefox.logfile", "logs\\firefox_logs.txt");
+            download(BrowserType.FIREFOX);
             return new NewFirefoxDriver(firefoxOptions);
         }
         return driver;
@@ -342,19 +296,7 @@ public class DriverManager {
     private static INewWebDriver getInternetExplorerDriver(InternetExplorerOptions internetExplorerOptions) {
         INewWebDriver driver = DRIVERS.get();
         if (Objects.isNull(driver)) {
-            String browserPath = DriverManager.propertiesSelenium.getSeleniumIE();
-            boolean isDriverAutoUpdateActivated = DriverManager.propertiesSelenium.getDriverAutoUpdateFlag();
-            synchronized (DOWNLOAD_DIR) {
-                if (isDriverAutoUpdateActivated && !driverDownloadedInternetExplorer) {
-                    if (!DriverManager.propertiesSelenium.getInternetExplorerDriverVersion()
-                            .equals("")) {
-                        System.setProperty("wdm.internetExplorerDriverVersion", DriverManager.propertiesSelenium.getInternetExplorerDriverVersion());
-                    }
-                    downloadNewestOrGivenVersionOfWebDriver(InternetExplorerDriver.class, browserPath);
-                }
-                driverDownloadedInternetExplorer = true;
-            }
-            System.setProperty("webdriver.ie.driver", browserPath);
+            download(BrowserType.IE);
             return new NewInternetExplorerDriver(internetExplorerOptions);
         }
         return driver;
@@ -385,17 +327,22 @@ public class DriverManager {
     }
 
     private static void setBrowserName(DesiredCapabilities capabilities, MutableCapabilities options) {
-        String browser = RuntimeParametersSelenium.BROWSER.getValue();
-        if (Browser.CHROME.is(browser)) {
-            capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-        } else if (Browser.EDGE.is(browser)) {
-            capabilities.setCapability(EdgeOptions.CAPABILITY, options);
-        } else if (Browser.FIREFOX.is(browser)) {
-            capabilities.setCapability(FirefoxOptions.FIREFOX_OPTIONS, options);
-        } else {
-            throw new IllegalStateException("Unsupported browser: " + browser);
+        BrowserType browserType = BrowserType.get();
+        switch (browserType) {
+            case CHROME:
+                capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+                break;
+            case EDGE:
+                capabilities.setCapability(EdgeOptions.CAPABILITY, options);
+                break;
+            case FIREFOX:
+                capabilities.setCapability(FirefoxOptions.FIREFOX_OPTIONS, options);
+                break;
+            case IE:
+            default:
+                throw new IllegalStateException("Unsupported browser: " + browserType);
         }
-        capabilities.setBrowserName(browser);
+        capabilities.setBrowserName(RuntimeParametersSelenium.BROWSER.getValue());
     }
 
     @SuppressWarnings("deprecation")
@@ -468,6 +415,11 @@ public class DriverManager {
         options.addArguments("--allow-running-insecure-content");
         options.addArguments("--disable-popup-blocking");
 
+        //ToDo: Remove after fix in Selenium 4.9
+        //https://groups.google.com/g/chromedriver-users/c/xL5-13_qGaA
+        //https://github.com/SeleniumHQ/selenium/issues/11750
+        options.addArguments("--remote-allow-origins=*");
+
         RuntimeParametersSelenium.BROWSER_OPTIONS.getValues().forEach((key, value) -> {
             String item = (value.toString().isEmpty()) ? key : key + "=" + value;
             BFLogger.logDebug("Add to Chromium arguments: " + item);
@@ -507,6 +459,68 @@ public class DriverManager {
         }
     }
 
+    private static <T extends RemoteWebDriver> void download(BrowserType browserType) {
+        if (DriverManager.propertiesSelenium.getDriverAutoUpdateFlag() && !driverDownloaded) {
+            synchronized (DOWNLOAD_DIR) {
+                if (!driverDownloaded) {
+                    try {
+                        WebDriverManager wdm;
+                        String driverPath;
+                        String driverVersion;
+                        switch (browserType) {
+                            case CHROME:
+                                wdm = WebDriverManager.getInstance(ChromeDriver.class);
+                                driverPath = DriverManager.propertiesSelenium.getSeleniumChrome();
+                                driverVersion = DriverManager.propertiesSelenium.getChromeDriverVersion().trim();
+                                //System.setProperty("webdriver.chrome.driver", driverPath);
+                                break;
+                            case EDGE:
+                                wdm = WebDriverManager.getInstance(EdgeDriver.class);
+                                driverPath = DriverManager.propertiesSelenium.getSeleniumEdge();
+                                driverVersion = DriverManager.propertiesSelenium.getEdgeDriverVersion().trim();
+                                //System.setProperty("webdriver.edge.driver", browserPath);
+                                break;
+                            case FIREFOX:
+                                wdm = WebDriverManager.getInstance(FirefoxDriver.class);
+                                driverPath = DriverManager.propertiesSelenium.getSeleniumFirefox();
+                                driverVersion = DriverManager.propertiesSelenium.getGeckoDriverVersion().trim();
+                                //System.setProperty("webdriver.gecko.driver", browserPath);
+                                System.setProperty("webdriver.firefox.logfile", "logs\\firefox_logs.txt");
+                                break;
+                            case IE:
+                                wdm = WebDriverManager.getInstance(InternetExplorerDriver.class);
+                                driverPath = DriverManager.propertiesSelenium.getSeleniumIE();
+                                driverVersion = DriverManager.propertiesSelenium.getInternetExplorerDriverVersion().trim();
+                                //System.setProperty("webdriver.ie.driver", browserPath);
+                                break;
+                            default:
+                                throw new IllegalStateException("Unsupported browser: " + browserType);
+                        }
+                        if (!driverVersion.isEmpty()) {
+                            wdm.driverVersion(driverVersion);
+                        }
+                        String driverFolder = Paths.get(driverPath).getParent().toString();
+                        wdm.config().setUseBetaVersions(false).setCachePath(driverFolder).setAvoidOutputTree(true).setAvoidBrowserDetection(false);
+                        wdm.setup();
+                        Path downloadPath = Paths.get(wdm.getDownloadedDriverPath().toLowerCase()).normalize();
+                        Path driverExpectedPath = Paths.get(driverPath.toLowerCase()).normalize();
+                        if (!downloadPath.endsWith(driverExpectedPath)) {
+                            OperationsOnFiles.moveWithPruneEmptydirectories(downloadPath.toString(), driverExpectedPath.toString());
+                        }
+                        BFLogger.logDebug("Driver version=" + wdm.getDownloadedDriverVersion());
+                        BFLogger.logDebug("Driver path=" + driverExpectedPath);
+                    } catch (WebDriverManagerException e) {
+                        e.printStackTrace();
+                        BFLogger.logError("Unable to download driver automatically. "
+                                + "If you want to download them manually, go to the "
+                                + "http://www.seleniumhq.org/projects/webdriver/ site.");
+                    }
+                    driverDownloaded = true;
+                }
+            }
+        }
+    }
+
     @SuppressWarnings("removal")
     @Override
     // TODO: handle that finalize should never been called - it's unreliable. Introduce Autoclose()
@@ -517,6 +531,36 @@ public class DriverManager {
             BFLogger.logDebug("Closing Driver in finalize()");
         } catch (Exception e) {
             // TODO: handle that
+        }
+    }
+
+    public enum BrowserType {
+        CHROME(Browser.CHROME),
+        EDGE(Browser.EDGE),
+        FIREFOX(Browser.FIREFOX),
+        IE(Browser.IE);
+
+        private final Browser browser;
+
+        BrowserType(Browser browser) {
+            this.browser = browser;
+        }
+
+        public Browser getBrowser() {
+            return this.browser;
+        }
+
+        public static BrowserType get() {
+            return get(RuntimeParametersSelenium.BROWSER.getValue());
+        }
+
+        public static BrowserType get(String browserName) {
+            for (BrowserType browserType : values()) {
+                if (browserType.getBrowser().is(browserName)) {
+                    return browserType;
+                }
+            }
+            throw new IllegalStateException("Unsupported browser: " + browserName);
         }
     }
 }
