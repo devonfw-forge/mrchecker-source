@@ -12,8 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static com.capgemini.mrchecker.selenium.core.base.runtime.RuntimeParametersSelenium.INVALID_IE_NAME;
-import static com.capgemini.mrchecker.selenium.core.base.runtime.RuntimeParametersSelenium.VALID_IE_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -97,17 +95,6 @@ public class RuntimeParametersTest {
         String browserValue = RuntimeParametersSelenium.BROWSER.getValue();
 
         assertThat(browserValue, is(equalTo(DEFAULT_BROWSER_VALUE)));
-    }
-
-    @Test
-    public void shouldGetValidIEName() {
-        System.setProperty("browser", INVALID_IE_NAME);
-
-        refreshAllParameters();
-        String browserValue = RuntimeParametersSelenium.BROWSER.getValue();
-
-        assertThat(browserValue, is(equalTo(VALID_IE_NAME)));
-
     }
 
     @Test

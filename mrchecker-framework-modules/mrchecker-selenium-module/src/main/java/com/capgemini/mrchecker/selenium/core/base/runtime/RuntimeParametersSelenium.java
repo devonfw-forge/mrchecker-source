@@ -17,23 +17,14 @@ import java.util.stream.Collectors;
  * @author MBABIARZ
  */
 public enum RuntimeParametersSelenium implements IRuntimeParameters {
-    BROWSER("browser", "chrome") {
-        protected void setValue() {
-            super.setValue();
-            paramValue = paramValue.toLowerCase();
-            if (paramValue.equals(INVALID_IE_NAME))
-                paramValue = VALID_IE_NAME;
-        }
-    },
+    BROWSER("browser", "chrome"),
     BROWSER_VERSION("browserVersion", ""),
     SELENIUM_GRID("seleniumGrid", ""),
     OS("os", ""),
     BROWSER_OPTIONS("browserOptions", "") {
         public Map<String, Object> getValues() {
             return Arrays.stream(getValue().split(BROWSER_OPTIONS_DELIMITER_REGEX))
-                    .filter(i -> !i.isEmpty()) // remove
-                    // empty
-                    // inputs
+                    .filter(i -> !i.trim().isEmpty()) // remove empty inputs
                     .map(i -> i.split(BROWSER_OPTIONS_KEY_VALUE_DELIMITER_REGEX, TOKENS_LIMIT)) // split to key, value.
                     // Not more than one time
                     .map(i -> new String[]{i[0], (i.length == 1) ? "" : i[1]}) // if value is empty, set empty text
@@ -42,8 +33,6 @@ public enum RuntimeParametersSelenium implements IRuntimeParameters {
     },
     HEADLESS("headless", "false");
 
-    public static final String VALID_IE_NAME = "internet explorer";
-    public static final String INVALID_IE_NAME = "ie";
     private static final int TOKENS_LIMIT = 2;
     private static final String BROWSER_OPTIONS_KEY_VALUE_DELIMITER_REGEX = "=";
     private static final String BROWSER_OPTIONS_DELIMITER_REGEX = ";";

@@ -81,7 +81,11 @@ public class TestExecutionObserver implements ITestExecutionObserver {
         try {
             validateTestClassAndCallHook(context, BaseTest::setUp);
         } catch (Throwable throwable) {
-            forEachObserver(ITestObserver::onSetupFailure);
+            try {
+                handleExecutionException(context, throwable, "setup", ITestObserver::onSetupFailure);
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
             throw throwable;
         }
     }
@@ -95,7 +99,11 @@ public class TestExecutionObserver implements ITestExecutionObserver {
         try {
             validateTestClassAndCallHook(context, BaseTest::tearDown);
         } catch (Throwable throwable) {
-            forEachObserver(ITestObserver::onTeardownFailure);
+            try {
+                handleExecutionException(context, throwable, "teardown", ITestObserver::onTeardownFailure);
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
             throw throwable;
         }
     }

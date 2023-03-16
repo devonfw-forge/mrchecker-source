@@ -29,8 +29,11 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class DriverManager {
     private static final ThreadLocal<INewWebDriver> DRIVERS = new ThreadLocal<>();
@@ -339,6 +342,8 @@ public class DriverManager {
                 capabilities.setCapability(FirefoxOptions.FIREFOX_OPTIONS, options);
                 break;
             case IE:
+                capabilities.setCapability(InternetExplorerOptions.IE_OPTIONS, options);
+                break;
             default:
                 throw new IllegalStateException("Unsupported browser: " + browserType);
         }
@@ -472,26 +477,22 @@ public class DriverManager {
                                 wdm = WebDriverManager.getInstance(ChromeDriver.class);
                                 driverPath = DriverManager.propertiesSelenium.getSeleniumChrome();
                                 driverVersion = DriverManager.propertiesSelenium.getChromeDriverVersion().trim();
-                                //System.setProperty("webdriver.chrome.driver", driverPath);
                                 break;
                             case EDGE:
                                 wdm = WebDriverManager.getInstance(EdgeDriver.class);
                                 driverPath = DriverManager.propertiesSelenium.getSeleniumEdge();
                                 driverVersion = DriverManager.propertiesSelenium.getEdgeDriverVersion().trim();
-                                //System.setProperty("webdriver.edge.driver", browserPath);
                                 break;
                             case FIREFOX:
                                 wdm = WebDriverManager.getInstance(FirefoxDriver.class);
                                 driverPath = DriverManager.propertiesSelenium.getSeleniumFirefox();
                                 driverVersion = DriverManager.propertiesSelenium.getGeckoDriverVersion().trim();
-                                //System.setProperty("webdriver.gecko.driver", browserPath);
                                 System.setProperty("webdriver.firefox.logfile", "logs\\firefox_logs.txt");
                                 break;
                             case IE:
                                 wdm = WebDriverManager.getInstance(InternetExplorerDriver.class);
                                 driverPath = DriverManager.propertiesSelenium.getSeleniumIE();
                                 driverVersion = DriverManager.propertiesSelenium.getInternetExplorerDriverVersion().trim();
-                                //System.setProperty("webdriver.ie.driver", browserPath);
                                 break;
                             default:
                                 throw new IllegalStateException("Unsupported browser: " + browserType);
@@ -560,7 +561,25 @@ public class DriverManager {
                     return browserType;
                 }
             }
-            throw new IllegalStateException("Unsupported browser: " + browserName);
+            //Names not included in Selenium 4 (W3C standard) but still in use
+            switch (browserName.toLowerCase()) {
+                case "edge":
+                case "msedge":
+                    return EDGE;
+                case "ie":
+                    return IE;
+            }
+
+            throw new IllegalStateException("Unsupported browser name: " + browserName + "\nSupported browsers names: " + getValidBrowsers());
+        }
+
+        public static Set<String> getValidBrowsers() {
+            Set<String> browsers = Arrays.stream(values()).map(browser -> browser.getBrowser().browserName()).collect(Collectors.toSet());
+            //Names not included in Selenium 4 (W3C standard) but still in use
+            browsers.add("edge");
+            browsers.add("msedge");
+            browsers.add("ie");
+            return browsers;
         }
     }
 }
