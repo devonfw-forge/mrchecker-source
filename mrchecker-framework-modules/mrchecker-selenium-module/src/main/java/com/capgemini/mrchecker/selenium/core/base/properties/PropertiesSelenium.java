@@ -14,6 +14,7 @@ public class PropertiesSelenium {
     private String seleniumIE = webDrivers + "/internetexplorer/IEDriverServer.exe";
     private String driverVersionIE = "";
     private boolean driverAutoUpdateFlag = true;
+    private boolean allowStaticPage = false;
 
     @Inject(optional = true)
     @SuppressWarnings("unused")
@@ -103,5 +104,15 @@ public class PropertiesSelenium {
 
     public String getEdgeDriverVersion() {
         return driverVersionEdge;
+    }
+
+    @Inject(optional = true)
+    @SuppressWarnings("unused")
+    private void setAllowStaticPage(@Named("selenium.allowStaticPage") boolean value) {
+        this.allowStaticPage = value;
+    }
+
+    public boolean getAllowStaticPage() {
+        return allowStaticPage;
     }
 }

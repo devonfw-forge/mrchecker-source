@@ -9,6 +9,7 @@ public class PropertiesPlaywright {
     private String channel;
     private String browsersPath = "./lib/playwright";
     private int skipBrowserDownload = 0;
+    private boolean allowStaticPage = false;
 
     @Inject(optional = true)
     @SuppressWarnings("unused")
@@ -48,5 +49,15 @@ public class PropertiesPlaywright {
 
     public int getSkipBrowserDownload() {
         return skipBrowserDownload;
+    }
+
+    @Inject(optional = true)
+    @SuppressWarnings("unused")
+    private void setAllowStaticPage(@Named("playwright.allowStaticPage") boolean value) {
+        this.allowStaticPage = value;
+    }
+
+    public boolean getAllowStaticPage() {
+        return allowStaticPage;
     }
 }

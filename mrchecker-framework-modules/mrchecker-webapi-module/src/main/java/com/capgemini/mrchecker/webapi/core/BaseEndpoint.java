@@ -7,7 +7,7 @@ import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.capgemini.mrchecker.webapi.core.base.driver.DriverManager;
-import com.capgemini.mrchecker.webapi.core.base.properties.PropertiesFileSettings;
+import com.capgemini.mrchecker.webapi.core.base.properties.PropertiesWebAPI;
 import com.capgemini.mrchecker.webapi.core.base.runtime.RuntimeParameters;
 import com.google.inject.Guice;
 import io.restassured.config.RestAssuredConfig;
@@ -17,7 +17,7 @@ import java.util.Objects;
 
 public abstract class BaseEndpoint extends Page implements IWebAPI {
     private static DriverManager driver = null;
-    private final static PropertiesFileSettings propertiesFileSettings;
+    private final static PropertiesWebAPI PROPERTIES_WEB_API;
     private final static IAnalytics ANALYTICS;
     public final static String ANALYTICS_CATEGORY_NAME = "WebAPI-Module";
 
@@ -26,13 +26,17 @@ public abstract class BaseEndpoint extends Page implements IWebAPI {
         ANALYTICS = BaseTest.getAnalytics();
 
         // Get and then set properties information from selenium.settings file
-        propertiesFileSettings = setPropertiesSettings();
+        PROPERTIES_WEB_API = setPropertiesSettings();
 
         // Read System or maven parameters
         setRuntimeParametersWebApi();
 
         // Read Environment variables either from environments.csv or any other input data.
         setEnvironmentInstance();
+    }
+
+    public BaseEndpoint() {
+        verifyStaticObject(PROPERTIES_WEB_API.getAllowStaticEndpoint(), "Endpoint");
     }
 
     public static IAnalytics getAnalytics() {
@@ -47,7 +51,7 @@ public abstract class BaseEndpoint extends Page implements IWebAPI {
     public static RequestSpecification getDriver() {
         if (Objects.isNull(driver)) {
             // Create module driver
-            driver = new DriverManager(propertiesFileSettings);
+            driver = new DriverManager(PROPERTIES_WEB_API);
         }
         return driver.getDriverWebAPI();
     }
@@ -55,15 +59,15 @@ public abstract class BaseEndpoint extends Page implements IWebAPI {
     public static RequestSpecification getDriver(RestAssuredConfig config) {
         if (Objects.isNull(driver)) {
             // Create module driver
-            driver = new DriverManager(propertiesFileSettings);
+            driver = new DriverManager(PROPERTIES_WEB_API);
         }
         return driver.getDriverWebAPI(config);
     }
 
-    private static PropertiesFileSettings setPropertiesSettings() {
+    private static PropertiesWebAPI setPropertiesSettings() {
         // Get and then set properties information from settings.properties file
         return Guice.createInjector(PropertiesSettingsModule.init())
-                .getInstance(PropertiesFileSettings.class);
+                .getInstance(PropertiesWebAPI.class);
     }
 
     private static void setRuntimeParametersWebApi() {

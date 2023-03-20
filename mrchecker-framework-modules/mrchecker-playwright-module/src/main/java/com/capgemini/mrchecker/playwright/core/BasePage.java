@@ -65,6 +65,7 @@ abstract public class BasePage extends Page implements IBasePage {
     }
 
     public BasePage(com.microsoft.playwright.Page page, BasePage parent) {
+        verifyStaticObject(PROPERTIES_PLAYWRIGHT.getAllowStaticPage(), "Page");
         setParent(parent);
         setPage(page);
 

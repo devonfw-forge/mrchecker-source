@@ -1,5 +1,6 @@
 package com.capgemini.mrchecker.test.core;
 
+import com.capgemini.mrchecker.test.core.exceptions.BFStaticVariableException;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 
 public abstract class Page implements ITestObserver {
@@ -78,5 +79,16 @@ public abstract class Page implements ITestObserver {
     @Override
     public final void addToTestExecutionObserver() {
         TEST_EXECUTION_OBSERVER.addObserver(this);
+    }
+
+    protected void verifyStaticObject(boolean allowStaticObject, String objectName) {
+        if (!allowStaticObject) {
+            StackTraceElement[] stackTrace = new Exception().getStackTrace();
+            for (StackTraceElement stackTraceElement : stackTrace) {
+                if (stackTraceElement.getMethodName().equalsIgnoreCase("<clinit>")) {
+                    throw new BFStaticVariableException(objectName);
+                }
+            }
+        }
     }
 }

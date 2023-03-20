@@ -1,7 +1,7 @@
 package com.capgemini.mrchecker.webapi.core.base.driver;
 
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
-import com.capgemini.mrchecker.webapi.core.base.properties.PropertiesFileSettings;
+import com.capgemini.mrchecker.webapi.core.base.properties.PropertiesWebAPI;
 import com.capgemini.mrchecker.webapi.core.base.runtime.RuntimeParameters;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -24,10 +24,10 @@ import static io.restassured.RestAssured.given;
 
 public class DriverManager {
     private static final ThreadLocal<VirtualizedService> driverVirtualizedService = new ThreadLocal<>();
-    private static PropertiesFileSettings propertiesFileSettings;
+    private static PropertiesWebAPI propertiesFileSettings;
 
     @Inject
-    public DriverManager(@Named("properties") PropertiesFileSettings propertiesFileSettings) {
+    public DriverManager(@Named("properties") PropertiesWebAPI propertiesFileSettings) {
         if (Objects.isNull(DriverManager.propertiesFileSettings)) {
             DriverManager.propertiesFileSettings = propertiesFileSettings;
         }

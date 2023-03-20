@@ -25,7 +25,7 @@ public class PropertiesFileSettingsTest {
     public static void tearDownAfterClass() throws Exception {
     }
 
-    private PropertiesFileSettings propertiesFileSettings;
+    private PropertiesWebAPI propertiesFileSettings;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -40,7 +40,7 @@ public class PropertiesFileSettingsTest {
     public void testParameterEnableVirtualServer_True() throws FileNotFoundException {
         String path = System.getProperty("user.dir") + Paths.get("/src/test/resources/settings.properties");
         Injector i = Guice.createInjector(PropertiesSettingsModule.init(new FileInputStream(path)));
-        this.propertiesFileSettings = i.getInstance(PropertiesFileSettings.class);
+        this.propertiesFileSettings = i.getInstance(PropertiesWebAPI.class);
 
         assertEquals("", true, propertiesFileSettings.isVirtualServerEnabled());
     }
@@ -49,7 +49,7 @@ public class PropertiesFileSettingsTest {
     public void testParameterEnableVirtualServer_False() throws FileNotFoundException {
         String path = System.getProperty("user.dir") + Paths.get("/src/test/resources/settings2.properties");
         Injector i = Guice.createInjector(PropertiesSettingsModule.init(new FileInputStream(path)));
-        this.propertiesFileSettings = i.getInstance(PropertiesFileSettings.class);
+        this.propertiesFileSettings = i.getInstance(PropertiesWebAPI.class);
 
         assertEquals("", false, propertiesFileSettings.isVirtualServerEnabled());
     }
@@ -58,7 +58,7 @@ public class PropertiesFileSettingsTest {
     public void testParameterEnableVirtualServer_NoValue() throws FileNotFoundException {
         String path = System.getProperty("user.dir") + Paths.get("/src/test/resources/settings3.properties");
         Injector i = Guice.createInjector(PropertiesSettingsModule.init(new FileInputStream(path)));
-        this.propertiesFileSettings = i.getInstance(PropertiesFileSettings.class);
+        this.propertiesFileSettings = i.getInstance(PropertiesWebAPI.class);
 
         assertEquals("", true, propertiesFileSettings.isVirtualServerEnabled());
     }
@@ -67,7 +67,7 @@ public class PropertiesFileSettingsTest {
     public void testParameterEnableVirtualServer_Text() throws FileNotFoundException {
         String path = System.getProperty("user.dir") + Paths.get("/src/test/resources/settings4.properties");
         Injector i = Guice.createInjector(PropertiesSettingsModule.init(new FileInputStream(path)));
-        this.propertiesFileSettings = i.getInstance(PropertiesFileSettings.class);
+        this.propertiesFileSettings = i.getInstance(PropertiesWebAPI.class);
 
         assertEquals("", true, propertiesFileSettings.isVirtualServerEnabled());
     }
@@ -76,7 +76,7 @@ public class PropertiesFileSettingsTest {
     public void testParameterEnableVirtualServer_NoParameter() throws FileNotFoundException {
         String path = System.getProperty("user.dir") + Paths.get("/src/test/resources/settings5.properties");
         Injector i = Guice.createInjector(PropertiesSettingsModule.init(new FileInputStream(path)));
-        this.propertiesFileSettings = i.getInstance(PropertiesFileSettings.class);
+        this.propertiesFileSettings = i.getInstance(PropertiesWebAPI.class);
 
         assertEquals("", true, propertiesFileSettings.isVirtualServerEnabled());
     }
@@ -86,7 +86,7 @@ public class PropertiesFileSettingsTest {
         PropertiesSettingsModule.delInstance();
 
         Injector i = Guice.createInjector(PropertiesSettingsModule.init());
-        PropertiesFileSettings propertiesFileSettings = i.getInstance(PropertiesFileSettings.class);
+        PropertiesWebAPI propertiesFileSettings = i.getInstance(PropertiesWebAPI.class);
 
         assertEquals("", true, propertiesFileSettings.isVirtualServerEnabled());
     }

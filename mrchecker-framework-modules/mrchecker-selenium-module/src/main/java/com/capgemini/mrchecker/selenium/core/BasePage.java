@@ -64,6 +64,7 @@ abstract public class BasePage extends Page implements IBasePage {
     }
 
     public BasePage(BasePage parent) {
+        verifyStaticObject(PROPERTIES_SELENIUM.getAllowStaticPage(), "Page");
         setParent(parent);
 
         // If the page is not yet loaded, then load it
