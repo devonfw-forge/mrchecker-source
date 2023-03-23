@@ -6,6 +6,7 @@ import com.capgemini.mrchecker.test.core.base.encryption.providers.DataEncryptio
 import com.capgemini.mrchecker.test.core.exceptions.BFSecureModuleException;
 import com.capgemini.mrchecker.test.core.tags.UnitTest;
 import com.google.inject.Guice;
+import com.google.inject.ProvisionException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,9 @@ public class DataEncryptionModuleTest {
 
     @Test
     public void shouldCreateThrowBFSecureModuleExceptionWhenWrongFile() {
-        assertThrows(BFSecureModuleException.class, () -> Guice.createInjector(new DataEncryptionModule(NO_FILE_PATH))
+        ProvisionException parentException = assertThrows(ProvisionException.class, () -> Guice.createInjector(new DataEncryptionModule(NO_FILE_PATH))
                 .getInstance(IDataEncryptionService.class));
+        Throwable cause = parentException.getCause();
+        assertThat(cause.getClass(), is(BFSecureModuleException.class));
     }
 }

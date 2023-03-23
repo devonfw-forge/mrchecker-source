@@ -80,7 +80,7 @@ public class TestExecutionClassObserverTest extends TestExecutionObserverBaseTes
         SUT.testAborted(contextMock, new RuntimeException("Test_Exception"));
 
         assertThat(FileTestUtils.getAllLinesInFile(FileTestUtils.getLogFilePath()), containsString("- ABORTED."));
-        verify(observerMock, times(0)).onTestFinish();
+        verify(observerMock, times(1)).onTestFinish();
     }
 
     @Test
@@ -89,7 +89,7 @@ public class TestExecutionClassObserverTest extends TestExecutionObserverBaseTes
 
         assertThat(FileTestUtils.getAllLinesInFile(FileTestUtils.getLogFilePath()), containsString("- PASSED."));
         verify(observerMock, times(1)).onTestSuccess();
-        verify(observerMock, times(0)).onTestFinish();
+        verify(observerMock, times(1)).onTestFinish();
     }
 
     @Test
@@ -98,7 +98,7 @@ public class TestExecutionClassObserverTest extends TestExecutionObserverBaseTes
 
         assertThat(FileTestUtils.getAllLinesInFile(FileTestUtils.getLogFilePath()), containsString("- FAILED."));
         verify(observerMock, times(1)).onTestFailed();
-        verify(observerMock, times(0)).onTestFinish();
+        verify(observerMock, times(1)).onTestFinish();
     }
 
     @Test

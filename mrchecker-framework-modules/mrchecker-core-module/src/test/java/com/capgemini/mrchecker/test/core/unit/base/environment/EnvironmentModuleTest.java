@@ -6,6 +6,7 @@ import com.capgemini.mrchecker.test.core.base.environment.providers.SpreadsheetE
 import com.capgemini.mrchecker.test.core.exceptions.BFInputDataException;
 import com.capgemini.mrchecker.test.core.tags.UnitTest;
 import com.google.inject.Guice;
+import com.google.inject.ProvisionException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,9 @@ public class EnvironmentModuleTest {
 
     @Test
     public void shouldCreateThrowExceptionWhenWrongFile() {
-        assertThrows(BFInputDataException.class, () -> Guice.createInjector(new EnvironmentModule(NO_FILE_PATH))
+        ProvisionException parentException = assertThrows(ProvisionException.class, () -> Guice.createInjector(new EnvironmentModule(NO_FILE_PATH))
                 .getInstance(IEnvironmentService.class));
+        Throwable cause = parentException.getCause();
+        assertThat(cause.getClass(), is(BFInputDataException.class));
     }
 }

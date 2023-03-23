@@ -158,12 +158,12 @@ public class RunningTestsTest {
 
         verify(testObserver, times(1)).onTestSuccess();
         verify(testObserver, times(0)).onTestFailed();
-        verify(testObserver, times(0)).onTestFinish();
+        verify(testObserver, times(1)).onTestFinish();
         verify(testObserver, times(1)).onTestClassFinish();
 
         verify(testObserverSecond, times(1)).onTestSuccess();
         verify(testObserverSecond, times(0)).onTestFailed();
-        verify(testObserverSecond, times(0)).onTestFinish();
+        verify(testObserverSecond, times(1)).onTestFinish();
         verify(testObserverSecond, times(1)).onTestClassFinish();
 
         assertThat(isBaseTestSetupCalled, is(equalTo(CALLED)));

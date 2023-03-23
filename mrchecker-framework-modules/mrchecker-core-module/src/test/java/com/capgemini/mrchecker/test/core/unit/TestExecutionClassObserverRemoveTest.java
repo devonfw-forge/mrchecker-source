@@ -24,7 +24,7 @@ public class TestExecutionClassObserverRemoveTest extends TestExecutionObserverB
 
         SUT.testSuccessful(contextMock);
 
-        verify(observerMock, times(0)).onTestSuccess();
-        verify(observerMock, times(0)).onTestFinish();
+        verify(observerMock, times(1)).onTestSuccess();
+        verify(observerMock, times(1)).onTestFinish();
     }
 }

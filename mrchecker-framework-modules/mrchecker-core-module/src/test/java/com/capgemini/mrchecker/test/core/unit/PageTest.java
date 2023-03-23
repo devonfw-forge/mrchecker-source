@@ -39,7 +39,7 @@ public class PageTest {
     public void shouldCallOnTestFailure() throws IOException {
         SUT.onTestFailed();
 
-        assertThat(FileTestUtils.getLastLineInFile(logFilePath), containsString("Page.onTestFailure    " + SUT.getClass()
+        assertThat(FileTestUtils.getLastLineInFile(logFilePath), containsString("Page.onTestFailed    " + SUT.getClass()
                 .getSimpleName()));
     }
 
@@ -47,7 +47,7 @@ public class PageTest {
     public void shouldCallOnTestFinish() throws IOException {
         SUT.onTestFinish();
 
-        assertThat(FileTestUtils.getLastLineInFile(logFilePath), containsString("To remove observer: " + SUT.toString()));
+        assertThat(FileTestUtils.getLastLineInFile(logFilePath), containsString("Removed observer: " + SUT.toString()));
     }
 
     @Test

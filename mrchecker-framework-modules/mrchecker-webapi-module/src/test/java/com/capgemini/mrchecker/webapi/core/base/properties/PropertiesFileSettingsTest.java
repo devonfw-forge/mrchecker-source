@@ -60,7 +60,7 @@ public class PropertiesFileSettingsTest {
         Injector i = Guice.createInjector(PropertiesSettingsModule.init(new FileInputStream(path)));
         this.propertiesFileSettings = i.getInstance(PropertiesWebAPI.class);
 
-        assertEquals("", true, propertiesFileSettings.isVirtualServerEnabled());
+        assertEquals("", false, propertiesFileSettings.isVirtualServerEnabled());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class PropertiesFileSettingsTest {
         Injector i = Guice.createInjector(PropertiesSettingsModule.init(new FileInputStream(path)));
         this.propertiesFileSettings = i.getInstance(PropertiesWebAPI.class);
 
-        assertEquals("", true, propertiesFileSettings.isVirtualServerEnabled());
+        assertEquals("", false, propertiesFileSettings.isVirtualServerEnabled());
     }
 
     @Test

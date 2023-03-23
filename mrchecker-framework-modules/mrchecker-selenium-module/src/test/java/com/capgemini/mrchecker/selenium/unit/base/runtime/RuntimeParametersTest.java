@@ -25,12 +25,13 @@ public class RuntimeParametersTest {
 
     private static final Map<String, String> STARTUP_PARAMETERS_VALUES = new LinkedHashMap<String, String>() {
         {
-            put("browser", "magicbrowser");
+            put("browser", "MagicBrowser");
             put("browserVersion", "11.0");
-            put("seleniumGrid", "smth");
+            put("seleniumGrid", "something");
             put("os", "linux");
             put("browserOptions",
                     "headless;window-size=1200x600;testEquals=FirstEquals=SecondEquals;--testMe;acceptInsecureCerts=true;maxInstances=3");
+            put("headless", "false");
         }
     };
 
@@ -64,9 +65,8 @@ public class RuntimeParametersTest {
     }
 
     @Test
-    public void shouldGetReturnLowercaseBrowserValue() {
-        System.setProperty("browser", STARTUP_PARAMETERS_VALUES.get("browser")
-                .toUpperCase());
+    public void shouldGetReturnOriginBrowserValue() {
+        System.setProperty("browser", STARTUP_PARAMETERS_VALUES.get("browser"));
 
         refreshAllParameters();
         String browserValue = RuntimeParametersSelenium.BROWSER.getValue();
