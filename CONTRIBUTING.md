@@ -1,13 +1,8 @@
 # Pull request general verifications
 
-## Jenkins job link
-
-Example Jenkins job link   http://10.40.232.131:8081/job/Training/job/selenium_workshop/197/allure/
-
 ## Branch naming convention
 
 Example:  *feature/LUSTEF-Zad12*
-
 
 # Every file
 
@@ -17,7 +12,7 @@ Remove ```// Commented lines``` and empty lines
 
 ## Enable file formatting 
 
-By default file formatting should be already uploaded to Eclipse.
+By default, file formatting should be already uploaded to Eclipse.
 
 * Eclipse -> Preferences -> Java -> Code Style -> Formatter -> Import [eclipse_format_code_standards.xml](https://bitbucket.org/capntc/selenium_workshop/src/cc4f1840dd7b2831907526c47bdf247ab74903a2/README/eclipse_format_code_standards.xml?at=develop)
 
@@ -131,7 +126,3 @@ Type of variable: *private static final*
 Naming: selector[ElementName]
 
 `private static final By selectorResultBanner = By.cssSelector("#hdtb-msb-vis");`
-
-
-
-
