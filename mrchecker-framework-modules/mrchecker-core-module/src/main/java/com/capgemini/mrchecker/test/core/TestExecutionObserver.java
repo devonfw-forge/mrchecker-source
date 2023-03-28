@@ -81,11 +81,7 @@ public class TestExecutionObserver implements ITestExecutionObserver {
         try {
             validateTestClassAndCallHook(context, BaseTest::setUp);
         } catch (Throwable throwable) {
-            try {
-                handleExecutionException(context, throwable, "setup", ITestObserver::onSetupFailure);
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
-            }
+            handleExecutionExceptionAction(context, throwable, "setup", ITestObserver::onSetupFailure);
             throw throwable;
         }
     }
@@ -99,11 +95,7 @@ public class TestExecutionObserver implements ITestExecutionObserver {
         try {
             validateTestClassAndCallHook(context, BaseTest::tearDown);
         } catch (Throwable throwable) {
-            try {
-                handleExecutionException(context, throwable, "teardown", ITestObserver::onTeardownFailure);
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
-            }
+            handleExecutionExceptionAction(context, throwable, "teardown", ITestObserver::onTeardownFailure);
             throw throwable;
         }
     }
@@ -125,11 +117,15 @@ public class TestExecutionObserver implements ITestExecutionObserver {
     }
 
     //LifecycleMethodExecutionExceptionHandler
-    private void handleExecutionException(ExtensionContext context, Throwable throwable, String annotationName, Consumer<ITestObserver> action) throws Throwable {
+    private void handleExecutionExceptionAction(ExtensionContext context, Throwable throwable, String annotationName, Consumer<ITestObserver> action) {
         forEachObserver(action);
         String className = context.getRequiredTestClass().getName();
         String testName = context.getDisplayName();
         BFLogger.logError("\"" + className + "#" + testName + "\"" + " - EXCEPTION in " + annotationName + ": " + throwable.getMessage());
+    }
+
+    private void handleExecutionException(ExtensionContext context, Throwable throwable, String annotationName, Consumer<ITestObserver> action) throws Throwable {
+        handleExecutionExceptionAction(context, throwable, annotationName, action);
         throw throwable;
     }
 

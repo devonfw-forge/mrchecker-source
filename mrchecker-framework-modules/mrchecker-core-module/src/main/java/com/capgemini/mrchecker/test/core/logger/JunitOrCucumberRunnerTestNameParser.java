@@ -1,5 +1,6 @@
 package com.capgemini.mrchecker.test.core.logger;
 
+import com.capgemini.mrchecker.test.core.cucumber.BaseHook;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
@@ -9,9 +10,7 @@ public class JunitOrCucumberRunnerTestNameParser implements ITestNameParser {
 
     @Override
     public ITestName parseFromContext(ExtensionContext context) {
-        return context.getRequiredTestClass()
-                .getName()
-                .contains("BaseHook") ? parseCucumber(context) : parseJUnit(context);
+        return context instanceof BaseHook.CucumberExtensionContext ? parseCucumber(context) : parseJUnit(context);
     }
 
     private static ITestName parseCucumber(ExtensionContext context) {

@@ -1,5 +1,6 @@
 package com.capgemini.mrchecker.test.core.integration.logger;
 
+import com.capgemini.mrchecker.test.core.cucumber.BaseHook;
 import com.capgemini.mrchecker.test.core.logger.ITestName;
 import com.capgemini.mrchecker.test.core.logger.ITestNameParser;
 import com.capgemini.mrchecker.test.core.logger.JunitOrCucumberRunnerTestNameParser;
@@ -33,7 +34,7 @@ public class JunitAndCucumberRunnerTestNameParserTest {
     @Test
     public void shouldParseJunitRunnerNoDDTName() throws NoSuchMethodException {
         ITestName parsedTestName = SUT.parseFromContext(
-                createMockedExtensionContext(JUNIT_RUNNER_DISPLAYED_NAME_NO_DDT, JUNIT_RUNNER_UNIQUE_ID_NO_DDT, Object.class, getClass().getMethod("shouldParseJunitRunnerNoDDTName")));
+                createMockedExtensionContext(JUNIT_RUNNER_DISPLAYED_NAME_NO_DDT, JUNIT_RUNNER_UNIQUE_ID_NO_DDT, Object.class, getClass().getMethod("shouldParseJunitRunnerNoDDTName"), ExtensionContext.class));
 
         assertThat(parsedTestName.getJunitName(), is(equalTo("com.capgemini.mrchecker.selenium.mts.MyThaiStarTest:Test_orderMenu")));
         assertThat(parsedTestName.getAllureName(), is(equalTo("Test_orderMenu")));
@@ -43,7 +44,7 @@ public class JunitAndCucumberRunnerTestNameParserTest {
     @DisplayName("shouldParseJunitRunnerNoDDTAnnotatedName")
     public void shouldParseJunitRunnerNoDDTAnnotatedName() throws NoSuchMethodException {
         ITestName parsedTestName = SUT.parseFromContext(
-                createMockedExtensionContext(JUNIT_RUNNER_DISPLAYED_NAME_NO_DDT, JUNIT_RUNNER_UNIQUE_ID_NO_DDT, Object.class, getClass().getMethod("shouldParseJunitRunnerNoDDTAnnotatedName")));
+                createMockedExtensionContext(JUNIT_RUNNER_DISPLAYED_NAME_NO_DDT, JUNIT_RUNNER_UNIQUE_ID_NO_DDT, Object.class, getClass().getMethod("shouldParseJunitRunnerNoDDTAnnotatedName"), ExtensionContext.class));
 
         assertThat(parsedTestName.getJunitName(), is(equalTo("com.capgemini.mrchecker.selenium.mts.MyThaiStarTest:shouldParseJunitRunnerNoDDTAnnotatedName")));
         assertThat(parsedTestName.getAllureName(), is(equalTo("shouldParseJunitRunnerNoDDTAnnotatedName")));
@@ -52,7 +53,7 @@ public class JunitAndCucumberRunnerTestNameParserTest {
     @Test
     public void shouldParseJunitRunnerDDTName() throws NoSuchMethodException {
         ITestName parsedTestName = SUT
-                .parseFromContext(createMockedExtensionContext(JUNIT_RUNNER_DISPLAYED_NAME_DDT, JUNIT_RUNNER_UNIQUE_ID_DDT, Object.class, getClass().getMethod("shouldParseJunitRunnerDDTName")));
+                .parseFromContext(createMockedExtensionContext(JUNIT_RUNNER_DISPLAYED_NAME_DDT, JUNIT_RUNNER_UNIQUE_ID_DDT, Object.class, getClass().getMethod("shouldParseJunitRunnerDDTName"), ExtensionContext.class));
 
         assertThat(parsedTestName.getJunitName(), is(equalTo("com.capgemini.mrchecker.selenium.mts.MyThaiStarTest" + ":" + EXPECTED_ALLURE_NAME_DDT)));
         assertThat(parsedTestName.getAllureName(), is(equalTo(EXPECTED_ALLURE_NAME_DDT)));
@@ -63,7 +64,7 @@ public class JunitAndCucumberRunnerTestNameParserTest {
     public void shouldParseJunitRunnerDDTAnnotatedName() throws NoSuchMethodException {
         ITestName parsedTestName = SUT
                 .parseFromContext(
-                        createMockedExtensionContext(JUNIT_RUNNER_DISPLAYED_NAME_DDT, JUNIT_RUNNER_UNIQUE_ID_DDT, Object.class, getClass().getMethod("shouldParseJunitRunnerDDTAnnotatedName")));
+                        createMockedExtensionContext(JUNIT_RUNNER_DISPLAYED_NAME_DDT, JUNIT_RUNNER_UNIQUE_ID_DDT, Object.class, getClass().getMethod("shouldParseJunitRunnerDDTAnnotatedName"), ExtensionContext.class));
 
         assertThat(parsedTestName.getJunitName(), is(equalTo("com.capgemini.mrchecker.selenium.mts.MyThaiStarTest:shouldParseJunitRunnerDDTAnnotatedName: waiter, waiter")));
         assertThat(parsedTestName.getAllureName(), is(equalTo("shouldParseJunitRunnerDDTAnnotatedName: waiter, waiter")));
@@ -73,14 +74,14 @@ public class JunitAndCucumberRunnerTestNameParserTest {
     public void shouldParseCucumberRunnerName() throws NoSuchMethodException {
         ITestName parsedTestName = SUT
                 .parseFromContext(
-                        createMockedExtensionContext(CUCUMBER_RUNNER_DISPLAYED_NAME, CUCUMBER_RUNNER_UNIQUE_ID_DDT, BaseHookTest.class, getClass().getMethod("shouldParseCucumberRunnerName")));
+                        createMockedExtensionContext(CUCUMBER_RUNNER_DISPLAYED_NAME, CUCUMBER_RUNNER_UNIQUE_ID_DDT, BaseHookTest.class, getClass().getMethod("shouldParseCucumberRunnerName"), BaseHook.CucumberExtensionContext.class));
 
         assertThat(parsedTestName.getJunitName(), is(equalTo(CUCUMBER_RUNNER_DISPLAYED_NAME)));
         assertThat(parsedTestName.getAllureName(), is(equalTo(CUCUMBER_RUNNER_DISPLAYED_NAME)));
     }
 
-    private static ExtensionContext createMockedExtensionContext(String displayedTestName, String uniqueId, Class testInstanceClass, Method testMethod) {
-        ExtensionContext contextMock = mock(ExtensionContext.class);
+    private static ExtensionContext createMockedExtensionContext(String displayedTestName, String uniqueId, Class testInstanceClass, Method testMethod, Class extensionContextClass) {
+        ExtensionContext contextMock = (ExtensionContext) mock(extensionContextClass);
         when(contextMock.getDisplayName()).thenReturn(displayedTestName);
         when(contextMock.getUniqueId()).thenReturn(uniqueId);
         when(contextMock.getRequiredTestClass()).thenReturn(testInstanceClass);
