@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static com.capgemini.mrchecker.test.core.utils.ExceptionUtils.sneakyThrow;
+
 public class TestExecutionObserver implements ITestExecutionObserver {
     private TestExecutionObserver() {
     }
@@ -81,8 +83,7 @@ public class TestExecutionObserver implements ITestExecutionObserver {
         try {
             validateTestClassAndCallHook(context, BaseTest::setUp);
         } catch (Throwable throwable) {
-            handleExecutionExceptionAction(context, throwable, "setup", ITestObserver::onSetupFailure);
-            throw throwable;
+            handleExecutionException(context, throwable, "setup", ITestObserver::onSetupFailure);
         }
     }
 
@@ -95,8 +96,7 @@ public class TestExecutionObserver implements ITestExecutionObserver {
         try {
             validateTestClassAndCallHook(context, BaseTest::tearDown);
         } catch (Throwable throwable) {
-            handleExecutionExceptionAction(context, throwable, "teardown", ITestObserver::onTeardownFailure);
-            throw throwable;
+            handleExecutionException(context, throwable, "teardown", ITestObserver::onTeardownFailure);
         }
     }
 
@@ -117,46 +117,44 @@ public class TestExecutionObserver implements ITestExecutionObserver {
     }
 
     //LifecycleMethodExecutionExceptionHandler
-    private void handleExecutionExceptionAction(ExtensionContext context, Throwable throwable, String annotationName, Consumer<ITestObserver> action) {
+    private void handleExecutionException(ExtensionContext context, Throwable throwable, String annotationName, Consumer<ITestObserver> action) {
         forEachObserver(action);
+        if (context != null) {
         String className = context.getRequiredTestClass().getName();
         String testName = context.getDisplayName();
         BFLogger.logError("\"" + className + "#" + testName + "\"" + " - EXCEPTION in " + annotationName + ": " + throwable.getMessage());
-    }
-
-    private void handleExecutionException(ExtensionContext context, Throwable throwable, String annotationName, Consumer<ITestObserver> action) throws Throwable {
-        handleExecutionExceptionAction(context, throwable, annotationName, action);
-        throw throwable;
+        }
+        sneakyThrow(throwable);
     }
 
     @Override
-    public void handleBeforeAllMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+    public void handleBeforeAllMethodExecutionException(ExtensionContext context, Throwable throwable) {
         handleExecutionException(context, throwable, "@BeforeAll", ITestObserver::onBeforeAllException);
     }
 
     @Override
-    public void handleBeforeEachMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+    public void handleBeforeEachMethodExecutionException(ExtensionContext context, Throwable throwable) {
         handleExecutionException(context, throwable, "@BeforeEach", ITestObserver::onBeforeEachException);
     }
 
     @Override
-    public void handleAfterEachMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+    public void handleAfterEachMethodExecutionException(ExtensionContext context, Throwable throwable) {
         handleExecutionException(context, throwable, "@AfterEach", ITestObserver::onAfterEachException);
     }
 
     @Override
-    public void handleAfterAllMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+    public void handleAfterAllMethodExecutionException(ExtensionContext context, Throwable throwable) {
         try {
             handleExecutionException(context, throwable, "@AfterAll", ITestObserver::onAfterAllException);
         } catch (Throwable e) {
             if (DONT_CONSUME_EXCEPTION_IN_AFTERALL)
-                throw throwable;
+                sneakyThrow(e);
         }
     }
 
     //TestExecutionExceptionHandler
     @Override
-    public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+    public void handleTestExecutionException(ExtensionContext context, Throwable throwable) {
         handleExecutionException(context, throwable, "@Test", ITestObserver::onTestExecutionException);
     }
 

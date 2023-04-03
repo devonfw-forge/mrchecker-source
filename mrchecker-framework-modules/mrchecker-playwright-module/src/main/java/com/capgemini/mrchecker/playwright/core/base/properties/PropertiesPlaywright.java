@@ -1,5 +1,6 @@
 package com.capgemini.mrchecker.playwright.core.base.properties;
 
+import com.capgemini.mrchecker.test.core.base.driver.DriverCloseLevel;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.microsoft.playwright.options.Proxy;
@@ -10,6 +11,7 @@ public class PropertiesPlaywright {
     private String browsersPath = "./lib/playwright";
     private int skipBrowserDownload = 0;
     private boolean allowStaticPage = false;
+    private DriverCloseLevel driverCloseLevel = DriverCloseLevel.CLASS;
 
     @Inject(optional = true)
     @SuppressWarnings("unused")
@@ -59,5 +61,15 @@ public class PropertiesPlaywright {
 
     public boolean getAllowStaticPage() {
         return allowStaticPage;
+    }
+
+    @Inject(optional = true)
+    @SuppressWarnings("unused")
+    private void setDriverCloseLevel(@Named("playwright.driverCloseLevel") String level) {
+        driverCloseLevel = DriverCloseLevel.fromText(level);
+    }
+
+    public DriverCloseLevel getDriverCloseLevel() {
+        return driverCloseLevel;
     }
 }

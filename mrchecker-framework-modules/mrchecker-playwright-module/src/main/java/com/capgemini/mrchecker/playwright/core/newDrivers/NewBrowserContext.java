@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -298,6 +299,11 @@ public class NewBrowserContext implements INewBrowserContext {
     @Override
     public void unroute(Predicate<String> predicate, Consumer<Route> consumer) {
         browserContext.unroute(predicate, consumer);
+    }
+
+    @Override
+    public void waitForCondition(BooleanSupplier booleanSupplier, WaitForConditionOptions waitForConditionOptions) {
+        browserContext.waitForCondition(booleanSupplier, waitForConditionOptions);
     }
 
     @Override

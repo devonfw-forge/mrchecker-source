@@ -53,24 +53,6 @@ public abstract class BaseHook {
     }
 
     public void tearDown(Scenario scenario) {
-        switch (scenario.getStatus()) {
-            case SKIPPED:
-                TestExecutionObserver.getInstance().testAborted(context, null);
-                break;
-            case PASSED:
-                TestExecutionObserver.getInstance().testSuccessful(context);
-                break;
-            case FAILED:
-                TestExecutionObserver.getInstance().testFailed(context, null);
-                break;
-            case UNUSED:
-            case PENDING:
-            case AMBIGUOUS:
-            case UNDEFINED:
-            default:
-                TestExecutionObserver.getInstance().testDisabled(context, null);
-                break;
-        }
         TestExecutionObserver.getInstance().afterTestExecution(context);
     }
 

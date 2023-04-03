@@ -8,6 +8,7 @@ import com.microsoft.playwright.options.*;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -1248,6 +1249,11 @@ public class NewPage implements Page {
     @Override
     public ElementHandle waitForSelector(String s, WaitForSelectorOptions waitForSelectorOptions) {
         return page.waitForSelector(s, waitForSelectorOptions);
+    }
+
+    @Override
+    public void waitForCondition(BooleanSupplier booleanSupplier, WaitForConditionOptions waitForConditionOptions) {
+        page.waitForCondition(booleanSupplier, waitForConditionOptions);
     }
 
     @Override

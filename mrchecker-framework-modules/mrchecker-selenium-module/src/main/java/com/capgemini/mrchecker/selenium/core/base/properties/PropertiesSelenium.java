@@ -1,5 +1,6 @@
 package com.capgemini.mrchecker.selenium.core.base.properties;
 
+import com.capgemini.mrchecker.test.core.base.driver.DriverCloseLevel;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -15,6 +16,7 @@ public class PropertiesSelenium {
     private String driverVersionIE = "";
     private boolean driverAutoUpdateFlag = true;
     private boolean allowStaticPage = false;
+    private DriverCloseLevel driverCloseLevel = DriverCloseLevel.CLASS;
 
     @Inject(optional = true)
     @SuppressWarnings("unused")
@@ -114,5 +116,15 @@ public class PropertiesSelenium {
 
     public boolean getAllowStaticPage() {
         return allowStaticPage;
+    }
+
+    @Inject(optional = true)
+    @SuppressWarnings("unused")
+    private void setDriverCloseLevel(@Named("selenium.driverCloseLevel") String level) {
+        driverCloseLevel = DriverCloseLevel.fromText(level);
+    }
+
+    public DriverCloseLevel getDriverCloseLevel() {
+        return driverCloseLevel;
     }
 }

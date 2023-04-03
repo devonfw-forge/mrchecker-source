@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.capgemini.mrchecker</groupId>
     <artifactId>mrchecker-test-framework</artifactId>
-    <version>2023.03.28</version>
+    <version>2023.04.03</version>
     <name>MrChecker</name>
     <description>MrChecker Test Framework is an automated testing framework for functional testing of web applications,
         native mobile apps, webservices and database.
@@ -95,7 +95,7 @@
         <java.compiler.version>1.8</java.compiler.version>
 
         <!-- Tests executors -->
-        <maven-surefire-plugin.version>3.0.0-M9</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
         <surefire.provider.version>1.3.2</surefire.provider.version>
 
         <!-- Test tools -->

@@ -11,6 +11,7 @@ import com.capgemini.mrchecker.test.core.BaseTest;
 import com.capgemini.mrchecker.test.core.ModuleType;
 import com.capgemini.mrchecker.test.core.Page;
 import com.capgemini.mrchecker.test.core.analytics.IAnalytics;
+import com.capgemini.mrchecker.test.core.base.driver.DriverCloseLevel;
 import com.capgemini.mrchecker.test.core.base.environment.IEnvironmentService;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
@@ -102,9 +103,20 @@ abstract public class BasePage extends Page implements IBasePage {
     }
 
     @Override
+    public void onTestFinish() {
+        super.onTestFinish();
+        if (PROPERTIES_SELENIUM.getDriverCloseLevel().equals(DriverCloseLevel.TEST)) {
+            DriverManager.closeDriver();
+        }
+    }
+
+
+    @Override
     public void onTestClassFinish() {
         super.onTestClassFinish();
-        DriverManager.closeDriver();
+        if (PROPERTIES_SELENIUM.getDriverCloseLevel().equals(DriverCloseLevel.CLASS)) {
+            DriverManager.closeDriver();
+        }
     }
 
     @Override

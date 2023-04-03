@@ -32,7 +32,7 @@ public class CustomStrategy implements ParallelExecutionConfiguration, ParallelE
 
     @Override
     public int getKeepAliveSeconds() {
-        return threadCount;
+        return 30;
     }
 
     @Override
