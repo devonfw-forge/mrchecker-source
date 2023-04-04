@@ -7,11 +7,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>2023.04.03</version>
+        <version>2023.04.04</version>
     </parent>
 
     <artifactId>mrchecker-core-module</artifactId>
-    <version>2023.04.03</version>
+    <version>2023.04.04</version>
     <packaging>jar</packaging>
     <name>MrChecker - Test core - Module</name>
     <description>MrChecker Test Framework Core is responsible for:
@@ -40,6 +40,18 @@
             <organization>Capgemini - Software Solution Center</organization>
             <organizationUrl>https://capgeminisoftware.pl</organizationUrl>
         </developer>
+        <developer>
+            <name>Mariusz Kowalski</name>
+            <email>mariusz.kowalski@capgemini.com</email>
+            <organization>Capgemini - Nearshore Test Center - Poland</organization>
+            <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
+        </developer>
+        <developer>
+            <name>Michal Babiarz</name>
+            <email>michal.babiarz@capgemini.com</email>
+            <organization>Capgemini - Nearshore Test Center - Poland</organization>
+            <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
+        </developer>
     </developers>
 
     <licenses>
@@ -58,6 +70,9 @@
     <properties>
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
+        <!-- Guava is a set of core libraries -->
+        <google.guava.version>31.1-jre</google.guava.version>
+        
         <!-- Logger -->
         <log4j.version>2.20.0</log4j.version>
         <slf4j.version>2.0.6</slf4j.version>
@@ -74,6 +89,15 @@
     </properties>
 
     <dependencies>
+        <!-- Guava is a set of core libraries -->
+        <!-- NOTE: given Guava lib is not backward compatible, therefore
+            must be used as first dependency import to overwrite any other imports -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${google.guava.version}</version>
+        </dependency>
+
         <!--This dependency is necessary for Logger. -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

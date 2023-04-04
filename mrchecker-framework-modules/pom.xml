@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.capgemini.mrchecker</groupId>
     <artifactId>mrchecker-test-framework</artifactId>
-    <version>2023.04.03</version>
+    <version>2023.04.04</version>
     <name>MrChecker</name>
     <description>MrChecker Test Framework is an automated testing framework for functional testing of web applications,
         native mobile apps, webservices and database.
@@ -52,7 +52,6 @@
         <url>http://github.com/devonfw/devonfw-testing/tree/develop</url>
     </scm>
 
-
     <modules>
         <module>mrchecker-core-module</module>
         <module>mrchecker-selenium-module</module>
@@ -80,7 +79,6 @@
         </repository>
     </distributionManagement>
 
-
     <properties>
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
@@ -101,10 +99,8 @@
         <!-- Test tools -->
         <mockito.version>4.11.0</mockito.version>
         <hamcrest.version>2.2</hamcrest.version>
-        <junit.jupiter.version>5.9.2</junit.jupiter.version>
+        <junit.version>5.9.2</junit.version>
         <junit.platform.version>1.9.2</junit.platform.version>
-        <junit.vintage.version>5.9.2</junit.vintage.version>
-        <junit.params.version>5.9.2</junit.params.version>
         <joda-time.version>2.12.2</joda-time.version>
         <commons-csv.version>1.10.0</commons-csv.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
@@ -130,9 +126,7 @@
 
         <!-- Allure Annotations -->
         <aspectj.version>1.9.19</aspectj.version>
-        <allure-junit5.version>2.21.0</allure-junit5.version>
-        <allure-java-commons.version>2.21.0</allure-java-commons.version>
-        <allure-junit-platform.version>2.21.0</allure-junit-platform.version>
+        <allure.version>2.21.0</allure.version>
         <allure-maven.version>2.12.0</allure-maven.version>
     </properties>
 
@@ -176,7 +170,7 @@
                 <!-- Test listener. Binds Junit exec to Allure annotation -->
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-junit5</artifactId>
-                <version>${allure-junit5.version}</version>
+                <version>${allure.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -184,7 +178,7 @@
                 <!-- Test listener. Binds Junit exec to Allure annotation -->
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-junit-platform</artifactId>
-                <version>${allure-junit-platform.version}</version>
+                <version>${allure.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -199,13 +193,13 @@
             <dependency>
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-java-commons</artifactId>
-                <version>${allure-java-commons.version}</version>
+                <version>${allure.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-attachments</artifactId>
-                <version>${allure-java-commons.version}</version>
+                <version>${allure.version}</version>
             </dependency>
 
             <dependency>
@@ -232,19 +226,19 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.jupiter.version}</version>
+            <version>${junit.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.jupiter.version}</version>
+            <version>${junit.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
-            <version>${junit.params.version}</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -258,7 +252,7 @@
         <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
-            <version>${junit.vintage.version}</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 

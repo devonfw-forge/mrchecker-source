@@ -7,11 +7,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>2023.04.03</version>
+        <version>2023.04.04</version>
     </parent>
 
     <artifactId>mrchecker-selenium-module</artifactId>
-    <version>2023.04.03</version>
+    <version>2023.04.04</version>
     <packaging>jar</packaging>
     <name>MrChecker - Selenium - Module</name>
     <description>MrChecker Test Framework Selenium supports:
@@ -80,28 +80,17 @@
         <!-- Selenium settings -->
         <selenium.version>4.8.3</selenium.version>
 
-        <!-- Guava is a set of core libraries -->
-        <google.guava.version>31.1-jre</google.guava.version>
 
         <webdrivermanager.version>5.3.2</webdrivermanager.version>
         <google-api-client.version>2.2.0</google-api-client.version>
     </properties>
 
     <dependencies>
-        <!-- Guava is a set of core libraries -->
-        <!-- NOTE: given Guava lib is not backward compatible, therefore 
-            must be used as first dependency import to overwrite any other imports -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${google.guava.version}</version>
-        </dependency>
-
         <!-- Dependency to other MrChecker Test Framework modules -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mrchecker-core-module</artifactId>
-            <version>2023.04.03</version>
+            <version>2023.04.04</version>
         </dependency>
 
         <!--This dependency is necessary for Selenium plugin. -->
