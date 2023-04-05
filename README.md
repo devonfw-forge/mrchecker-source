@@ -1,4 +1,5 @@
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdevonfw%2Fdevonfw-testing.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdevonfw%2Fdevonfw-testing?ref=badge_shield)
+![Maven Central](https://img.shields.io/maven-central/v/com.capgemini.mrchecker/mrchecker-core-module)
 
 ![MrChecker.png](resources%2Fimg%2FMrChecker.png)
 
