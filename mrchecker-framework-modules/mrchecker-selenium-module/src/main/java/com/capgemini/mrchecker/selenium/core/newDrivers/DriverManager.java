@@ -320,6 +320,7 @@ public class DriverManager {
         setPlatformName(capabilities);
 
         NewRemoteWebDriver newRemoteWebDriver = null;
+        capabilities.setBrowserName(options.getBrowserName())
         try {
             newRemoteWebDriver = new NewRemoteWebDriver(new URL(SELENIUM_GRID_URL), capabilities);
         } catch (MalformedURLException e) {
