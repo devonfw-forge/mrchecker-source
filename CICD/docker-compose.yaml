@@ -1,25 +1,29 @@
-version: "3.8"
+# TODO: restore 3.8 version
+version: "3.3"
 services:
   jenkins:
-    image: mrchecker/mrchecker-jenkins:v1.1.2
+    # TODO: set final version when ready
+    image: mrchecker/mrchecker-jenkins:v1.1.2.4
     ports:
       - "8888:8080"
       - "50000:50000"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      # TODO: find out what it does
+      #- /var/run/docker.sock:/var/run/docker.sock
       - ./jenkins:/var/jenkins_home
     build:
       context: .
       dockerfile: dockerfile
     restart: unless-stopped
-  jenkins_agent1:
-    image: jenkins/jnlp-agent-maven:jdk11
-    command: -url http://jenkins:8080 ${agent1_secret} ${agent1_name}
-    restart: unless-stopped
-  jenkins_agent2:
-    image: jenkins/jnlp-agent-maven:jdk11
-    command: -url http://jenkins:8080 ${agent2_secret} ${agent2_name}
-    restart: unless-stopped
+    # TODO: enable agents
+#  jenkins_agent1:
+#    image: jenkins/jnlp-agent-maven:jdk11
+#    command: -url http://jenkins:8080 ${agent1_secret} ${agent1_name}
+#    restart: unless-stopped
+#  jenkins_agent2:
+#    image: jenkins/jnlp-agent-maven:jdk11
+#    command: -url http://jenkins:8080 ${agent2_secret} ${agent2_name}
+#    restart: unless-stopped
   selenium-hub:
     image: selenium/hub:3.141.59
     container_name: selenium-hub
