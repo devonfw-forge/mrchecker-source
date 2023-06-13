@@ -1,0 +1,15 @@
+This folder contains all files necessary to setup Jenkins build server for MrChecker source.
+
+docker-compose.yaml is an entry file. It defines Jenkins master, 2 build agents and SeleniumGrid for testing purpose.
+Jenkins component uses local docker image of Jenkins. If not existent, it's built using dockerfile in the folder.
+
+To start Jenkins execute "docker-compose up".
+Jenkins runs on port: 8888.
+
+If first-time start & configuration: 
+- conosle log contains access token to Jenkins
+- an admin user must be created
+- Seed.groovy file contains code to create all pipelines. To use it create a new pipeline "SetMeUp" and use the code from the script in NON sandbox mode.
+Run the job. Jenkins will complain about missing script approvals. Make approvals to proceed. 
+- Jenkins stores its data in ./jenkins folder
+
