@@ -89,7 +89,7 @@ def addJobForDeployParent(){
 }
 def makeConfigFiles(cfgFiles){
     def script = ""
-    node('master'){
+    node(){
         checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/feature/new_CICD_process']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/devonfw-forge/mrchecker-source.git']]]
         cfgFiles.each{f->
             def content = readFile(file:f.location,encoding:'UTF-8')
