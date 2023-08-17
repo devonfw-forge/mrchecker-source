@@ -117,14 +117,20 @@ public class TestExecutionObserver implements ITestExecutionObserver {
     }
 
     //LifecycleMethodExecutionExceptionHandler
-    private void handleExecutionException(ExtensionContext context, Throwable throwable, String annotationName, Consumer<ITestObserver> action) {
+    private void handleExecutionException(ExtensionContext context, Throwable throwable, String annotationName, Consumer<ITestObserver> action, boolean throwException) {
         forEachObserver(action);
         if (context != null) {
-        String className = context.getRequiredTestClass().getName();
-        String testName = context.getDisplayName();
-        BFLogger.logError("\"" + className + "#" + testName + "\"" + " - EXCEPTION in " + annotationName + ": " + throwable.getMessage());
+            String className = context.getRequiredTestClass().getName();
+            String testName = context.getDisplayName();
+            BFLogger.logError("\"" + className + "#" + testName + "\"" + " - EXCEPTION in " + annotationName + ": " + throwable.getMessage());
         }
-        sneakyThrow(throwable);
+        if (throwException) {
+            sneakyThrow(throwable);
+        }
+    }
+
+    private void handleExecutionException(ExtensionContext context, Throwable throwable, String annotationName, Consumer<ITestObserver> action) {
+        handleExecutionException(context, throwable, annotationName, action, true);
     }
 
     @Override
@@ -155,7 +161,11 @@ public class TestExecutionObserver implements ITestExecutionObserver {
     //TestExecutionExceptionHandler
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) {
-        handleExecutionException(context, throwable, "@Test", ITestObserver::onTestExecutionException);
+        handleTestExecutionException(context, throwable, true);
+    }
+
+    public void handleTestExecutionException(ExtensionContext context, Throwable throwable, boolean throwException) {
+        handleExecutionException(context, throwable, "@Test", ITestObserver::onTestExecutionException, throwException);
     }
 
     //ITestObservable

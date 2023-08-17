@@ -444,15 +444,15 @@ abstract public class BasePage extends Page implements IBasePage {
     }
 
     private static void makeScreenshotOnTestFail() {
-        makeScreenShot("Screenshot on test fail", (WebElement) null);
+        makeScreenShot("Screenshot on test fail");
     }
 
     private static void makeScreenshotOnSetupFail() {
-        makeScreenShot("Screenshot on setup fail", (WebElement) null);
+        makeScreenShot("Screenshot on setup fail");
     }
 
     private static void makeScreenshotOnTeardownFail() {
-        makeScreenShot("Screenshot on teardown fail", (WebElement) null);
+        makeScreenShot("Screenshot on teardown fail");
     }
 
     @Attachment("{attachmentName}")

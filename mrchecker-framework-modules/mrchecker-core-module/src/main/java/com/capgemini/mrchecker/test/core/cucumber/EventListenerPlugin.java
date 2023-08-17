@@ -42,7 +42,7 @@ public class EventListenerPlugin implements ConcurrentEventListener {
 
     private final EventHandler<TestStepFinished> testStepFinished = event -> {
         if (event.getResult().getError() != null) {
-            TestExecutionObserver.getInstance().handleTestExecutionException(null, event.getResult().getError());
+            TestExecutionObserver.getInstance().handleTestExecutionException(null, event.getResult().getError(), false);
         }
     };
 }
