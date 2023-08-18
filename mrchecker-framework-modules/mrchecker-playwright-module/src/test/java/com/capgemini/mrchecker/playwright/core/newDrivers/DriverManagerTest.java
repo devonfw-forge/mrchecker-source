@@ -1,6 +1,5 @@
 package com.capgemini.mrchecker.playwright.core.newDrivers;
 
-import static org.junit.Assert.assertTrue;
 
 import org.junit.jupiter.api.*;
 
@@ -8,6 +7,8 @@ import com.capgemini.mrchecker.playwright.core.base.properties.PropertiesPlaywri
 import com.capgemini.mrchecker.playwright.tags.UnitTest;
 import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModule;
 import com.google.inject.Guice;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @UnitTest
 public class DriverManagerTest {
@@ -37,7 +38,7 @@ public class DriverManagerTest {
 	
 	@Test
 	public void test() {
-		assertTrue(true);
+		assertTrue(DriverManager.wasDriverCreated(), "Driver was not created");
 	}
 	
 }
