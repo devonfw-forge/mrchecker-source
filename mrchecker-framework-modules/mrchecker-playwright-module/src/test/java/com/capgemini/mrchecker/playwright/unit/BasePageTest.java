@@ -15,6 +15,6 @@ class BasePageTest extends BaseTest {
 	void testGetPageTitle() {
 		TestPage testPage = PageFactory.getPageInstance(TestPage.class);
 		testPage.load();
-		Assertions.assertEquals("Google", testPage.pageTitle(), "");
+		Assertions.assertEquals("Google", testPage.pageTitle(), "Wrong page title");
 	}
 }
