@@ -37,7 +37,7 @@ public class DriverManagerTest {
 	}
 	
 	@Test
-	public void test() {
+	public void shouldDriverBeCreated() {
 		assertTrue(DriverManager.wasDriverCreated(), "Driver was not created");
 	}
 	
