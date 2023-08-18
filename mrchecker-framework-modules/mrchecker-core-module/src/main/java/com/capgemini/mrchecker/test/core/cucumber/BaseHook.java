@@ -35,7 +35,7 @@ public abstract class BaseHook {
     }
 
     public void setup(Scenario scenario) {
-        context.setDisplayName(scenario.getName());
+        context.setScenario(scenario);
         Allure.suite(getFeatureFileNameFromId(scenario.getId()));
         TestExecutionObserver.getInstance().beforeTestExecution(context);
     }
@@ -57,7 +57,7 @@ public abstract class BaseHook {
     }
 
     public static class CucumberExtensionContext implements ExtensionContext {
-        private String testName;
+        private Scenario scenario;
         private final BaseTest testInstance;
 
         private CucumberExtensionContext(BaseTest testInstance) {
@@ -81,11 +81,15 @@ public abstract class BaseHook {
 
         @Override
         public String getDisplayName() {
-            return testName;
+            return scenario.getName();
         }
 
-        public void setDisplayName(String testName) {
-            this.testName = testName;
+        public void setScenario(Scenario scenario) {
+            this.scenario = scenario;
+        }
+
+        public Scenario getScenario() {
+            return scenario;
         }
 
         @Override
