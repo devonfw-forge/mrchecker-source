@@ -90,7 +90,7 @@
         <jacoco-maven-plugin.version>0.8.3</jacoco-maven-plugin.version>
 
         <!-- Java settings -->
-        <java.compiler.version>1.8</java.compiler.version>
+        <java.compiler.version>11</java.compiler.version>
 
         <!-- Tests executors -->
         <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
@@ -451,8 +451,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -683,7 +683,7 @@
                                             <version>3.3.9</version>
                                         </requireMavenVersion>
                                         <requireJavaVersion>
-                                            <version>1.8</version>
+                                            <version>11</version>
                                         </requireJavaVersion>
                                     </rules>
                                 </configuration>

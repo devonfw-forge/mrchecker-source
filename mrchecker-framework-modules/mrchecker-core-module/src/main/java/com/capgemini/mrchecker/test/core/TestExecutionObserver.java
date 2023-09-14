@@ -100,7 +100,7 @@ public class TestExecutionObserver implements ITestExecutionObserver {
     //AfterTestExecutionCallback
     @Override
     public void afterTestExecution(ExtensionContext inputContext) {
-        ExtensionContext context = inputContext == null ? extensionContext.get() : inputContext;
+        var context = inputContext == null ? extensionContext.get() : inputContext;
         setExtensionContext(context);
         stopwatch.set(System.currentTimeMillis() - stopwatch.get()); // end timing
         logTestInfo("FINISHED");
