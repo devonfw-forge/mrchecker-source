@@ -28,11 +28,19 @@ public class TestExecutionObserver implements ITestExecutionObserver {
     private final ThreadLocal<List<ITestObserver>> testObservers = ThreadLocal.withInitial(ArrayList::new);
     private final ThreadLocal<ITestName> testNames = ThreadLocal.withInitial(EmptyTestName::new);
     private final ITestNameParser testNameParser = new JunitOrCucumberRunnerTestNameParser();
+    private final ThreadLocal<ExtensionContext> extensionContext = new ThreadLocal<>();
 
     public static final boolean DONT_CONSUME_EXCEPTION_IN_AFTERALL = false;
 
     private void forEachObserver(Consumer<ITestObserver> action) {
         testObservers.get().forEach(action);
+    }
+
+    private void setExtensionContext(ExtensionContext context) {
+        extensionContext.set(context);
+        for (ITestObserver obs : testObservers.get()) {
+            obs.setExtensionContext(context);
+        }
     }
 
     //TestWatcher - after complete test execution (befores + test + afters)
@@ -66,8 +74,9 @@ public class TestExecutionObserver implements ITestExecutionObserver {
 
     //BeforeAllCallback
     @Override
-    public void beforeAll(ExtensionContext extensionContext) {
-        String testName = extensionContext.getRequiredTestClass().getName();
+    public void beforeAll(ExtensionContext context) {
+        String testName = context.getRequiredTestClass().getName();
+        setExtensionContext(context);
         BFLogger.logInfo("\"" + testName + "\"" + " - CLASS STARTED.");
     }
 
@@ -76,6 +85,7 @@ public class TestExecutionObserver implements ITestExecutionObserver {
     public void beforeTestExecution(ExtensionContext context) {
         BFLogger.RestrictedMethods.startSeparateLog();
         testNames.set(testNameParser.parseFromContext(context));
+        setExtensionContext(context);
         Allure.getLifecycle().updateTestCase(testResult -> testResult.setName(testNames.get().getAllureName()));
         BaseTest.getAnalytics().sendClassName();
         logTestInfo("STARTED");
@@ -89,7 +99,9 @@ public class TestExecutionObserver implements ITestExecutionObserver {
 
     //AfterTestExecutionCallback
     @Override
-    public void afterTestExecution(ExtensionContext context) {
+    public void afterTestExecution(ExtensionContext inputContext) {
+        ExtensionContext context = inputContext == null ? extensionContext.get() : inputContext;
+        setExtensionContext(context);
         stopwatch.set(System.currentTimeMillis() - stopwatch.get()); // end timing
         logTestInfo("FINISHED");
         printTimeExecutionLog();
@@ -117,14 +129,22 @@ public class TestExecutionObserver implements ITestExecutionObserver {
     }
 
     //LifecycleMethodExecutionExceptionHandler
-    private void handleExecutionException(ExtensionContext context, Throwable throwable, String annotationName, Consumer<ITestObserver> action) {
+    private void handleExecutionException(ExtensionContext inputContext, Throwable throwable, String annotationName, Consumer<ITestObserver> action, boolean throwException) {
         forEachObserver(action);
+        ExtensionContext context = inputContext == null ? extensionContext.get() : inputContext;
+        setExtensionContext(context);
         if (context != null) {
-        String className = context.getRequiredTestClass().getName();
-        String testName = context.getDisplayName();
-        BFLogger.logError("\"" + className + "#" + testName + "\"" + " - EXCEPTION in " + annotationName + ": " + throwable.getMessage());
+            String className = context.getRequiredTestClass().getName();
+            String testName = context.getDisplayName();
+            BFLogger.logError("\"" + className + "#" + testName + "\"" + " - EXCEPTION in " + annotationName + ": " + throwable.getMessage());
         }
-        sneakyThrow(throwable);
+        if (throwException) {
+            sneakyThrow(throwable);
+        }
+    }
+
+    private void handleExecutionException(ExtensionContext context, Throwable throwable, String annotationName, Consumer<ITestObserver> action) {
+        handleExecutionException(context, throwable, annotationName, action, true);
     }
 
     @Override
@@ -155,7 +175,11 @@ public class TestExecutionObserver implements ITestExecutionObserver {
     //TestExecutionExceptionHandler
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) {
-        handleExecutionException(context, throwable, "@Test", ITestObserver::onTestExecutionException);
+        handleTestExecutionException(context, throwable, true);
+    }
+
+    public void handleTestExecutionException(ExtensionContext context, Throwable throwable, boolean throwException) {
+        handleExecutionException(context, throwable, "@Test", ITestObserver::onTestExecutionException, throwException);
     }
 
     //ITestObservable

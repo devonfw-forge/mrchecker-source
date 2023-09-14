@@ -1,5 +1,7 @@
 package com.capgemini.mrchecker.test.core;
 
+import org.junit.jupiter.api.extension.ExtensionContext;
+
 public interface ITestObserver {
     //TestWatcher - after complete test execution (befores + test + afters)
     void onTestDisabled();
@@ -36,4 +38,8 @@ public interface ITestObserver {
     void addToTestExecutionObserver();
 
     ModuleType getModuleType();
+
+    void setExtensionContext(ExtensionContext context);
+
+    ExtensionContext getExtensionContext();
 }

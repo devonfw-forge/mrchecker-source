@@ -17,6 +17,7 @@ import com.capgemini.mrchecker.test.core.base.properties.PropertiesSettingsModul
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.google.inject.Guice;
 import io.qameta.allure.Attachment;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -41,6 +42,7 @@ abstract public class BasePage extends Page implements IBasePage {
     private final static IAnalytics ANALYTICS;
     public final static String ANALYTICS_CATEGORY_NAME = "Selenium-NewDrivers";
     private final static PropertiesSelenium PROPERTIES_SELENIUM;
+    private final static ThreadLocal<ExtensionContext> extensionContext = new ThreadLocal<>();
 
     static {
         // Get analytics instance created in BaseTest
@@ -73,6 +75,8 @@ abstract public class BasePage extends Page implements IBasePage {
         if (!isLoaded()) { // In this scenario check if
             load();
         }
+
+        extensionContext.set(getExtensionContext());
     }
 
     private void handleBeforeTestFails() {
@@ -109,7 +113,6 @@ abstract public class BasePage extends Page implements IBasePage {
             DriverManager.closeDriver();
         }
     }
-
 
     @Override
     public void onTestClassFinish() {
@@ -444,15 +447,15 @@ abstract public class BasePage extends Page implements IBasePage {
     }
 
     private static void makeScreenshotOnTestFail() {
-        makeScreenShot("Screenshot on test fail", (WebElement) null);
+        makeScreenShot("Screenshot on test fail");
     }
 
     private static void makeScreenshotOnSetupFail() {
-        makeScreenShot("Screenshot on setup fail", (WebElement) null);
+        makeScreenShot("Screenshot on setup fail");
     }
 
     private static void makeScreenshotOnTeardownFail() {
-        makeScreenShot("Screenshot on teardown fail", (WebElement) null);
+        makeScreenShot("Screenshot on teardown fail");
     }
 
     @Attachment("{attachmentName}")

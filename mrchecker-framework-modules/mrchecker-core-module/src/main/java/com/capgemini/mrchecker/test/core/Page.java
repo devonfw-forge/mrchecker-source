@@ -2,9 +2,12 @@ package com.capgemini.mrchecker.test.core;
 
 import com.capgemini.mrchecker.test.core.exceptions.BFStaticVariableException;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 public abstract class Page implements ITestObserver {
     protected static final ITestExecutionObserver TEST_EXECUTION_OBSERVER = TestExecutionObserver.getInstance();
+
+    private ExtensionContext context;
 
     protected Page() {
     }
@@ -90,5 +93,15 @@ public abstract class Page implements ITestObserver {
                 }
             }
         }
+    }
+
+    @Override
+    public void setExtensionContext(ExtensionContext context) {
+        this.context = context;
+    }
+
+    @Override
+    public ExtensionContext getExtensionContext() {
+        return context;
     }
 }

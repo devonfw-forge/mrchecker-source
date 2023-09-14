@@ -78,10 +78,9 @@
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
         <!-- Selenium settings -->
-        <selenium.version>4.8.3</selenium.version>
+        <selenium.version>4.12.1</selenium.version>
 
-
-        <webdrivermanager.version>5.3.2</webdrivermanager.version>
+        <webdrivermanager.version>5.5.3</webdrivermanager.version>
         <google-api-client.version>2.2.0</google-api-client.version>
     </properties>
 

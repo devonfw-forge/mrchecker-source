@@ -71,16 +71,16 @@
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
         <!-- Guava is a set of core libraries -->
-        <google.guava.version>31.1-jre</google.guava.version>
-        
+        <google.guava.version>32.0.0-jre</google.guava.version>
+
         <!-- Logger -->
         <log4j.version>2.20.0</log4j.version>
         <slf4j.version>2.0.6</slf4j.version>
 
         <!-- Cucumber version -->
-        <cucumber.version>7.11.2</cucumber.version>
-        <gherkin.cucumber.version>26.1.0</gherkin.cucumber.version>
-        <cucumber-reporting.version>5.7.5</cucumber-reporting.version>
+        <cucumber.version>7.13.0</cucumber.version>
+        <gherkin.cucumber.version>26.2.0</gherkin.cucumber.version>
+        <cucumber-reporting.version>5.7.6</cucumber-reporting.version>
 
         <!--GSON-->
         <gson.version>2.10.1</gson.version>
