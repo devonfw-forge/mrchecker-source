@@ -356,7 +356,7 @@ public class DriverManager {
         if (!isEmpty(browserVersion)) {
             //Backward compatibility with Selenium 3 grids
             if (Boolean.parseBoolean(System.getProperty("selenium3grid", "false"))) {
-                capabilities.setCapability(CapabilityType.VERSION, browserVersion);
+                capabilities.setCapability("version", browserVersion);
             } else {
                 capabilities.setVersion(browserVersion);
             }
@@ -370,7 +370,7 @@ public class DriverManager {
             Platform platform = Platform.fromString(operatingSystem);
             //Backward compatibility with Selenium 3 grids
             if (Boolean.parseBoolean(System.getProperty("selenium3grid", "false"))) {
-                capabilities.setCapability(CapabilityType.PLATFORM, platform);
+                capabilities.setCapability("platform", platform);
             } else {
                 capabilities.setPlatform(platform);
             }
