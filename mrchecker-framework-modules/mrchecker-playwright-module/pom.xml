@@ -48,10 +48,10 @@
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
         <!-- PLAYWRIGHT -->
-        <playwright.verion>1.32.0</playwright.verion>
+        <playwright.verion>1.38.0</playwright.verion>
 
         <!-- Guava is a set of core libraries -->
-        <google.guava.version>32.0.0-jre</google.guava.version>
+        <google.guava.version>32.1.2-jre</google.guava.version>
     </properties>
 
     <dependencies>

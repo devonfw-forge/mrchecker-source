@@ -76,7 +76,7 @@
         <!-- Allure reporting -->
         <allure.version>2.24.0</allure.version>
 
-        <jackson.version>2.14.2</jackson.version>
+        <jackson.version>2.15.2</jackson.version>
     </properties>
 
     <dependencies>
