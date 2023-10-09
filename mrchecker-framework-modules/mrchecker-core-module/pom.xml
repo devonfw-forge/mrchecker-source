@@ -7,11 +7,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>2023.04.04</version>
+        <version>2023.10.04</version>
     </parent>
 
     <artifactId>mrchecker-core-module</artifactId>
-    <version>2023.04.04</version>
+    <version>2023.10.04</version>
     <packaging>jar</packaging>
     <name>MrChecker - Test core - Module</name>
     <description>MrChecker Test Framework Core is responsible for:
@@ -71,15 +71,15 @@
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
         <!-- Guava is a set of core libraries -->
-        <google.guava.version>32.0.0-jre</google.guava.version>
+        <google.guava.version>32.1.2-jre</google.guava.version>
 
         <!-- Logger -->
         <log4j.version>2.20.0</log4j.version>
-        <slf4j.version>2.0.6</slf4j.version>
+        <slf4j.version>2.0.9</slf4j.version>
 
         <!-- Cucumber version -->
-        <cucumber.version>7.13.0</cucumber.version>
-        <gherkin.cucumber.version>26.2.0</gherkin.cucumber.version>
+        <cucumber.version>7.14.0</cucumber.version>
+        <gherkin.cucumber.version>27.0.0</gherkin.cucumber.version>
         <cucumber-reporting.version>5.7.6</cucumber-reporting.version>
 
         <!--GSON-->
