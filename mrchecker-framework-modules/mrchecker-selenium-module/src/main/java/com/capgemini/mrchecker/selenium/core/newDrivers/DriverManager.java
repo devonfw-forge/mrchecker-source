@@ -21,7 +21,10 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
-import org.openqa.selenium.remote.*;
+import org.openqa.selenium.remote.AbstractDriverOptions;
+import org.openqa.selenium.remote.Browser;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
@@ -330,7 +333,7 @@ public class DriverManager {
     }
 
     private static void setBrowserName(DesiredCapabilities capabilities, MutableCapabilities options) {
-        BrowserType browserType = BrowserType.get();
+        var browserType = BrowserType.get();
         switch (browserType) {
             case CHROME:
                 capabilities.setCapability(ChromeOptions.CAPABILITY, options);

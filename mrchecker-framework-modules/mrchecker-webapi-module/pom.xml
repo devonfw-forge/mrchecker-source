@@ -69,7 +69,7 @@
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
         <!-- Lib/package version settings -->
-        <wiremock.version>2.27.2</wiremock.version>
+        <wiremock.version>3.2.0</wiremock.version>
         <wiremock-body-transformer.version>1.1.6</wiremock-body-transformer.version>
         <java-xmlbuilder.version>1.3</java-xmlbuilder.version>
 
@@ -124,10 +124,9 @@
         </dependency>
 
         <!-- Dependency to start mock API -->
+        <!-- https://mvnrepository.com/artifact/org.wiremock/wiremock -->
         <dependency>
-            <!-- http://wiremock.org/docs/ -->
-            <!-- https://github.com/tomakehurst/wiremock/blob/master/src/test/java/ignored/Examples.java#374 -->
-            <groupId>com.github.tomakehurst</groupId>
+            <groupId>org.wiremock</groupId>
             <artifactId>wiremock</artifactId>
             <version>${wiremock.version}</version>
         </dependency>
