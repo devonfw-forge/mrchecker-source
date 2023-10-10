@@ -44,7 +44,7 @@
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 
         <!-- Lib/package version settings -->
-        <io.appium.java.client.version>8.3.0</io.appium.java.client.version>
+        <io.appium.java.client.version>8.5.1</io.appium.java.client.version>
     </properties>
 
     <dependencies>

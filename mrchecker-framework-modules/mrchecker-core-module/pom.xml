@@ -80,7 +80,7 @@
         <!-- Cucumber version -->
         <cucumber.version>7.14.0</cucumber.version>
         <gherkin.cucumber.version>27.0.0</gherkin.cucumber.version>
-        <cucumber-reporting.version>5.7.6</cucumber-reporting.version>
+        <cucumber-reporting.version>5.7.7</cucumber-reporting.version>
 
         <!--GSON-->
         <gson.version>2.10.1</gson.version>
