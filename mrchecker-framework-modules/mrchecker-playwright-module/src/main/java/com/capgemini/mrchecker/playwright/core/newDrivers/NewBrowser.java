@@ -1,9 +1,6 @@
 package com.capgemini.mrchecker.playwright.core.newDrivers;
 
-import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.BrowserContext;
-import com.microsoft.playwright.BrowserType;
-import com.microsoft.playwright.Page;
+import com.microsoft.playwright.*;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -43,6 +40,11 @@ public class NewBrowser implements Browser {
     @Override
     public boolean isConnected() {
         return browser.isConnected();
+    }
+
+    @Override
+    public CDPSession newBrowserCDPSession() {
+        return browser.newBrowserCDPSession();
     }
 
     @Override

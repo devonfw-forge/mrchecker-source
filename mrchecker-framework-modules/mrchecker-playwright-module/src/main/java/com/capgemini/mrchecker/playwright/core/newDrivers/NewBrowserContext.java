@@ -36,6 +36,26 @@ public class NewBrowserContext implements INewBrowserContext {
     }
 
     @Override
+    public void onConsoleMessage(Consumer<ConsoleMessage> handler) {
+        browserContext.onConsoleMessage(handler);
+    }
+
+    @Override
+    public void offConsoleMessage(Consumer<ConsoleMessage> handler) {
+        browserContext.offConsoleMessage(handler);
+    }
+
+    @Override
+    public void onDialog(Consumer<Dialog> handler) {
+        browserContext.onDialog(handler);
+    }
+
+    @Override
+    public void offDialog(Consumer<Dialog> handler) {
+        browserContext.offDialog(handler);
+    }
+
+    @Override
     public void onPage(Consumer<Page> consumer) {
         browserContext.onPage(consumer);
     }
@@ -43,6 +63,16 @@ public class NewBrowserContext implements INewBrowserContext {
     @Override
     public void offPage(Consumer<Page> consumer) {
         browserContext.offPage(consumer);
+    }
+
+    @Override
+    public void onWebError(Consumer<WebError> handler) {
+        browserContext.onWebError(handler);
+    }
+
+    @Override
+    public void offWebError(Consumer<WebError> handler) {
+        browserContext.offWebError(handler);
     }
 
     @Override
@@ -158,6 +188,16 @@ public class NewBrowserContext implements INewBrowserContext {
     @Override
     public void grantPermissions(List<String> list, GrantPermissionsOptions grantPermissionsOptions) {
         browserContext.grantPermissions(list, grantPermissionsOptions);
+    }
+
+    @Override
+    public CDPSession newCDPSession(Page page) {
+        return browserContext.newCDPSession(page);
+    }
+
+    @Override
+    public CDPSession newCDPSession(Frame frame) {
+        return browserContext.newCDPSession(frame);
     }
 
     @Override
@@ -304,6 +344,11 @@ public class NewBrowserContext implements INewBrowserContext {
     @Override
     public void waitForCondition(BooleanSupplier booleanSupplier, WaitForConditionOptions waitForConditionOptions) {
         browserContext.waitForCondition(booleanSupplier, waitForConditionOptions);
+    }
+
+    @Override
+    public ConsoleMessage waitForConsoleMessage(WaitForConsoleMessageOptions options, Runnable callback) {
+        return browserContext.waitForConsoleMessage(options, callback);
     }
 
     @Override
