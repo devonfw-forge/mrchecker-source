@@ -6,6 +6,7 @@ import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.*;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.locators.RelativeLocator;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
@@ -42,7 +43,7 @@ public class DriverExtension {
         try {
             element = Objects.isNull(elementToSearchIn) ? getDriver().findElement(by) : new NewRemoteWebElement(elementToSearchIn).findElement(by);
         } catch (NoSuchElementException e) {
-            BFLogger.logError("Element [" + by.toString() + "] was not found in given element");
+            BFLogger.logError("Element [" + getReadableSelector(by) + "] was not found in given element");
         }
         return element;
     }
@@ -77,7 +78,7 @@ public class DriverExtension {
             boolean isTimeout = true;
             throw new BFElementNotFoundException(by, isTimeout, timeOut);
         }
-        BFLogger.logTime(startTime, "findElementDynamic()", by.toString());
+        BFLogger.logTime(startTime, "findElementDynamic()", getReadableSelector(by));
         return element;
     }
 
@@ -93,9 +94,9 @@ public class DriverExtension {
             throw new BFElementNotFoundException(by, true, timeOut);
         }
         if (elements.isEmpty()) {
-            BFLogger.logError("Not found element : " + by.toString() + ".");
+            BFLogger.logError("Not found element : " + getReadableSelector(by) + ".");
         }
-        BFLogger.logTime(startTime, "findElementDynamics()", by.toString());
+        BFLogger.logTime(startTime, "findElementDynamics()", getReadableSelector(by));
         return elements;
     }
 
@@ -118,7 +119,7 @@ public class DriverExtension {
             boolean isTimeout = true;
             throw new BFElementNotFoundException(by, isTimeout, DriverManager.EXPLICIT_WAIT);
         }
-        BFLogger.logTime(startTime, "waitForElement()", by.toString());
+        BFLogger.logTime(startTime, "waitForElement()", getReadableSelector(by));
         return element;
     }
 
@@ -133,7 +134,7 @@ public class DriverExtension {
             boolean isTimeout = true;
             throw new BFElementNotFoundException(by, isTimeout, DriverManager.EXPLICIT_WAIT);
         }
-        BFLogger.logTime(startTime, "waitUntilElementIsClickable()", by.toString());
+        BFLogger.logTime(startTime, "waitUntilElementIsClickable()", getReadableSelector(by));
         return element;
     }
 
@@ -149,7 +150,7 @@ public class DriverExtension {
             boolean isTimeout = true;
             throw new BFElementNotFoundException(by, isTimeout, DriverManager.EXPLICIT_WAIT);
         }
-        BFLogger.logTime(startTime, "waitForElementVisible()", by.toString());
+        BFLogger.logTime(startTime, "waitForElementVisible()", getReadableSelector(by));
         return element;
     }
 
@@ -366,4 +367,16 @@ public class DriverExtension {
                 .perform();
     }
 
+    private String getReadableSelector(By selector) {
+        if (selector instanceof RelativeLocator.RelativeBy) {
+            return getReadableRelativeBy((RelativeLocator.RelativeBy) selector);
+        }
+        return selector.toString();
+    }
+
+    private String getReadableRelativeBy(RelativeLocator.RelativeBy relativeLocator) {
+        return relativeLocator.getRemoteParameters()
+                              .toString()
+                              .replaceAll("\\[\\[\\[\\[New\\w+Driver.*?->[^]]+]", "WebElement");
+    }
 }
