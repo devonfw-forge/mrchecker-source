@@ -4,9 +4,10 @@ import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import com.capgemini.mrchecker.test.core.utils.DurationUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.support.locators.RelativeLocator;
 
 import java.time.Duration;
+
+import static com.capgemini.mrchecker.selenium.core.utils.ByToString.getReadableByName;
 
 public class BFElementNotFoundException extends NoSuchElementException {
 
@@ -115,7 +116,7 @@ public class BFElementNotFoundException extends NoSuchElementException {
     }
 
     private static String generateStandardMessage(By by) {
-        return getExceutedMethodName() + "\nElement '" + getReadableSelector(by) + "' was not found. Check printscreen.\n";
+        return getExceutedMethodName() + "\nElement '" + getReadableByName(by) + "' was not found. Check printscreen.\n";
 
     }
 
@@ -148,18 +149,5 @@ public class BFElementNotFoundException extends NoSuchElementException {
             message = message + messageTimeout;
         }
         return message;
-    }
-
-    private static String getReadableSelector(By selector) {
-        if (selector instanceof RelativeLocator.RelativeBy) {
-            return getReadableRelativeBy((RelativeLocator.RelativeBy) selector);
-        }
-        return selector.toString();
-    }
-
-    private static String getReadableRelativeBy(RelativeLocator.RelativeBy relativeLocator) {
-        return relativeLocator.getRemoteParameters()
-                              .toString()
-                              .replaceAll("\\[\\[\\[\\[New\\w+Driver.*?->[^]]+]", "WebElement");
     }
 }

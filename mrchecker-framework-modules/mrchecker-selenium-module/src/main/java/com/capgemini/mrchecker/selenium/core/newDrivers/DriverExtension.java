@@ -6,7 +6,6 @@ import com.capgemini.mrchecker.selenium.core.newDrivers.elementType.*;
 import com.capgemini.mrchecker.test.core.logger.BFLogger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.locators.RelativeLocator;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
@@ -17,6 +16,8 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static com.capgemini.mrchecker.selenium.core.utils.ByToString.getReadableByName;
 
 public class DriverExtension {
 
@@ -43,7 +44,7 @@ public class DriverExtension {
         try {
             element = Objects.isNull(elementToSearchIn) ? getDriver().findElement(by) : new NewRemoteWebElement(elementToSearchIn).findElement(by);
         } catch (NoSuchElementException e) {
-            BFLogger.logError("Element [" + getReadableSelector(by) + "] was not found in given element");
+            BFLogger.logError("Element [" + getReadableByName(by) + "] was not found in given element");
         }
         return element;
     }
@@ -78,7 +79,7 @@ public class DriverExtension {
             boolean isTimeout = true;
             throw new BFElementNotFoundException(by, isTimeout, timeOut);
         }
-        BFLogger.logTime(startTime, "findElementDynamic()", getReadableSelector(by));
+        BFLogger.logTime(startTime, "findElementDynamic()", getReadableByName(by));
         return element;
     }
 
@@ -94,9 +95,9 @@ public class DriverExtension {
             throw new BFElementNotFoundException(by, true, timeOut);
         }
         if (elements.isEmpty()) {
-            BFLogger.logError("Not found element : " + getReadableSelector(by) + ".");
+            BFLogger.logError("Not found element : " + getReadableByName(by) + ".");
         }
-        BFLogger.logTime(startTime, "findElementDynamics()", getReadableSelector(by));
+        BFLogger.logTime(startTime, "findElementDynamics()", getReadableByName(by));
         return elements;
     }
 
@@ -119,7 +120,7 @@ public class DriverExtension {
             boolean isTimeout = true;
             throw new BFElementNotFoundException(by, isTimeout, DriverManager.EXPLICIT_WAIT);
         }
-        BFLogger.logTime(startTime, "waitForElement()", getReadableSelector(by));
+        BFLogger.logTime(startTime, "waitForElement()", getReadableByName(by));
         return element;
     }
 
@@ -134,7 +135,7 @@ public class DriverExtension {
             boolean isTimeout = true;
             throw new BFElementNotFoundException(by, isTimeout, DriverManager.EXPLICIT_WAIT);
         }
-        BFLogger.logTime(startTime, "waitUntilElementIsClickable()", getReadableSelector(by));
+        BFLogger.logTime(startTime, "waitUntilElementIsClickable()", getReadableByName(by));
         return element;
     }
 
@@ -150,7 +151,7 @@ public class DriverExtension {
             boolean isTimeout = true;
             throw new BFElementNotFoundException(by, isTimeout, DriverManager.EXPLICIT_WAIT);
         }
-        BFLogger.logTime(startTime, "waitForElementVisible()", getReadableSelector(by));
+        BFLogger.logTime(startTime, "waitForElementVisible()", getReadableByName(by));
         return element;
     }
 
@@ -365,18 +366,5 @@ public class DriverExtension {
         new Actions(getDriver()).click(element)
                 .build()
                 .perform();
-    }
-
-    private String getReadableSelector(By selector) {
-        if (selector instanceof RelativeLocator.RelativeBy) {
-            return getReadableRelativeBy((RelativeLocator.RelativeBy) selector);
-        }
-        return selector.toString();
-    }
-
-    private String getReadableRelativeBy(RelativeLocator.RelativeBy relativeLocator) {
-        return relativeLocator.getRemoteParameters()
-                              .toString()
-                              .replaceAll("\\[\\[\\[\\[New\\w+Driver.*?->[^]]+]", "WebElement");
     }
 }
