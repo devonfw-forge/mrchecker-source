@@ -7,6 +7,8 @@ import org.openqa.selenium.NoSuchElementException;
 
 import java.time.Duration;
 
+import static com.capgemini.mrchecker.selenium.core.utils.ByToString.getReadableByName;
+
 public class BFElementNotFoundException extends NoSuchElementException {
 
     private static final long serialVersionUID = 6697212034783474583L;
@@ -114,7 +116,7 @@ public class BFElementNotFoundException extends NoSuchElementException {
     }
 
     private static String generateStandardMessage(By by) {
-        return getExceutedMethodName() + "\nElement '" + by.toString() + "' was not found. Check printscreen.\n";
+        return getExceutedMethodName() + "\nElement '" + getReadableByName(by) + "' was not found. Check printscreen.\n";
 
     }
 
@@ -148,5 +150,4 @@ public class BFElementNotFoundException extends NoSuchElementException {
         }
         return message;
     }
-
 }

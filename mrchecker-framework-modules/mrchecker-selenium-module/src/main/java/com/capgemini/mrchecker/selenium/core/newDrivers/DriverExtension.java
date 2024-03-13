@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.capgemini.mrchecker.selenium.core.utils.ByToString.getReadableByName;
+
 public class DriverExtension {
 
     private INewWebDriver driver;
@@ -42,7 +44,7 @@ public class DriverExtension {
         try {
             element = Objects.isNull(elementToSearchIn) ? getDriver().findElement(by) : new NewRemoteWebElement(elementToSearchIn).findElement(by);
         } catch (NoSuchElementException e) {
-            BFLogger.logError("Element [" + by.toString() + "] was not found in given element");
+            BFLogger.logError("Element [" + getReadableByName(by) + "] was not found in given element");
         }
         return element;
     }
@@ -77,7 +79,7 @@ public class DriverExtension {
             boolean isTimeout = true;
             throw new BFElementNotFoundException(by, isTimeout, timeOut);
         }
-        BFLogger.logTime(startTime, "findElementDynamic()", by.toString());
+        BFLogger.logTime(startTime, "findElementDynamic()", getReadableByName(by));
         return element;
     }
 
@@ -93,9 +95,9 @@ public class DriverExtension {
             throw new BFElementNotFoundException(by, true, timeOut);
         }
         if (elements.isEmpty()) {
-            BFLogger.logError("Not found element : " + by.toString() + ".");
+            BFLogger.logError("Not found element : " + getReadableByName(by) + ".");
         }
-        BFLogger.logTime(startTime, "findElementDynamics()", by.toString());
+        BFLogger.logTime(startTime, "findElementDynamics()", getReadableByName(by));
         return elements;
     }
 
@@ -118,7 +120,7 @@ public class DriverExtension {
             boolean isTimeout = true;
             throw new BFElementNotFoundException(by, isTimeout, DriverManager.EXPLICIT_WAIT);
         }
-        BFLogger.logTime(startTime, "waitForElement()", by.toString());
+        BFLogger.logTime(startTime, "waitForElement()", getReadableByName(by));
         return element;
     }
 
@@ -133,7 +135,7 @@ public class DriverExtension {
             boolean isTimeout = true;
             throw new BFElementNotFoundException(by, isTimeout, DriverManager.EXPLICIT_WAIT);
         }
-        BFLogger.logTime(startTime, "waitUntilElementIsClickable()", by.toString());
+        BFLogger.logTime(startTime, "waitUntilElementIsClickable()", getReadableByName(by));
         return element;
     }
 
@@ -149,7 +151,7 @@ public class DriverExtension {
             boolean isTimeout = true;
             throw new BFElementNotFoundException(by, isTimeout, DriverManager.EXPLICIT_WAIT);
         }
-        BFLogger.logTime(startTime, "waitForElementVisible()", by.toString());
+        BFLogger.logTime(startTime, "waitForElementVisible()", getReadableByName(by));
         return element;
     }
 
@@ -365,5 +367,4 @@ public class DriverExtension {
                 .build()
                 .perform();
     }
-
 }
