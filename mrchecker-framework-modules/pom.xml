@@ -110,7 +110,7 @@
         <guice.version>7.0.0</guice.version>
 
         <!-- JSON -->
-        <org.json.version>20230618</org.json.version>
+        <org.json.version>20231013</org.json.version>
 
         <!-- Hashes sensitive data -->
         <org.jasypt.version>1.9.3</org.jasypt.version>
