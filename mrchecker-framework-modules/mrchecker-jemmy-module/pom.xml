@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>mrchecker-test-framework</artifactId>
+        <groupId>com.capgemini.mrchecker</groupId>
+        <version>2025.01.10</version>
+    </parent>
+
+    <artifactId>mrchecker-jemmy-module</artifactId>
+    <version>2025.01.10</version>
+    <packaging>jar</packaging>
+    <name>MrChecker - Jemmy - Module</name>
+    <description>MrChecker Jemmy Module supports:
+        <!--        TODO:-->
+    </description>
+    <url>https://github.com/devonfw/devonfw-testing</url>
+
+    <organization>
+        <name>Capgemini - Software Solution Center</name>
+        <url>https://capgeminisoftware.pl/</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>Michal Babiarz</name>
+            <email>michal.babiarz@capgemini.com</email>
+            <organization>Capgemini - Nearshore Test Center - Poland</organization>
+            <organizationUrl>http://nsc.capgemini.com/nearshoretestcenter</organizationUrl>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git://github.com/devonfw/devonfw-testing.git</connection>
+        <developerConnection>scm:git:ssh://github.com:devonfw/devonfw-testing.git</developerConnection>
+        <url>http://github.com/devonfw/devonfw-testing/tree/master</url>
+    </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- Dependency to other MrChecker Test Framework modules -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mrchecker-core-module</artifactId>
+            <version>2025.01.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.netbeans</groupId>
+            <artifactId>jemmy</artifactId>
+            <version>2.2.7.5</version>
+        </dependency>
+
+    </dependencies>
+
+    <!-- Build goals/actions -->
+    <build>
+        <plugins>
+            <!-- Plugins are taken from parent pom.xml -->
+        </plugins>
+    </build>
+</project>
