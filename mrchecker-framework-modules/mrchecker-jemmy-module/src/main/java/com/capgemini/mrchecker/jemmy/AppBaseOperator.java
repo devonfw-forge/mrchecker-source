@@ -13,6 +13,7 @@ import org.netbeans.jemmy.ComponentChooser;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.operators.FrameOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
+import org.netbeans.jemmy.operators.JInternalFrameOperator;
 import org.netbeans.jemmy.util.PNGEncoder;
 
 import java.io.FileInputStream;
@@ -31,7 +32,11 @@ public abstract class AppBaseOperator extends Page {
 
 	private final BFLoggerInstance bfLogger = BFLogger.getLog();
 
-	protected JFrameOperator mainFrame;
+	protected AppBaseOperator parent;
+
+	protected JFrameOperator frame;
+
+	protected JInternalFrameOperator internalFrame;
 
 	static {
 		// Read Environment variables either from environments.csv or any other input data.
@@ -49,11 +54,16 @@ public abstract class AppBaseOperator extends Page {
 	public AppBaseOperator(String classNameToStart, ComponentChooser componentChooser, String[] args) {
 		try {
 			var threadCount = Integer.parseInt(System.getProperty("thread.count", "1"));
-			framePool = ObjectPool.getInstance(threadCount, new JFrameOperatorFactor(classNameToStart, args, componentChooser));
-			mainFrame = framePool.borrowObject();
+			framePool = ObjectPool.getInstance(threadCount, new JFrameOperatorFactory(classNameToStart, args, componentChooser));
+			frame = framePool.borrowObject();
 		} catch (InterruptedException e) {
-			throw new JemmyException("Could not start app: " + e.getMessage());
+			throw new JemmyException("Could not start app: " + e.getClass().getSimpleName() + "\\" + e.getMessage());
 		}
+	}
+
+	public AppBaseOperator(AppBaseOperator parent, String title) {
+		this.parent = parent;
+		internalFrame = new JInternalFrameOperator(parent.getFrame(), title);
 	}
 
 	public AppBaseOperator(String classNameToStart, ComponentChooser componentChooser) {
@@ -61,7 +71,15 @@ public abstract class AppBaseOperator extends Page {
 	}
 
 	public String getTitle() {
-		return mainFrame.getTitle();
+		return internalFrame != null ? internalFrame.getTitle() : frame.getTitle();
+	}
+
+	public JFrameOperator getFrame() {
+		return frame != null ? frame : parent.getFrame();
+	}
+
+	public JInternalFrameOperator getInternalFrame() {
+		return getInternalFrame();
 	}
 
 	@Override
@@ -73,7 +91,7 @@ public abstract class AppBaseOperator extends Page {
 	@Override
 	public void onTestClassFinish() {
 		super.onTestClassFinish();
-		framePool.returnObject(mainFrame);
+		framePool.returnObject(frame);
 	}
 
 	@Attachment(type = "image/png")
@@ -84,8 +102,8 @@ public abstract class AppBaseOperator extends Page {
 		try {
 			Files.createFile(filePath);
 			synchronized (screenshotLock) {
-				mainFrame.toFront();
-				PNGEncoder.captureScreen(mainFrame.getContentPane(), fileName);
+				frame.toFront();
+				PNGEncoder.captureScreen(frame.getContentPane(), fileName);
 			}
 			try (var fis = new FileInputStream(fileName)) {
 				reuslt = IOUtils.toByteArray(fis);
@@ -116,12 +134,12 @@ public abstract class AppBaseOperator extends Page {
 		 */
 	}
 
-	private static class JFrameOperatorFactor implements ObjectPool.ObjectFactory<JFrameOperator> {
+	private static class JFrameOperatorFactory implements ObjectPool.ObjectFactory<JFrameOperator> {
 		public String classNameToStart;
 		public String[] args;
 		public ComponentChooser componentChooser;
 
-		public JFrameOperatorFactor(String classNameToStart, String[] args, ComponentChooser componentChooser) {
+		public JFrameOperatorFactory(String classNameToStart, String[] args, ComponentChooser componentChooser) {
 			this.classNameToStart = classNameToStart;
 			this.args = args;
 			this.componentChooser = componentChooser;
@@ -134,7 +152,7 @@ public abstract class AppBaseOperator extends Page {
 				cr.startApplication(args);
 				return new JFrameOperator(componentChooser, index);
 			} catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException e) {
-				throw new JemmyException("Could not start app: " + e.getMessage());
+				throw new JemmyException("Could not start app: " + e.getClass().getSimpleName() + "\\" + e.getMessage());
 			}
 		}
 	}

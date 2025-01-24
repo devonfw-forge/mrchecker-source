@@ -8,5 +8,6 @@ public enum ModuleType {
     DATABASE,
     SECURITY,
     MOBILE,
-    CLI
+    CLI,
+    JEMMY
 }

@@ -50,7 +50,7 @@ class AppBaseOperator2Test {
 			findJButtonByText("+").clickMouse();
 			findJButtonByText("" + second).clickMouse();
 			findJButtonByText("=").clickMouse();
-			return Double.parseDouble(new JTextFieldOperator(mainFrame, 0).getText());
+			return Double.parseDouble(new JTextFieldOperator(frame, 0).getText());
 		}
 
 		public void clear() {
@@ -63,7 +63,7 @@ class AppBaseOperator2Test {
 			} catch (InterruptedException e) {
 			}
 
-			return new JButtonOperator(mainFrame, text);
+			return new JButtonOperator(frame, text);
 		}
 	}
 

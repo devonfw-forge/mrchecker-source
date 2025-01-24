@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.capgemini.mrchecker</groupId>
     <artifactId>mrchecker-test-framework</artifactId>
-    <version>2023.10.10</version>
+    <version>2025.01.10</version>
     <name>MrChecker</name>
     <description>MrChecker Test Framework is an automated testing framework for functional testing of web applications,
         native mobile apps, webservices and database.
@@ -61,6 +61,7 @@
         <module>mrchecker-mobile-module</module>
         <module>mrchecker-database-module</module>
         <module>mrchecker-cli-module</module>
+        <module>mrchecker-jemmy-module</module>
     </modules>
 
     <repositories>
@@ -412,6 +413,16 @@
                             <groupId>org.aspectj</groupId>
                             <artifactId>aspectjweaver</artifactId>
                             <version>${aspectj.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.maven.surefire</groupId>
+                            <artifactId>surefire-junit-platform</artifactId>
+                            <version>3.1.2</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.junit.jupiter</groupId>
+                            <artifactId>junit-jupiter-engine</artifactId>
+                            <version>5.10.0</version>
                         </dependency>
                         <dependency>
                             <groupId>org.apache.maven.surefire</groupId>
