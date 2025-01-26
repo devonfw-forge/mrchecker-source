@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.capgemini.mrchecker</groupId>
     <artifactId>mrchecker-test-framework</artifactId>
-    <version>2025.01.10</version>
+    <version>2025.01.10_j8</version>
     <name>MrChecker</name>
     <description>MrChecker Test Framework is an automated testing framework for functional testing of web applications,
         native mobile apps, webservices and database.
@@ -54,13 +54,13 @@
 
     <modules>
         <module>mrchecker-core-module</module>
-        <module>mrchecker-selenium-module</module>
-        <module>mrchecker-playwright-module</module>
-        <module>mrchecker-security-module</module>
-        <module>mrchecker-webapi-module</module>
-        <module>mrchecker-mobile-module</module>
-        <module>mrchecker-database-module</module>
-        <module>mrchecker-cli-module</module>
+<!--        <module>mrchecker-selenium-module</module>-->
+<!--        <module>mrchecker-playwright-module</module>-->
+<!--        <module>mrchecker-security-module</module>-->
+<!--        <module>mrchecker-webapi-module</module>-->
+<!--        <module>mrchecker-mobile-module</module>-->
+<!--        <module>mrchecker-database-module</module>-->
+<!--        <module>mrchecker-cli-module</module>-->
         <module>mrchecker-jemmy-module</module>
     </modules>
 
@@ -91,7 +91,7 @@
         <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
 
         <!-- Java settings -->
-        <java.compiler.version>11</java.compiler.version>
+        <java.compiler.version>8</java.compiler.version>
 
         <!-- Tests executors -->
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
@@ -461,8 +461,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
             <plugin>
