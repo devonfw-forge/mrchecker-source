@@ -1,5 +1,7 @@
 package com.capgemini.mrchecker.jemmy.utils;
 
+import com.capgemini.mrchecker.jemmy.exceptions.JemmyException;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -17,6 +19,14 @@ public class ObjectPool<T> {
 	public static synchronized <T> ObjectPool<T> getInstance(int size, ObjectFactory<T> factory) {
 		if (instance == null) {
 			instance = new ObjectPool<>(size, factory);
+		}
+
+		return instance;
+	}
+
+	public static synchronized <T> ObjectPool<T> getInstance() {
+		if (instance == null) {
+			throw new JemmyException(new IllegalStateException("Object not initialized with getInstance(int size, ObjectFactory<T> factory) method"));
 		}
 		return instance;
 	}

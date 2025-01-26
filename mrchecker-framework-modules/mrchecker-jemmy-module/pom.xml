@@ -6,11 +6,11 @@
     <parent>
         <artifactId>mrchecker-test-framework</artifactId>
         <groupId>com.capgemini.mrchecker</groupId>
-        <version>2025.01.10</version>
+        <version>2025.01.10_j8</version>
     </parent>
 
     <artifactId>mrchecker-jemmy-module</artifactId>
-    <version>2025.01.10</version>
+    <version>2025.01.10_j8</version>
     <packaging>jar</packaging>
     <name>MrChecker - Jemmy - Module</name>
     <description>MrChecker Jemmy Module supports:
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>mrchecker-core-module</artifactId>
-            <version>2025.01.10</version>
+            <version>2025.01.10_j8</version>
         </dependency>
 
         <dependency>
@@ -62,7 +62,7 @@
             <artifactId>jemmy</artifactId>
             <version>2.2.7.5</version>
         </dependency>
-        
+
     </dependencies>
 
     <!-- Build goals/actions -->
