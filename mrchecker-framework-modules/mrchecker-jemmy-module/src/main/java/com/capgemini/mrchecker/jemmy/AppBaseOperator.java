@@ -1,6 +1,7 @@
 package com.capgemini.mrchecker.jemmy;
 
 import com.capgemini.mrchecker.jemmy.base.runtime.ScreenshotsConfig;
+import com.capgemini.mrchecker.jemmy.logging.JemmyLogConfig;
 import com.capgemini.mrchecker.jemmy.utils.ObjectPool;
 import com.capgemini.mrchecker.test.core.ModuleType;
 import com.capgemini.mrchecker.test.core.Page;
@@ -25,6 +26,10 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 public abstract class AppBaseOperator extends Page {
+
+	static {
+		JemmyLogConfig.configure();
+	}
 
 	private static final Object screenshotLock = new Object();
 	private static IEnvironmentService environmentService;
