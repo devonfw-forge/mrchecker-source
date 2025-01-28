@@ -24,8 +24,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
-import static com.capgemini.mrchecker.jemmy.base.runtime.RuntimeParametersJemmy.SCREENSHOTS;
-
 public abstract class AppBaseOperator extends Page {
 
 	private static final Object screenshotLock = new Object();
@@ -97,7 +95,7 @@ public abstract class AppBaseOperator extends Page {
 	}
 
 	public void screenshot() {
-		if (ScreenshotsConfig.ALWAYS == ScreenshotsConfig.forValue(SCREENSHOTS.getValue())) {
+		if (ScreenshotsConfig.ALWAYS == ScreenshotsConfig.getConfig()) {
 			makeScreenshot();
 		}
 	}
