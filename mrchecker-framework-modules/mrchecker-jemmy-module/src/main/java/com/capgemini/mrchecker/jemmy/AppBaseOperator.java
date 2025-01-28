@@ -1,5 +1,6 @@
 package com.capgemini.mrchecker.jemmy;
 
+import com.capgemini.mrchecker.jemmy.base.runtime.ScreenshotsConfig;
 import com.capgemini.mrchecker.jemmy.utils.ObjectPool;
 import com.capgemini.mrchecker.test.core.ModuleType;
 import com.capgemini.mrchecker.test.core.Page;
@@ -22,6 +23,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
+
+import static com.capgemini.mrchecker.jemmy.base.runtime.RuntimeParametersJemmy.SCREENSHOTS;
 
 public abstract class AppBaseOperator extends Page {
 
@@ -84,7 +87,7 @@ public abstract class AppBaseOperator extends Page {
 	@Override
 	public void onTestExecutionException() {
 		super.onTestExecutionException();
-		screenshot();
+		makeScreenshot();
 	}
 
 	@Override
@@ -93,8 +96,14 @@ public abstract class AppBaseOperator extends Page {
 		ObjectPool.getInstance().returnObject(frame);
 	}
 
+	public void screenshot() {
+		if (ScreenshotsConfig.ALWAYS == ScreenshotsConfig.forValue(SCREENSHOTS.getValue())) {
+			makeScreenshot();
+		}
+	}
+
 	@Attachment(type = "image/png")
-	public byte[] screenshot() {
+	private byte[] makeScreenshot() {
 		String fileName = "screenshot_" + UUID.randomUUID() + ".png";
 		Path filePath = Paths.get(fileName);
 		byte[] reuslt = new byte[0];
