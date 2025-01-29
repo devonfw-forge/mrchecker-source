@@ -17,12 +17,14 @@ import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JInternalFrameOperator;
 import org.netbeans.jemmy.util.PNGEncoder;
 
-import java.io.FileInputStream;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.UUID;
 
 public abstract class AppBaseOperator extends Page {
@@ -109,15 +111,14 @@ public abstract class AppBaseOperator extends Page {
 	private byte[] makeScreenshot() {
 		String fileName = "screenshot_" + UUID.randomUUID() + ".png";
 		Path filePath = Paths.get(fileName);
-		byte[] reuslt = new byte[0];
 		try {
 			Files.createFile(filePath);
 			synchronized (screenshotLock) {
-				frame.toFront();
-				PNGEncoder.captureScreen(frame.getContentPane(), fileName);
+				getTopFrame().toFront();
+				PNGEncoder.captureScreen(getTopFrame().getContentPane(), fileName, PNGEncoder.COLOR_MODE);
 			}
-			try (FileInputStream fis = new FileInputStream(fileName)) {
-				reuslt = IOUtils.toByteArray(fis);
+			try (InputStream fis = new BufferedInputStream(Files.newInputStream(filePath, StandardOpenOption.READ))) {
+				return IOUtils.toByteArray(fis);
 			}
 		} catch (IOException e) {
 			BFLogger.logError("Could not create a screenshot: " + e.getMessage());
@@ -129,7 +130,7 @@ public abstract class AppBaseOperator extends Page {
 			}
 		}
 
-		return reuslt;
+		return new byte[0];
 	}
 
 	@Override
